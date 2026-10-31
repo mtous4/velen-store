@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>لوحة تحكم Velen Official — Admin Portal</title>
+  <link rel="icon" href="/assets/velen-logo.jpg">
+
+  <!-- Google Fonts & FontAwesome -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body class="admin-body">
+
+  <!-- Admin Sidebar -->
+  <aside class="admin-sidebar" id="adminSidebar">
+    <div class="sidebar-brand">
+      <img src="/assets/velen-logo.jpg" alt="Velen" class="brand-logo-img">
+      <div class="brand-text">
+        <h2>VELEN</h2>
+        <span>لوحة التحكم الإدارية</span>
+      </div>
+    </div>
+
+    <!-- Live Sync Pill -->
+    <div class="admin-live-pill">
+      <span class="live-dot"></span>
+      <span class="live-label">البث المباشر للمتجر نشط</span>
+    </div>
+
+    <nav class="sidebar-nav">
+      <button class="nav-item active" data-tab="dashboard">
+        <i class="fa-solid fa-chart-pie"></i>
+        <span>نظرة عامة (Dashboard)</span>
+      </button>
+
+      <button class="nav-item" data-tab="products">
+        <i class="fa-solid fa-shirt"></i>
+        <span>إدارة المنتجات (Products)</span>
+        <span class="badge-count" id="navProdCount">0</span>
+      </button>
+
+      <button class="nav-item" data-tab="orders">
+        <i class="fa-solid fa-bag-shopping"></i>
+        <span>الطلبات والمبيعات (Orders)</span>
+        <span class="badge-count orders-badge" id="navOrdersCount">0</span>
+      </button>
+
+      <button class="nav-item" data-tab="community">
+        <i class="fa-solid fa-users-viewfinder"></i>
+        <span>المجتمع والتقييمات (Community)</span>
+        <span class="badge-count" id="navCommCount">0</span>
+      </button>
+
+      <button class="nav-item" data-tab="settings">
+        <i class="fa-solid fa-sliders"></i>
+        <span>إعدادات المتجر (Settings)</span>
+      </button>
+    </nav>
+
+    <div class="sidebar-footer">
+      <a href="/" target="_blank" class="btn-view-store">
+        <i class="fa-solid fa-arrow-up-right-from-square"></i>
+        <span>معاينة المتجر الرسمي</span>
+      </a>
+      <div class="admin-user-info">
+        <i class="fa-solid fa-shield-halved"></i>
+        <span>مدير المتجر: Mahmoud Al-Tous</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Admin Main Content Area -->
+  <main class="admin-main">
+    
+    <!-- Top Header -->
+    <header class="admin-topbar">
+      <div class="topbar-left">
+        <button id="mobileMenuBtn" class="mobile-toggle-btn"><i class="fa-solid fa-bars"></i></button>
+        <h1 class="page-title" id="pageTitle">نظرة عامة والإحصائيات</h1>
+      </div>
+
+      <div class="topbar-right">
+        <div class="quick-stat-pill">
+          <i class="fa-solid fa-coins"></i>
+          <span>إجمالي المبيعات:</span>
+          <strong id="topbarRevenue">0.000 JOD</strong>
+        </div>
+        <button id="quickAddProductBtn" class="btn-primary-action">
+          <i class="fa-solid fa-plus"></i> إضافة منتج جديد
+        </button>
+      </div>
+    </header>
+
+    <div class="admin-content-container">
+
+      <!-- ================= TAB 1: DASHBOARD ================= -->
+      <section class="admin-tab-pane active" id="tab-dashboard">
+        <!-- KPI Cards Grid -->
+        <div class="kpi-grid">
+          <div class="kpi-card card-revenue">
+            <div class="kpi-icon"><i class="fa-solid fa-coins"></i></div>
+            <div class="kpi-details">
+              <span class="kpi-title">إجمالي المبيعات (JOD)</span>
+              <h3 class="kpi-value" id="kpiRevenue">0.000 JOD</h3>
+              <span class="kpi-sub">تحديث تلقائي مع كل طلب جديد</span>
+            </div>
+          </div>
+
+          <div class="kpi-card card-orders">
+            <div class="kpi-icon"><i class="fa-solid fa-box-open"></i></div>
+            <div class="kpi-details">
+              <span class="kpi-title">عدد الطلبات المستلمة</span>
+              <h3 class="kpi-value" id="kpiOrders">0</h3>
+              <span class="kpi-sub" id="kpiPendingOrders">0 قيد الانتظار</span>
+            </div>
+          </div>
+
+          <div class="kpi-card card-products">
+            <div class="kpi-icon"><i class="fa-solid fa-shirt"></i></div>
+            <div class="kpi-details">
+              <span class="kpi-title">المنتجات المعروضة</span>
+              <h3 class="kpi-value" id="kpiProducts">0</h3>
+              <span class="kpi-sub">تزامن فوري مع المتجر الرسمي</span>
+            </div>
+          </div>
+
+          <div class="kpi-card card-rating">
+            <div class="kpi-icon"><i class="fa-solid fa-star"></i></div>
+            <div class="kpi-details">
+              <span class="kpi-title">متوسط تقييم البراند</span>
+              <h3 class="kpi-value" id="kpiRating">5.0 / 5</h3>
+              <span class="kpi-sub" id="kpiCommunityCount">0 مشاركة في المجتمع</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Orders & Fast Actions -->
+        <div class="dashboard-split-grid">
+          <div class="dash-block">
+            <div class="block-header">
+              <h3><i class="fa-solid fa-clock-rotate-left"></i> أحدث الطلبات الواردة</h3>
+              <button class="link-btn" onclick="window.velenAdmin.switchTab('orders')">عرض الكل</button>
+            </div>
+            <div class="table-responsive">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>رقم الطلب</th>
+                    <th>العميل</th>
+                    <th>المحافظة</th>
+                    <th>الإجمالي</th>
+                    <th>الحالة</th>
+                    <th>إجراء</th>
+                  </tr>
+                </thead>
+                <tbody id="dashRecentOrdersTable">
+                  <!-- Rendered dynamically -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="dash-block">
+            <div class="block-header">
+              <h3><i class="fa-solid fa-fire"></i> أحدث إطلالات المجتمع والريفيوز</h3>
+              <button class="link-btn" onclick="window.velenAdmin.switchTab('community')">إدارة المجتمع</button>
+            </div>
+            <div class="dash-community-list" id="dashRecentCommunityList">
+              <!-- Rendered dynamically -->
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= TAB 2: PRODUCTS ================= -->
+      <section class="admin-tab-pane" id="tab-products">
+        <div class="tab-action-bar">
+          <div class="search-filter-box">
+            <div class="input-with-icon">
+              <i class="fa-solid fa-magnifying-glass"></i>
+              <input type="text" id="productSearchInput" placeholder="بحث بالاسم أو التصنيف...">
+            </div>
+            <select id="productCategoryFilter">
+              <option value="all">جميع التصنيفات</option>
+              <option value="Tees">Tees</option>
+              <option value="Ringer">Ringer Edition</option>
+              <option value="Boxy">Boxy Cropped</option>
+            </select>
+          </div>
+
+          <button id="openNewProductModalBtn" class="btn-primary-action">
+            <i class="fa-solid fa-plus"></i> إضافة قطعة جديدة إلى المتجر
+          </button>
+        </div>
+
+        <div class="products-admin-grid" id="adminProductsGrid">
+          <!-- Rendered dynamically -->
+        </div>
+      </section>
+
+      <!-- ================= TAB 3: ORDERS ================= -->
+      <section class="admin-tab-pane" id="tab-orders">
+        <div class="tab-action-bar">
+          <div class="search-filter-box">
+            <div class="input-with-icon">
+              <i class="fa-solid fa-magnifying-glass"></i>
+              <input type="text" id="orderSearchInput" placeholder="بحث بالاسم أو رقم الهاتف...">
+            </div>
+            <select id="orderStatusFilter">
+              <option value="all">جميع الحالات</option>
+              <option value="Pending">قيد الانتظار (Pending)</option>
+              <option value="Preparing">جاري التجهيز (Preparing)</option>
+              <option value="Out for Delivery">مع المندوب (Out for Delivery)</option>
+              <option value="Delivered">تم التسليم (Delivered)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="table-card">
+          <div class="table-responsive">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>رقم الطلب</th>
+                  <th>تاريخ الطلب</th>
+                  <th>بيانات العميل</th>
+                  <th>العنوان بالتفصيل</th>
+                  <th>القطع والمقاسات</th>
+                  <th>طريقة الدفع</th>
+                  <th>المبلغ الإجمالي</th>
+                  <th>حالة الطلب</th>
+                  <th>إجراءات</th>
+                </tr>
+              </thead>
+              <tbody id="ordersFullTable">
+                <!-- Rendered dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= TAB 4: COMMUNITY ================= -->
+      <section class="admin-tab-pane" id="tab-community">
+        <div class="tab-action-bar">
+          <p class="tab-desc-note">
+            هنا تظهر جميع منشورات وصور وفيديوهات الزبائن وتقييمات الـ 5 نجوم. يمكنك حذف أي منشور أو إضافة منشور رسمي مباشرة للمجتمع.
+          </p>
+          <button id="adminAddCommunityLookBtn" class="btn-primary-action">
+            <i class="fa-solid fa-video"></i> نشر بوست رسمي في Community
+          </button>
+        </div>
+
+        <div class="community-admin-grid" id="adminCommunityGrid">
+          <!-- Rendered dynamically -->
+        </div>
+      </section>
+
+      <!-- ================= TAB 5: SETTINGS ================= -->
+      <section class="admin-tab-pane" id="tab-settings">
+        <div class="settings-card">
+          <h3><i class="fa-solid fa-bullhorn"></i> شريط الإعلانات العلوي في المتجر</h3>
+          <p class="sub-tip">النص المعروض في الشريط الأسود في أعلى المتجر (مثل التوصيل المجاني):</p>
+          <form id="settingsForm">
+            <div class="form-group">
+              <label>نص الإعلان العلوي (Announcement Bar)</label>
+              <input type="text" id="setAnnouncement" value="FREE DELIVERY IN AMMAN • 1 JD ACROSS JORDAN" required>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label>اسم البراند</label>
+                <input type="text" id="setBrandName" value="Velen Official" required>
+              </div>
+              <div class="form-group">
+                <label>العملة الرسمية</label>
+                <input type="text" id="setCurrency" value="JOD" required>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>الشعار الأساسي (Slogan)</label>
+              <input type="text" id="setSlogan" value="Premium Everyday Essentials. Made in Jordan." required>
+            </div>
+
+            <div class="form-group">
+              <label>الشعار الفرعي (Sub-Slogan)</label>
+              <input type="text" id="setSubSlogan" value="CLEAN FITS. PREMIUM FEEL. BUILT FOR EVERYDAY WEAR." required>
+            </div>
+
+            <button type="submit" class="btn-primary-action">
+              <i class="fa-solid fa-floppy-disk"></i> حفظ الإعدادات وتحديث المتجر فوراً
+            </button>
+          </form>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- ================= MODALS ================= -->
+
+  <!-- Add / Edit Product Modal -->
+  <div id="productEditModal" class="admin-modal" aria-hidden="true">
+    <div class="admin-modal-dialog">
+      <button id="closeProductEditModal" class="modal-close-icon"><i class="fa-solid fa-xmark"></i></button>
+      <div class="modal-head">
+        <h3 id="productModalTitle">إضافة قطعة جديدة إلى Velen Collection</h3>
+        <p>بمجرد الحفظ، ستظهر القطعة فوراً لدى الزبائن على الموقع الرسمي بالبث الحي.</p>
+      </div>
+
+      <form id="productForm">
+        <input type="hidden" id="editProductId" value="">
+
+        <div class="form-group">
+          <label>اسم القطعة / الموديل *</label>
+          <input type="text" id="prodName" placeholder="مثال: VELEN Ringer Tee — Sky Blue" required>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>السعر للبيع (JOD) *</label>
+            <input type="number" step="0.5" id="prodPrice" placeholder="13.000" required>
+          </div>
+          <div class="form-group">
+            <label>السعر قبل الخصم (اختياري - يظهر مشطوب)</label>
+            <input type="number" step="0.5" id="prodComparePrice" placeholder="16.000">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>التصنيف *</label>
+            <select id="prodCategory" required>
+              <option value="Tees">Tees (تيشيرتات)</option>
+              <option value="Ringer">Ringer Edition (ياقة ملونة)</option>
+              <option value="Boxy">Boxy & Cropped</option>
+              <option value="Hoodies">Hoodies & Sweats</option>
+              <option value="Pants">Pants & Bottoms</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>الكمية المتوفرة في المخزن *</label>
+            <input type="number" id="prodStock" value="25" min="0" required>
+          </div>
+        </div>
+
+        <!-- Available Sizes -->
+        <div class="form-group">
+          <label>المقاسات المتوفرة:</label>
+          <div class="sizes-checkbox-row">
+            <label class="size-check"><input type="checkbox" name="prodSizes" value="XS"> <span>XS</span></label>
+            <label class="size-check"><input type="checkbox" name="prodSizes" value="S" checked> <span>S</span></label>
+            <label class="size-check"><input type="checkbox" name="prodSizes" value="M" checked> <span>M</span></label>
+            <label class="size-check"><input type="checkbox" name="prodSizes" value="L" checked> <span>L</span></label>
+            <label class="size-check"><input type="checkbox" name="prodSizes" value="XL" checked> <span>XL</span></label>
+            <label class="size-check"><input type="checkbox" name="prodSizes" value="XXL"> <span>XXL</span></label>
+          </div>
+        </div>
+
+        <!-- Sale & Featured Badges -->
+        <div class="form-row">
+          <label class="toggle-switch-label">
+            <input type="checkbox" id="prodOnSale" checked>
+            <span>إظهار شارة SALE على الصورة</span>
+          </label>
+          <label class="toggle-switch-label">
+            <input type="checkbox" id="prodFeatured" checked>
+            <span>قطعة مميزة في الصفحة الأولى</span>
+          </label>
+        </div>
+
+        <!-- Image Upload or URL -->
+        <div class="form-group">
+          <label>صورة المنتج الرئيسية *</label>
+          <div class="upload-dropzone" id="prodDropzone">
+            <i class="fa-solid fa-cloud-arrow-up upload-icon"></i>
+            <p>اسحب صورة الموديل هنا أو اضغط للاختيار</p>
+            <span class="upload-hint">PNG, JPG حتى 20MB</span>
+            <input type="file" id="prodFileInput" accept="image/*" style="display:none;">
+          </div>
+          <div id="prodPreviewArea" class="upload-preview-area" style="display:none;"></div>
+          <div class="url-fallback-wrap">
+            <span class="or-separator">أو أدخل رابط صورة مباشر:</span>
+            <input type="url" id="prodImageUrl" placeholder="https://... أو /assets/velen-ringer-sky-blue.jpg">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>تفاصيل القماش والخامة</label>
+          <input type="text" id="prodFabric" value="100% قطن أردني معالج ثقيل 260 GSM">
+        </div>
+
+        <div class="form-group">
+          <label>وصف القطعة والقصّة</label>
+          <textarea id="prodDescription" rows="3" placeholder="قصة بوكسي مريحة، أكتاف منسدلة، معالجة ضد الانكماش..."></textarea>
+        </div>
+
+        <div class="modal-actions-bar">
+          <button type="button" class="btn-cancel" id="cancelProductBtn">إلغاء</button>
+          <button type="submit" class="btn-primary-action" id="saveProductBtn">
+            <i class="fa-solid fa-check"></i> حفظ ونشر فوراً على المتجر
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="adminToastContainer" class="admin-toast-container"></div>
+
+  <script src="/js/admin.js"></script>
+</body>
+</html>

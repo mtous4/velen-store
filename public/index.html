@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Velen Official — Premium Everyday Essentials | Made in Jordan</title>
+  <meta name="description" content="Clean fits. Premium feel. Built for everyday wear. Shop the official Velen collection made in Jordan. Free delivery in Amman.">
+  <link rel="icon" href="/assets/velen-logo.jpg">
+  
+  <!-- Modern Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="theme-dark">
+
+  <!-- Realtime Sync Notification Pill -->
+  <div id="syncBadge" class="sync-badge" title="متصل بالبث الحي مع لوحة الأدمن">
+    <span class="pulse-dot"></span>
+    <span class="sync-text">متصل مباشر</span>
+  </div>
+
+  <!-- Announcement Bar (Free Delivery in Amman) -->
+  <header class="announcement-bar" id="announcementBar">
+    <div class="announcement-content">
+      <span id="announcementText">FREE DELIVERY IN AMMAN • 1 JD ACROSS JORDAN</span>
+    </div>
+  </header>
+
+  <!-- Main Sticky Navigation -->
+  <nav class="main-nav" id="mainNav">
+    <div class="nav-container">
+      <!-- Left: Mobile Menu & Search -->
+      <div class="nav-left">
+        <button id="menuToggleBtn" class="icon-btn" aria-label="Open menu">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+        <button id="searchOpenBtn" class="icon-btn" aria-label="Search collection">
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </button>
+      </div>
+
+      <!-- Center: Logo -->
+      <div class="nav-center">
+        <a href="#hero" class="brand-link">
+          <span class="brand-title">Velen Official</span>
+        </a>
+      </div>
+
+      <!-- Right: Admin link, Account & Cart -->
+      <div class="nav-right">
+        <a href="/admin" target="_blank" class="admin-portal-link" title="فتح لوحة تحكم الأدمن">
+          <span class="admin-badge"><i class="fa-solid fa-gauge-high"></i> لوحة الأدمن</span>
+        </a>
+        <button id="accountBtn" class="icon-btn" aria-label="User Account">
+          <i class="fa-regular fa-user"></i>
+        </button>
+        <button id="cartToggleBtn" class="icon-btn cart-btn" aria-label="Shopping Cart">
+          <i class="fa-solid fa-bag-shopping"></i>
+          <span id="cartCountBadge" class="cart-badge">0</span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Fullscreen Slide Navigation Drawer (Matching Screenshot 5) -->
+  <div id="navDrawer" class="nav-drawer" aria-hidden="true">
+    <div class="drawer-header">
+      <div class="drawer-logo-wrap">
+        <img src="/assets/velen-logo.jpg" alt="Velen" class="drawer-logo-img">
+        <span>Velen Official</span>
+      </div>
+      <button id="navDrawerClose" class="icon-btn close-btn" aria-label="Close menu">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+
+    <div class="drawer-body">
+      <div class="drawer-section">
+        <h3 class="drawer-heading">Shop</h3>
+        <ul class="drawer-links">
+          <li><a href="#collection" class="drawer-link" data-filter="all">Products <i class="fa-solid fa-angle-left"></i></a></li>
+          <li><a href="#collection" class="drawer-link" data-filter="Tees">Tees & Ringers <i class="fa-solid fa-angle-left"></i></a></li>
+          <li><a href="#community" class="drawer-link highlight-link">COMMUNITY <span class="new-pill">HOT</span> <i class="fa-solid fa-angle-left"></i></a></li>
+        </ul>
+      </div>
+
+      <div class="drawer-section">
+        <h3 class="drawer-heading">About us</h3>
+        <ul class="drawer-links">
+          <li><a href="#about" class="drawer-link">Why Velen <i class="fa-solid fa-angle-left"></i></a></li>
+          <li><a href="#community" class="drawer-link">Reviews & Fit Checks <i class="fa-solid fa-angle-left"></i></a></li>
+          <li><a href="#faq" class="drawer-link">FAQ & Sizing <i class="fa-solid fa-angle-left"></i></a></li>
+          <li><a href="/admin" target="_blank" class="drawer-link admin-nav-item"><i class="fa-solid fa-shield-halved"></i> لوحة تحكم الأدمن (Admin Panel)</a></li>
+        </ul>
+      </div>
+
+      <div class="drawer-section">
+        <h3 class="drawer-heading">STAY CONNECTED</h3>
+        <div class="social-pills">
+          <a href="https://instagram.com" target="_blank" class="social-pill"><i class="fa-brands fa-instagram"></i> Instagram</a>
+          <a href="https://tiktok.com" target="_blank" class="social-pill"><i class="fa-brands fa-tiktok"></i> TikTok</a>
+          <a href="https://wa.me/962790000000" target="_blank" class="social-pill"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a>
+        </div>
+      </div>
+
+      <div class="drawer-newsletter">
+        <p class="newsletter-label">Sign up for our newsletter</p>
+        <form id="drawerNewsletterForm" class="newsletter-form">
+          <input type="email" placeholder="Email address" required>
+          <button type="submit" aria-label="Subscribe"><i class="fa-solid fa-arrow-right"></i></button>
+        </form>
+      </div>
+
+      <div class="drawer-bottom-brand">
+        <h2>Velen Official</h2>
+        <p class="origin-tag">Made with pride in Amman, Jordan 🇯🇴</p>
+      </div>
+    </div>
+  </div>
+  <div id="drawerOverlay" class="drawer-overlay"></div>
+
+  <!-- Search Modal -->
+  <div id="searchModal" class="search-modal" aria-hidden="true">
+    <div class="search-modal-container">
+      <div class="search-input-wrap">
+        <i class="fa-solid fa-magnifying-glass search-icon"></i>
+        <input type="text" id="searchInput" placeholder="ابحث عن التيشيرتات، المقاسات، الألوان..." autofocus>
+        <button id="searchCloseBtn" class="icon-btn"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div id="searchResults" class="search-results-grid"></div>
+    </div>
+  </div>
+
+  <!-- Hero Section (Exact design matching Screenshot 4) -->
+  <section class="hero-section" id="hero">
+    <div class="hero-media-wrapper">
+      <img src="/assets/velen-hero-clean.jpg" alt="Velen Essentials" class="hero-banner-img">
+      <div class="hero-vignette-overlay"></div>
+    </div>
+
+    <div class="hero-content">
+      <div class="hero-logo-emblem">
+        <img src="/assets/velen-logo.jpg" alt="Velen Logo" class="hero-logo-img">
+      </div>
+      <h1 class="hero-brand-name">VELEN</h1>
+      <h2 class="hero-main-heading">Premium Everyday Essentials. Made in Jordan.</h2>
+      <p class="hero-tagline">CLEAN FITS. PREMIUM FEEL. BUILT FOR EVERYDAY WEAR.</p>
+      <div class="hero-cta-wrap">
+        <a href="#collection" class="btn-velen-primary" id="heroShopBtn">
+          SHOP THE COLLECTION
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Quick Value Props Strip -->
+  <div class="value-props-bar">
+    <div class="prop-item">
+      <i class="fa-solid fa-truck-fast"></i>
+      <span>توصيل مجاني في عمّان وبدينار لكافة المحافظات</span>
+    </div>
+    <div class="prop-item">
+      <i class="fa-solid fa-crown"></i>
+      <span>قطن أردني فاخر 260 GSM معالج ومثبت</span>
+    </div>
+    <div class="prop-item">
+      <i class="fa-solid fa-rotate-left"></i>
+      <span>تبديل فوري للمقاس عند باب البيت</span>
+    </div>
+  </div>
+
+  <!-- Collection Section (Exact design matching Screenshot 2) -->
+  <section class="collection-section" id="collection">
+    <div class="section-container">
+      <div class="collection-header">
+        <span class="section-sub">AUTUMN / ESSENTIALS 2026</span>
+        <h2 class="section-title">THE COLLECTION</h2>
+        <div class="collection-line"></div>
+      </div>
+
+      <!-- Categories Filter Tabs -->
+      <div class="category-tabs" id="categoryTabs">
+        <button class="cat-pill active" data-cat="all">All Essentials</button>
+        <button class="cat-pill" data-cat="Tees">Tees</button>
+        <button class="cat-pill" data-cat="Ringer">Ringer Edition</button>
+        <button class="cat-pill" data-cat="Boxy">Boxy & Cropped</button>
+      </div>
+
+      <!-- Realtime Admin Notification Banner -->
+      <div id="newProductToast" class="live-toast" style="display:none;">
+        <i class="fa-solid fa-bell"></i> تم إضافة منتج جديد بواسطة الأدمن للتو!
+      </div>
+
+      <!-- Products Grid (Matches 2-column mobile in screenshot 2) -->
+      <div class="products-grid" id="productsGrid">
+        <!-- Rendered dynamically from backend / db.json -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Community Section (Exact design matching Screenshot 3) -->
+  <section class="community-section" id="community">
+    <div class="section-container">
+      <div class="community-header">
+        <h2 class="community-title">COMMUNITY WEARS VELEN</h2>
+        <p class="community-subtitle">Real people. Real style.</p>
+        <p class="community-desc">شاركنا لوكك اليومي وفيديوهاتك مع قطع Velen، وقيم تجربتك من 5 نجوم لتدخل السحب الأسبوعي على بوكس إسنشيلز كامل!</p>
+        
+        <div class="community-actions-bar">
+          <button id="addLookBtn" class="btn-community-share">
+            <i class="fa-solid fa-camera"></i> شارك صورتك أو ريلز ستايلك + تقييم 5 نجوم
+          </button>
+          <div class="community-filter-pills">
+            <button class="comm-pill active" data-comm-filter="all">جميع المشاركات</button>
+            <button class="comm-pill" data-comm-filter="video"><i class="fa-solid fa-play"></i> فيديو ريلز</button>
+            <button class="comm-pill" data-comm-filter="5star">★★★★★ (5 نجوم فقط)</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Community Grid / Feed -->
+      <div class="community-feed-grid" id="communityGrid">
+        <!-- Rendered dynamically from backend -->
+      </div>
+    </div>
+  </section>
+
+  <!-- About / Why Velen Section -->
+  <section class="about-section" id="about">
+    <div class="section-container">
+      <div class="about-grid">
+        <div class="about-content">
+          <span class="section-sub">THE STORY</span>
+          <h2 class="section-title">WHY VELEN?</h2>
+          <p class="about-p">
+            انطلقت <strong>Velen</strong> من عمّان لإعادة تعريف الملابس اليومية في الأردن. نركز على القصّات البوكسي المريحة (Boxy & Cropped Fitt) والأقمشة القطنية الثقيلة 100% التي تحافظ على شكلها ونعومتها مع الاستخدام المتكرر.
+          </p>
+          <div class="about-features">
+            <div class="feature-card">
+              <span class="num">01</span>
+              <h4>قطن محلي نخب أول</h4>
+              <p>نسيج قطني محبوك بوزن 260 GSM معالجة ضد الانكماش والوبر.</p>
+            </div>
+            <div class="feature-card">
+              <span class="num">02</span>
+              <h4>قصّة بوكسي معاصرة</h4>
+              <p>تصميم أكتاف منسدلة وطول متناسق يعطي إطلالة ستريت وير نظيفة وفخمة.</p>
+            </div>
+            <div class="feature-card">
+              <span class="num">03</span>
+              <h4>فخر الصناعة الأردنية</h4>
+              <p>مُصمم ومُنتج بأيادٍ أردنية مبدعة لدعم الإنتاج المحلي بأعلى معايير العالمية.</p>
+            </div>
+          </div>
+        </div>
+        <div class="about-visual">
+          <div class="about-img-frame">
+            <img src="/assets/velen-logo.jpg" alt="Velen Identity" class="about-img">
+            <div class="about-quote">
+              <p>"Clean fits. Premium feel. Built for everyday wear."</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer (Matching Screenshot 5 & Modern luxury streetwear) -->
+  <footer class="main-footer">
+    <div class="footer-container">
+      <div class="footer-columns">
+        <div class="footer-col">
+          <h4 class="footer-heading">Shop</h4>
+          <ul class="footer-menu">
+            <li><a href="#collection">Products</a></li>
+            <li><a href="#collection">Tees & Boxy Fits</a></li>
+            <li><a href="#community">COMMUNITY WEARS</a></li>
+            <li><a href="/admin" target="_blank" class="admin-secret-link"><i class="fa-solid fa-lock"></i> لوحة الأدمن (Store Management)</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4 class="footer-heading">About us</h4>
+          <ul class="footer-menu">
+            <li><a href="#about">Why Velen</a></li>
+            <li><a href="#community">Customer Reviews</a></li>
+            <li><a href="#about">Fabric & Care Guide</a></li>
+            <li><a href="#hero">Terms of Service</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4 class="footer-heading">STAY CONNECTED</h4>
+          <p class="footer-note">تابعنا على منصاتنا لتكون أول من يعرف عن الدروبات الجديدة والخصومات:</p>
+          <div class="footer-social-links">
+            <a href="https://instagram.com" target="_blank" class="social-icon" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+            <a href="https://tiktok.com" target="_blank" class="social-icon" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+            <a href="https://wa.me/962790000000" target="_blank" class="social-icon" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+          </div>
+        </div>
+
+        <div class="footer-col newsletter-col">
+          <h4 class="footer-heading">Sign up for our newsletter</h4>
+          <p class="footer-note">اشترك لتحصل على خصم 10% على طلبك القادم ووصول مبكر للدروبات الحصرية.</p>
+          <form id="footerNewsletterForm" class="footer-form">
+            <input type="email" placeholder="Email address" required>
+            <button type="submit" aria-label="Subscribe"><i class="fa-solid fa-arrow-right"></i></button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Big Branding Section -->
+      <div class="footer-giant-brand">
+        <h2 class="giant-text">Velen Official</h2>
+      </div>
+
+      <div class="footer-bottom-bar">
+        <div class="copyright">
+          © 2026 VELEN OFFICIAL. ALL RIGHTS RESERVED. MADE IN JORDAN 🇯🇴
+        </div>
+        <div class="payment-methods">
+          <span><i class="fa-solid fa-money-bill-wave"></i> الدفع عند الاستلام (COD)</span>
+          <span><i class="fa-solid fa-bolt"></i> كليك CliQ</span>
+          <span><i class="fa-brands fa-cc-visa"></i> Visa / Master</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ================= MODALS & DRAWERS ================= -->
+
+  <!-- Cart Drawer -->
+  <div id="cartDrawer" class="cart-drawer" aria-hidden="true">
+    <div class="cart-drawer-header">
+      <h3>حقيبة التسوق (<span id="cartTotalItems">0</span>)</h3>
+      <button id="cartCloseBtn" class="icon-btn close-btn"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+
+    <!-- Free Delivery Meter -->
+    <div class="delivery-progress-wrap">
+      <div class="delivery-meter-text">
+        <span id="deliveryMeterMsg">توصيل مجاني لجميع الطلبات في عمّان!</span>
+      </div>
+      <div class="delivery-bar">
+        <div id="deliveryProgressFill" class="delivery-bar-fill" style="width: 100%;"></div>
+      </div>
+    </div>
+
+    <div class="cart-drawer-body" id="cartItemsList">
+      <!-- Empty state or list of cart items -->
+    </div>
+
+    <div class="cart-drawer-footer">
+      <div class="cart-subtotal-row">
+        <span>المجموع الفرعي:</span>
+        <span id="cartSubtotal" class="subtotal-amount">0.000 JOD</span>
+      </div>
+      <div class="cart-subtotal-row delivery-row">
+        <span>التوصيل (عمّان):</span>
+        <span class="free-tag">مجاناً (0.000 JOD)</span>
+      </div>
+      <div class="cart-total-row">
+        <span>الإجمالي النهائي:</span>
+        <span id="cartTotal" class="total-amount">0.000 JOD</span>
+      </div>
+
+      <button id="openCheckoutBtn" class="btn-checkout-now">
+        إتمام الطلب الآن (الدفع عند الاستلام) <i class="fa-solid fa-arrow-left"></i>
+      </button>
+    </div>
+  </div>
+  <div id="cartOverlay" class="drawer-overlay"></div>
+
+  <!-- Product Detail & Quick View Modal -->
+  <div id="productModal" class="product-modal" aria-hidden="true">
+    <div class="product-modal-dialog">
+      <button id="productModalClose" class="modal-close-icon"><i class="fa-solid fa-xmark"></i></button>
+      <div class="product-modal-content" id="productModalDetails">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Community Submission Modal (Add look + 5-star review) -->
+  <div id="communityModal" class="community-modal" aria-hidden="true">
+    <div class="community-modal-dialog">
+      <button id="communityModalClose" class="modal-close-icon"><i class="fa-solid fa-xmark"></i></button>
+      <div class="community-modal-content">
+        <div class="modal-head">
+          <img src="/assets/velen-logo.jpg" alt="Velen" class="modal-logo">
+          <h3>شارك إطلالتك مع عائلة VELEN</h3>
+          <p>ارفع صورتك أو فيديو الريلز، وقيّم تجربتك مع ملابس Velen من 1 إلى 5 نجوم!</p>
+        </div>
+
+        <form id="communityForm" class="community-form">
+          <div class="form-row">
+            <div class="form-group">
+              <label>اسمك أو حسابك (Instagram)</label>
+              <input type="text" id="commAuthor" placeholder="مثال: Ahmad_jo أو @ahmad.fits" required>
+            </div>
+            <div class="form-group">
+              <label>القطعة التي ترتديها</label>
+              <select id="commItemWorn" required>
+                <!-- Populated dynamically with current products -->
+              </select>
+            </div>
+          </div>
+
+          <!-- Star Rating Selector (1 to 5 stars) -->
+          <div class="form-group rating-selector-group">
+            <label>تقييمك للبراند (من 5 نجوم):</label>
+            <div class="star-rating-picker" id="starRatingPicker">
+              <i class="fa-solid fa-star star-btn active" data-value="1"></i>
+              <i class="fa-solid fa-star star-btn active" data-value="2"></i>
+              <i class="fa-solid fa-star star-btn active" data-value="3"></i>
+              <i class="fa-solid fa-star star-btn active" data-value="4"></i>
+              <i class="fa-solid fa-star star-btn active" data-value="5"></i>
+              <span id="starRatingLabel" class="rating-label">5 من 5 (ممتاز جداً 🔥)</span>
+            </div>
+            <input type="hidden" id="commRatingVal" value="5">
+          </div>
+
+          <div class="form-group">
+            <label>تعليقك وتقييمك البسيط</label>
+            <textarea id="commComment" rows="3" placeholder="احكيلنا عن خامة القطن، المقاس، والراحة في اللبس..." required></textarea>
+          </div>
+
+          <!-- Media Upload: Photo or Video -->
+          <div class="form-group media-upload-group">
+            <label>ارفع صورة أو مقطع فيديو / ريلز</label>
+            <div class="upload-dropzone" id="commDropzone">
+              <i class="fa-solid fa-cloud-arrow-up upload-icon"></i>
+              <p>اسحب وأفلت الفيديو أو الصورة هنا أو اضغط للاختيار</p>
+              <span class="upload-hint">يدعم MP4, MOV, JPG, PNG حتى 50MB</span>
+              <input type="file" id="commFileInput" accept="image/*,video/*" style="display:none;">
+            </div>
+            <div id="commFilePreview" class="upload-preview-area" style="display:none;"></div>
+            
+            <div class="url-fallback-wrap">
+              <span class="or-separator">أو رابط فيديو / صورة خارجي:</span>
+              <input type="url" id="commUrlInput" placeholder="https://example.com/video.mp4">
+            </div>
+          </div>
+
+          <button type="submit" id="commSubmitBtn" class="btn-submit-look">
+            <span>نشر الإطلالة الآن</span>
+            <i class="fa-solid fa-paper-plane"></i>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Checkout Modal (Order Placement) -->
+  <div id="checkoutModal" class="checkout-modal" aria-hidden="true">
+    <div class="checkout-modal-dialog">
+      <button id="checkoutModalClose" class="modal-close-icon"><i class="fa-solid fa-xmark"></i></button>
+      <div class="checkout-head">
+        <img src="/assets/velen-logo.jpg" alt="Velen" class="checkout-logo">
+        <h3>تأكيد الطلب السريع — Velen Jordan</h3>
+        <p>التوصيل مجاناً في عمّان • 1 دينار لجميع المحافظات • الدفع عند الاستلام</p>
+      </div>
+
+      <form id="checkoutForm" class="checkout-form">
+        <div class="checkout-body-grid">
+          <div class="checkout-inputs">
+            <div class="form-group">
+              <label>الاسم الكامل *</label>
+              <input type="text" id="custName" placeholder="مثال: يوسف الخالد" required>
+            </div>
+
+            <div class="form-group">
+              <label>رقم الهاتف (أردني) *</label>
+              <input type="tel" id="custPhone" placeholder="079XXXXXXX أو 078XXXXXXX" pattern="07[789][0-9]{7}" required>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label>المحافظة / المدينة *</label>
+                <select id="custCity" required>
+                  <option value="Amman" data-shipping="0">عمّان (توصيل مجاني)</option>
+                  <option value="Zarqa" data-shipping="1">الزرقاء (1 دينار)</option>
+                  <option value="Irbid" data-shipping="1">إربد (1 دينار)</option>
+                  <option value="Balqa" data-shipping="1">البلقاء / السلط (1 دينار)</option>
+                  <option value="Madaba" data-shipping="1">مأدبا (1 دينار)</option>
+                  <option value="Aqaba" data-shipping="1">العقبة (1 دينار)</option>
+                  <option value="Mafraq" data-shipping="1">المفرق (1 دينار)</option>
+                  <option value="Jerash" data-shipping="1">جرش (1 دينار)</option>
+                  <option value="Ajloun" data-shipping="1">عجلون (1 دينار)</option>
+                  <option value="Karak" data-shipping="1">الكرك (1 دينار)</option>
+                  <option value="Tafilah" data-shipping="1">الطفيلة (1 دينار)</option>
+                  <option value="Maan" data-shipping="1">معان (1 دينار)</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label>طريقة الدفع *</label>
+                <select id="custPayment" required>
+                  <option value="Cash on Delivery (دفع عند الاستلام)">الدفع نقداً عند الاستلام (COD)</option>
+                  <option value="CliQ (كليك)">تحويل فوري كليك (CliQ)</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>العنوان بالتفصيل (المنطقة، الشارع، رقم البناية) *</label>
+              <input type="text" id="custAddress" placeholder="مثال: الصويفية، شارع باريس، عمارة 12، بجانب..." required>
+            </div>
+
+            <div class="form-group">
+              <label>ملاحظات إضافية للتوصيل (اختياري)</label>
+              <input type="text" id="custNotes" placeholder="مثال: يرجى الاتصال قبل الوصول بنصف ساعة">
+            </div>
+          </div>
+
+          <div class="checkout-summary-box">
+            <h4>ملخص طلبك</h4>
+            <div id="checkoutItemsList" class="checkout-items-mini"></div>
+            <div class="summary-totals">
+              <div class="total-line">
+                <span>المجموع الفرعي:</span>
+                <span id="checkoutSubtotal">0.000 JOD</span>
+              </div>
+              <div class="total-line">
+                <span>رسوم التوصيل:</span>
+                <span id="checkoutShipping">0.000 JOD</span>
+              </div>
+              <div class="total-line final">
+                <span>المبلغ الإجمالي للدفع:</span>
+                <span id="checkoutFinalTotal">0.000 JOD</span>
+              </div>
+            </div>
+
+            <button type="submit" id="confirmOrderBtn" class="btn-confirm-order">
+              <i class="fa-solid fa-check"></i> تأكيد الطلب فوراً
+            </button>
+            <p class="safe-checkout-note"><i class="fa-solid fa-shield"></i> سيتم معالجة طلبك وإرسال تأكيد مباشر</p>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Order Success Modal -->
+  <div id="successModal" class="success-modal" aria-hidden="true">
+    <div class="success-dialog">
+      <div class="success-icon"><i class="fa-solid fa-circle-check"></i></div>
+      <h2>تم استلام طلبك بنجاح!</h2>
+      <p class="order-id-label">رقم الطلب: <strong id="successOrderId">ORD-0000</strong></p>
+      <p class="success-sub">شكراً لاختيارك Velen. فريق التوصيل سيتواصل معك هاتفياً لتسليم طلبك في أقرب وقت.</p>
+      <div class="success-actions">
+        <a id="whatsappTrackBtn" href="#" target="_blank" class="btn-whatsapp-track">
+          <i class="fa-brands fa-whatsapp"></i> متابعة الطلب عبر واتساب
+        </a>
+        <button id="closeSuccessBtn" class="btn-continue-shopping">متابعة التسوق</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div id="toastContainer" class="toast-container"></div>
+
+  <!-- Client Script -->
+  <script src="/js/app.js"></script>
+</body>
+</html>
