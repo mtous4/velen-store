@@ -28,9 +28,34 @@ if (fs.existsSync(ENV_FILE)) {
 }
 
 const PORT = process.env.PORT || 3000;
-const DB_FILE = path.join(__dirname, 'data', 'db.json');
-const UPLOADS_DIR = path.join(__dirname, 'public', 'uploads');
+let DB_FILE = path.join(__dirname, 'data', 'db.json');
+let UPLOADS_DIR = path.join(__dirname, 'public', 'uploads');
 const PRIVATE_DIR = path.join(__dirname, 'private');
+
+// Vercel Serverless environment handling (/tmp is the only writable directory on AWS Lambda)
+if (process.env.VERCEL) {
+  const tmpDB = path.join('/tmp', 'db.json');
+  if (!fs.existsSync(tmpDB) && fs.existsSync(DB_FILE)) {
+    try {
+      fs.copyFileSync(DB_FILE, tmpDB);
+      DB_FILE = tmpDB;
+    } catch (e) {
+      console.error('Error initializing /tmp/db.json on Vercel:', e);
+    }
+  } else if (fs.existsSync(tmpDB)) {
+    DB_FILE = tmpDB;
+  }
+
+  const tmpUploads = path.join('/tmp', 'uploads');
+  if (!fs.existsSync(tmpUploads)) {
+    try {
+      fs.mkdirSync(tmpUploads, { recursive: true });
+      UPLOADS_DIR = tmpUploads;
+    } catch (e) {}
+  } else {
+    UPLOADS_DIR = tmpUploads;
+  }
+}
 
 // Admin Security & Domain Stealth Configuration
 const ADMIN_SECRET_KEY = process.env.ADMIN_SECRET_KEY || 'velen-adm-sec-962';
@@ -435,12 +460,16 @@ app.post('/api/admin/logout', (req, res) => {
   res.json({ success: true, message: 'تم قفل لوحة التحكم' });
 });
 
-// Start server
-server.listen(PORT, () => {
-  console.log(`=================================================`);
-  console.log(`VELEN OFFICIAL STORE: http://localhost:${PORT}`);
-  console.log(`STEALTH ADMIN ACCESS LINK: http://localhost:${PORT}/admin?key=${ADMIN_SECRET_KEY}`);
-  console.log(`PUBLIC ACCESS TO /admin WITHOUT KEY: 404 Not Found (Stealth Mode)`);
-  console.log(`WebSocket live sync active!`);
-  console.log(`=================================================`);
-});
+// Start server locally or in continuous Node.js environment
+if (!process.env.VERCEL) {
+  server.listen(PORT, () => {
+    console.log(`=================================================`);
+    console.log(`VELEN OFFICIAL STORE: http://localhost:${PORT}`);
+    console.log(`STEALTH ADMIN ACCESS LINK: http://localhost:${PORT}/admin?key=${ADMIN_SECRET_KEY}`);
+    console.log(`PUBLIC ACCESS TO /admin WITHOUT KEY: 404 Not Found (Stealth Mode)`);
+    console.log(`WebSocket live sync active!`);
+    console.log(`=================================================`);
+  });
+}
+
+module.exports = app;
