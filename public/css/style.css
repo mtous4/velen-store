@@ -835,6 +835,66 @@ input:focus, textarea:focus, select:focus {
   color: #ff4757;
 }
 
+/* Text-only Community Card (Optional media review) */
+.comm-card-text {
+  background: linear-gradient(145deg, #141414 0%, #090909 100%);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  min-height: 260px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+.comm-card-text .comm-text-header {
+  padding: 18px 18px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.comm-card-text .quote-icon {
+  font-size: 24px;
+  color: var(--accent-gold);
+  opacity: 0.85;
+}
+
+.comm-verified-pill {
+  font-size: 10px;
+  background: rgba(46, 204, 113, 0.12);
+  border: 1px solid rgba(46, 204, 113, 0.3);
+  color: #2ecc71;
+  padding: 3px 8px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.comm-text-body {
+  padding: 14px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 1;
+}
+
+.comm-text-body .comm-text-comment {
+  font-size: 13px;
+  font-weight: 500;
+  color: #f5f5f5;
+  line-height: 1.6;
+}
+
+.comm-text-brand-watermark {
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: rgba(255, 255, 255, 0.25);
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-top: auto;
+}
+
 /* About / Story Section */
 .about-section {
   padding: 60px 0;

@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const state = {
     products: [],
     community: [],
+    design: null,
     cart: JSON.parse(localStorage.getItem('velen_cart') || '[]'),
     activeCategory: 'all',
     activeCommFilter: 'all',
@@ -43,6 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   async function initApp() {
     setupEventListeners();
+    await fetchDesign();
     await fetchProducts();
     await fetchCommunity();
     updateCartUI();
@@ -50,14 +52,139 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ================= DATA FETCHING =================
-  async function fetchProducts() {
+  async function fetchDesign() {
     try {
-      const res = await fetch('/api/products');
-      state.products = await res.json();
-      renderProducts();
-      populateProductSelect();
+      const res = await fetch('/api/design');
+      state.design = await res.json();
+      applyDesign(state.design);
     } catch (err) {
-      console.error('Error fetching products:', err);
+      console.error('Error fetching design:', err);
+    }
+  }
+
+  function applyDesign(design) {
+    if (!design) return;
+    state.design = design;
+
+    // 1. Theme colors
+    if (design.theme) {
+      if (design.theme.accentColor) {
+        document.documentElement.style.setProperty('--accent-gold', design.theme.accentColor);
+      }
+      if (design.theme.bgColor) {
+        document.documentElement.style.setProperty('--bg-black', design.theme.bgColor);
+        document.body.style.backgroundColor = design.theme.bgColor;
+      }
+    }
+
+    // 2. Header & Announcement
+    if (design.header) {
+      const annBar = document.getElementById('announcementBar');
+      if (annBar) {
+        annBar.style.display = design.header.showAnnouncement !== false ? 'flex' : 'none';
+      }
+      const annText = document.getElementById('announcementText');
+      if (annText && design.header.announcementText) {
+        annText.textContent = design.header.announcementText;
+      }
+      const navBrand = document.getElementById('navBrandTitle') || document.querySelector('.brand-title');
+      if (navBrand && design.header.brandName) {
+        navBrand.textContent = design.header.brandName;
+      }
+      const logoImgs = document.querySelectorAll('.hero-logo-img, .drawer-logo-img, .modal-logo, .checkout-logo');
+      if (design.header.logoUrl) {
+        logoImgs.forEach(img => img.src = design.header.logoUrl);
+      }
+    }
+
+    // 3. Hero Section
+    const secHero = document.getElementById('sec-hero');
+    if (secHero && design.hero) {
+      secHero.style.display = design.hero.enabled !== false ? 'flex' : 'none';
+      const heroBg = document.getElementById('heroBannerImg');
+      if (heroBg && design.hero.bgImage) heroBg.src = design.hero.bgImage;
+      const brandName = document.getElementById('heroBrandName');
+      if (brandName && design.hero.brandTitle) brandName.textContent = design.hero.brandTitle;
+      const mainH = document.getElementById('heroMainHeading');
+      if (mainH && design.hero.mainHeading) mainH.textContent = design.hero.mainHeading;
+      const tagline = document.getElementById('heroTagline');
+      if (tagline && design.hero.subHeading) tagline.textContent = design.hero.subHeading;
+      const ctaBtn = document.getElementById('heroShopBtn');
+      if (ctaBtn) {
+        if (design.hero.ctaText) ctaBtn.textContent = design.hero.ctaText;
+        if (design.hero.ctaLink) ctaBtn.setAttribute('href', design.hero.ctaLink);
+      }
+    }
+
+    // 4. Value Props
+    const secValue = document.getElementById('sec-valueProps');
+    if (secValue && design.valueProps) {
+      secValue.style.display = design.valueProps.enabled !== false ? 'flex' : 'none';
+      const p1 = document.getElementById('propText1');
+      if (p1 && design.valueProps.prop1) p1.textContent = design.valueProps.prop1;
+      const p2 = document.getElementById('propText2');
+      if (p2 && design.valueProps.prop2) p2.textContent = design.valueProps.prop2;
+      const p3 = document.getElementById('propText3');
+      if (p3 && design.valueProps.prop3) p3.textContent = design.valueProps.prop3;
+    }
+
+    // 5. Sections Re-ordering & Visibility
+    const container = document.getElementById('mainSectionsContainer');
+    if (container && design.sectionsOrder && Array.isArray(design.sectionsOrder)) {
+      design.sectionsOrder.forEach(secKey => {
+        const secEl = document.getElementById(`sec-${secKey}`);
+        if (secEl) {
+          container.appendChild(secEl);
+          const isVisible = design.sectionsVisibility ? (design.sectionsVisibility[secKey] !== false) : true;
+          secEl.style.display = isVisible ? (secKey === 'hero' ? 'flex' : (secKey === 'valueProps' ? 'flex' : 'block')) : 'none';
+        }
+      });
+    }
+
+    // 6. Collection section texts
+    if (design.collectionSection) {
+      const sub = document.getElementById('collectionSubtitle');
+      if (sub && design.collectionSection.subtitle) sub.textContent = design.collectionSection.subtitle;
+      const title = document.getElementById('collectionTitle');
+      if (title && design.collectionSection.title) title.textContent = design.collectionSection.title;
+    }
+
+    // 7. Community section texts
+    if (design.communitySection) {
+      const commT = document.getElementById('communityTitle');
+      if (commT && design.communitySection.title) commT.textContent = design.communitySection.title;
+      const commSub = document.getElementById('communitySubtitle');
+      if (commSub && design.communitySection.subtitle) commSub.textContent = design.communitySection.subtitle;
+      const commD = document.getElementById('communityDesc');
+      if (commD && design.communitySection.desc) commD.textContent = design.communitySection.desc;
+    }
+
+    // 8. About section
+    const secAbout = document.getElementById('sec-about');
+    if (secAbout && design.aboutSection) {
+      secAbout.style.display = design.aboutSection.enabled !== false ? 'block' : 'none';
+      const aSub = document.getElementById('aboutSub');
+      if (aSub && design.aboutSection.sub) aSub.textContent = design.aboutSection.sub;
+      const aTitle = document.getElementById('aboutTitle');
+      if (aTitle && design.aboutSection.title) aTitle.textContent = design.aboutSection.title;
+      const aP = document.getElementById('aboutP1');
+      if (aP && design.aboutSection.p1) aP.textContent = design.aboutSection.p1;
+      const ft1 = document.getElementById('featTitle1');
+      if (ft1 && design.aboutSection.feature1Title) ft1.textContent = design.aboutSection.feature1Title;
+      const fd1 = document.getElementById('featDesc1');
+      if (fd1 && design.aboutSection.feature1Desc) fd1.textContent = design.aboutSection.feature1Desc;
+      const ft2 = document.getElementById('featTitle2');
+      if (ft2 && design.aboutSection.feature2Title) ft2.textContent = design.aboutSection.feature2Title;
+      const fd2 = document.getElementById('featDesc2');
+      if (fd2 && design.aboutSection.feature2Desc) fd2.textContent = design.aboutSection.feature2Desc;
+      const ft3 = document.getElementById('featTitle3');
+      if (ft3 && design.aboutSection.feature3Title) ft3.textContent = design.aboutSection.feature3Title;
+      const fd3 = document.getElementById('featDesc3');
+      if (fd3 && design.aboutSection.feature3Desc) fd3.textContent = design.aboutSection.feature3Desc;
+      const aImg = document.getElementById('aboutImg');
+      if (aImg && design.aboutSection.image) aImg.src = design.aboutSection.image;
+      const aQ = document.getElementById('aboutQuote');
+      if (aQ && design.aboutSection.quote) aQ.textContent = `"${design.aboutSection.quote}"`;
     }
   }
 
@@ -163,6 +290,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const annText = document.getElementById('announcementText');
         if (annText) annText.textContent = payload.announcement;
       }
+    } else if (event === 'DESIGN_UPDATED') {
+      applyDesign(payload);
+      showToast('تم تحديث مظهر وترتيب المتجر مباشرة من الأدمن!', 'info');
     }
   }
 
@@ -237,7 +367,45 @@ document.addEventListener('DOMContentLoaded', () => {
         `<i class="fa-solid fa-star" style="color: ${i < item.rating ? '#ffca28' : '#333'}"></i>`
       ).join('');
 
-      const isVideo = item.mediaType === 'video' || item.videoUrl;
+      // Check if item has media (photo or video), or if it is a text-only review
+      const hasMedia = Boolean(item.mediaUrl) && item.mediaType !== 'text';
+      const isVideo = hasMedia && (item.mediaType === 'video' || item.videoUrl);
+
+      if (!hasMedia) {
+        // Luxury minimal text-only review card
+        return `
+          <div class="comm-card comm-card-text" data-comm-id="${item.id}">
+            <div class="comm-text-header">
+              <i class="fa-solid fa-quote-right quote-icon"></i>
+              <span class="comm-verified-pill"><i class="fa-solid fa-circle-check"></i> تقييم معتمد</span>
+            </div>
+            <div class="comm-text-body">
+              <div class="comm-stars">${starsHtml}</div>
+              <p class="comm-text-comment">"${item.comment}"</p>
+              <div class="comm-text-brand-watermark">VELEN ESSENTIALS • MADE IN JORDAN</div>
+            </div>
+            <div class="comm-content" style="padding-top:0;">
+              <div class="comm-user-row">
+                <div class="comm-author-info">
+                  <img src="${item.avatar || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&q=80'}" class="comm-avatar" alt="${item.author}">
+                  <div>
+                    <span class="comm-author-name">${item.author}</span>
+                    <span style="font-size:10px; color:#888; display:block;">${item.authorTag || ''}</span>
+                  </div>
+                </div>
+                <button class="comm-like-btn" data-like-id="${item.id}" onclick="window.velenApp.likeCommunityPost('${item.id}')">
+                  <i class="fa-regular fa-heart"></i>
+                  <span class="count">${item.likes || 0}</span>
+                </button>
+              </div>
+              <div class="comm-footer">
+                <span>يرتدي: <strong>${item.itemWorn || 'Velen Essential'}</strong></span>
+                <span><i class="fa-solid fa-location-dot"></i> الأردن</span>
+              </div>
+            </div>
+          </div>
+        `;
+      }
 
       return `
         <div class="comm-card" data-comm-id="${item.id}">
@@ -474,6 +642,27 @@ document.addEventListener('DOMContentLoaded', () => {
     const fileInput = document.getElementById('commFileInput');
     const preview = document.getElementById('commFilePreview');
 
+    const clearMediaBtn = document.getElementById('clearCommMediaBtn');
+    if (clearMediaBtn) {
+      clearMediaBtn.addEventListener('click', () => {
+        uploadedMediaUrl = null;
+        uploadedMediaType = 'photo';
+        if (fileInput) fileInput.value = '';
+        const urlInput = document.getElementById('commUrlInput');
+        if (urlInput) urlInput.value = '';
+        if (preview) {
+          preview.style.display = 'none';
+          preview.innerHTML = '';
+        }
+        if (dropzone) {
+          dropzone.style.display = 'block';
+          dropzone.innerHTML = `<i class="fa-solid fa-cloud-arrow-up upload-icon"></i><p>اسحب وأفلت الفيديو أو الصورة هنا أو اضغط للاختيار (اختياري)</p><span class="upload-hint">يدعم MP4, MOV, JPG, PNG حتى 50MB</span>`;
+        }
+        clearMediaBtn.style.display = 'none';
+        showToast('تم إلغاء الميديا، يمكنك إرسال التقييم بالكلام والنجوم فقط', 'info');
+      });
+    }
+
     if (dropzone && fileInput) {
       dropzone.addEventListener('click', () => fileInput.click());
 
@@ -498,6 +687,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
             dropzone.style.display = 'none';
             preview.style.display = 'block';
+            if (clearMediaBtn) clearMediaBtn.style.display = 'inline-block';
+
             if (uploadedMediaType === 'video') {
               preview.innerHTML = `<video src="${uploadedMediaUrl}" controls autoplay muted style="width:100%; height:180px; object-fit:cover;"></video>`;
             } else {
@@ -556,16 +747,17 @@ document.addEventListener('DOMContentLoaded', () => {
         const externalUrl = document.getElementById('commUrlInput').value.trim();
         const rating = parseInt(document.getElementById('commRatingVal').value, 10) || 5;
 
-        const mediaUrl = uploadedMediaUrl || externalUrl || '/assets/velen-community-1.jpg';
-        const isVideo = uploadedMediaType === 'video' || (externalUrl && (externalUrl.endsWith('.mp4') || externalUrl.includes('video')));
+        // Photos/videos are completely optional!
+        const finalMediaUrl = uploadedMediaUrl || (externalUrl !== '' ? externalUrl : null);
+        const isVideo = finalMediaUrl && (uploadedMediaType === 'video' || finalMediaUrl.endsWith('.mp4') || finalMediaUrl.includes('video'));
 
         const payload = {
           author,
           authorTag: '@' + author.toLowerCase().replace(/\s+/g, '_'),
           avatar: `https://images.unsplash.com/photo-${1500000000000 + Math.floor(Math.random() * 9000000)}?auto=format&fit=crop&w=150&q=80`,
-          mediaType: isVideo ? 'video' : 'photo',
-          mediaUrl: mediaUrl,
-          videoUrl: isVideo ? mediaUrl : null,
+          mediaType: finalMediaUrl ? (isVideo ? 'video' : 'photo') : 'text',
+          mediaUrl: finalMediaUrl,
+          videoUrl: isVideo ? finalMediaUrl : null,
           subtitle: `${itemWorn} - الأردن`,
           rating,
           comment,
@@ -583,7 +775,16 @@ document.addEventListener('DOMContentLoaded', () => {
             communityModal.classList.remove('active');
             commForm.reset();
             uploadedMediaUrl = null;
-            showToast('شكراً لك! تم نشر إطلالتك وتقييمك في مجتمع Velen 🎉', 'success');
+            if (clearMediaBtn) clearMediaBtn.style.display = 'none';
+            if (preview) {
+              preview.style.display = 'none';
+              preview.innerHTML = '';
+            }
+            if (dropzone) {
+              dropzone.style.display = 'block';
+              dropzone.innerHTML = `<i class="fa-solid fa-cloud-arrow-up upload-icon"></i><p>اسحب وأفلت الفيديو أو الصورة هنا أو اضغط للاختيار (اختياري)</p><span class="upload-hint">يدعم MP4, MOV, JPG, PNG حتى 50MB</span>`;
+            }
+            showToast('شكراً لك! تم نشر تقييمك وإطلالتك في مجتمع Velen 🎉', 'success');
           }
         } catch (err) {
           console.error('Community submit error:', err);

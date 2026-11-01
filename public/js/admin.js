@@ -11,8 +11,12 @@ document.addEventListener('DOMContentLoaded', () => {
     community: [],
     settings: {},
     stats: {},
+    design: null,
     activeTab: 'dashboard',
-    uploadedProductImageUrl: null
+    uploadedProductImageUrl: null,
+    uploadedHeroBgUrl: null,
+    uploadedLogoUrl: null,
+    uploadedAboutImageUrl: null
   };
 
   // DOM Elements
@@ -37,12 +41,13 @@ document.addEventListener('DOMContentLoaded', () => {
   // ================= FETCH ALL DATA =================
   async function fetchAllData() {
     try {
-      const [pRes, oRes, cRes, sRes, statsRes] = await Promise.all([
+      const [pRes, oRes, cRes, sRes, statsRes, dRes] = await Promise.all([
         fetch('/api/products'),
         fetch('/api/orders'),
         fetch('/api/community'),
         fetch('/api/settings'),
-        fetch('/api/stats')
+        fetch('/api/stats'),
+        fetch('/api/design')
       ]);
 
       state.products = await pRes.json();
@@ -50,12 +55,14 @@ document.addEventListener('DOMContentLoaded', () => {
       state.community = await cRes.json();
       state.settings = await sRes.json();
       state.stats = await statsRes.json();
+      state.design = await dRes.json();
 
       renderDashboard();
       renderProducts();
       renderOrders();
       renderCommunity();
       populateSettings();
+      populateDesignCustomizer();
       updateBadgeCounts();
     } catch (err) {
       console.error('Error fetching admin data:', err);
@@ -118,6 +125,10 @@ document.addEventListener('DOMContentLoaded', () => {
         updateBadgeCounts();
         showAdminToast(`📸 إطلالة وتقييم جديد من ${payload.author} في المجتمع!`, 'info');
       }
+    } else if (evType === 'DESIGN_UPDATED') {
+      state.design = payload;
+      populateDesignCustomizer();
+      showAdminToast('🎨 تم تحديث تصميم وهيكلية المتجر من قِبل الإدارة!', 'info');
     }
   }
 
@@ -554,6 +565,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Forms
     setupProductForm();
+    setupDesignCustomizer();
   }
 
   function switchTab(tabId) {
@@ -573,6 +585,7 @@ document.addEventListener('DOMContentLoaded', () => {
       products: 'إدارة المنتجات وكتالوج Velen',
       orders: 'الطلبات والمبيعات وإدارة التوصيل',
       community: 'مشاركات المجتمع وتقييمات الـ 5 نجوم',
+      design: 'تخصيص التصميم والتركيبة وهيكلية المتجر',
       settings: 'إعدادات متجر Velen'
     };
     if (pageTitle) pageTitle.textContent = titles[tabId] || 'لوحة التحكم';
@@ -624,9 +637,448 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 4500);
   }
 
+  // ================= DESIGN & LAYOUT CUSTOMIZER =================
+  const SECTION_METADATA = {
+    hero: { title: 'البانر الترحيبي وصورة الغلاف الرئيسية', sub: 'Hero Cover & Title', icon: 'fa-image' },
+    valueProps: { title: 'شريط المميزات والضمانات الفاخرة', sub: 'Value Proposition Badges', icon: 'fa-tags' },
+    collection: { title: 'كتالوج وتشكيلة الملابس والمنتجات', sub: 'Velen Collection Grid', icon: 'fa-shirt' },
+    community: { title: 'مشاركات المجتمع وتقييمات الـ 5 نجوم', sub: 'Community Looks & Reviews', icon: 'fa-users-viewfinder' },
+    about: { title: 'قصة البراند وعن Velen في عمّان', sub: 'About Us & Story Section', icon: 'fa-book-open' }
+  };
+
+  function renderSectionsOrderList() {
+    const listEl = document.getElementById('sectionsOrderList');
+    if (!listEl || !state.design || !Array.isArray(state.design.sectionsOrder)) return;
+
+    const order = state.design.sectionsOrder;
+    const visibility = state.design.sectionsVisibility || {};
+
+    listEl.innerHTML = order.map((key, idx) => {
+      const meta = SECTION_METADATA[key] || { title: key, sub: '', icon: 'fa-layer-group' };
+      const isVisible = visibility[key] !== false;
+      const isFirst = idx === 0;
+      const isLast = idx === order.length - 1;
+
+      return `
+        <div class="section-order-row ${isVisible ? '' : 'disabled-sec'}" data-key="${key}">
+          <div class="section-order-info">
+            <span class="order-badge">${idx + 1}</span>
+            <i class="fa-solid ${meta.icon}" style="color:var(--gold-accent, #e5b95f);"></i>
+            <div>
+              <span class="section-order-title">${meta.title}</span>
+              <span class="section-order-sub">(${meta.sub})</span>
+            </div>
+          </div>
+          <div class="section-order-actions">
+            <label class="toggle-switch-inline" title="إظهار أو إخفاء القسم">
+              <input type="checkbox" ${isVisible ? 'checked' : ''} onchange="window.velenAdmin.toggleSectionVisibility('${key}', this.checked)">
+              <span>${isVisible ? 'ظاهر' : 'مخفي'}</span>
+            </label>
+            <button type="button" class="btn-reorder" title="تقديم للأعلى" ${isFirst ? 'disabled' : ''} onclick="window.velenAdmin.moveSection(${idx}, -1)">
+              <i class="fa-solid fa-arrow-up"></i>
+            </button>
+            <button type="button" class="btn-reorder" title="تأخير للأسفل" ${isLast ? 'disabled' : ''} onclick="window.velenAdmin.moveSection(${idx}, 1)">
+              <i class="fa-solid fa-arrow-down"></i>
+            </button>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  function populateDesignCustomizer() {
+    if (!state.design) return;
+    const d = state.design;
+
+    // 1. Sections Order & Visibility
+    renderSectionsOrderList();
+
+    // 2. Hero
+    if (d.hero) {
+      const heroEnabled = document.getElementById('desHeroEnabled');
+      if (heroEnabled) heroEnabled.checked = d.hero.enabled !== false;
+      const heroBg = document.getElementById('desHeroBgImage');
+      if (heroBg) heroBg.value = d.hero.bgImage || '';
+      const heroBrand = document.getElementById('desHeroBrandTitle');
+      if (heroBrand) heroBrand.value = d.hero.brandTitle || 'VELEN';
+      const heroMain = document.getElementById('desHeroMainHeading');
+      if (heroMain) heroMain.value = d.hero.mainHeading || '';
+      const heroSub = document.getElementById('desHeroSubHeading');
+      if (heroSub) heroSub.value = d.hero.subHeading || '';
+      const heroCta = document.getElementById('desHeroCtaText');
+      if (heroCta) heroCta.value = d.hero.ctaText || 'SHOP THE COLLECTION';
+
+      updateHeroPreview(d.hero.bgImage);
+    }
+
+    // 3. Header & Identity
+    if (d.header) {
+      const showAnn = document.getElementById('desHeaderShowAnnouncement');
+      if (showAnn) showAnn.checked = d.header.showAnnouncement !== false;
+      const annText = document.getElementById('desHeaderAnnouncementText');
+      if (annText) annText.value = d.header.announcementText || '';
+      const logoUrl = document.getElementById('desHeaderLogoUrl');
+      if (logoUrl) logoUrl.value = d.header.logoUrl || '';
+      const brandName = document.getElementById('desHeaderBrandName');
+      if (brandName) brandName.value = d.header.brandName || 'Velen Official';
+
+      updateLogoPreview(d.header.logoUrl);
+    }
+
+    // 4. Value Props
+    if (d.valueProps) {
+      const vpEnabled = document.getElementById('desValuePropsEnabled');
+      if (vpEnabled) vpEnabled.checked = d.valueProps.enabled !== false;
+      const p1 = document.getElementById('desProp1');
+      if (p1) p1.value = d.valueProps.prop1 || '';
+      const p2 = document.getElementById('desProp2');
+      if (p2) p2.value = d.valueProps.prop2 || '';
+      const p3 = document.getElementById('desProp3');
+      if (p3) p3.value = d.valueProps.prop3 || '';
+    }
+
+    // 5. Headings
+    if (d.collectionSection) {
+      const cSub = document.getElementById('desCollectionSubtitle');
+      if (cSub) cSub.value = d.collectionSection.subtitle || '';
+      const cTitle = document.getElementById('desCollectionTitle');
+      if (cTitle) cTitle.value = d.collectionSection.title || '';
+    }
+    if (d.communitySection) {
+      const commTitle = document.getElementById('desCommunityTitle');
+      if (commTitle) commTitle.value = d.communitySection.title || '';
+      const commSub = document.getElementById('desCommunitySubtitle');
+      if (commSub) commSub.value = d.communitySection.subtitle || '';
+      const commDesc = document.getElementById('desCommunityDesc');
+      if (commDesc) commDesc.value = d.communitySection.desc || '';
+    }
+
+    // 6. About
+    if (d.aboutSection) {
+      const abEnabled = document.getElementById('desAboutEnabled');
+      if (abEnabled) abEnabled.checked = d.aboutSection.enabled !== false;
+      const abSub = document.getElementById('desAboutSub');
+      if (abSub) abSub.value = d.aboutSection.sub || '';
+      const abTitle = document.getElementById('desAboutTitle');
+      if (abTitle) abTitle.value = d.aboutSection.title || '';
+      const abP1 = document.getElementById('desAboutP1');
+      if (abP1) abP1.value = d.aboutSection.p1 || '';
+      const f1T = document.getElementById('desAboutF1Title');
+      if (f1T) f1T.value = d.aboutSection.feature1Title || '';
+      const f1D = document.getElementById('desAboutF1Desc');
+      if (f1D) f1D.value = d.aboutSection.feature1Desc || '';
+      const f2T = document.getElementById('desAboutF2Title');
+      if (f2T) f2T.value = d.aboutSection.feature2Title || '';
+      const f2D = document.getElementById('desAboutF2Desc');
+      if (f2D) f2D.value = d.aboutSection.feature2Desc || '';
+      const f3T = document.getElementById('desAboutF3Title');
+      if (f3T) f3T.value = d.aboutSection.feature3Title || '';
+      const f3D = document.getElementById('desAboutF3Desc');
+      if (f3D) f3D.value = d.aboutSection.feature3Desc || '';
+      const abImg = document.getElementById('desAboutImage');
+      if (abImg) abImg.value = d.aboutSection.image || '';
+      const abQuote = document.getElementById('desAboutQuote');
+      if (abQuote) abQuote.value = d.aboutSection.quote || '';
+    }
+
+    // 7. Theme & Colors
+    if (d.theme) {
+      const accent = d.theme.accentColor || '#e5b95f';
+      const bg = d.theme.bgColor || '#000000';
+      const text = d.theme.primaryColor || '#ffffff';
+      const sale = d.theme.saleBadgeText || 'SALE';
+
+      const accentPicker = document.getElementById('desAccentColorPicker');
+      const accentHex = document.getElementById('desAccentColorHex');
+      if (accentPicker) accentPicker.value = accent;
+      if (accentHex) accentHex.value = accent;
+
+      const bgPicker = document.getElementById('desBgColorPicker');
+      const bgHex = document.getElementById('desBgColorHex');
+      if (bgPicker) bgPicker.value = bg;
+      if (bgHex) bgHex.value = bg;
+
+      const textPicker = document.getElementById('desTextColorPicker');
+      const textHex = document.getElementById('desTextColorHex');
+      if (textPicker) textPicker.value = text;
+      if (textHex) textHex.value = text;
+
+      const saleInput = document.getElementById('desSaleBadgeText');
+      if (saleInput) saleInput.value = sale;
+    }
+  }
+
+  function updateHeroPreview(url) {
+    const img = document.getElementById('heroImagePreviewImg');
+    if (img && url) img.src = url;
+  }
+
+  function updateLogoPreview(url) {
+    const img = document.getElementById('logoPreviewImg');
+    if (img && url) img.src = url;
+  }
+
+  function setupDesignCustomizer() {
+    // 1. Color Pickers Sync
+    syncColorInputs('desAccentColorPicker', 'desAccentColorHex');
+    syncColorInputs('desBgColorPicker', 'desBgColorHex');
+    syncColorInputs('desTextColorPicker', 'desTextColorHex');
+
+    // 2. Setup Image Dropzones with /api/upload
+    setupGenericDropzone('heroBgDropzone', 'heroBgFileInput', (url) => {
+      state.uploadedHeroBgUrl = url;
+      const input = document.getElementById('desHeroBgImage');
+      if (input) input.value = url;
+      updateHeroPreview(url);
+    });
+
+    setupGenericDropzone('logoDropzone', 'logoFileInput', (url) => {
+      state.uploadedLogoUrl = url;
+      const input = document.getElementById('desHeaderLogoUrl');
+      if (input) input.value = url;
+      updateLogoPreview(url);
+    });
+
+    setupGenericDropzone('aboutDropzone', 'aboutFileInput', (url) => {
+      state.uploadedAboutImageUrl = url;
+      const input = document.getElementById('desAboutImage');
+      if (input) input.value = url;
+    });
+
+    // 3. Live URL inputs preview
+    document.getElementById('desHeroBgImage')?.addEventListener('input', (e) => {
+      updateHeroPreview(e.target.value.trim());
+    });
+    document.getElementById('desHeaderLogoUrl')?.addEventListener('input', (e) => {
+      updateLogoPreview(e.target.value.trim());
+    });
+
+    // 4. Form Submit
+    const designForm = document.getElementById('designCustomizerForm');
+    designForm?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      await saveDesignCustomizer();
+    });
+
+    document.getElementById('saveDesignTopBtn')?.addEventListener('click', () => {
+      designForm?.requestSubmit();
+    });
+
+    // 5. Reset to defaults
+    document.getElementById('resetDesignDefaultsBtn')?.addEventListener('click', async () => {
+      if (!confirm('هل أنت متأكد من استعادة التصميم والهيكلية الافتراضية لمتجر Velen؟')) return;
+      state.design = {
+        theme: {
+          primaryColor: '#ffffff',
+          accentColor: '#e5b95f',
+          bgColor: '#000000',
+          saleBadgeText: 'SALE'
+        },
+        header: {
+          showAnnouncement: true,
+          announcementText: 'FREE DELIVERY IN AMMAN • 1 JD ACROSS JORDAN',
+          logoUrl: '/assets/velen-logo.jpg',
+          brandName: 'Velen Official'
+        },
+        hero: {
+          enabled: true,
+          bgImage: '/assets/velen-hero-clean.jpg',
+          brandTitle: 'VELEN',
+          mainHeading: 'Premium Everyday Essentials. Made in Jordan.',
+          subHeading: 'CLEAN FITS. PREMIUM FEEL. BUILT FOR EVERYDAY WEAR.',
+          ctaText: 'SHOP THE COLLECTION',
+          ctaLink: '#collection'
+        },
+        valueProps: {
+          enabled: true,
+          prop1: 'توصيل مجاني في عمّان وبدينار لكافة المحافظات',
+          prop2: 'قطن أردني فاخر 260 GSM معالج ومثبت',
+          prop3: 'تبديل فوري للمقاس عند باب البيت'
+        },
+        sectionsOrder: ['hero', 'valueProps', 'collection', 'community', 'about'],
+        sectionsVisibility: { hero: true, valueProps: true, collection: true, community: true, about: true },
+        collectionSection: {
+          subtitle: 'AUTUMN / ESSENTIALS 2026',
+          title: 'THE COLLECTION'
+        },
+        communitySection: {
+          title: 'COMMUNITY WEARS VELEN',
+          subtitle: 'Real people. Real style.',
+          desc: 'شاركنا لوكك اليومي وفيديوهاتك مع قطع Velen، وقيم تجربتك من 5 نجوم لتدخل السحب الأسبوعي على بوكس إسنشيلز كامل!'
+        },
+        aboutSection: {
+          enabled: true,
+          sub: 'THE STORY',
+          title: 'WHY VELEN?',
+          p1: 'انطلقت Velen من عمّان لإعادة تعريف الملابس اليومية في الأردن. نركز على القصّات البوكسي المريحة (Boxy & Cropped Fit) والأقمشة القطنية الثقيلة 100% التي تحافظ على شكلها ونعومتها مع الاستخدام المتكرر.',
+          feature1Title: 'قطن محلي نخب أول',
+          feature1Desc: 'نسيج قطني محبوك بوزن 260 GSM معالجة ضد الانكماش والوبر.',
+          feature2Title: 'قصّة بوكسي معاصرة',
+          feature2Desc: 'تصميم أكتاف منسدلة وطول متناسق يعطي إطلالة ستريت وير نظيفة وفخمة.',
+          feature3Title: 'فخر الصناعة الأردنية',
+          feature3Desc: 'مُصمم ومُنتج بأيادٍ أردنية مبدعة لدعم الإنتاج المحلي بأعلى معايير العالمية.',
+          image: '/assets/velen-logo.jpg',
+          quote: 'Clean fits. Premium feel. Built for everyday wear.'
+        }
+      };
+      populateDesignCustomizer();
+      await saveDesignCustomizer();
+    });
+  }
+
+  function syncColorInputs(pickerId, hexId) {
+    const picker = document.getElementById(pickerId);
+    const hex = document.getElementById(hexId);
+    if (!picker || !hex) return;
+
+    picker.addEventListener('input', () => {
+      hex.value = picker.value.toUpperCase();
+    });
+
+    hex.addEventListener('input', () => {
+      let val = hex.value.trim();
+      if (!val.startsWith('#')) val = '#' + val;
+      if (/^#[0-9A-Fa-f]{6}$/.test(val)) {
+        picker.value = val;
+      }
+    });
+  }
+
+  function setupGenericDropzone(dropzoneId, fileInputId, onUploadSuccess) {
+    const dropzone = document.getElementById(dropzoneId);
+    const fileInput = document.getElementById(fileInputId);
+    if (!dropzone || !fileInput) return;
+
+    dropzone.addEventListener('click', () => fileInput.click());
+
+    fileInput.addEventListener('change', async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const formData = new FormData();
+      formData.append('media', file);
+
+      const originalHtml = dropzone.innerHTML;
+      dropzone.innerHTML = `<i class="fa-solid fa-spinner fa-spin upload-icon"></i><p>جاري رفع الصورة...</p>`;
+
+      try {
+        const res = await fetch('/api/upload', { method: 'POST', body: formData });
+        const data = await res.json();
+        if (data.success) {
+          dropzone.innerHTML = originalHtml;
+          onUploadSuccess(data.url);
+          showAdminToast('تم رفع الصورة بنجاح وتحديث المعاينة!', 'success');
+        } else {
+          dropzone.innerHTML = `<p style="color:#ff4757;">فشل الرفع: ${data.error || 'خطأ غير معروف'}</p>`;
+        }
+      } catch (err) {
+        dropzone.innerHTML = `<p style="color:#ff4757;">فشل الرفع، يرجى المحاولة ثانية</p>`;
+      }
+    });
+  }
+
+  async function saveDesignCustomizer() {
+    const heroBgInput = document.getElementById('desHeroBgImage')?.value.trim();
+    const logoUrlInput = document.getElementById('desHeaderLogoUrl')?.value.trim();
+    const aboutImgInput = document.getElementById('desAboutImage')?.value.trim();
+
+    const updatedDesign = {
+      theme: {
+        primaryColor: document.getElementById('desTextColorHex')?.value.trim() || '#ffffff',
+        accentColor: document.getElementById('desAccentColorHex')?.value.trim() || '#e5b95f',
+        bgColor: document.getElementById('desBgColorHex')?.value.trim() || '#000000',
+        saleBadgeText: document.getElementById('desSaleBadgeText')?.value.trim() || 'SALE'
+      },
+      header: {
+        showAnnouncement: Boolean(document.getElementById('desHeaderShowAnnouncement')?.checked),
+        announcementText: document.getElementById('desHeaderAnnouncementText')?.value.trim() || '',
+        logoUrl: state.uploadedLogoUrl || logoUrlInput || '/assets/velen-logo.jpg',
+        brandName: document.getElementById('desHeaderBrandName')?.value.trim() || 'Velen Official'
+      },
+      hero: {
+        enabled: Boolean(document.getElementById('desHeroEnabled')?.checked),
+        bgImage: state.uploadedHeroBgUrl || heroBgInput || '/assets/velen-hero-clean.jpg',
+        brandTitle: document.getElementById('desHeroBrandTitle')?.value.trim() || 'VELEN',
+        mainHeading: document.getElementById('desHeroMainHeading')?.value.trim() || '',
+        subHeading: document.getElementById('desHeroSubHeading')?.value.trim() || '',
+        ctaText: document.getElementById('desHeroCtaText')?.value.trim() || 'SHOP THE COLLECTION',
+        ctaLink: '#collection'
+      },
+      valueProps: {
+        enabled: Boolean(document.getElementById('desValuePropsEnabled')?.checked),
+        prop1: document.getElementById('desProp1')?.value.trim() || '',
+        prop2: document.getElementById('desProp2')?.value.trim() || '',
+        prop3: document.getElementById('desProp3')?.value.trim() || ''
+      },
+      sectionsOrder: state.design?.sectionsOrder || ['hero', 'valueProps', 'collection', 'community', 'about'],
+      sectionsVisibility: state.design?.sectionsVisibility || { hero: true, valueProps: true, collection: true, community: true, about: true },
+      collectionSection: {
+        subtitle: document.getElementById('desCollectionSubtitle')?.value.trim() || 'AUTUMN / ESSENTIALS 2026',
+        title: document.getElementById('desCollectionTitle')?.value.trim() || 'THE COLLECTION'
+      },
+      communitySection: {
+        title: document.getElementById('desCommunityTitle')?.value.trim() || 'COMMUNITY WEARS VELEN',
+        subtitle: document.getElementById('desCommunitySubtitle')?.value.trim() || 'Real people. Real style.',
+        desc: document.getElementById('desCommunityDesc')?.value.trim() || ''
+      },
+      aboutSection: {
+        enabled: Boolean(document.getElementById('desAboutEnabled')?.checked),
+        sub: document.getElementById('desAboutSub')?.value.trim() || 'THE STORY',
+        title: document.getElementById('desAboutTitle')?.value.trim() || 'WHY VELEN?',
+        p1: document.getElementById('desAboutP1')?.value.trim() || '',
+        feature1Title: document.getElementById('desAboutF1Title')?.value.trim() || '',
+        feature1Desc: document.getElementById('desAboutF1Desc')?.value.trim() || '',
+        feature2Title: document.getElementById('desAboutF2Title')?.value.trim() || '',
+        feature2Desc: document.getElementById('desAboutF2Desc')?.value.trim() || '',
+        feature3Title: document.getElementById('desAboutF3Title')?.value.trim() || '',
+        feature3Desc: document.getElementById('desAboutF3Desc')?.value.trim() || '',
+        image: state.uploadedAboutImageUrl || aboutImgInput || '/assets/velen-logo.jpg',
+        quote: document.getElementById('desAboutQuote')?.value.trim() || ''
+      }
+    };
+
+    try {
+      const res = await fetch('/api/design', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedDesign)
+      });
+      const data = await res.json();
+      if (data.success) {
+        state.design = data.design;
+        populateDesignCustomizer();
+        showAdminToast('✨ تم حفظ وتطبيق جميع تعديلات التصميم والتركيبة فوراً بالبث المباشر!', 'success');
+      } else {
+        showAdminToast('فشل حفظ التصميم', 'error');
+      }
+    } catch (err) {
+      console.error(err);
+      showAdminToast('حدث خطأ في الاتصال بالخادم', 'error');
+    }
+  }
+
   // Global methods for window
   window.velenAdmin = {
     switchTab,
+    moveSection: (fromIdx, direction) => {
+      if (!state.design || !Array.isArray(state.design.sectionsOrder)) return;
+      const order = [...state.design.sectionsOrder];
+      const toIdx = fromIdx + direction;
+      if (toIdx < 0 || toIdx >= order.length) return;
+      const [item] = order.splice(fromIdx, 1);
+      order.splice(toIdx, 0, item);
+      state.design.sectionsOrder = order;
+      renderSectionsOrderList();
+      showAdminToast(`تم تغيير ترتيب قسم (${SECTION_METADATA[item]?.title || item})، اضغط "حفظ ونشر التعديلات" للتطبيق المباشر`, 'info');
+    },
+    toggleSectionVisibility: (key, isVisible) => {
+      if (!state.design) return;
+      if (!state.design.sectionsVisibility) state.design.sectionsVisibility = {};
+      state.design.sectionsVisibility[key] = Boolean(isVisible);
+      renderSectionsOrderList();
+      showAdminToast(`${isVisible ? 'تم تفعيل' : 'تم إخفاء'} قسم (${SECTION_METADATA[key]?.title || key})`, 'info');
+    },
+    saveDesign: saveDesignCustomizer,
     editProduct: (id) => {
       const p = state.products.find(x => x.id === id);
       if (!p) return;

@@ -96,6 +96,20 @@ app.put('/api/settings', (req, res) => {
   res.json({ success: true, settings: db.settings });
 });
 
+// ================= API: Design & Layout CMS =================
+app.get('/api/design', (req, res) => {
+  const db = readDB();
+  res.json(db.design || {});
+});
+
+app.put('/api/design', (req, res) => {
+  const db = readDB();
+  db.design = { ...db.design, ...req.body };
+  writeDB(db);
+  broadcast('DESIGN_UPDATED', db.design);
+  res.json({ success: true, design: db.design });
+});
+
 // ================= API: Products =================
 app.get('/api/products', (req, res) => {
   const db = readDB();
@@ -180,17 +194,20 @@ app.get('/api/community', (req, res) => {
   res.json(db.community || []);
 });
 
-// Customer submits look & 1-5 star review
+// Customer submits look & 1-5 star review (Photo/video is completely optional!)
 app.post('/api/community', (req, res) => {
   const db = readDB();
+  const rawMediaUrl = req.body.mediaUrl && req.body.mediaUrl.trim() !== '' ? req.body.mediaUrl.trim() : null;
+  const hasMedia = Boolean(rawMediaUrl);
+
   const post = {
     id: 'comm-' + Date.now(),
     author: req.body.author || 'Velen Community Member',
     authorTag: req.body.authorTag || '@' + (req.body.author || 'member').toLowerCase().replace(/\s+/g, '_'),
     avatar: req.body.avatar || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&q=80',
-    mediaType: req.body.mediaType || 'photo',
-    mediaUrl: req.body.mediaUrl || '/assets/velen-community-1.jpg',
-    videoUrl: req.body.videoUrl || null,
+    mediaType: hasMedia ? (req.body.mediaType || 'photo') : 'text',
+    mediaUrl: rawMediaUrl,
+    videoUrl: hasMedia && (req.body.mediaType === 'video' || (rawMediaUrl && rawMediaUrl.includes('.mp4'))) ? rawMediaUrl : null,
     subtitle: req.body.subtitle || 'Velen Style',
     rating: Math.min(5, Math.max(1, parseInt(req.body.rating, 10) || 5)),
     comment: req.body.comment || 'Amazing quality and fit!',

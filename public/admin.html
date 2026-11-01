@@ -56,6 +56,11 @@
         <span class="badge-count" id="navCommCount">0</span>
       </button>
 
+      <button class="nav-item" data-tab="design">
+        <i class="fa-solid fa-wand-magic-sparkles"></i>
+        <span>تخصيص التصميم والتركيبة (Design & Layout)</span>
+      </button>
+
       <button class="nav-item" data-tab="settings">
         <i class="fa-solid fa-sliders"></i>
         <span>إعدادات المتجر (Settings)</span>
@@ -259,6 +264,356 @@
         <div class="community-admin-grid" id="adminCommunityGrid">
           <!-- Rendered dynamically -->
         </div>
+      </section>
+
+      <!-- ================= TAB: DESIGN & LAYOUT CUSTOMIZER ================= -->
+      <section class="admin-tab-pane" id="tab-design">
+        <div class="tab-action-bar">
+          <div>
+            <h2 class="tab-main-heading"><i class="fa-solid fa-wand-magic-sparkles"></i> محرر مظهر وتركيبة المتجر الشامل (Visual CMS & Layout)</h2>
+            <p class="tab-desc-note">
+              يمكنك من هنا تعديل أي عنصر في مظهر وهيكلية الموقع: ترتيب الأقسام، إخفاء/إظهار أي قسم، تغيير الصور والبانرات، النصوص والعناوين، والألوان في بث حي وفوري للزبائن.
+            </p>
+          </div>
+          <div class="header-action-group">
+            <a href="/" target="_blank" class="btn-secondary-action">
+              <i class="fa-solid fa-eye"></i> معاينة المتجر
+            </a>
+            <button type="button" id="saveDesignTopBtn" class="btn-primary-action">
+              <i class="fa-solid fa-floppy-disk"></i> حفظ ونشر التعديلات فوراً
+            </button>
+          </div>
+        </div>
+
+        <form id="designCustomizerForm" class="design-editor-form">
+
+          <!-- 1. SECTIONS ORDER & VISIBILITY -->
+          <div class="design-card">
+            <div class="design-card-head">
+              <div class="head-title">
+                <i class="fa-solid fa-layer-group"></i>
+                <h3>ترتيب وهيكلية أقسام الصفحة الرئيسية (Layout Architecture)</h3>
+              </div>
+              <span class="head-badge">رتب الأقسام بالأسهم وتحكم بالظهور</span>
+            </div>
+            <p class="design-card-desc">
+              حدد ترتيب الأقسام على الصفحة الأولى بالضغط على أزرار تقديم/تأخير (⬆️ / ⬇️)، أو ألغِ تفعيل أي قسم ترغب بإخفائه مؤقتاً:
+            </p>
+
+            <div class="sections-order-list" id="sectionsOrderList">
+              <!-- Rendered dynamically by JS with reorder buttons and switches -->
+            </div>
+          </div>
+
+          <!-- 2. HERO BANNER & IMAGES -->
+          <div class="design-card">
+            <div class="design-card-head">
+              <div class="head-title">
+                <i class="fa-solid fa-image"></i>
+                <h3>بانر البداية وصورة الغلاف الرئيسية (Hero Section)</h3>
+              </div>
+              <label class="toggle-switch-inline">
+                <input type="checkbox" id="desHeroEnabled" checked>
+                <span>تفعيل قسم البانر</span>
+              </label>
+            </div>
+            
+            <div class="form-row">
+              <!-- Hero Image Picker & Preview -->
+              <div class="form-group flex-1">
+                <label>صورة الغلاف الرئيسية (Hero Banner Image) *</label>
+                <div class="upload-dropzone design-dropzone" id="heroBgDropzone">
+                  <i class="fa-solid fa-cloud-arrow-up upload-icon"></i>
+                  <p>اسحب صورة البانر الرئيسية هنا أو اضغط للاختيار</p>
+                  <span class="upload-hint">مفضل صورة طولية أو عريضة فخمة عالية الدقة</span>
+                  <input type="file" id="heroBgFileInput" accept="image/*" style="display:none;">
+                </div>
+                <div class="url-fallback-wrap">
+                  <span class="or-separator">أو رابط الصورة المباشر:</span>
+                  <input type="text" id="desHeroBgImage" placeholder="/assets/velen-hero-clean.jpg أو رابط خارجي">
+                </div>
+              </div>
+
+              <div class="form-group preview-box-group">
+                <label>معاينة صورة البانر الحالية:</label>
+                <div class="hero-image-preview" id="heroImagePreviewWrap">
+                  <img id="heroImagePreviewImg" src="/assets/velen-hero-clean.jpg" alt="Hero Preview">
+                </div>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label>اسم البراند في الهيرو</label>
+                <input type="text" id="desHeroBrandTitle" value="VELEN">
+              </div>
+              <div class="form-group">
+                <label>العنوان الترحيبي العريض (Main Heading)</label>
+                <input type="text" id="desHeroMainHeading" value="Premium Everyday Essentials. Made in Jordan.">
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label>الشعار الفرعي (Sub-Heading)</label>
+                <input type="text" id="desHeroSubHeading" value="CLEAN FITS. PREMIUM FEEL. BUILT FOR EVERYDAY WEAR.">
+              </div>
+              <div class="form-group">
+                <label>نص زر الشراء الرئيسي (CTA Button)</label>
+                <input type="text" id="desHeroCtaText" value="SHOP THE COLLECTION">
+              </div>
+            </div>
+          </div>
+
+          <!-- 3. BRAND IDENTITY & HEADER -->
+          <div class="design-card">
+            <div class="design-card-head">
+              <div class="head-title">
+                <i class="fa-solid fa-compass"></i>
+                <h3>الهوية والشعار وشريط الإعلانات (Header & Identity)</h3>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group flex-1">
+                <label>لوقو المتجر (Logo)</label>
+                <div class="upload-dropzone design-dropzone" id="logoDropzone">
+                  <i class="fa-solid fa-cloud-arrow-up upload-icon"></i>
+                  <p>اسحب ملف اللوقو هنا أو اضغط للاختيار</p>
+                  <input type="file" id="logoFileInput" accept="image/*" style="display:none;">
+                </div>
+                <div class="url-fallback-wrap">
+                  <span class="or-separator">أو رابط اللوقو:</span>
+                  <input type="text" id="desHeaderLogoUrl" placeholder="/assets/velen-logo.jpg">
+                </div>
+              </div>
+
+              <div class="form-group preview-box-group">
+                <label>معاينة اللوقو:</label>
+                <div class="logo-image-preview" id="logoPreviewWrap">
+                  <img id="logoPreviewImg" src="/assets/velen-logo.jpg" alt="Logo Preview">
+                </div>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group flex-1">
+                <label class="toggle-switch-inline" style="margin-bottom:8px;">
+                  <input type="checkbox" id="desHeaderShowAnnouncement" checked>
+                  <span>إظهار شريط الإعلانات الترويجي في أعلى الصفحة</span>
+                </label>
+                <input type="text" id="desHeaderAnnouncementText" value="FREE DELIVERY IN AMMAN • 1 JD ACROSS JORDAN">
+              </div>
+              <div class="form-group">
+                <label>اسم المتجر الرسمي</label>
+                <input type="text" id="desHeaderBrandName" value="Velen Official">
+              </div>
+            </div>
+          </div>
+
+          <!-- 4. VALUE PROPS (شريط المميزات) -->
+          <div class="design-card">
+            <div class="design-card-head">
+              <div class="head-title">
+                <i class="fa-solid fa-tags"></i>
+                <h3>شريط ميزات المتجر (Value Proposition Badges)</h3>
+              </div>
+              <label class="toggle-switch-inline">
+                <input type="checkbox" id="desValuePropsEnabled" checked>
+                <span>تفعيل شريط المميزات</span>
+              </label>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>الميزة الأولى (التوصيل)</label>
+                <input type="text" id="desProp1" value="توصيل مجاني في عمّان وبدينار لكافة المحافظات">
+              </div>
+              <div class="form-group">
+                <label>الميزة الثانية (الجودة والخامة)</label>
+                <input type="text" id="desProp2" value="قطن أردني فاخر 260 GSM معالج ومثبت">
+              </div>
+              <div class="form-group">
+                <label>الميزة الثالثة (الضمان والتبديل)</label>
+                <input type="text" id="desProp3" value="تبديل فوري للمقاس عند باب البيت">
+              </div>
+            </div>
+          </div>
+
+          <!-- 5. SECTION HEADINGS (Collection & Community) -->
+          <div class="design-card">
+            <div class="design-card-head">
+              <div class="head-title">
+                <i class="fa-solid fa-heading"></i>
+                <h3>عناوين الأقسام (Collection & Community Titles)</h3>
+              </div>
+            </div>
+            
+            <div class="form-row">
+              <div class="form-group">
+                <label>العنوان الفرعي لتشكيلة الملابس</label>
+                <input type="text" id="desCollectionSubtitle" value="AUTUMN / ESSENTIALS 2026">
+              </div>
+              <div class="form-group">
+                <label>العنوان الرئيسي لتشكيلة الملابس</label>
+                <input type="text" id="desCollectionTitle" value="THE COLLECTION">
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label>عنوان قسم المجتمع (Community Title)</label>
+                <input type="text" id="desCommunityTitle" value="COMMUNITY WEARS VELEN">
+              </div>
+              <div class="form-group">
+                <label>العنوان الفرعي للمجتمع (Community Subtitle)</label>
+                <input type="text" id="desCommunitySubtitle" value="Real people. Real style.">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>نص دعوة وتقييمات المجتمع والمسابقة</label>
+              <textarea id="desCommunityDesc" rows="2">شاركنا لوكك اليومي وفيديوهاتك مع قطع Velen، وقيم تجربتك من 5 نجوم لتدخل السحب الأسبوعي على بوكس إسنشيلز كامل!</textarea>
+            </div>
+          </div>
+
+          <!-- 6. ABOUT BRAND STORY -->
+          <div class="design-card">
+            <div class="design-card-head">
+              <div class="head-title">
+                <i class="fa-solid fa-book-open"></i>
+                <h3>قسم قصة البراند (Why Velen Story & Highlights)</h3>
+              </div>
+              <label class="toggle-switch-inline">
+                <input type="checkbox" id="desAboutEnabled" checked>
+                <span>تفعيل قسم القصة</span>
+              </label>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label>العنوان الفرعي (Sub-label)</label>
+                <input type="text" id="desAboutSub" value="THE STORY">
+              </div>
+              <div class="form-group">
+                <label>العنوان الرئيسي لقسم القصة</label>
+                <input type="text" id="desAboutTitle" value="WHY VELEN?">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>النص التعريفي لقصة البراند</label>
+              <textarea id="desAboutP1" rows="3">انطلقت Velen من عمّان لإعادة تعريف الملابس اليومية في الأردن. نركز على القصّات البوكسي المريحة (Boxy & Cropped Fit) والأقمشة القطنية الثقيلة 100% التي تحافظ على شكلها ونعومتها مع الاستخدام المتكرر.</textarea>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label>الميزة 1 (العنوان)</label>
+                <input type="text" id="desAboutF1Title" value="قطن محلي نخب أول">
+              </div>
+              <div class="form-group">
+                <label>الميزة 1 (الوصف)</label>
+                <input type="text" id="desAboutF1Desc" value="نسيج قطني محبوك بوزن 260 GSM معالجة ضد الانكماش والوبر.">
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label>الميزة 2 (العنوان)</label>
+                <input type="text" id="desAboutF2Title" value="قصّة بوكسي معاصرة">
+              </div>
+              <div class="form-group">
+                <label>الميزة 2 (الوصف)</label>
+                <input type="text" id="desAboutF2Desc" value="تصميم أكتاف منسدلة وطول متناسق يعطي إطلالة ستريت وير نظيفة وفخمة.">
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label>الميزة 3 (العنوان)</label>
+                <input type="text" id="desAboutF3Title" value="فخر الصناعة الأردنية">
+              </div>
+              <div class="form-group">
+                <label>الميزة 3 (الوصف)</label>
+                <input type="text" id="desAboutF3Desc" value="مُصمم ومُنتج بأيادٍ أردنية مبدعة لدعم الإنتاج المحلي بأعلى معايير العالمية.">
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group flex-1">
+                <label>صورة قسم القصة (About Image)</label>
+                <div class="upload-dropzone design-dropzone" id="aboutDropzone">
+                  <i class="fa-solid fa-cloud-arrow-up upload-icon"></i>
+                  <p>اسحب صورة القصة هنا أو اضغط للاختيار</p>
+                  <input type="file" id="aboutFileInput" accept="image/*" style="display:none;">
+                </div>
+                <div class="url-fallback-wrap">
+                  <span class="or-separator">أو رابط الصورة:</span>
+                  <input type="text" id="desAboutImage" placeholder="/assets/velen-logo.jpg">
+                </div>
+              </div>
+              <div class="form-group">
+                <label>اقتباس ختامي فاخر (Quote)</label>
+                <input type="text" id="desAboutQuote" value="Clean fits. Premium feel. Built for everyday wear.">
+              </div>
+            </div>
+          </div>
+
+          <!-- 7. COLORS & THEME -->
+          <div class="design-card">
+            <div class="design-card-head">
+              <div class="head-title">
+                <i class="fa-solid fa-palette"></i>
+                <h3>باليتة الألوان والمظهر العام (Colors & Visual Theme)</h3>
+              </div>
+            </div>
+
+            <div class="color-pickers-grid">
+              <div class="color-picker-item">
+                <label>اللون التمييزي (Accent Color):</label>
+                <div class="color-input-wrap">
+                  <input type="color" id="desAccentColorPicker" value="#e5b95f">
+                  <input type="text" id="desAccentColorHex" value="#e5b95f" maxlength="7">
+                </div>
+                <span class="color-hint">يستخدم للنجوم، أزرار التفاعل، والإشارات الفاخرة</span>
+              </div>
+
+              <div class="color-picker-item">
+                <label>لون خلفية المتجر (Background):</label>
+                <div class="color-input-wrap">
+                  <input type="color" id="desBgColorPicker" value="#000000">
+                  <input type="text" id="desBgColorHex" value="#000000" maxlength="7">
+                </div>
+                <span class="color-hint">الخلفية الداكنة الفخمة للعلامة</span>
+              </div>
+
+              <div class="color-picker-item">
+                <label>لون النصوص والعناوين (Primary Text):</label>
+                <div class="color-input-wrap">
+                  <input type="color" id="desTextColorPicker" value="#ffffff">
+                  <input type="text" id="desTextColorHex" value="#ffffff" maxlength="7">
+                </div>
+                <span class="color-hint">النصوص الرئيسية للمنتجات والهيدر</span>
+              </div>
+
+              <div class="color-picker-item">
+                <label>نص شارة التخفيض (Sale Badge):</label>
+                <input type="text" id="desSaleBadgeText" value="SALE" class="badge-text-input">
+                <span class="color-hint">تظهر على صور المنتجات المخفضة</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- BOTTOM SAVE BAR -->
+          <div class="design-footer-save-bar">
+            <button type="submit" class="btn-primary-action btn-save-large">
+              <i class="fa-solid fa-check-double"></i> حفظ ونشر جميع التعديلات فوراً على المتجر الحي
+            </button>
+            <button type="button" id="resetDesignDefaultsBtn" class="btn-secondary-action">
+              <i class="fa-solid fa-rotate-left"></i> استعادة الإعدادات الافتراضية
+            </button>
+          </div>
+
+        </form>
       </section>
 
       <!-- ================= TAB 5: SETTINGS ================= -->

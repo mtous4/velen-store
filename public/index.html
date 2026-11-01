@@ -138,139 +138,142 @@
     </div>
   </div>
 
-  <!-- Hero Section (Exact design matching Screenshot 4) -->
-  <section class="hero-section" id="hero">
-    <div class="hero-media-wrapper">
-      <img src="/assets/velen-hero-clean.jpg" alt="Velen Essentials" class="hero-banner-img">
-      <div class="hero-vignette-overlay"></div>
-    </div>
-
-    <div class="hero-content">
-      <div class="hero-logo-emblem">
-        <img src="/assets/velen-logo.jpg" alt="Velen Logo" class="hero-logo-img">
-      </div>
-      <h1 class="hero-brand-name">VELEN</h1>
-      <h2 class="hero-main-heading">Premium Everyday Essentials. Made in Jordan.</h2>
-      <p class="hero-tagline">CLEAN FITS. PREMIUM FEEL. BUILT FOR EVERYDAY WEAR.</p>
-      <div class="hero-cta-wrap">
-        <a href="#collection" class="btn-velen-primary" id="heroShopBtn">
-          SHOP THE COLLECTION
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <!-- Quick Value Props Strip -->
-  <div class="value-props-bar">
-    <div class="prop-item">
-      <i class="fa-solid fa-truck-fast"></i>
-      <span>توصيل مجاني في عمّان وبدينار لكافة المحافظات</span>
-    </div>
-    <div class="prop-item">
-      <i class="fa-solid fa-crown"></i>
-      <span>قطن أردني فاخر 260 GSM معالج ومثبت</span>
-    </div>
-    <div class="prop-item">
-      <i class="fa-solid fa-rotate-left"></i>
-      <span>تبديل فوري للمقاس عند باب البيت</span>
-    </div>
-  </div>
-
-  <!-- Collection Section (Exact design matching Screenshot 2) -->
-  <section class="collection-section" id="collection">
-    <div class="section-container">
-      <div class="collection-header">
-        <span class="section-sub">AUTUMN / ESSENTIALS 2026</span>
-        <h2 class="section-title">THE COLLECTION</h2>
-        <div class="collection-line"></div>
+  <!-- Main Sections Container (Allows dynamic re-ordering and visibility by Admin) -->
+  <main id="mainSectionsContainer">
+    <!-- Hero Section (Exact design matching Screenshot 4) -->
+    <section class="hero-section" id="sec-hero">
+      <div class="hero-media-wrapper">
+        <img src="/assets/velen-hero-clean.jpg" alt="Velen Essentials" class="hero-banner-img" id="heroBannerImg">
+        <div class="hero-vignette-overlay"></div>
       </div>
 
-      <!-- Categories Filter Tabs -->
-      <div class="category-tabs" id="categoryTabs">
-        <button class="cat-pill active" data-cat="all">All Essentials</button>
-        <button class="cat-pill" data-cat="Tees">Tees</button>
-        <button class="cat-pill" data-cat="Ringer">Ringer Edition</button>
-        <button class="cat-pill" data-cat="Boxy">Boxy & Cropped</button>
-      </div>
-
-      <!-- Realtime Admin Notification Banner -->
-      <div id="newProductToast" class="live-toast" style="display:none;">
-        <i class="fa-solid fa-bell"></i> تم إضافة منتج جديد بواسطة الأدمن للتو!
-      </div>
-
-      <!-- Products Grid (Matches 2-column mobile in screenshot 2) -->
-      <div class="products-grid" id="productsGrid">
-        <!-- Rendered dynamically from backend / db.json -->
-      </div>
-    </div>
-  </section>
-
-  <!-- Community Section (Exact design matching Screenshot 3) -->
-  <section class="community-section" id="community">
-    <div class="section-container">
-      <div class="community-header">
-        <h2 class="community-title">COMMUNITY WEARS VELEN</h2>
-        <p class="community-subtitle">Real people. Real style.</p>
-        <p class="community-desc">شاركنا لوكك اليومي وفيديوهاتك مع قطع Velen، وقيم تجربتك من 5 نجوم لتدخل السحب الأسبوعي على بوكس إسنشيلز كامل!</p>
-        
-        <div class="community-actions-bar">
-          <button id="addLookBtn" class="btn-community-share">
-            <i class="fa-solid fa-camera"></i> شارك صورتك أو ريلز ستايلك + تقييم 5 نجوم
-          </button>
-          <div class="community-filter-pills">
-            <button class="comm-pill active" data-comm-filter="all">جميع المشاركات</button>
-            <button class="comm-pill" data-comm-filter="video"><i class="fa-solid fa-play"></i> فيديو ريلز</button>
-            <button class="comm-pill" data-comm-filter="5star">★★★★★ (5 نجوم فقط)</button>
-          </div>
+      <div class="hero-content">
+        <div class="hero-logo-emblem">
+          <img src="/assets/velen-logo.jpg" alt="Velen Logo" class="hero-logo-img" id="heroLogoImg">
+        </div>
+        <h1 class="hero-brand-name" id="heroBrandName">VELEN</h1>
+        <h2 class="hero-main-heading" id="heroMainHeading">Premium Everyday Essentials. Made in Jordan.</h2>
+        <p class="hero-tagline" id="heroTagline">CLEAN FITS. PREMIUM FEEL. BUILT FOR EVERYDAY WEAR.</p>
+        <div class="hero-cta-wrap">
+          <a href="#collection" class="btn-velen-primary" id="heroShopBtn">
+            SHOP THE COLLECTION
+          </a>
         </div>
       </div>
+    </section>
 
-      <!-- Community Grid / Feed -->
-      <div class="community-feed-grid" id="communityGrid">
-        <!-- Rendered dynamically from backend -->
+    <!-- Quick Value Props Strip -->
+    <div class="value-props-bar" id="sec-valueProps">
+      <div class="prop-item">
+        <i class="fa-solid fa-truck-fast"></i>
+        <span id="propText1">توصيل مجاني في عمّان وبدينار لكافة المحافظات</span>
+      </div>
+      <div class="prop-item">
+        <i class="fa-solid fa-crown"></i>
+        <span id="propText2">قطن أردني فاخر 260 GSM معالج ومثبت</span>
+      </div>
+      <div class="prop-item">
+        <i class="fa-solid fa-rotate-left"></i>
+        <span id="propText3">تبديل فوري للمقاس عند باب البيت</span>
       </div>
     </div>
-  </section>
 
-  <!-- About / Why Velen Section -->
-  <section class="about-section" id="about">
-    <div class="section-container">
-      <div class="about-grid">
-        <div class="about-content">
-          <span class="section-sub">THE STORY</span>
-          <h2 class="section-title">WHY VELEN?</h2>
-          <p class="about-p">
-            انطلقت <strong>Velen</strong> من عمّان لإعادة تعريف الملابس اليومية في الأردن. نركز على القصّات البوكسي المريحة (Boxy & Cropped Fitt) والأقمشة القطنية الثقيلة 100% التي تحافظ على شكلها ونعومتها مع الاستخدام المتكرر.
-          </p>
-          <div class="about-features">
-            <div class="feature-card">
-              <span class="num">01</span>
-              <h4>قطن محلي نخب أول</h4>
-              <p>نسيج قطني محبوك بوزن 260 GSM معالجة ضد الانكماش والوبر.</p>
-            </div>
-            <div class="feature-card">
-              <span class="num">02</span>
-              <h4>قصّة بوكسي معاصرة</h4>
-              <p>تصميم أكتاف منسدلة وطول متناسق يعطي إطلالة ستريت وير نظيفة وفخمة.</p>
-            </div>
-            <div class="feature-card">
-              <span class="num">03</span>
-              <h4>فخر الصناعة الأردنية</h4>
-              <p>مُصمم ومُنتج بأيادٍ أردنية مبدعة لدعم الإنتاج المحلي بأعلى معايير العالمية.</p>
+    <!-- Collection Section (Exact design matching Screenshot 2) -->
+    <section class="collection-section" id="sec-collection">
+      <div class="section-container">
+        <div class="collection-header">
+          <span class="section-sub" id="collectionSubtitle">AUTUMN / ESSENTIALS 2026</span>
+          <h2 class="section-title" id="collectionTitle">THE COLLECTION</h2>
+          <div class="collection-line"></div>
+        </div>
+
+        <!-- Categories Filter Tabs -->
+        <div class="category-tabs" id="categoryTabs">
+          <button class="cat-pill active" data-cat="all">All Essentials</button>
+          <button class="cat-pill" data-cat="Tees">Tees</button>
+          <button class="cat-pill" data-cat="Ringer">Ringer Edition</button>
+          <button class="cat-pill" data-cat="Boxy">Boxy & Cropped</button>
+        </div>
+
+        <!-- Realtime Admin Notification Banner -->
+        <div id="newProductToast" class="live-toast" style="display:none;">
+          <i class="fa-solid fa-bell"></i> تم إضافة منتج جديد بواسطة الأدمن للتو!
+        </div>
+
+        <!-- Products Grid (Matches 2-column mobile in screenshot 2) -->
+        <div class="products-grid" id="productsGrid">
+          <!-- Rendered dynamically from backend / db.json -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Community Section (Exact design matching Screenshot 3) -->
+    <section class="community-section" id="sec-community">
+      <div class="section-container">
+        <div class="community-header">
+          <h2 class="community-title" id="communityTitle">COMMUNITY WEARS VELEN</h2>
+          <p class="community-subtitle" id="communitySubtitle">Real people. Real style.</p>
+          <p class="community-desc" id="communityDesc">شاركنا لوكك اليومي وفيديوهاتك مع قطع Velen، وقيم تجربتك من 5 نجوم لتدخل السحب الأسبوعي على بوكس إسنشيلز كامل!</p>
+          
+          <div class="community-actions-bar">
+            <button id="addLookBtn" class="btn-community-share">
+              <i class="fa-solid fa-camera"></i> شارك صورتك أو ريلز ستايلك + تقييم 5 نجوم
+            </button>
+            <div class="community-filter-pills">
+              <button class="comm-pill active" data-comm-filter="all">جميع المشاركات</button>
+              <button class="comm-pill" data-comm-filter="video"><i class="fa-solid fa-play"></i> فيديو ريلز</button>
+              <button class="comm-pill" data-comm-filter="5star">★★★★★ (5 نجوم فقط)</button>
             </div>
           </div>
         </div>
-        <div class="about-visual">
-          <div class="about-img-frame">
-            <img src="/assets/velen-logo.jpg" alt="Velen Identity" class="about-img">
-            <div class="about-quote">
-              <p>"Clean fits. Premium feel. Built for everyday wear."</p>
+
+        <!-- Community Grid / Feed -->
+        <div class="community-feed-grid" id="communityGrid">
+          <!-- Rendered dynamically from backend -->
+        </div>
+      </div>
+    </section>
+
+    <!-- About / Why Velen Section -->
+    <section class="about-section" id="sec-about">
+      <div class="section-container">
+        <div class="about-grid">
+          <div class="about-content">
+            <span class="section-sub" id="aboutSub">THE STORY</span>
+            <h2 class="section-title" id="aboutTitle">WHY VELEN?</h2>
+            <p class="about-p" id="aboutP1">
+              انطلقت <strong>Velen</strong> من عمّان لإعادة تعريف الملابس اليومية في الأردن. نركز على القصّات البوكسي المريحة (Boxy & Cropped Fitt) والأقمشة القطنية الثقيلة 100% التي تحافظ على شكلها ونعومتها مع الاستخدام المتكرر.
+            </p>
+            <div class="about-features">
+              <div class="feature-card">
+                <span class="num">01</span>
+                <h4 id="featTitle1">قطن محلي نخب أول</h4>
+                <p id="featDesc1">نسيج قطني محبوك بوزن 260 GSM معالجة ضد الانكماش والوبر.</p>
+              </div>
+              <div class="feature-card">
+                <span class="num">02</span>
+                <h4 id="featTitle2">قصّة بوكسي معاصرة</h4>
+                <p id="featDesc2">تصميم أكتاف منسدلة وطول متناسق يعطي إطلالة ستريت وير نظيفة وفخمة.</p>
+              </div>
+              <div class="feature-card">
+                <span class="num">03</span>
+                <h4 id="featTitle3">فخر الصناعة الأردنية</h4>
+                <p id="featDesc3">مُصمم ومُنتج بأيادٍ أردنية مبدعة لدعم الإنتاج المحلي بأعلى معايير العالمية.</p>
+              </div>
+            </div>
+          </div>
+          <div class="about-visual">
+            <div class="about-img-frame">
+              <img src="/assets/velen-logo.jpg" alt="Velen Identity" class="about-img" id="aboutImg">
+              <div class="about-quote">
+                <p id="aboutQuote">"Clean fits. Premium feel. Built for everyday wear."</p>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
+  </main>
 
   <!-- Footer (Matching Screenshot 5 & Modern luxury streetwear) -->
   <footer class="main-footer">
@@ -432,19 +435,24 @@
             <textarea id="commComment" rows="3" placeholder="احكيلنا عن خامة القطن، المقاس، والراحة في اللبس..." required></textarea>
           </div>
 
-          <!-- Media Upload: Photo or Video -->
+          <!-- Media Upload: Photo or Video (Optional) -->
           <div class="form-group media-upload-group">
-            <label>ارفع صورة أو مقطع فيديو / ريلز</label>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+              <label>ارفع صورة أو مقطع فيديو / ريلز <span class="optional-tag" style="color:var(--accent-gold); font-weight:normal; font-size:11px;">(اختياري - يمكنك التقييم بدون وسائط)</span></label>
+              <button type="button" id="clearCommMediaBtn" style="display:none; color:#ff4757; font-size:11px; background:transparent; border:none; cursor:pointer;" title="إزالة الوسائط">
+                <i class="fa-solid fa-trash"></i> إلغاء الميديا
+              </button>
+            </div>
             <div class="upload-dropzone" id="commDropzone">
               <i class="fa-solid fa-cloud-arrow-up upload-icon"></i>
-              <p>اسحب وأفلت الفيديو أو الصورة هنا أو اضغط للاختيار</p>
+              <p>اسحب وأفلت الفيديو أو الصورة هنا أو اضغط للاختيار (اختياري)</p>
               <span class="upload-hint">يدعم MP4, MOV, JPG, PNG حتى 50MB</span>
               <input type="file" id="commFileInput" accept="image/*,video/*" style="display:none;">
             </div>
             <div id="commFilePreview" class="upload-preview-area" style="display:none;"></div>
             
             <div class="url-fallback-wrap">
-              <span class="or-separator">أو رابط فيديو / صورة خارجي:</span>
+              <span class="or-separator">أو رابط فيديو / صورة خارجي (اختياري):</span>
               <input type="url" id="commUrlInput" placeholder="https://example.com/video.mp4">
             </div>
           </div>

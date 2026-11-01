@@ -160,6 +160,22 @@
   ],
   "community": [
     {
+      "id": "comm-1793548900530",
+      "author": "حمزة العبادي",
+      "authorTag": "@hamza_abbadi",
+      "avatar": "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&q=80",
+      "mediaType": "text",
+      "mediaUrl": null,
+      "videoUrl": null,
+      "subtitle": "Velen Style",
+      "rating": 5,
+      "comment": "الخامة خرافية والقصة البوكسي على اللبس ممتازة جداً، فخورين بمنتج أردني بهالمستوى!",
+      "itemWorn": "VELEN Ringer Tee — Sky Blue",
+      "likes": 0,
+      "approved": true,
+      "createdAt": "2026-11-01T16:01:40.530Z"
+    },
+    {
       "id": "comm-1",
       "author": "Omar_AlKhatib",
       "authorTag": "@omar.style_jo",
@@ -254,5 +270,71 @@
       "status": "Out for Delivery",
       "createdAt": "2026-10-29T08:15:00.000Z"
     }
-  ]
+  ],
+  "design": {
+    "theme": {
+      "primaryColor": "#ffffff",
+      "accentColor": "#e5b95f",
+      "bgColor": "#000000",
+      "saleBadgeText": "SALE"
+    },
+    "header": {
+      "showAnnouncement": true,
+      "announcementText": "FREE DELIVERY IN AMMAN • 1 JD ACROSS JORDAN",
+      "logoUrl": "/assets/velen-logo.jpg",
+      "brandName": "Velen Official"
+    },
+    "hero": {
+      "enabled": true,
+      "bgImage": "/assets/velen-hero-clean.jpg",
+      "brandTitle": "VELEN",
+      "mainHeading": "Premium Everyday Essentials. Made in Jordan.",
+      "subHeading": "CLEAN FITS. PREMIUM FEEL. BUILT FOR EVERYDAY WEAR.",
+      "ctaText": "SHOP THE COLLECTION",
+      "ctaLink": "#collection"
+    },
+    "valueProps": {
+      "enabled": true,
+      "prop1": "توصيل مجاني في عمّان وبدينار لكافة المحافظات",
+      "prop2": "قطن أردني فاخر 260 GSM معالج ومثبت",
+      "prop3": "تبديل فوري للمقاس عند باب البيت"
+    },
+    "sectionsOrder": [
+      "hero",
+      "valueProps",
+      "collection",
+      "community",
+      "about"
+    ],
+    "sectionsVisibility": {
+      "hero": true,
+      "valueProps": true,
+      "collection": true,
+      "community": true,
+      "about": true
+    },
+    "collectionSection": {
+      "subtitle": "AUTUMN / ESSENTIALS 2026",
+      "title": "THE COLLECTION"
+    },
+    "communitySection": {
+      "title": "COMMUNITY WEARS VELEN",
+      "subtitle": "Real people. Real style.",
+      "desc": "شاركنا لوكك اليومي وفيديوهاتك مع قطع Velen، وقيم تجربتك من 5 نجوم لتدخل السحب الأسبوعي على بوكس إسنشيلز كامل!"
+    },
+    "aboutSection": {
+      "enabled": true,
+      "sub": "THE STORY",
+      "title": "WHY VELEN?",
+      "p1": "انطلقت Velen من عمّان لإعادة تعريف الملابس اليومية في الأردن. نركز على القصّات البوكسي المريحة (Boxy & Cropped Fit) والأقمشة القطنية الثقيلة 100% التي تحافظ على شكلها ونعومتها مع الاستخدام المتكرر.",
+      "feature1Title": "قطن محلي نخب أول",
+      "feature1Desc": "نسيج قطني محبوك بوزن 260 GSM معالجة ضد الانكماش والوبر.",
+      "feature2Title": "قصّة بوكسي معاصرة",
+      "feature2Desc": "تصميم أكتاف منسدلة وطول متناسق يعطي إطلالة ستريت وير نظيفة وفخمة.",
+      "feature3Title": "فخر الصناعة الأردنية",
+      "feature3Desc": "مُصمم ومُنتج بأيادٍ أردنية مبدعة لدعم الإنتاج المحلي بأعلى معايير العالمية.",
+      "image": "/assets/velen-logo.jpg",
+      "quote": "Clean fits. Premium feel. Built for everyday wear."
+    }
+  }
 }
