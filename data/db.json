@@ -37,7 +37,13 @@
       "stock": 20,
       "description": "Oversized luxury drape, double-layered hood without drawstrings, kangaroo pocket, ribbed cuffs. Made in Amman.",
       "fabric": "450 GSM Heavy French Terry Cotton",
-      "createdAt": "2026-10-29T07:16:52.025Z"
+      "createdAt": "2026-10-29T07:16:52.025Z",
+      "sizeInventory": {
+        "S": 5,
+        "M": 8,
+        "L": 5,
+        "XL": 2
+      }
     },
     {
       "id": "prod-1",
@@ -67,7 +73,13 @@
       "stock": 24,
       "description": "Designed for effortless everyday wear. Crafted from 100% premium Jordanian heavyweight cotton with contrast white ribbed collar and cuffs. Tailored streetwear relaxed fit.",
       "fabric": "100% Heavyweight Cotton (260 GSM)",
-      "createdAt": "2026-10-28T10:00:00.000Z"
+      "createdAt": "2026-10-28T10:00:00.000Z",
+      "sizeInventory": {
+        "S": 6,
+        "M": 10,
+        "L": 6,
+        "XL": 2
+      }
     },
     {
       "id": "prod-2",
@@ -97,7 +109,13 @@
       "stock": 19,
       "description": "Signature boxy cropped silhouette with dropped shoulders. Ultra-soft breathable cotton finish. High-density Velen branding tag at hem.",
       "fabric": "100% Combed Heavy Cotton (250 GSM)",
-      "createdAt": "2026-10-28T10:05:00.000Z"
+      "createdAt": "2026-10-28T10:05:00.000Z",
+      "sizeInventory": {
+        "S": 4,
+        "M": 8,
+        "L": 4,
+        "XL": 3
+      }
     },
     {
       "id": "prod-3",
@@ -126,7 +144,13 @@
       "stock": 32,
       "description": "Clean white base with contrast obsidian black ringer trims. Essential streetwear staple designed and manufactured locally in Amman, Jordan.",
       "fabric": "100% Jordanian Cotton (260 GSM)",
-      "createdAt": "2026-10-28T10:10:00.000Z"
+      "createdAt": "2026-10-28T10:10:00.000Z",
+      "sizeInventory": {
+        "S": 8,
+        "M": 13,
+        "L": 8,
+        "XL": 3
+      }
     },
     {
       "id": "prod-4",
@@ -155,7 +179,13 @@
       "stock": 28,
       "description": "Deep midnight black boxy cut tee. Heavyweight drape, reinforced double stitching, minimal understated luxury aesthetic.",
       "fabric": "100% Combed Heavy Cotton (250 GSM)",
-      "createdAt": "2026-10-28T10:15:00.000Z"
+      "createdAt": "2026-10-28T10:15:00.000Z",
+      "sizeInventory": {
+        "S": 7,
+        "M": 12,
+        "L": 7,
+        "XL": 2
+      }
     }
   ],
   "community": [

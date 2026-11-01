@@ -410,6 +410,24 @@ app.post('/api/orders', async (req, res) => {
 
   db.orders = db.orders || [];
   db.orders.unshift(newOrder);
+
+  // Decrement per-size inventory in real-time
+  if (Array.isArray(newOrder.items)) {
+    for (const item of newOrder.items) {
+      const prod = (db.products || []).find(p => p.id === item.id || p.name === item.name);
+      if (prod) {
+        if (prod.sizeInventory && item.size && typeof prod.sizeInventory[item.size] !== 'undefined') {
+          prod.sizeInventory[item.size] = Math.max(0, prod.sizeInventory[item.size] - (item.quantity || 1));
+          prod.stock = Object.values(prod.sizeInventory).reduce((a, b) => a + b, 0);
+        } else {
+          prod.stock = Math.max(0, (prod.stock || 0) - (item.quantity || 1));
+        }
+        await firebaseService.saveProduct(prod);
+        broadcast('PRODUCT_UPDATED', prod);
+      }
+    }
+  }
+
   writeDB(db);
   await firebaseService.saveOrder(newOrder);
 

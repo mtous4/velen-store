@@ -255,7 +255,12 @@ document.addEventListener('DOMContentLoaded', () => {
             <strong style="color:#fff;">${Number(p.price).toFixed(3)} JOD</strong>
             ${p.comparePrice ? `<span style="color:#666; text-decoration:line-through; font-size:12px;">${Number(p.comparePrice).toFixed(3)} JOD</span>` : ''}
           </div>
-          <div style="font-size:11px; color:#aaa;">المقاسات: ${(p.sizes || []).join(', ')}</div>
+          <div style="font-size:11px; color:#aaa; margin-top:4px;">
+            ${p.sizeInventory 
+              ? `<span style="color:#e5b95f; font-weight:600;">المخزون بالمقاس:</span> ` + Object.entries(p.sizeInventory).map(([s, q]) => `<span style="display:inline-block; margin-left:3px; padding:1px 5px; border-radius:3px; background:#1b1b1b; color:${q > 0 ? '#fff' : '#e74c3c'}; font-size:10px;">${s}:<strong>${q}</strong></span>`).join('')
+              : `المقاسات: ${(p.sizes || []).join(', ')}`
+            }
+          </div>
           
           <div class="admin-prod-actions">
             <button class="btn-card-edit" onclick="window.velenAdmin.editProduct('${p.id}')">
@@ -423,6 +428,58 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }
 
+    // Setup size inventory listeners
+    const sizeGrid = document.getElementById('sizeInventoryGrid');
+    if (sizeGrid) {
+      function recalculateTotalStock() {
+        let total = 0;
+        const cards = sizeGrid.querySelectorAll('.size-stock-card');
+        cards.forEach(card => {
+          const check = card.querySelector('.size-enable-check');
+          const input = card.querySelector('.size-qty-input');
+          if (check && check.checked) {
+            const qty = parseInt(input.value, 10) || 0;
+            total += qty;
+          }
+        });
+        const prodStock = document.getElementById('prodStock');
+        const badge = document.getElementById('totalCalculatedStockBadge');
+        if (prodStock) prodStock.value = total;
+        if (badge) badge.textContent = total;
+      }
+
+      sizeGrid.addEventListener('change', (e) => {
+        if (e.target.classList.contains('size-enable-check')) {
+          const card = e.target.closest('.size-stock-card');
+          const input = card.querySelector('.size-qty-input');
+          if (e.target.checked) {
+            card.classList.add('active');
+            if ((parseInt(input.value, 10) || 0) === 0) {
+              input.value = 5;
+            }
+          } else {
+            card.classList.remove('active');
+          }
+          recalculateTotalStock();
+        }
+      });
+
+      sizeGrid.addEventListener('input', (e) => {
+        if (e.target.classList.contains('size-qty-input')) {
+          const card = e.target.closest('.size-stock-card');
+          const check = card.querySelector('.size-enable-check');
+          const val = parseInt(e.target.value, 10) || 0;
+          if (val > 0 && !check.checked) {
+            check.checked = true;
+            card.classList.add('active');
+          }
+          recalculateTotalStock();
+        }
+      });
+
+      window._recalculateTotalStock = recalculateTotalStock;
+    }
+
     productForm?.addEventListener('submit', async (e) => {
       e.preventDefault();
 
@@ -432,16 +489,28 @@ document.addEventListener('DOMContentLoaded', () => {
       const comparePriceVal = document.getElementById('prodComparePrice').value;
       const comparePrice = comparePriceVal ? parseFloat(comparePriceVal) : null;
       const category = document.getElementById('prodCategory').value;
-      const stock = parseInt(document.getElementById('prodStock').value, 10);
       const onSale = document.getElementById('prodOnSale').checked;
       const featured = document.getElementById('prodFeatured').checked;
       const fabric = document.getElementById('prodFabric').value.trim();
       const description = document.getElementById('prodDescription').value.trim();
       const imageUrlInput = document.getElementById('prodImageUrl').value.trim();
 
-      const sizeInputs = document.querySelectorAll('input[name="prodSizes"]:checked');
-      const sizes = Array.from(sizeInputs).map(cb => cb.value);
+      // Collect sizeInventory and active sizes
+      const sizeInventory = {};
+      const sizes = [];
+      const cards = document.querySelectorAll('#sizeInventoryGrid .size-stock-card');
+      cards.forEach(card => {
+        const size = card.getAttribute('data-size');
+        const check = card.querySelector('.size-enable-check');
+        const input = card.querySelector('.size-qty-input');
+        if (check && check.checked) {
+          const qty = parseInt(input.value, 10) || 0;
+          sizeInventory[size] = qty;
+          sizes.push(size);
+        }
+      });
 
+      const totalStock = Object.values(sizeInventory).reduce((acc, q) => acc + q, 0);
       const finalImage = state.uploadedProductImageUrl || imageUrlInput || '/assets/velen-logo.jpg';
 
       const payload = {
@@ -449,7 +518,8 @@ document.addEventListener('DOMContentLoaded', () => {
         price,
         comparePrice,
         category,
-        stock,
+        stock: totalStock,
+        sizeInventory,
         onSale,
         featured,
         fabric,
@@ -528,6 +598,24 @@ document.addEventListener('DOMContentLoaded', () => {
       dropzone.innerHTML = `<i class="fa-solid fa-cloud-arrow-up upload-icon"></i><p>اسحب صورة الموديل هنا أو اضغط للاختيار</p><span class="upload-hint">PNG, JPG حتى 20MB</span>`;
     }
     if (preview) preview.style.display = 'none';
+
+    // Reset size inventory grid to standard defaults
+    const sizeCards = document.querySelectorAll('#sizeInventoryGrid .size-stock-card');
+    sizeCards.forEach(card => {
+      const size = card.getAttribute('data-size');
+      const check = card.querySelector('.size-enable-check');
+      const input = card.querySelector('.size-qty-input');
+      const isDefault = ['S', 'M', 'L', 'XL'].includes(size);
+      check.checked = isDefault;
+      if (isDefault) {
+        card.classList.add('active');
+        input.value = 5;
+      } else {
+        card.classList.remove('active');
+        input.value = 0;
+      }
+    });
+    if (window._recalculateTotalStock) window._recalculateTotalStock();
 
     productEditModal.classList.add('active');
   }
@@ -1178,10 +1266,30 @@ document.addEventListener('DOMContentLoaded', () => {
       document.getElementById('prodDescription').value = p.description || '';
       document.getElementById('prodImageUrl').value = p.image || '';
 
-      const checkboxes = document.querySelectorAll('input[name="prodSizes"]');
-      checkboxes.forEach(cb => {
-        cb.checked = (p.sizes || []).includes(cb.value);
+      // Set size breakdown
+      const cards = document.querySelectorAll('#sizeInventoryGrid .size-stock-card');
+      cards.forEach(card => {
+        const size = card.getAttribute('data-size');
+        const check = card.querySelector('.size-enable-check');
+        const input = card.querySelector('.size-qty-input');
+        
+        if (p.sizeInventory && typeof p.sizeInventory[size] !== 'undefined') {
+          const qty = parseInt(p.sizeInventory[size], 10) || 0;
+          check.checked = true;
+          card.classList.add('active');
+          input.value = qty;
+        } else if (Array.isArray(p.sizes) && p.sizes.includes(size)) {
+          const approxQty = Math.max(1, Math.floor((p.stock || 20) / p.sizes.length));
+          check.checked = true;
+          card.classList.add('active');
+          input.value = approxQty;
+        } else {
+          check.checked = false;
+          card.classList.remove('active');
+          input.value = 0;
+        }
       });
+      if (window._recalculateTotalStock) window._recalculateTotalStock();
 
       document.getElementById('productModalTitle').textContent = `تعديل قطعة: ${p.name}`;
       productEditModal.classList.add('active');

@@ -1608,23 +1608,51 @@ input:focus, textarea:focus, select:focus {
 }
 
 .size-box {
-  width: 44px;
-  height: 44px;
+  min-width: 46px;
+  height: 48px;
   border: 1px solid var(--border-subtle);
   background: transparent;
   color: #fff;
   font-size: 13px;
   font-weight: 600;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 1px;
+  padding: 4px 6px;
   transition: all var(--transition-fast);
 }
 
-.size-box.selected, .size-box:hover {
+.size-box.selected, .size-box:not(.out-of-stock):hover {
   border-color: #fff;
   background: #fff;
   color: #000;
+}
+
+.size-box.out-of-stock {
+  opacity: 0.3;
+  cursor: not-allowed;
+  border-style: dashed;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.size-box.out-of-stock .size-letter {
+  text-decoration: line-through;
+}
+
+.stock-sub-badge {
+  font-size: 9px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.stock-sub-badge.low {
+  color: #e5b95f;
+}
+
+.size-box.selected .stock-sub-badge.low {
+  color: #b8860b;
 }
 
 .btn-add-to-bag {

@@ -581,6 +581,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const priceFormatted = Number(product.price).toFixed(3) + ' JOD';
     const comparePriceFormatted = product.comparePrice ? Number(product.comparePrice).toFixed(3) + ' JOD' : null;
     const sizes = product.sizes || ['S', 'M', 'L', 'XL'];
+    const sizeInv = product.sizeInventory || null;
+
+    // Pick initial selected size: first size that has stock > 0
+    let initialSize = 'M';
+    if (sizeInv) {
+      const available = sizes.find(s => typeof sizeInv[s] === 'undefined' || sizeInv[s] > 0);
+      initialSize = available || sizes[0] || 'M';
+    } else {
+      initialSize = (product.sizes && product.sizes[0]) || 'M';
+    }
+    state.selectedSize = initialSize;
 
     productModalDetails.innerHTML = `
       <div class="product-modal-grid">
@@ -601,11 +612,27 @@ document.addEventListener('DOMContentLoaded', () => {
               <span style="color:#aaa; font-weight:400;">(Boxy Relaxed Fit)</span>
             </div>
             <div class="size-boxes" id="modalSizeBoxes">
-              ${sizes.map(size => `
-                <button class="size-box ${size === state.selectedSize ? 'selected' : ''}" onclick="window.velenApp.selectModalSize('${size}')">
-                  ${size}
-                </button>
-              `).join('')}
+              ${sizes.map(size => {
+                const qty = sizeInv ? (typeof sizeInv[size] !== 'undefined' ? sizeInv[size] : 99) : 99;
+                const isOutOfStock = qty <= 0;
+                const isSelected = size === state.selectedSize;
+
+                if (isOutOfStock) {
+                  return `
+                    <button class="size-box out-of-stock" disabled title="هذا المقاس نفذت كميته حالياً">
+                      <span class="size-letter">${size}</span>
+                      <span class="stock-sub-badge">نفذ</span>
+                    </button>
+                  `;
+                }
+
+                return `
+                  <button class="size-box ${isSelected ? 'selected' : ''}" onclick="window.velenApp.selectModalSize('${size}')" title="${qty <= 5 ? `متبقي ${qty} فقط!` : 'متوفر'}">
+                    <span class="size-letter">${size}</span>
+                    ${qty <= 3 ? `<span class="stock-sub-badge low">بقي ${qty}</span>` : ''}
+                  </button>
+                `;
+              }).join('')}
             </div>
           </div>
 
@@ -1018,15 +1045,30 @@ document.addEventListener('DOMContentLoaded', () => {
   window.velenApp = {
     openProductModal,
     selectModalSize: (size) => {
+      if (state.currentProductForModal?.sizeInventory) {
+        const qty = state.currentProductForModal.sizeInventory[size];
+        if (typeof qty !== 'undefined' && qty <= 0) {
+          showToast('هذا المقاس غير متوفر حالياً', 'info');
+          return;
+        }
+      }
       state.selectedSize = size;
       const boxes = document.querySelectorAll('#modalSizeBoxes .size-box');
       boxes.forEach(b => {
-        if (b.textContent.trim() === size) b.classList.add('selected');
+        const letter = b.querySelector('.size-letter')?.textContent.trim() || b.textContent.trim();
+        if (letter === size) b.classList.add('selected');
         else b.classList.remove('selected');
       });
     },
     addCurrentModalToCart: () => {
       if (state.currentProductForModal) {
+        if (state.currentProductForModal.sizeInventory) {
+          const qty = state.currentProductForModal.sizeInventory[state.selectedSize];
+          if (typeof qty !== 'undefined' && qty <= 0) {
+            showToast('عذراً، هذا المقاس نفذت كميته', 'info');
+            return;
+          }
+        }
         addToCart(state.currentProductForModal, state.selectedSize, 1);
         closeProductModal();
       }
@@ -1034,7 +1076,13 @@ document.addEventListener('DOMContentLoaded', () => {
     quickAddToCart: (productId) => {
       const product = state.products.find(p => p.id === productId);
       if (product) {
-        addToCart(product, 'M', 1);
+        const sizes = product.sizes || ['S', 'M', 'L', 'XL'];
+        const sizeInv = product.sizeInventory || null;
+        let pickSize = 'M';
+        if (sizeInv) {
+          pickSize = sizes.find(s => typeof sizeInv[s] === 'undefined' || sizeInv[s] > 0) || 'M';
+        }
+        addToCart(product, pickSize, 1);
       }
     },
     updateCartQty: updateCartQuantity,

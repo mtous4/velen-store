@@ -742,22 +742,89 @@
             </select>
           </div>
           <div class="form-group">
-            <label>الكمية المتوفرة في المخزن *</label>
-            <input type="number" id="prodStock" value="25" min="0" required>
+            <label>إجمالي الكمية المتوفرة (محسوب تلقائياً من المقاسات) *</label>
+            <input type="number" id="prodStock" value="20" min="0" required readonly style="background:#161616; cursor:not-allowed; border-color:#333;">
           </div>
         </div>
 
-        <!-- Available Sizes -->
+        <!-- Available Sizes & Stock per Size -->
         <div class="form-group">
-          <label>المقاسات المتوفرة:</label>
-          <div class="sizes-checkbox-row">
-            <label class="size-check"><input type="checkbox" name="prodSizes" value="XS"> <span>XS</span></label>
-            <label class="size-check"><input type="checkbox" name="prodSizes" value="S" checked> <span>S</span></label>
-            <label class="size-check"><input type="checkbox" name="prodSizes" value="M" checked> <span>M</span></label>
-            <label class="size-check"><input type="checkbox" name="prodSizes" value="L" checked> <span>L</span></label>
-            <label class="size-check"><input type="checkbox" name="prodSizes" value="XL" checked> <span>XL</span></label>
-            <label class="size-check"><input type="checkbox" name="prodSizes" value="XXL"> <span>XXL</span></label>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <label style="margin:0; font-weight:600;"><i class="fa-solid fa-ruler-combined"></i> المقاسات المتوفرة والكمية لكل مقاس:</label>
+            <span style="font-size:12px; color:var(--accent-gold); font-weight:600;">
+              المجموع: <span id="totalCalculatedStockBadge">20</span> قطعة
+            </span>
           </div>
+          <div class="size-inventory-grid" id="sizeInventoryGrid">
+            <div class="size-stock-card" data-size="XS">
+              <label class="size-stock-label">
+                <input type="checkbox" class="size-enable-check" data-size="XS">
+                <span class="size-tag">XS</span>
+              </label>
+              <div class="size-stock-input-wrap">
+                <input type="number" class="size-qty-input" data-size="XS" min="0" value="0" placeholder="0">
+                <span class="qty-unit">قطعة</span>
+              </div>
+            </div>
+
+            <div class="size-stock-card active" data-size="S">
+              <label class="size-stock-label">
+                <input type="checkbox" class="size-enable-check" data-size="S" checked>
+                <span class="size-tag">S</span>
+              </label>
+              <div class="size-stock-input-wrap">
+                <input type="number" class="size-qty-input" data-size="S" min="0" value="5" placeholder="0">
+                <span class="qty-unit">قطعة</span>
+              </div>
+            </div>
+
+            <div class="size-stock-card active" data-size="M">
+              <label class="size-stock-label">
+                <input type="checkbox" class="size-enable-check" data-size="M" checked>
+                <span class="size-tag">M</span>
+              </label>
+              <div class="size-stock-input-wrap">
+                <input type="number" class="size-qty-input" data-size="M" min="0" value="5" placeholder="0">
+                <span class="qty-unit">قطعة</span>
+              </div>
+            </div>
+
+            <div class="size-stock-card active" data-size="L">
+              <label class="size-stock-label">
+                <input type="checkbox" class="size-enable-check" data-size="L" checked>
+                <span class="size-tag">L</span>
+              </label>
+              <div class="size-stock-input-wrap">
+                <input type="number" class="size-qty-input" data-size="L" min="0" value="5" placeholder="0">
+                <span class="qty-unit">قطعة</span>
+              </div>
+            </div>
+
+            <div class="size-stock-card active" data-size="XL">
+              <label class="size-stock-label">
+                <input type="checkbox" class="size-enable-check" data-size="XL" checked>
+                <span class="size-tag">XL</span>
+              </label>
+              <div class="size-stock-input-wrap">
+                <input type="number" class="size-qty-input" data-size="XL" min="0" value="5" placeholder="0">
+                <span class="qty-unit">قطعة</span>
+              </div>
+            </div>
+
+            <div class="size-stock-card" data-size="XXL">
+              <label class="size-stock-label">
+                <input type="checkbox" class="size-enable-check" data-size="XXL">
+                <span class="size-tag">XXL</span>
+              </label>
+              <div class="size-stock-input-wrap">
+                <input type="number" class="size-qty-input" data-size="XXL" min="0" value="0" placeholder="0">
+                <span class="qty-unit">قطعة</span>
+              </div>
+            </div>
+          </div>
+          <p style="font-size:11px; color:#888; margin-top:6px;">
+            <i class="fa-solid fa-circle-info"></i> حدد المقاسات المتوفرة واكتب عدد القطع لكل مقاس. المقاس الذي كميته 0 سيظهر للزبون كـ "نفذت الكمية".
+          </p>
         </div>
 
         <!-- Sale & Featured Badges -->
