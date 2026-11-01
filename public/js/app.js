@@ -188,6 +188,23 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  async function fetchProducts() {
+    try {
+      const res = await fetch('/api/products');
+      state.products = await res.json();
+      renderProducts();
+      populateProductSelect();
+    } catch (err) {
+      console.error('Error fetching products:', err);
+    }
+  }
+
+  function populateProductSelect() {
+    if (commItemWorn && Array.isArray(state.products)) {
+      commItemWorn.innerHTML = state.products.map(p => `<option value="${p.name}">${p.name}</option>`).join('');
+    }
+  }
+
   async function fetchCommunity() {
     try {
       const res = await fetch('/api/community');
@@ -302,11 +319,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let filtered = state.products;
     if (state.activeCategory === 'Tees') {
-      filtered = state.products.filter(p => p.category === 'Tees');
+      filtered = state.products.filter(p => 
+        (p.category && p.category.toLowerCase().includes('tee')) || 
+        (p.name && p.name.toLowerCase().includes('tee'))
+      );
     } else if (state.activeCategory === 'Ringer') {
-      filtered = state.products.filter(p => p.name.toLowerCase().includes('ringer'));
+      filtered = state.products.filter(p => 
+        (p.name && p.name.toLowerCase().includes('ringer')) ||
+        (p.category && p.category.toLowerCase().includes('ringer'))
+      );
     } else if (state.activeCategory === 'Boxy') {
-      filtered = state.products.filter(p => p.name.toLowerCase().includes('boxy') || p.name.toLowerCase().includes('cropped'));
+      filtered = state.products.filter(p => 
+        (p.name && (p.name.toLowerCase().includes('boxy') || p.name.toLowerCase().includes('cropped'))) ||
+        (p.category && (p.category.toLowerCase().includes('boxy') || p.category.toLowerCase().includes('cropped')))
+      );
+    } else if (state.activeCategory === 'Hoodies') {
+      filtered = state.products.filter(p => 
+        (p.name && p.name.toLowerCase().includes('hoodie')) ||
+        (p.category && p.category.toLowerCase().includes('hoodie'))
+      );
+    } else if (state.activeCategory && state.activeCategory !== 'all') {
+      filtered = state.products.filter(p => p.category === state.activeCategory);
     }
 
     if (filtered.length === 0) {
