@@ -10,9 +10,33 @@ const app = express();
 const server = http.createServer(app);
 const wss = new WebSocketServer({ server });
 
+// Load environment variables from .env file if it exists
+const ENV_FILE = path.join(__dirname, '.env');
+if (fs.existsSync(ENV_FILE)) {
+  const envContent = fs.readFileSync(ENV_FILE, 'utf8');
+  envContent.split('\n').forEach(line => {
+    const trimmed = line.trim();
+    if (trimmed && !trimmed.startsWith('#')) {
+      const [k, ...v] = trimmed.split('=');
+      const key = k?.trim();
+      const val = v.join('=').trim().replace(/^["'](.*)["']$/, '$1');
+      if (key && !process.env[key]) {
+        process.env[key] = val;
+      }
+    }
+  });
+}
+
 const PORT = process.env.PORT || 3000;
 const DB_FILE = path.join(__dirname, 'data', 'db.json');
 const UPLOADS_DIR = path.join(__dirname, 'public', 'uploads');
+const PRIVATE_DIR = path.join(__dirname, 'private');
+
+// Admin Security & Domain Stealth Configuration
+const ADMIN_SECRET_KEY = process.env.ADMIN_SECRET_KEY || 'velen-adm-sec-962';
+const ADMIN_PASSCODE = process.env.ADMIN_PASSCODE || '2026';
+const STORE_DOMAIN = (process.env.STORE_DOMAIN || '').trim().toLowerCase();
+const ADMIN_DOMAIN = (process.env.ADMIN_DOMAIN || '').trim().toLowerCase();
 
 if (!fs.existsSync(UPLOADS_DIR)) {
   fs.mkdirSync(UPLOADS_DIR, { recursive: true });
@@ -37,6 +61,21 @@ function writeDB(data) {
   }
 }
 
+// Helper to parse cookies from headers
+function parseCookies(req) {
+  const list = {};
+  const cookieHeader = req.headers.cookie;
+  if (!cookieHeader) return list;
+  cookieHeader.split(';').forEach(cookie => {
+    let [name, ...rest] = cookie.split('=');
+    name = name?.trim();
+    if (!name) return;
+    const value = rest.join('=').trim();
+    list[name] = decodeURIComponent(value);
+  });
+  return list;
+}
+
 // WebSocket broadcast to all connected clients (real-time sync)
 function broadcast(event, payload) {
   const message = JSON.stringify({ event, payload });
@@ -51,6 +90,66 @@ function broadcast(event, payload) {
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// ================= STEALTH ADMIN GUARD & DOMAIN ISOLATION =================
+// Intercept admin requests BEFORE express.static serves anything publicly
+app.use((req, res, next) => {
+  const host = (req.hostname || req.headers.host || '').toLowerCase().split(':')[0];
+  const cookies = parseCookies(req);
+  const queryKey = req.query.key || req.query.secret;
+  const isKeyAuthorized = queryKey === ADMIN_SECRET_KEY || cookies.velen_admin_key === ADMIN_SECRET_KEY;
+
+  function serveAdminPage() {
+    if (queryKey === ADMIN_SECRET_KEY) {
+      res.setHeader('Set-Cookie', `velen_admin_key=${ADMIN_SECRET_KEY}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${30 * 24 * 3600}`);
+    }
+    const htmlPath = path.join(PRIVATE_DIR, 'admin.html');
+    if (fs.existsSync(htmlPath)) {
+      return res.type('html').send(fs.readFileSync(htmlPath, 'utf8'));
+    }
+    return res.status(500).send('Admin template missing');
+  }
+
+  // 1. If request is on the Public Store domain, 100% hide admin paths
+  if (STORE_DOMAIN && host === STORE_DOMAIN) {
+    if (req.path === '/admin' || req.path === '/admin/' || req.path === '/admin.html' || req.path === '/css/admin.css' || req.path === '/js/admin.js') {
+      return res.status(404).send('<!DOCTYPE html><html><head><title>404 Not Found</title></head><body><h1>404 Not Found</h1><p>The requested URL was not found on this server.</p></body></html>');
+    }
+  }
+
+  // 2. If request is on the dedicated Admin domain
+  if (ADMIN_DOMAIN && host === ADMIN_DOMAIN) {
+    // Root path on admin domain
+    if (req.path === '/' || req.path === '/index.html') {
+      if (isKeyAuthorized) {
+        return serveAdminPage();
+      } else {
+        // Camouflage as 404: neither customer nor scanner knows the admin panel exists!
+        return res.status(404).send('<!DOCTYPE html><html><head><title>404 Not Found</title></head><body><h1>404 Not Found</h1><p>The requested URL was not found on this server.</p></body></html>');
+      }
+    }
+  }
+
+  // 3. Admin routes (/admin, /admin/, /admin.html)
+  if (req.path === '/admin' || req.path === '/admin/' || req.path === '/admin.html') {
+    if (isKeyAuthorized) {
+      return serveAdminPage();
+    } else {
+      // Complete camouflage: realistic 404 response
+      return res.status(404).send('<!DOCTYPE html><html><head><title>404 Not Found</title></head><body><h1>404 Not Found</h1><p>The requested URL was not found on this server.</p></body></html>');
+    }
+  }
+
+  // 4. Protect admin assets from direct public reconnaissance
+  if (req.path === '/css/admin.css' || req.path === '/js/admin.js') {
+    if (!isKeyAuthorized) {
+      return res.status(404).send('Not Found');
+    }
+  }
+
+  next();
+});
+
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Configure Multer for media uploads (Images and Videos)
@@ -317,16 +416,31 @@ app.get('/api/stats', (req, res) => {
   });
 });
 
-// Handle graceful redirects for admin portal
-app.get(['/admin', '/admin/'], (req, res) => {
-  res.redirect('/admin.html');
+// ================= API: Admin Authentication =================
+app.post('/api/admin/verify', (req, res) => {
+  const { passcode, key } = req.body;
+  const isKeyValid = key && key === ADMIN_SECRET_KEY;
+  const isPassValid = passcode && passcode === ADMIN_PASSCODE;
+
+  if (isKeyValid || isPassValid) {
+    res.setHeader('Set-Cookie', `velen_admin_key=${ADMIN_SECRET_KEY}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${30 * 24 * 3600}`);
+    return res.json({ success: true, message: 'تم التحقق بنجاح، مرحباً بك في لوحة تحكم Velen' });
+  }
+
+  return res.status(401).json({ success: false, message: 'رمز الدخول الرئيسي (Passcode) غير صحيح' });
+});
+
+app.post('/api/admin/logout', (req, res) => {
+  res.setHeader('Set-Cookie', `velen_admin_key=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0`);
+  res.json({ success: true, message: 'تم قفل لوحة التحكم' });
 });
 
 // Start server
 server.listen(PORT, () => {
   console.log(`=================================================`);
-  console.log(`VELEN OFFICIAL STORE RUNNING ON: http://localhost:${PORT}`);
-  console.log(`VELEN ADMIN DASHBOARD ON:      http://localhost:${PORT}/admin`);
+  console.log(`VELEN OFFICIAL STORE: http://localhost:${PORT}`);
+  console.log(`STEALTH ADMIN ACCESS LINK: http://localhost:${PORT}/admin?key=${ADMIN_SECRET_KEY}`);
+  console.log(`PUBLIC ACCESS TO /admin WITHOUT KEY: 404 Not Found (Stealth Mode)`);
   console.log(`WebSocket live sync active!`);
   console.log(`=================================================`);
 });

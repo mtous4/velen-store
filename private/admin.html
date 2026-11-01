@@ -16,6 +16,44 @@
 </head>
 <body class="admin-body">
 
+  <!-- ================= MASTER PIN LOCK OVERLAY ================= -->
+  <div id="adminLockOverlay" class="admin-lock-overlay">
+    <div class="admin-lock-card">
+      <div class="lock-brand">
+        <img src="/assets/velen-logo.jpg" alt="Velen Logo" class="lock-logo">
+        <h2>VELEN CONTROL ROOM</h2>
+        <p>بوابة إدارة المتجر الرسمية — وصول مشفر ومحمي</p>
+      </div>
+
+      <div class="lock-status-pill">
+        <i class="fa-solid fa-shield-halved"></i>
+        <span>الاتصال موثق ومحمي برمز وصول سري</span>
+      </div>
+
+      <form id="adminLockForm" class="lock-form">
+        <div class="pin-input-wrap">
+          <label for="adminPinInput">رمز الدخول الرئيسي (Admin Passcode):</label>
+          <div class="pin-field">
+            <input type="password" id="adminPinInput" placeholder="••••" maxlength="16" autofocus autocomplete="current-password" required>
+            <button type="button" id="togglePinVisBtn" class="btn-toggle-eye" title="إظهار/إخفاء الرمز">
+              <i class="fa-solid fa-eye"></i>
+            </button>
+          </div>
+          <span class="pin-hint">أدخل رمز الحماية لفتح لوحة التحكم وإدارة المتجر</span>
+        </div>
+
+        <button type="submit" id="unlockAdminBtn" class="btn-unlock-action">
+          <i class="fa-solid fa-lock-open"></i> تأكيد ودخول لوحة التحكم
+        </button>
+        <div id="lockErrorMsg" class="lock-error-msg" style="display:none;"></div>
+      </form>
+
+      <div class="lock-footer-info">
+        <span>Velen Official Security Shield • Amman, Jordan</span>
+      </div>
+    </div>
+  </div>
+
   <!-- Admin Sidebar -->
   <aside class="admin-sidebar" id="adminSidebar">
     <div class="sidebar-brand">
@@ -72,6 +110,10 @@
         <i class="fa-solid fa-arrow-up-right-from-square"></i>
         <span>معاينة المتجر الرسمي</span>
       </a>
+      <button type="button" id="lockAdminPortalBtn" class="btn-lock-sidebar">
+        <i class="fa-solid fa-lock"></i>
+        <span>قفل لوحة التحكم</span>
+      </button>
       <div class="admin-user-info">
         <i class="fa-solid fa-shield-halved"></i>
         <span>مدير المتجر: Mahmoud Al-Tous</span>

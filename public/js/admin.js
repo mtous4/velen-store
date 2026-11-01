@@ -566,6 +566,89 @@ document.addEventListener('DOMContentLoaded', () => {
     // Forms
     setupProductForm();
     setupDesignCustomizer();
+    setupMasterLock();
+  }
+
+  // ================= MASTER PIN LOCK SCREEN =================
+  function setupMasterLock() {
+    const lockOverlay = document.getElementById('adminLockOverlay');
+    const lockForm = document.getElementById('adminLockForm');
+    const pinInput = document.getElementById('adminPinInput');
+    const toggleEye = document.getElementById('togglePinVisBtn');
+    const errorMsg = document.getElementById('lockErrorMsg');
+    const lockSidebarBtn = document.getElementById('lockAdminPortalBtn');
+
+    if (!lockOverlay) return;
+
+    // Check if session is already unlocked
+    const isUnlocked = sessionStorage.getItem('velen_admin_unlocked') === 'true';
+    if (!isUnlocked) {
+      lockOverlay.classList.add('active');
+      setTimeout(() => pinInput?.focus(), 300);
+    } else {
+      lockOverlay.classList.remove('active');
+    }
+
+    // Toggle Eye (show/hide password)
+    toggleEye?.addEventListener('click', () => {
+      if (pinInput.type === 'password') {
+        pinInput.type = 'text';
+        toggleEye.innerHTML = '<i class="fa-solid fa-eye-slash"></i>';
+      } else {
+        pinInput.type = 'password';
+        toggleEye.innerHTML = '<i class="fa-solid fa-eye"></i>';
+      }
+    });
+
+    // Form Submit
+    lockForm?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const passcode = pinInput.value.trim();
+      if (!passcode) return;
+
+      try {
+        const res = await fetch('/api/admin/verify', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ passcode })
+        });
+        const data = await res.json();
+
+        if (data.success) {
+          sessionStorage.setItem('velen_admin_unlocked', 'true');
+          lockOverlay.classList.remove('active');
+          if (errorMsg) errorMsg.style.display = 'none';
+          playNotificationSound();
+          showAdminToast('تم فتح قفل لوحة التحكم بنجاح، أهلاً بك!', 'success');
+        } else {
+          if (errorMsg) {
+            errorMsg.textContent = data.message || 'رمز الدخول غير صحيح، يرجى المحاولة ثانية';
+            errorMsg.style.display = 'block';
+          }
+          pinInput.value = '';
+          pinInput.focus();
+        }
+      } catch (err) {
+        if (errorMsg) {
+          errorMsg.textContent = 'حدث خطأ في الاتصال بالخادم';
+          errorMsg.style.display = 'block';
+        }
+      }
+    });
+
+    // Sidebar Lock Button
+    lockSidebarBtn?.addEventListener('click', async () => {
+      sessionStorage.removeItem('velen_admin_unlocked');
+      lockOverlay.classList.add('active');
+      if (pinInput) {
+        pinInput.value = '';
+        setTimeout(() => pinInput.focus(), 300);
+      }
+      try {
+        await fetch('/api/admin/logout', { method: 'POST' });
+      } catch (e) {}
+      showAdminToast('تم قفل لوحة التحكم', 'info');
+    });
   }
 
   function switchTab(tabId) {
