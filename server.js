@@ -32,6 +32,10 @@ let DB_FILE = path.join(__dirname, 'data', 'db.json');
 let UPLOADS_DIR = path.join(__dirname, 'public', 'uploads');
 const PRIVATE_DIR = path.join(__dirname, 'private');
 
+// Initialize Google Firebase Firestore service
+const firebaseService = require('./firebase');
+firebaseService.initFirebase();
+
 // Vercel Serverless environment handling (/tmp is the only writable directory on AWS Lambda)
 if (process.env.VERCEL) {
   const tmpDB = path.join('/tmp', 'db.json');
@@ -207,48 +211,50 @@ app.post('/api/upload', upload.single('media'), (req, res) => {
 });
 
 // ================= API: Settings =================
-app.get('/api/settings', (req, res) => {
-  const db = readDB();
-  res.json(db.settings || {});
+app.get('/api/settings', async (req, res) => {
+  const settings = await firebaseService.getSettings(readDB());
+  res.json(settings || {});
 });
 
-app.put('/api/settings', (req, res) => {
+app.put('/api/settings', async (req, res) => {
   const db = readDB();
   db.settings = { ...db.settings, ...req.body };
   writeDB(db);
+  await firebaseService.updateSettings(db.settings);
   broadcast('SETTINGS_UPDATED', db.settings);
   res.json({ success: true, settings: db.settings });
 });
 
 // ================= API: Design & Layout CMS =================
-app.get('/api/design', (req, res) => {
-  const db = readDB();
-  res.json(db.design || {});
+app.get('/api/design', async (req, res) => {
+  const design = await firebaseService.getDesign(readDB());
+  res.json(design || {});
 });
 
-app.put('/api/design', (req, res) => {
+app.put('/api/design', async (req, res) => {
   const db = readDB();
   db.design = { ...db.design, ...req.body };
   writeDB(db);
+  await firebaseService.updateDesign(db.design);
   broadcast('DESIGN_UPDATED', db.design);
   res.json({ success: true, design: db.design });
 });
 
 // ================= API: Products =================
-app.get('/api/products', (req, res) => {
-  const db = readDB();
-  res.json(db.products || []);
+app.get('/api/products', async (req, res) => {
+  const products = await firebaseService.getProducts(readDB());
+  res.json(products || []);
 });
 
-app.get('/api/products/:id', (req, res) => {
-  const db = readDB();
-  const product = (db.products || []).find(p => p.id === req.params.id);
+app.get('/api/products/:id', async (req, res) => {
+  const products = await firebaseService.getProducts(readDB());
+  const product = (products || []).find(p => p.id === req.params.id);
   if (!product) return res.status(404).json({ message: 'Product not found' });
   res.json(product);
 });
 
-// Admin creates new product -> instantly syncs to store
-app.post('/api/products', (req, res) => {
+// Admin creates new product -> instantly syncs to store & Firestore
+app.post('/api/products', async (req, res) => {
   const db = readDB();
   const newProduct = {
     id: 'prod-' + Date.now(),
@@ -271,55 +277,57 @@ app.post('/api/products', (req, res) => {
   db.products = db.products || [];
   db.products.unshift(newProduct);
   writeDB(db);
+  await firebaseService.saveProduct(newProduct);
 
   broadcast('PRODUCT_ADDED', newProduct);
   res.status(201).json({ success: true, product: newProduct });
 });
 
 // Admin updates product
-app.put('/api/products/:id', (req, res) => {
+app.put('/api/products/:id', async (req, res) => {
   const db = readDB();
-  const index = (db.products || []).findIndex(p => p.id === req.params.id);
-  if (index === -1) return res.status(404).json({ message: 'Product not found' });
+  const products = await firebaseService.getProducts(db);
+  const existing = (products || []).find(p => p.id === req.params.id);
+  if (!existing) return res.status(404).json({ message: 'Product not found' });
 
   const updatedProduct = {
-    ...db.products[index],
+    ...existing,
     ...req.body,
-    price: parseFloat(req.body.price !== undefined ? req.body.price : db.products[index].price),
-    comparePrice: req.body.comparePrice !== undefined ? (req.body.comparePrice ? parseFloat(req.body.comparePrice) : null) : db.products[index].comparePrice,
-    stock: parseInt(req.body.stock !== undefined ? req.body.stock : db.products[index].stock, 10)
+    price: parseFloat(req.body.price !== undefined ? req.body.price : existing.price),
+    comparePrice: req.body.comparePrice !== undefined ? (req.body.comparePrice ? parseFloat(req.body.comparePrice) : null) : existing.comparePrice,
+    stock: parseInt(req.body.stock !== undefined ? req.body.stock : existing.stock, 10)
   };
 
-  db.products[index] = updatedProduct;
-  writeDB(db);
+  const localIdx = (db.products || []).findIndex(p => p.id === req.params.id);
+  if (localIdx !== -1) {
+    db.products[localIdx] = updatedProduct;
+    writeDB(db);
+  }
+  await firebaseService.saveProduct(updatedProduct);
 
   broadcast('PRODUCT_UPDATED', updatedProduct);
   res.json({ success: true, product: updatedProduct });
 });
 
 // Admin deletes product
-app.delete('/api/products/:id', (req, res) => {
+app.delete('/api/products/:id', async (req, res) => {
   const db = readDB();
-  const initialLen = (db.products || []).length;
   db.products = (db.products || []).filter(p => p.id !== req.params.id);
-
-  if (db.products.length === initialLen) {
-    return res.status(404).json({ message: 'Product not found' });
-  }
-
   writeDB(db);
+  await firebaseService.deleteProduct(req.params.id);
+
   broadcast('PRODUCT_DELETED', { id: req.params.id });
   res.json({ success: true, message: 'Product deleted' });
 });
 
 // ================= API: Community =================
-app.get('/api/community', (req, res) => {
-  const db = readDB();
-  res.json(db.community || []);
+app.get('/api/community', async (req, res) => {
+  const community = await firebaseService.getCommunity(readDB());
+  res.json(community || []);
 });
 
 // Customer submits look & 1-5 star review (Photo/video is completely optional!)
-app.post('/api/community', (req, res) => {
+app.post('/api/community', async (req, res) => {
   const db = readDB();
   const rawMediaUrl = req.body.mediaUrl && req.body.mediaUrl.trim() !== '' ? req.body.mediaUrl.trim() : null;
   const hasMedia = Boolean(rawMediaUrl);
@@ -344,40 +352,44 @@ app.post('/api/community', (req, res) => {
   db.community = db.community || [];
   db.community.unshift(post);
   writeDB(db);
+  await firebaseService.saveCommunityPost(post);
 
   broadcast('COMMUNITY_NEW_POST', post);
   res.status(201).json({ success: true, post });
 });
 
 // Like a community post
-app.post('/api/community/:id/like', (req, res) => {
+app.post('/api/community/:id/like', async (req, res) => {
   const db = readDB();
   const item = (db.community || []).find(c => c.id === req.params.id);
-  if (!item) return res.status(404).json({ message: 'Post not found' });
-
-  item.likes = (item.likes || 0) + 1;
-  writeDB(db);
-  broadcast('COMMUNITY_LIKED', { id: item.id, likes: item.likes });
-  res.json({ success: true, likes: item.likes });
+  if (item) {
+    item.likes = (item.likes || 0) + 1;
+    writeDB(db);
+  }
+  await firebaseService.likeCommunityPost(req.params.id);
+  broadcast('COMMUNITY_LIKED', { id: req.params.id, likes: (item ? item.likes : 1) });
+  res.json({ success: true, likes: (item ? item.likes : 1) });
 });
 
 // Admin deletes community post
-app.delete('/api/community/:id', (req, res) => {
+app.delete('/api/community/:id', async (req, res) => {
   const db = readDB();
   db.community = (db.community || []).filter(c => c.id !== req.params.id);
   writeDB(db);
+  await firebaseService.deleteCommunityPost(req.params.id);
+
   broadcast('COMMUNITY_DELETED', { id: req.params.id });
   res.json({ success: true, message: 'Community post removed' });
 });
 
 // ================= API: Orders =================
-app.get('/api/orders', (req, res) => {
-  const db = readDB();
-  res.json(db.orders || []);
+app.get('/api/orders', async (req, res) => {
+  const orders = await firebaseService.getOrders(readDB());
+  res.json(orders || []);
 });
 
 // Customer places an order
-app.post('/api/orders', (req, res) => {
+app.post('/api/orders', async (req, res) => {
   const db = readDB();
   const orderNumber = 'ORD-' + Math.floor(1000 + Math.random() * 9000);
   const newOrder = {
@@ -399,6 +411,7 @@ app.post('/api/orders', (req, res) => {
   db.orders = db.orders || [];
   db.orders.unshift(newOrder);
   writeDB(db);
+  await firebaseService.saveOrder(newOrder);
 
   // Broadcast to admin dashboard
   broadcast('ORDER_PLACED', newOrder);
@@ -406,24 +419,25 @@ app.post('/api/orders', (req, res) => {
 });
 
 // Admin updates order status
-app.patch('/api/orders/:id/status', (req, res) => {
+app.patch('/api/orders/:id/status', async (req, res) => {
   const db = readDB();
   const order = (db.orders || []).find(o => o.id === req.params.id);
-  if (!order) return res.status(404).json({ message: 'Order not found' });
+  if (order) {
+    order.status = req.body.status || order.status;
+    writeDB(db);
+  }
+  await firebaseService.updateOrderStatus(req.params.id, req.body.status);
 
-  order.status = req.body.status || order.status;
-  writeDB(db);
-
-  broadcast('ORDER_STATUS_CHANGED', order);
-  res.json({ success: true, order });
+  broadcast('ORDER_STATUS_CHANGED', { id: req.params.id, status: req.body.status });
+  res.json({ success: true, order: { id: req.params.id, status: req.body.status } });
 });
 
 // ================= API: Analytics & Stats =================
-app.get('/api/stats', (req, res) => {
+app.get('/api/stats', async (req, res) => {
   const db = readDB();
-  const products = db.products || [];
-  const orders = db.orders || [];
-  const community = db.community || [];
+  const products = await firebaseService.getProducts(db);
+  const orders = await firebaseService.getOrders(db);
+  const community = await firebaseService.getCommunity(db);
 
   const totalRevenue = orders.reduce((sum, o) => sum + (Number(o.total) || 0), 0);
   const totalOrders = orders.length;
