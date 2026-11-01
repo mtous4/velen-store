@@ -3,7 +3,8 @@
  * Seamlessly integrates Google Cloud Firestore with automatic local fallback & auto-migration
  */
 
-const admin = require('firebase-admin');
+const { initializeApp, cert, getApps } = require('firebase-admin/app');
+const { getFirestore } = require('firebase-admin/firestore');
 const path = require('path');
 const fs = require('fs');
 
@@ -21,18 +22,20 @@ function initFirebase() {
     // 1. Check local key file
     if (fs.existsSync(keyFilePath)) {
       const keyData = JSON.parse(fs.readFileSync(keyFilePath, 'utf8'));
-      credential = admin.credential.cert(keyData);
+      credential = cert(keyData);
       console.log('🔥 Initializing Firebase from local firebase-key.json');
     }
     // 2. Check full JSON environment variable
     else if (process.env.FIREBASE_SERVICE_ACCOUNT) {
-      const keyData = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
-      credential = admin.credential.cert(keyData);
+      const keyData = typeof process.env.FIREBASE_SERVICE_ACCOUNT === 'string'
+        ? JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT)
+        : process.env.FIREBASE_SERVICE_ACCOUNT;
+      credential = cert(keyData);
       console.log('🔥 Initializing Firebase from FIREBASE_SERVICE_ACCOUNT env');
     }
     // 3. Check individual environment variables
     else if (process.env.FIREBASE_PROJECT_ID && process.env.FIREBASE_CLIENT_EMAIL && process.env.FIREBASE_PRIVATE_KEY) {
-      credential = admin.credential.cert({
+      credential = cert({
         projectId: process.env.FIREBASE_PROJECT_ID,
         clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
         privateKey: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n')
@@ -41,10 +44,13 @@ function initFirebase() {
     }
 
     if (credential) {
-      if (!admin.apps.length) {
-        admin.initializeApp({ credential });
+      let app;
+      if (!getApps().length) {
+        app = initializeApp({ credential });
+      } else {
+        app = getApps()[0];
       }
-      db = admin.firestore();
+      db = getFirestore(app);
       isFirebaseReady = true;
       console.log('✅ Google Firebase Firestore Connected Successfully!');
       
