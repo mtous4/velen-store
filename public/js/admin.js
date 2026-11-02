@@ -142,6 +142,14 @@ document.addEventListener('DOMContentLoaded', () => {
       state.design = payload;
       populateDesignCustomizer();
       showAdminToast('🎨 تم تحديث تصميم وهيكلية المتجر من قِبل الإدارة!', 'info');
+    } else if (evType === 'ORDER_STATUS_CHANGED') {
+      const ord = state.orders.find(o => o.id === payload.id);
+      if (ord) {
+        ord.status = payload.status;
+        renderOrders();
+        renderDashboard();
+        updateBadgeCounts();
+      }
     }
   }
 
@@ -172,12 +180,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const pendingOrders = state.orders.filter(o => o.status === 'Pending').length;
     document.getElementById('navOrdersCount').textContent = pendingOrders;
 
-    const totalRevenue = state.orders.reduce((sum, o) => sum + (Number(o.total) || 0), 0);
+    // Filter out cancelled orders so cancelled orders do NOT count towards total sales
+    const validOrders = state.orders.filter(o => o.status !== 'Cancelled');
+    const cancelledOrders = state.orders.filter(o => o.status === 'Cancelled');
+    const totalRevenue = validOrders.reduce((sum, o) => sum + (Number(o.total) || 0), 0);
     const revStr = totalRevenue.toFixed(3) + ' JOD';
     document.getElementById('topbarRevenue').textContent = revStr;
     document.getElementById('kpiRevenue').textContent = revStr;
-    document.getElementById('kpiOrders').textContent = state.orders.length;
-    document.getElementById('kpiPendingOrders').textContent = `${pendingOrders} قيد الانتظار`;
+    document.getElementById('kpiOrders').textContent = validOrders.length;
+    document.getElementById('kpiPendingOrders').textContent = `${pendingOrders} قيد الانتظار${cancelledOrders.length ? ` • ${cancelledOrders.length} ملغي` : ''}`;
     document.getElementById('kpiProducts').textContent = state.products.length;
 
     const avg = state.community.length > 0 
@@ -614,7 +625,7 @@ document.addEventListener('DOMContentLoaded', () => {
         social: {
           instagram: document.getElementById('setSocialInstagram')?.value.trim() || 'https://instagram.com/velenofficial',
           tiktok: document.getElementById('setSocialTiktok')?.value.trim() || 'https://tiktok.com/@velenofficial',
-          whatsapp: document.getElementById('setSocialWhatsapp')?.value.trim() || '+962790000000',
+          whatsapp: document.getElementById('setSocialWhatsapp')?.value.trim() || '+962 7 7018 8144',
           facebook: document.getElementById('setSocialFacebook')?.value.trim() || 'https://facebook.com/velenofficial'
         }
       };

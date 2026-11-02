@@ -528,14 +528,50 @@ async function sendOrderNotificationEmail(order, settings) {
 app.patch('/api/orders/:id/status', async (req, res) => {
   const db = readDB();
   const order = (db.orders || []).find(o => o.id === req.params.id);
-  if (order) {
-    order.status = req.body.status || order.status;
+  const oldStatus = order ? order.status : null;
+  const newStatus = req.body.status;
+
+  if (order && newStatus) {
+    order.status = newStatus;
+
+    // If order is cancelled, return reserved items back to inventory
+    if (newStatus === 'Cancelled' && oldStatus !== 'Cancelled' && Array.isArray(order.items)) {
+      for (const item of order.items) {
+        const prod = (db.products || []).find(p => p.id === item.id || p.name === item.name);
+        if (prod) {
+          if (prod.sizeInventory && item.size && typeof prod.sizeInventory[item.size] !== 'undefined') {
+            prod.sizeInventory[item.size] = (prod.sizeInventory[item.size] || 0) + (item.quantity || 1);
+            prod.stock = Object.values(prod.sizeInventory).reduce((a, b) => a + b, 0);
+          } else {
+            prod.stock = (prod.stock || 0) + (item.quantity || 1);
+          }
+          await firebaseService.saveProduct(prod);
+          broadcast('PRODUCT_UPDATED', prod);
+        }
+      }
+    } else if (oldStatus === 'Cancelled' && newStatus !== 'Cancelled' && Array.isArray(order.items)) {
+      // If re-activated from cancelled, re-decrement inventory
+      for (const item of order.items) {
+        const prod = (db.products || []).find(p => p.id === item.id || p.name === item.name);
+        if (prod) {
+          if (prod.sizeInventory && item.size && typeof prod.sizeInventory[item.size] !== 'undefined') {
+            prod.sizeInventory[item.size] = Math.max(0, (prod.sizeInventory[item.size] || 0) - (item.quantity || 1));
+            prod.stock = Object.values(prod.sizeInventory).reduce((a, b) => a + b, 0);
+          } else {
+            prod.stock = Math.max(0, (prod.stock || 0) - (item.quantity || 1));
+          }
+          await firebaseService.saveProduct(prod);
+          broadcast('PRODUCT_UPDATED', prod);
+        }
+      }
+    }
+
     writeDB(db);
   }
-  await firebaseService.updateOrderStatus(req.params.id, req.body.status);
+  await firebaseService.updateOrderStatus(req.params.id, newStatus);
 
-  broadcast('ORDER_STATUS_CHANGED', { id: req.params.id, status: req.body.status });
-  res.json({ success: true, order: { id: req.params.id, status: req.body.status } });
+  broadcast('ORDER_STATUS_CHANGED', { id: req.params.id, status: newStatus });
+  res.json({ success: true, order: { id: req.params.id, status: newStatus } });
 });
 
 // ================= API: Analytics & Stats =================
@@ -545,8 +581,11 @@ app.get('/api/stats', async (req, res) => {
   const orders = await firebaseService.getOrders(db);
   const community = await firebaseService.getCommunity(db);
 
-  const totalRevenue = orders.reduce((sum, o) => sum + (Number(o.total) || 0), 0);
-  const totalOrders = orders.length;
+  // Exclude cancelled orders from total revenue and successful orders count
+  const validOrders = orders.filter(o => o.status !== 'Cancelled');
+  const cancelledOrders = orders.filter(o => o.status === 'Cancelled');
+  const totalRevenue = validOrders.reduce((sum, o) => sum + (Number(o.total) || 0), 0);
+  const totalOrders = validOrders.length;
   const activeProducts = products.length;
   const avgRating = community.length > 0 
     ? (community.reduce((acc, c) => acc + (Number(c.rating) || 5), 0) / community.length).toFixed(1)
@@ -555,6 +594,7 @@ app.get('/api/stats', async (req, res) => {
   res.json({
     totalRevenue: totalRevenue.toFixed(3) + ' JOD',
     totalOrders,
+    cancelledOrders: cancelledOrders.length,
     activeProducts,
     communityPosts: community.length,
     avgRating
@@ -710,7 +750,9 @@ app.post('/api/admin/ai-assistant', async (req, res) => {
   const db = readDB();
   const products = await firebaseService.getProducts(db);
   const orders = await firebaseService.getOrders(db);
-  const totalRevenue = orders.reduce((sum, o) => sum + (Number(o.total) || 0), 0);
+  const validOrders = orders.filter(o => o.status !== 'Cancelled');
+  const cancelledOrders = orders.filter(o => o.status === 'Cancelled');
+  const totalRevenue = validOrders.reduce((sum, o) => sum + (Number(o.total) || 0), 0);
   const activeCount = activeCarts.size;
 
   const lower = prompt.toLowerCase();
@@ -718,9 +760,9 @@ app.post('/api/admin/ai-assistant', async (req, res) => {
 
   if (lower.includes('مبيعات') || lower.includes('ارباح') || lower.includes('sales') || lower.includes('revenue')) {
     reply = `📊 **تحليل مبيعات وأداء متجر VELEN:**\n\n` +
-      `- **إجمالي المبيعات المحققة:** ${totalRevenue.toFixed(3)} JOD من خلال ${orders.length} طلبات ناجحة.\n` +
+      `- **إجمالي المبيعات المحققة:** ${totalRevenue.toFixed(3)} JOD من خلال ${validOrders.length} طلبات ناجحة ومؤكدة${cancelledOrders.length ? ` (تم استبعاد ${cancelledOrders.length} طلبات ملغية)` : ''}.\n` +
       `- **السلات النشطة الآن في المتجر:** ${activeCount} سلة تسوق حية.\n` +
-      `- **متوسط قيمة الطلب (AOV):** ${(orders.length ? (totalRevenue / orders.length).toFixed(3) : '0.000')} JOD.\n` +
+      `- **متوسط قيمة الطلب (AOV):** ${(validOrders.length ? (totalRevenue / validOrders.length).toFixed(3) : '0.000')} JOD.\n` +
       `- **التوصية:** القطع الأكثر إقبالاً هي التيشيرتات البوكسي والرينجر. ننصح بتفعيل كود شحن مجاني (FREESHIP) للطلبات فوق 20 JOD لزيادة معدل تحويل السلات النشطة إلى طلبات مؤكدة!`;
   } else if (lower.includes('مخزون') || lower.includes('كمية') || lower.includes('stock')) {
     const lowStock = products.filter(p => (p.stock || 0) < 10);

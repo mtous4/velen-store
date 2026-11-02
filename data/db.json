@@ -6,14 +6,15 @@
     "subSlogan": "CLEAN FITS. PREMIUM FEEL. BUILT FOR EVERYDAY WEAR.",
     "currency": "JOD",
     "freeShippingThreshold": 20,
-    "contactPhone": "+962 7 9000 0000",
+    "contactPhone": "+962 7 7018 8144",
     "orderEmail": "Velenoffical@gmail.com",
     "social": {
       "instagram": "https://instagram.com/velenofficial",
       "tiktok": "https://tiktok.com/@velenofficial",
-      "whatsapp": "962790000000",
+      "whatsapp": "962770188144",
       "facebook": "https://facebook.com/velenofficial"
-    }
+    },
+    "instagram": "velenofficial"
   },
   "products": [
     {
@@ -399,7 +400,7 @@
     {
       "code": "FREESHIP",
       "type": "fixed",
-      "value": 1.0,
+      "value": 1,
       "active": true,
       "uses": 0,
       "minOrder": 15

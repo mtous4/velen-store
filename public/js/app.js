@@ -1080,7 +1080,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const whatsappBtn = document.getElementById('whatsappTrackBtn');
             if (whatsappBtn) {
               const msg = encodeURIComponent(`مرحباً Velen Official، قمت بالطلب رقم ${result.order.id} باسم ${customerName} بمبلغ ${total.toFixed(3)} JOD. أود متابعة حالة الشحن.`);
-              whatsappBtn.href = `https://wa.me/962790000000?text=${msg}`;
+              const cleanWa = (state.settings?.social?.whatsapp || '962770188144').replace(/[^0-9]/g, '');
+              whatsappBtn.href = `https://wa.me/${cleanWa}?text=${msg}`;
             }
 
             successModal.classList.add('active');
@@ -1282,14 +1283,20 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!social) return;
     const insta = social.instagram || 'https://instagram.com/velenofficial';
     const tiktok = social.tiktok || 'https://tiktok.com/@velenofficial';
-    const wa = social.whatsapp ? (social.whatsapp.startsWith('http') ? social.whatsapp : `https://wa.me/${social.whatsapp.replace(/[^0-9]/g, '')}`) : 'https://wa.me/962790000000';
+    const wa = social.whatsapp ? (social.whatsapp.startsWith('http') ? social.whatsapp : `https://wa.me/${social.whatsapp.replace(/[^0-9]/g, '')}`) : 'https://wa.me/962770188144';
     const fb = social.facebook || '#';
 
     document.querySelectorAll('a[id*="Insta"], a[href*="instagram"]').forEach(a => a.href = insta);
     document.querySelectorAll('a[id*="Tiktok"], a[href*="tiktok"]').forEach(a => a.href = tiktok);
     document.querySelectorAll('a[id*="Wa"], a[href*="wa.me"]').forEach(a => {
       if (!a.id.includes('whatsappTrackBtn')) {
-        a.href = wa;
+        if (a.id === 'floatingWaBtn') {
+          const defaultMsg = encodeURIComponent('مرحباً Velen Official، لدي استفسار بخصوص منتجاتكم.');
+          const rawWa = wa.split('?')[0];
+          a.href = `${rawWa}?text=${defaultMsg}`;
+        } else {
+          a.href = wa;
+        }
       }
     });
     document.querySelectorAll('a[id*="Fb"], a[href*="facebook"]').forEach(a => a.href = fb);

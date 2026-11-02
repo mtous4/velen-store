@@ -135,7 +135,18 @@ module.exports = {
     if (!isFirebaseReady) return localFallback?.settings || {};
     try {
       const doc = await db.collection('config').doc('settings').get();
-      return doc.exists ? doc.data() : (localFallback?.settings || {});
+      if (doc.exists) {
+        const firestoreData = doc.data() || {};
+        return {
+          ...(localFallback?.settings || {}),
+          ...firestoreData,
+          social: {
+            ...(localFallback?.settings?.social || {}),
+            ...(firestoreData?.social || {})
+          }
+        };
+      }
+      return localFallback?.settings || {};
     } catch (e) {
       return localFallback?.settings || {};
     }
@@ -155,7 +166,22 @@ module.exports = {
     if (!isFirebaseReady) return localFallback?.design || {};
     try {
       const doc = await db.collection('config').doc('design').get();
-      return doc.exists ? doc.data() : (localFallback?.design || {});
+      if (doc.exists) {
+        const firestoreData = doc.data() || {};
+        return {
+          ...(localFallback?.design || {}),
+          ...firestoreData,
+          comingSoon: {
+            ...(localFallback?.design?.comingSoon || {}),
+            ...(firestoreData?.comingSoon || {})
+          },
+          checkoutUpsell: {
+            ...(localFallback?.design?.checkoutUpsell || {}),
+            ...(firestoreData?.checkoutUpsell || {})
+          }
+        };
+      }
+      return localFallback?.design || {};
     } catch (e) {
       return localFallback?.design || {};
     }
