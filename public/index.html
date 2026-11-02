@@ -20,10 +20,54 @@
 </head>
 <body class="theme-dark">
 
-  <!-- Realtime Sync Notification Pill -->
-  <div id="syncBadge" class="sync-badge" title="متصل بالبث الحي مع لوحة الأدمن">
-    <span class="pulse-dot"></span>
-    <span class="sync-text">متصل مباشر</span>
+  <!-- ================= COMING SOON OVERLAY THEME ================= -->
+  <div id="comingSoonScreen" class="coming-soon-screen" style="display:none;">
+    <div class="coming-soon-content">
+      <div class="cs-logo-wrap">
+        <img src="/assets/velen-logo.jpg" alt="Velen Official" class="cs-logo-img">
+      </div>
+      <span class="cs-badge"><i class="fa-solid fa-clock"></i> COMING SOON • إطلاق حصري</span>
+      <h1 class="cs-title" id="csTitle">THE NEXT DROP IS COMING</h1>
+      <p class="cs-subtitle" id="csSubtitle">AUTUMN / WINTER ESSENTIALS 2026. MADE IN JORDAN.</p>
+      
+      <!-- Live Countdown Timer -->
+      <div class="cs-timer-grid" id="csTimerGrid">
+        <div class="cs-time-box">
+          <span class="cs-num" id="csDays">00</span>
+          <span class="cs-unit">DAYS / أيام</span>
+        </div>
+        <span class="cs-colon">:</span>
+        <div class="cs-time-box">
+          <span class="cs-num" id="csHours">00</span>
+          <span class="cs-unit">HOURS / ساعات</span>
+        </div>
+        <span class="cs-colon">:</span>
+        <div class="cs-time-box">
+          <span class="cs-num" id="csMinutes">00</span>
+          <span class="cs-unit">MINS / دقائق</span>
+        </div>
+        <span class="cs-colon">:</span>
+        <div class="cs-time-box">
+          <span class="cs-num" id="csSeconds">00</span>
+          <span class="cs-unit">SECS / ثواني</span>
+        </div>
+      </div>
+
+      <!-- Notify Me Box -->
+      <div class="cs-notify-wrap">
+        <p class="cs-notify-note" id="csNotifyNote">كن أول من يحصل على إشعار عند إطلاق الدروب الجديد:</p>
+        <form id="csNotifyForm" class="cs-notify-form">
+          <input type="text" id="csNotifyContact" placeholder="رقم هاتفك أو حساب إنستغرام" required>
+          <button type="submit" class="btn-cs-notify">إشعار فوري</button>
+        </form>
+      </div>
+
+      <div class="cs-social-row">
+        <a href="https://instagram.com/velenofficial" target="_blank" class="cs-social-link cs-insta-link" id="csInstaLink"><i class="fa-brands fa-instagram"></i> Instagram</a>
+        <a href="https://tiktok.com/@velenofficial" target="_blank" class="cs-social-link cs-tiktok-link" id="csTiktokLink"><i class="fa-brands fa-tiktok"></i> TikTok</a>
+        <a href="https://wa.me/962790000000" target="_blank" class="cs-social-link cs-wa-link" id="csWaLink"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a>
+      </div>
+    </div>
   </div>
 
   <!-- Announcement Bar (Free Delivery in Amman) -->
@@ -46,17 +90,18 @@
         </button>
       </div>
 
-      <!-- Center: Logo -->
+      <!-- Center: Logo (Emblem image + Title) -->
       <div class="nav-center">
         <a href="#hero" class="brand-link">
+          <img src="/assets/velen-logo.jpg" alt="Velen" class="nav-brand-logo" id="navBrandLogo">
           <span class="brand-title">Velen Official</span>
         </a>
       </div>
 
-      <!-- Right: Account & Cart -->
+      <!-- Right: Language Switcher & Cart (User icon deleted as requested) -->
       <div class="nav-right">
-        <button id="accountBtn" class="icon-btn" aria-label="User Account">
-          <i class="fa-regular fa-user"></i>
+        <button id="langToggleBtn" class="icon-btn lang-btn" title="تغيير اللغة / Switch Language" aria-label="Switch Language">
+          <span id="langLabel" class="lang-label-pill">EN</span>
         </button>
         <button id="cartToggleBtn" class="icon-btn cart-btn" aria-label="Shopping Cart">
           <i class="fa-solid fa-bag-shopping"></i>
@@ -80,34 +125,34 @@
 
     <div class="drawer-body">
       <div class="drawer-section">
-        <h3 class="drawer-heading">Shop</h3>
+        <h3 class="drawer-heading" data-i18n="shop">Shop</h3>
         <ul class="drawer-links">
-          <li><a href="#collection" class="drawer-link" data-filter="all">Products <i class="fa-solid fa-angle-left"></i></a></li>
-          <li><a href="#collection" class="drawer-link" data-filter="Tees">Tees & Ringers <i class="fa-solid fa-angle-left"></i></a></li>
-          <li><a href="#community" class="drawer-link highlight-link">COMMUNITY <span class="new-pill">HOT</span> <i class="fa-solid fa-angle-left"></i></a></li>
+          <li><a href="#collection" class="drawer-link" data-filter="all"><span data-i18n="allProducts">Products</span> <i class="fa-solid fa-angle-left"></i></a></li>
+          <li><a href="#collection" class="drawer-link" data-filter="Tees"><span data-i18n="teesRingers">Tees & Ringers</span> <i class="fa-solid fa-angle-left"></i></a></li>
+          <li><a href="#community" class="drawer-link highlight-link"><span data-i18n="community">COMMUNITY</span> <span class="new-pill">HOT</span> <i class="fa-solid fa-angle-left"></i></a></li>
         </ul>
       </div>
 
       <div class="drawer-section">
-        <h3 class="drawer-heading">About us</h3>
+        <h3 class="drawer-heading" data-i18n="aboutUs">About us</h3>
         <ul class="drawer-links">
-          <li><a href="#about" class="drawer-link">Why Velen <i class="fa-solid fa-angle-left"></i></a></li>
-          <li><a href="#community" class="drawer-link">Reviews & Fit Checks <i class="fa-solid fa-angle-left"></i></a></li>
-          <li><a href="#faq" class="drawer-link">FAQ & Sizing <i class="fa-solid fa-angle-left"></i></a></li>
+          <li><a href="#about" class="drawer-link"><span data-i18n="whyVelen">Why Velen</span> <i class="fa-solid fa-angle-left"></i></a></li>
+          <li><a href="#community" class="drawer-link"><span data-i18n="customerReviews">Reviews & Fit Checks</span> <i class="fa-solid fa-angle-left"></i></a></li>
+          <li><a href="#" class="drawer-link" id="drawerTermsBtn"><span data-i18n="policyAndShipping">Shipping & Policy</span> <i class="fa-solid fa-angle-left"></i></a></li>
         </ul>
       </div>
 
       <div class="drawer-section">
-        <h3 class="drawer-heading">STAY CONNECTED</h3>
+        <h3 class="drawer-heading" data-i18n="stayConnected">STAY CONNECTED</h3>
         <div class="social-pills">
-          <a href="https://instagram.com" target="_blank" class="social-pill"><i class="fa-brands fa-instagram"></i> Instagram</a>
-          <a href="https://tiktok.com" target="_blank" class="social-pill"><i class="fa-brands fa-tiktok"></i> TikTok</a>
-          <a href="https://wa.me/962790000000" target="_blank" class="social-pill"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a>
+          <a href="https://instagram.com/velenofficial" target="_blank" class="social-pill" id="drawerInstaLink"><i class="fa-brands fa-instagram"></i> Instagram</a>
+          <a href="https://tiktok.com/@velenofficial" target="_blank" class="social-pill" id="drawerTiktokLink"><i class="fa-brands fa-tiktok"></i> TikTok</a>
+          <a href="https://wa.me/962790000000" target="_blank" class="social-pill" id="drawerWaLink"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a>
         </div>
       </div>
 
       <div class="drawer-newsletter">
-        <p class="newsletter-label">Sign up for our newsletter</p>
+        <p class="newsletter-label" data-i18n="newsletterPrompt">Sign up for our newsletter</p>
         <form id="drawerNewsletterForm" class="newsletter-form">
           <input type="email" placeholder="Email address" required>
           <button type="submit" aria-label="Subscribe"><i class="fa-solid fa-arrow-right"></i></button>
@@ -137,6 +182,7 @@
   <!-- Main Sections Container (Allows dynamic re-ordering and visibility by Admin) -->
   <main id="mainSectionsContainer">
     <!-- Hero Section (Exact design matching Screenshot 4) -->
+    <div id="hero"></div>
     <section class="hero-section" id="sec-hero">
       <div class="hero-media-wrapper">
         <img src="/assets/velen-hero-clean.jpg" alt="Velen Essentials" class="hero-banner-img" id="heroBannerImg">
@@ -175,6 +221,7 @@
     </div>
 
     <!-- Collection Section (Exact design matching Screenshot 2) -->
+    <div id="collection"></div>
     <section class="collection-section" id="sec-collection">
       <div class="section-container">
         <div class="collection-header">
@@ -232,6 +279,7 @@
     </section>
 
     <!-- About / Why Velen Section -->
+    <div id="about"></div>
     <section class="about-section" id="sec-about">
       <div class="section-container">
         <div class="about-grid">
@@ -277,41 +325,44 @@
     <div class="footer-container">
       <div class="footer-columns">
         <div class="footer-col">
-          <h4 class="footer-heading">Shop</h4>
+          <h4 class="footer-heading" data-i18n="shop">Shop</h4>
           <ul class="footer-menu">
-            <li><a href="#collection">Products</a></li>
-            <li><a href="#collection">Tees & Boxy Fits</a></li>
-            <li><a href="#community">COMMUNITY WEARS</a></li>
+            <li><a href="#collection" data-footer-filter="all"><span data-i18n="allProducts">Products</span></a></li>
+            <li><a href="#collection" data-footer-filter="Tees"><span data-i18n="teesRingers">Tees & Boxy Fits</span></a></li>
+            <li><a href="#community"><span data-i18n="community">COMMUNITY WEARS</span></a></li>
           </ul>
         </div>
 
         <div class="footer-col">
-          <h4 class="footer-heading">About us</h4>
+          <h4 class="footer-heading" data-i18n="aboutUs">About us</h4>
           <ul class="footer-menu">
-            <li><a href="#about">Why Velen</a></li>
-            <li><a href="#community">Customer Reviews</a></li>
-            <li><a href="#about">Fabric & Care Guide</a></li>
-            <li><a href="#hero">Terms of Service</a></li>
+            <li><a href="#about"><span data-i18n="whyVelen">Why Velen</span></a></li>
+            <li><a href="#community"><span data-i18n="customerReviews">Customer Reviews</span></a></li>
+            <li><a href="#" class="open-terms-link" data-tab="care"><span data-i18n="fabricCare">Fabric & Care Guide</span></a></li>
+            <li><a href="#" class="open-terms-link" data-tab="terms"><span data-i18n="termsOfService">Terms & Shipping</span></a></li>
           </ul>
         </div>
 
         <div class="footer-col">
-          <h4 class="footer-heading">STAY CONNECTED</h4>
-          <p class="footer-note">تابعنا على منصاتنا لتكون أول من يعرف عن الدروبات الجديدة والخصومات:</p>
+          <h4 class="footer-heading" data-i18n="stayConnected">STAY CONNECTED</h4>
+          <p class="footer-note" data-i18n="stayConnectedNote">تابعنا على منصاتنا لتكون أول من يعرف عن الدروبات الجديدة والخصومات:</p>
           <div class="footer-social-links">
-            <a href="https://instagram.com" target="_blank" class="social-icon" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
-            <a href="https://tiktok.com" target="_blank" class="social-icon" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
-            <a href="https://wa.me/962790000000" target="_blank" class="social-icon" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+            <a href="https://instagram.com/velenofficial" target="_blank" class="social-icon" id="footerInstaLink" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+            <a href="https://tiktok.com/@velenofficial" target="_blank" class="social-icon" id="footerTiktokLink" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+            <a href="https://wa.me/962790000000" target="_blank" class="social-icon" id="footerWaLink" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
           </div>
         </div>
 
         <div class="footer-col newsletter-col">
-          <h4 class="footer-heading">Sign up for our newsletter</h4>
-          <p class="footer-note">اشترك لتحصل على خصم 10% على طلبك القادم ووصول مبكر للدروبات الحصرية.</p>
+          <h4 class="footer-heading" data-i18n="newsletterHeading">Sign up for our newsletter</h4>
+          <p class="footer-note" data-i18n="newsletterDesc">اشترك لتحصل على كود خصم 10% (VELEN10) على طلبك القادم ووصول مبكر للدروبات الحصرية.</p>
           <form id="footerNewsletterForm" class="footer-form">
             <input type="email" placeholder="Email address" required>
             <button type="submit" aria-label="Subscribe"><i class="fa-solid fa-arrow-right"></i></button>
           </form>
+          <div id="footerNewsletterSuccess" style="display:none; color:#2ecc71; font-size:12px; margin-top:6px;">
+            🎉 شكراً لاشتراكك! كود خصمك هو: <strong>VELEN10</strong>
+          </div>
         </div>
       </div>
 
@@ -327,7 +378,6 @@
         <div class="payment-methods">
           <span><i class="fa-solid fa-money-bill-wave"></i> الدفع عند الاستلام (COD)</span>
           <span><i class="fa-solid fa-bolt"></i> كليك CliQ</span>
-          <span><i class="fa-brands fa-cc-visa"></i> Visa / Master</span>
         </div>
       </div>
     </div>
@@ -357,9 +407,22 @@
     </div>
 
     <div class="cart-drawer-footer">
+      <!-- Promo Code Box in Cart Drawer (Item 11) -->
+      <div class="cart-promo-box">
+        <div class="promo-input-row">
+          <input type="text" id="cartPromoInput" placeholder="كود الخصم (Promo Code)">
+          <button type="button" id="applyCartPromoBtn" class="btn-apply-promo">تطبيق</button>
+        </div>
+        <div id="cartPromoMsg" class="promo-msg" style="display:none;"></div>
+      </div>
+
       <div class="cart-subtotal-row">
         <span>المجموع الفرعي:</span>
         <span id="cartSubtotal" class="subtotal-amount">0.000 JOD</span>
+      </div>
+      <div class="cart-subtotal-row promo-discount-row" id="cartPromoDiscountRow" style="display:none; color:#2ecc71;">
+        <span>خصم كود الترويجي:</span>
+        <span id="cartPromoDiscount">-0.000 JOD</span>
       </div>
       <div class="cart-subtotal-row delivery-row">
         <span>التوصيل (عمّان):</span>
@@ -482,7 +545,8 @@
 
             <div class="form-group">
               <label>رقم الهاتف (أردني) *</label>
-              <input type="tel" id="custPhone" placeholder="079XXXXXXX أو 078XXXXXXX" pattern="07[789][0-9]{7}" required>
+              <input type="tel" id="custPhone" placeholder="07XXXXXXXX أو 9627XXXXXXXX أو +9627XXXXXXXX" required>
+              <small style="color:#888; font-size:10px;">يقبل الأرقام بصيغة 07... أو 962... أو +962...</small>
             </div>
 
             <div class="form-row">
@@ -527,10 +591,51 @@
           <div class="checkout-summary-box">
             <h4>ملخص طلبك</h4>
             <div id="checkoutItemsList" class="checkout-items-mini"></div>
+
+            <!-- Checkout Upsell Special Offer (Item 12) -->
+            <div class="checkout-upsell-card" id="checkoutUpsellBox">
+              <div class="upsell-badge"><i class="fa-solid fa-fire"></i> عرض خاص مع طلبك (Exclusive Offer)</div>
+              <div class="upsell-body">
+                <img src="/assets/velen-ringer-white.jpg" id="upsellImg" alt="Special Offer" class="upsell-thumb">
+                <div class="upsell-details">
+                  <h5 id="upsellTitle">VELEN Ringer Tee — White</h5>
+                  <p class="upsell-desc">أضف قطعة إضافية إلى طلبك الآن بسعر خاص!</p>
+                  <div class="upsell-pricing">
+                    <span class="upsell-special-price" id="upsellPrice">9.500 JOD</span>
+                    <span class="upsell-orig-price" id="upsellOrigPrice">13.000 JOD</span>
+                  </div>
+                </div>
+              </div>
+              <div class="upsell-actions">
+                <select id="upsellSizeSelect" class="upsell-size-picker">
+                  <option value="S">مقاس S</option>
+                  <option value="M" selected>مقاس M</option>
+                  <option value="L">مقاس L</option>
+                  <option value="XL">مقاس XL</option>
+                </select>
+                <button type="button" id="btnApplyUpsell" class="btn-upsell-add">
+                  <i class="fa-solid fa-plus"></i> أضف للطلب (+9.500 JOD)
+                </button>
+              </div>
+            </div>
+
+            <!-- Promo Code in Checkout (Item 11) -->
+            <div class="checkout-promo-wrap">
+              <div class="promo-input-row">
+                <input type="text" id="checkoutPromoInput" placeholder="كود الخصم (Promo Code)">
+                <button type="button" id="applyCheckoutPromoBtn" class="btn-apply-promo">تطبيق</button>
+              </div>
+              <div id="checkoutPromoMsg" class="promo-msg" style="display:none;"></div>
+            </div>
+
             <div class="summary-totals">
               <div class="total-line">
                 <span>المجموع الفرعي:</span>
                 <span id="checkoutSubtotal">0.000 JOD</span>
+              </div>
+              <div class="total-line checkout-promo-line" id="checkoutPromoLine" style="display:none; color:#2ecc71;">
+                <span>خصم الكود:</span>
+                <span id="checkoutPromoDiscount">-0.000 JOD</span>
               </div>
               <div class="total-line">
                 <span>رسوم التوصيل:</span>
@@ -564,6 +669,34 @@
           <i class="fa-brands fa-whatsapp"></i> متابعة الطلب عبر واتساب
         </a>
         <button id="closeSuccessBtn" class="btn-continue-shopping">متابعة التسوق</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Terms, Shipping & Policy Modal (Item 7) -->
+  <div id="policyModal" class="policy-modal" style="display:none;" aria-hidden="true">
+    <div class="policy-modal-dialog">
+      <button id="policyModalClose" class="modal-close-icon"><i class="fa-solid fa-xmark"></i></button>
+      <div class="policy-modal-content">
+        <div class="modal-head">
+          <img src="/assets/velen-logo.jpg" alt="Velen" class="modal-logo">
+          <h3 id="policyModalTitle">سياسة الشحن والتبديل — Velen Jordan</h3>
+          <p>Clean fits. Premium feel. Built for everyday wear.</p>
+        </div>
+        <div class="policy-body" id="policyModalBody">
+          <h4><i class="fa-solid fa-truck"></i> سياسة التوصيل والشحن:</h4>
+          <p>• التوصيل داخل عمّان: <strong>مجاناً</strong> لكافة المناطق خلال 24 - 48 ساعة.</p>
+          <p>• التوصيل لكافة محافظات المملكة (إربد، الزرقاء، العقبة، السلط...): <strong>1 دينار فقط</strong>.</p>
+          <p>• الدفع: نقداً عند الاستلام (COD) أو تحويل فوري عبر CliQ.</p>
+
+          <h4 style="margin-top:16px;"><i class="fa-solid fa-rotate-left"></i> سياسة التبديل الفوري:</h4>
+          <p>• يحق لك معاينة وتجربة المقاس عند الاستلام.</p>
+          <p>• في حال الرغبة بتبديل المقاس، يتم التبديل فوري وبكل سلاسة عند باب بيتك خلال 3 أيام من تاريخ الاستلام.</p>
+
+          <h4 style="margin-top:16px;"><i class="fa-solid fa-shirt"></i> تعليمات العناية بالقطن الثقيل 260 GSM:</h4>
+          <p>• غسيل بدرجة حرارة 30° مئوية كحد أقصى للحفاظ على نعومة ونقاء الألياف القطنية.</p>
+          <p>• غسل القطعة من الداخل للخارج وتجنب المبيضات القوية.</p>
+        </div>
       </div>
     </div>
   </div>

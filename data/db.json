@@ -7,7 +7,13 @@
     "currency": "JOD",
     "freeShippingThreshold": 20,
     "contactPhone": "+962 7 9000 0000",
-    "instagram": "velenofficial"
+    "orderEmail": "Velenoffical@gmail.com",
+    "social": {
+      "instagram": "https://instagram.com/velenofficial",
+      "tiktok": "https://tiktok.com/@velenofficial",
+      "whatsapp": "962790000000",
+      "facebook": "https://facebook.com/velenofficial"
+    }
   },
   "products": [
     {
@@ -365,6 +371,38 @@
       "feature3Desc": "مُصمم ومُنتج بأيادٍ أردنية مبدعة لدعم الإنتاج المحلي بأعلى معايير العالمية.",
       "image": "/assets/velen-logo.jpg",
       "quote": "Clean fits. Premium feel. Built for everyday wear."
+    },
+    "comingSoon": {
+      "enabled": false,
+      "title": "THE NEXT DROP IS COMING",
+      "subtitle": "AUTUMN / WINTER ESSENTIALS 2026. MADE IN JORDAN.",
+      "launchDate": "2026-11-20T20:00:00.000Z",
+      "notifyNote": "BE THE FIRST TO ACCESS THE EXCLUSIVE COLLECTION."
+    },
+    "checkoutUpsell": {
+      "enabled": true,
+      "title": "عرض خاص وحصري مع طلبك",
+      "subtitle": "أضف تيشيرت رينجر إضافي إلى طلبك الآن بخصم خاص (9.500 JOD بدل 13.000)!",
+      "productId": "prod-1",
+      "specialPrice": 9.5
     }
-  }
+  },
+  "promoCodes": [
+    {
+      "code": "VELEN10",
+      "type": "percentage",
+      "value": 10,
+      "active": true,
+      "uses": 0,
+      "minOrder": 0
+    },
+    {
+      "code": "FREESHIP",
+      "type": "fixed",
+      "value": 1.0,
+      "active": true,
+      "uses": 0,
+      "minOrder": 15
+    }
+  ]
 }

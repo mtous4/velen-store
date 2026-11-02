@@ -4,7 +4,7 @@
  */
 
 const { initializeApp, cert, getApps } = require('firebase-admin/app');
-const { getFirestore } = require('firebase-admin/firestore');
+const { getFirestore, FieldValue } = require('firebase-admin/firestore');
 const path = require('path');
 const fs = require('fs');
 
@@ -268,10 +268,40 @@ module.exports = {
     try {
       const ref = db.collection('community').doc(postId);
       await ref.update({
-        likes: admin.firestore.FieldValue.increment(1)
+        likes: FieldValue.increment(1)
       });
     } catch (e) {
       console.error('Firestore likeCommunityPost error:', e);
+    }
+  },
+
+  // Promo Codes
+  async getPromoCodes(localFallback) {
+    if (!isFirebaseReady) return localFallback?.promoCodes || [];
+    try {
+      const snap = await db.collection('promoCodes').get();
+      if (snap.empty) return localFallback?.promoCodes || [];
+      return snap.docs.map(doc => doc.data());
+    } catch (e) {
+      return localFallback?.promoCodes || [];
+    }
+  },
+
+  async savePromoCode(promo) {
+    if (!isFirebaseReady) return;
+    try {
+      await db.collection('promoCodes').doc(promo.code).set(promo);
+    } catch (e) {
+      console.error('Firestore savePromoCode error:', e);
+    }
+  },
+
+  async deletePromoCode(code) {
+    if (!isFirebaseReady) return;
+    try {
+      await db.collection('promoCodes').doc(code).delete();
+    } catch (e) {
+      console.error('Firestore deletePromoCode error:', e);
     }
   }
 };

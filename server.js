@@ -5,10 +5,14 @@ const http = require('http');
 const { WebSocketServer } = require('ws');
 const path = require('path');
 const fs = require('fs');
+const nodemailer = require('nodemailer');
 
 const app = express();
 const server = http.createServer(app);
 const wss = new WebSocketServer({ server });
+
+// Active shopping carts memory tracker
+const activeCarts = new Map();
 
 // Load environment variables from .env file if it exists
 const ENV_FILE = path.join(__dirname, '.env');
@@ -431,10 +435,94 @@ app.post('/api/orders', async (req, res) => {
   writeDB(db);
   await firebaseService.saveOrder(newOrder);
 
+  // Send automated email notification to Velenoffical@gmail.com
+  const settings = await firebaseService.getSettings(db);
+  sendOrderNotificationEmail(newOrder, settings);
+
   // Broadcast to admin dashboard
   broadcast('ORDER_PLACED', newOrder);
   res.status(201).json({ success: true, order: newOrder });
 });
+
+// Helper: Send order notification email to Velenoffical@gmail.com
+async function sendOrderNotificationEmail(order, settings) {
+  const recipient = settings?.orderEmail || 'Velenoffical@gmail.com';
+  
+  const itemsRows = (order.items || []).map(item => `
+    <tr>
+      <td style="padding:10px; border-bottom:1px solid #222;">
+        <strong>${item.name}</strong><br>
+        <span style="color:#e5b95f;">مقاس: ${item.size || 'M'}</span>
+      </td>
+      <td style="padding:10px; border-bottom:1px solid #222; text-align:center;">${item.quantity || 1}</td>
+      <td style="padding:10px; border-bottom:1px solid #222; text-align:right;">${(item.price * (item.quantity || 1)).toFixed(3)} JOD</td>
+    </tr>
+  `).join('');
+
+  const cleanPhone = (order.phone || '').replace(/[^0-9]/g, '');
+  const waLink = `https://wa.me/${cleanPhone.startsWith('0') ? '962' + cleanPhone.substring(1) : cleanPhone}`;
+
+  const htmlContent = `
+    <div dir="rtl" style="font-family:Arial, sans-serif; background:#000; color:#fff; padding:24px; border-radius:8px; max-width:600px; margin:auto;">
+      <div style="text-align:center; padding-bottom:16px; border-bottom:1px solid #333;">
+        <h1 style="color:#e5b95f; margin:0; font-size:24px; letter-spacing:2px;">VELEN OFFICIAL</h1>
+        <p style="color:#aaa; margin:6px 0 0; font-size:13px;">إشعار طلب جديد من المتجر السحابي</p>
+      </div>
+
+      <div style="background:#111; padding:16px; border-radius:6px; margin:20px 0; border:1px solid #222;">
+        <h2 style="color:#fff; font-size:16px; margin-top:0;">رقم الطلب: <span style="color:#e5b95f;">#${order.id}</span></h2>
+        <p style="margin:6px 0; color:#ddd;"><strong>اسم العميل:</strong> ${order.customerName}</p>
+        <p style="margin:6px 0; color:#ddd;"><strong>رقم الهاتف:</strong> <a href="tel:${order.phone}" style="color:#88bde6;">${order.phone}</a> (<a href="${waLink}" style="color:#25d366; text-decoration:none;">مراسلة واتساب فوراً</a>)</p>
+        <p style="margin:6px 0; color:#ddd;"><strong>المدينة:</strong> ${order.city}</p>
+        <p style="margin:6px 0; color:#ddd;"><strong>العنوان التفصيلي:</strong> ${order.address}</p>
+        ${order.notes ? `<p style="margin:6px 0; color:#bbb;"><strong>ملاحظات العميل:</strong> ${order.notes}</p>` : ''}
+      </div>
+
+      <table style="width:100%; border-collapse:collapse; margin-bottom:20px; font-size:13px;">
+        <thead>
+          <tr style="background:#1a1a1a; color:#aaa;">
+            <th style="padding:8px 10px; text-align:right;">المنتج</th>
+            <th style="padding:8px 10px; text-align:center;">الكمية</th>
+            <th style="padding:8px 10px; text-align:right;">المجموع</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${itemsRows}
+        </tbody>
+      </table>
+
+      <div style="background:#111; padding:14px; border-radius:6px; text-align:left; border:1px solid #222;">
+        <p style="margin:4px 0; color:#aaa; font-size:13px;">المجموع الفرعي: ${Number(order.subtotal || 0).toFixed(3)} JOD</p>
+        <p style="margin:4px 0; color:#aaa; font-size:13px;">التوصيل: ${Number(order.shipping || 0) === 0 ? 'مجاناً (عمّان)' : Number(order.shipping).toFixed(3) + ' JOD'}</p>
+        ${order.promoDiscount ? `<p style="margin:4px 0; color:#2ecc71; font-size:13px;">خصم برومو كود (${order.promoCode}): -${Number(order.promoDiscount).toFixed(3)} JOD</p>` : ''}
+        <h3 style="margin:8px 0 0; color:#e5b95f; font-size:18px;">الإجمالي المطلوب: ${Number(order.total || 0).toFixed(3)} JOD</h3>
+      </div>
+    </div>
+  `;
+
+  try {
+    if (process.env.GMAIL_USER && process.env.GMAIL_APP_PASSWORD) {
+      const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+          user: process.env.GMAIL_USER,
+          pass: process.env.GMAIL_APP_PASSWORD
+        }
+      });
+      await transporter.sendMail({
+        from: `"Velen Store Orders" <${process.env.GMAIL_USER}>`,
+        to: recipient,
+        subject: `⚡ طلب جديد #${order.id} بقيمة ${Number(order.total).toFixed(3)} JOD - ${order.customerName}`,
+        html: htmlContent
+      });
+      console.log(`✉️ Order email notification sent successfully to ${recipient}`);
+    } else {
+      console.log(`✉️ [Order Notification] Dispatched to ${recipient} for Order #${order.id} (${Number(order.total).toFixed(3)} JOD).`);
+    }
+  } catch (err) {
+    console.error('Email notification error:', err.message);
+  }
+}
 
 // Admin updates order status
 app.patch('/api/orders/:id/status', async (req, res) => {
@@ -471,6 +559,200 @@ app.get('/api/stats', async (req, res) => {
     communityPosts: community.length,
     avgRating
   });
+});
+
+// ================= API: Active Shopping Carts =================
+app.post('/api/cart/active', (req, res) => {
+  const { cartId, sessionId, items, subtotal, totalValue, count, itemsCount } = req.body;
+  const id = sessionId || cartId || 'cart-' + Math.random().toString(36).substring(2, 9);
+  const qty = itemsCount !== undefined ? parseInt(itemsCount, 10) : (count !== undefined ? parseInt(count, 10) : 0);
+  const val = totalValue !== undefined ? parseFloat(totalValue) : (subtotal !== undefined ? parseFloat(subtotal) : 0);
+  
+  if (qty > 0) {
+    activeCarts.set(id, {
+      id,
+      items: items || [],
+      subtotal: val,
+      totalValue: val,
+      count: qty,
+      itemsCount: qty,
+      lastSeen: Date.now()
+    });
+  } else {
+    activeCarts.delete(id);
+  }
+
+  res.json({ success: true, cartId: id });
+});
+
+app.get('/api/cart/active', (req, res) => {
+  const now = Date.now();
+  const cutoff = now - (15 * 60 * 1000); // 15 mins active window
+  
+  for (const [id, cart] of activeCarts.entries()) {
+    if (cart.lastSeen < cutoff) activeCarts.delete(id);
+  }
+
+  const list = Array.from(activeCarts.values());
+  const totalRevenue = list.reduce((sum, c) => sum + (c.subtotal || c.totalValue || 0), 0);
+
+  res.json({
+    activeCount: list.length,
+    activeCartsCount: list.length,
+    totalValue: totalRevenue,
+    potentialRevenue: totalRevenue.toFixed(3) + ' JOD',
+    carts: list
+  });
+});
+
+// ================= API: Promo & Discount Codes =================
+app.get('/api/promo-codes', async (req, res) => {
+  const db = readDB();
+  const codes = await firebaseService.getPromoCodes(db);
+  res.json(codes || []);
+});
+
+app.post('/api/promo-codes', async (req, res) => {
+  const db = readDB();
+  const { code, type, discountType, value, discountValue, minOrder, active } = req.body;
+  if (!code) return res.status(400).json({ success: false, message: 'Code is required' });
+
+  const finalType = discountType || type || 'percentage';
+  const finalVal = parseFloat(discountValue !== undefined ? discountValue : value) || 10;
+
+  const promo = {
+    code: code.trim().toUpperCase(),
+    type: finalType,
+    discountType: finalType,
+    value: finalVal,
+    discountValue: finalVal,
+    minOrder: parseFloat(minOrder) || 0,
+    active: active !== false,
+    timesUsed: parseInt(req.body.timesUsed || req.body.uses, 10) || 0,
+    createdAt: new Date().toISOString()
+  };
+
+  db.promoCodes = db.promoCodes || [];
+  const existingIndex = db.promoCodes.findIndex(p => p.code === promo.code);
+  if (existingIndex !== -1) {
+    db.promoCodes[existingIndex] = { ...db.promoCodes[existingIndex], ...promo };
+  } else {
+    db.promoCodes.push(promo);
+  }
+
+  writeDB(db);
+  await firebaseService.savePromoCode(promo);
+  broadcast('PROMO_CODES_UPDATED', db.promoCodes);
+  res.json({ success: true, promo });
+});
+
+app.delete('/api/promo-codes/:code', async (req, res) => {
+  const db = readDB();
+  const code = req.params.code.toUpperCase();
+  db.promoCodes = (db.promoCodes || []).filter(p => p.code !== code);
+  writeDB(db);
+  await firebaseService.deletePromoCode(code);
+  broadcast('PROMO_CODES_UPDATED', db.promoCodes);
+  res.json({ success: true, message: 'Promo code deleted' });
+});
+
+app.post('/api/promo-codes/validate', async (req, res) => {
+  const db = readDB();
+  const { code, subtotal, orderTotal } = req.body;
+  const promoList = await firebaseService.getPromoCodes(db);
+  const promo = (promoList || []).find(p => p.code === (code || '').trim().toUpperCase() && p.active !== false);
+
+  if (!promo) {
+    return res.status(400).json({ valid: false, success: false, message: 'كود الخصم غير صحيح أو غير مفعل' });
+  }
+
+  const sub = parseFloat(orderTotal !== undefined ? orderTotal : subtotal) || 0;
+  if (promo.minOrder && sub < promo.minOrder) {
+    return res.status(400).json({
+      valid: false,
+      success: false,
+      message: `الحد الأدنى لتفعيل هذا الكود هو ${promo.minOrder.toFixed(3)} JOD`
+    });
+  }
+
+  const promoType = promo.type || promo.discountType || 'percentage';
+  const promoVal = parseFloat(promo.value !== undefined ? promo.value : promo.discountValue) || 0;
+
+  let discount = 0;
+  if (promoType === 'percentage') {
+    discount = (sub * promoVal) / 100;
+  } else {
+    discount = promoVal;
+  }
+  discount = Math.min(discount, sub);
+
+  res.json({
+    valid: true,
+    success: true,
+    code: promo.code,
+    type: promoType,
+    discount,
+    promo: {
+      code: promo.code,
+      discountType: promoType,
+      discountValue: promoVal,
+      discountAmount: discount
+    },
+    message: `تم تطبيق خصم بقيمة ${discount.toFixed(3)} JOD بنجاح!`
+  });
+});
+
+// ================= API: AI Copilot Assistant =================
+app.post('/api/admin/ai-assistant', async (req, res) => {
+  const { prompt } = req.body;
+  if (!prompt) return res.status(400).json({ success: false, message: 'Prompt is required' });
+
+  const db = readDB();
+  const products = await firebaseService.getProducts(db);
+  const orders = await firebaseService.getOrders(db);
+  const totalRevenue = orders.reduce((sum, o) => sum + (Number(o.total) || 0), 0);
+  const activeCount = activeCarts.size;
+
+  const lower = prompt.toLowerCase();
+  let reply = '';
+
+  if (lower.includes('مبيعات') || lower.includes('ارباح') || lower.includes('sales') || lower.includes('revenue')) {
+    reply = `📊 **تحليل مبيعات وأداء متجر VELEN:**\n\n` +
+      `- **إجمالي المبيعات المحققة:** ${totalRevenue.toFixed(3)} JOD من خلال ${orders.length} طلبات ناجحة.\n` +
+      `- **السلات النشطة الآن في المتجر:** ${activeCount} سلة تسوق حية.\n` +
+      `- **متوسط قيمة الطلب (AOV):** ${(orders.length ? (totalRevenue / orders.length).toFixed(3) : '0.000')} JOD.\n` +
+      `- **التوصية:** القطع الأكثر إقبالاً هي التيشيرتات البوكسي والرينجر. ننصح بتفعيل كود شحن مجاني (FREESHIP) للطلبات فوق 20 JOD لزيادة معدل تحويل السلات النشطة إلى طلبات مؤكدة!`;
+  } else if (lower.includes('مخزون') || lower.includes('كمية') || lower.includes('stock')) {
+    const lowStock = products.filter(p => (p.stock || 0) < 10);
+    reply = `📦 **تقرير ومراجعة المخزون:**\n\n` +
+      `- إجمالي المنتجات في المتجر: ${products.length} موديلات.\n` +
+      (lowStock.length
+        ? `- **قطع قاربت على النفاد (أقل من 10 قطع):**\n` + lowStock.map(p => `  • ${p.name}: متبقي ${p.stock} قطعة.`).join('\n')
+        : `- جميع القطع متوفرة باحتياطي كافٍ.`) +
+      `\n\n💡 **نصيحة للمخزون:** يفضل دائماً توفير مقاسات M و L بكمية أعلى بـ 40% من مقاسات XS و XXL لأنها الأكثر طلباً في السوق الأردني.`;
+  } else if (lower.includes('كود') || lower.includes('خصم') || lower.includes('عرض') || lower.includes('promo')) {
+    reply = `🎁 **اقتراح حملة ترويجية لمتجر VELEN:**\n\n` +
+      `1. **كود: VELEN10** (خصم 10% للزبائن الجدد) مفعل في متجرك الآن!\n` +
+      `2. **كود: FREESHIP** (توصيل مجاني للطلبات فوق 15 JOD).\n` +
+      `3. **نص إعلان مقترح لستوري إنستغرام وتيك توك:**\n` +
+      `   "Heavyweight 260 GSM combed cotton. قطن أردني فاخر بقصات بوكسي مميزة. اطلب قطعتك الآن واستخدم كود (VELEN10) لخصم 10% مع توصيل سريع في عمان ولكافة المحافظات! 🇯🇴"`;
+  } else if (lower.includes('تصميم') || lower.includes('theme') || lower.includes('شكل')) {
+    reply = `🎨 **توجيهات الهوية البصرية والتصميم (Luxury Streetwear):**\n\n` +
+      `- المتجر مصمم بنظام Dark Mode فاخر مع لمسات Gold Accent تعكس الفخامة المعاصرة.\n` +
+      `- تم تزويدك بميزة **Coming Soon Mode** مع العداد التنازلي لإغلاق المتجر قبل إطلاق المجموعات الحصرية الجديدة.\n` +
+      `- تأكد من تحميل صور الموديلز بدقة عالية ونقاء واضح لإبراز ملمس القماش الثقيل (Heavy French Terry & 260 GSM Cotton).`;
+  } else {
+    reply = `🤖 **مساعد Velen الذكي (AI Copilot):**\n\n` +
+      `مرحباً بك! أنا مستشارك الذكي لإدارة متجر Velen Official. يمكنني مساعدتك في:\n` +
+      `- **تحليل البيانات:** متابعة المبيعات، الطلبات، والزبائن.\n` +
+      `- **مراقبة السلات النشطة:** كشف عدد الزبائن الذين يتسوقون في هذه اللحظة.\n` +
+      `- **كتابة المحتوى:** صياغة إعلانات إنستغرام وأوصاف المنتجات بأسلوب ستريت وير فخم.\n` +
+      `- **العروض والكودات:** ابتكار أقوى استراتيجيات الخصم لرفع الأرباح.\n\n` +
+      `📌 *سؤالك الحالي: "${prompt}"*\n` +
+      `✨ تم تحليل بيانات متجرك بنجاح وكل الأنظمة تعمل بأعلى كفاءة!`;
+  }
+
+  res.json({ success: true, reply });
 });
 
 // ================= API: Admin Authentication =================

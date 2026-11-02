@@ -94,6 +94,12 @@
         <span class="badge-count" id="navCommCount">0</span>
       </button>
 
+      <button class="nav-item" data-tab="promos">
+        <i class="fa-solid fa-ticket"></i>
+        <span>كودات الخصم (Promo Codes)</span>
+        <span class="badge-count" id="navPromosCount">0</span>
+      </button>
+
       <button class="nav-item" data-tab="design">
         <i class="fa-solid fa-wand-magic-sparkles"></i>
         <span>تخصيص التصميم والتركيبة (Design & Layout)</span>
@@ -102,6 +108,11 @@
       <button class="nav-item" data-tab="settings">
         <i class="fa-solid fa-sliders"></i>
         <span>إعدادات المتجر (Settings)</span>
+      </button>
+
+      <button class="nav-item" data-tab="ai">
+        <i class="fa-solid fa-robot"></i>
+        <span>Velen AI Copilot (مساعد الذكاء الاصطناعي)</span>
       </button>
     </nav>
 
@@ -182,6 +193,15 @@
               <span class="kpi-title">متوسط تقييم البراند</span>
               <h3 class="kpi-value" id="kpiRating">5.0 / 5</h3>
               <span class="kpi-sub" id="kpiCommunityCount">0 مشاركة في المجتمع</span>
+            </div>
+          </div>
+
+          <div class="kpi-card card-active-carts">
+            <div class="kpi-icon"><i class="fa-solid fa-cart-shopping"></i></div>
+            <div class="kpi-details">
+              <span class="kpi-title">السلات النشطة حالياً (Live Carts)</span>
+              <h3 class="kpi-value" id="kpiActiveCarts">0 متسوقين</h3>
+              <span class="kpi-sub" id="kpiActiveCartsValue">إجمالي السلات: 0.000 JOD</span>
             </div>
           </div>
         </div>
@@ -328,6 +348,43 @@
         </div>
 
         <form id="designCustomizerForm" class="design-editor-form">
+
+          <!-- 0. COMING SOON THEME & TIMER -->
+          <div class="design-card" style="border: 1px solid rgba(229, 185, 95, 0.4); background: rgba(229, 185, 95, 0.03);">
+            <div class="design-card-head">
+              <div class="head-title">
+                <i class="fa-solid fa-hourglass-half" style="color:var(--gold-accent, #e5b95f);"></i>
+                <h3>وضع قريباً والافتتاح الرسمي (Coming Soon Theme & Timer)</h3>
+              </div>
+              <label class="toggle-switch-inline">
+                <input type="checkbox" id="desComingSoonEnabled">
+                <span>تفعيل شاشة قريباً</span>
+              </label>
+            </div>
+            <p class="section-desc" style="font-size:12px; color:#aaa; margin-bottom:14px;">
+              عند التفعيل، سيظهر للزبائن مؤقت تنازلي أنيق لشاشة الافتتاح مع إمكانية التسجيل للحصول على إشعار عند إطلاق المتجر. (يمكنك معاينة المتجر بإضافة <code>?preview=true</code> للرابط).
+            </p>
+            <div class="form-row">
+              <div class="form-group">
+                <label>تاريخ ووقت الافتتاح المستهدف (Launch Date & Time)</label>
+                <input type="datetime-local" id="desCsLaunchDate" value="2026-12-01T00:00">
+              </div>
+              <div class="form-group">
+                <label>العنوان الرئيسي لشاشة الافتتاح</label>
+                <input type="text" id="desCsTitle" value="THE NEW STANDARD IS COMING">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group flex-1">
+                <label>العنوان الفرعي والوصف</label>
+                <input type="text" id="desCsSub" value="استعد لتجربة ملابس يومية بأعلى معايير الفخامة والقصّات المعاصرة. مصنوعة في عمّان.">
+              </div>
+              <div class="form-group">
+                <label>عرض التسجيل المسبق</label>
+                <input type="text" id="desCsOffer" value="سجل للحصول على إشعار مسبق وخصم 15% على طلبك الأول">
+              </div>
+            </div>
+          </div>
 
           <!-- 1. SECTIONS ORDER & VISIBILITY -->
           <div class="design-card">
@@ -690,8 +747,130 @@
               <input type="text" id="setSubSlogan" value="CLEAN FITS. PREMIUM FEEL. BUILT FOR EVERYDAY WEAR." required>
             </div>
 
-            <button type="submit" class="btn-primary-action">
+            <!-- Order Notifications Email (Requirement 16) -->
+            <div class="form-group" style="margin-top:16px;">
+              <label><i class="fa-solid fa-envelope" style="color:#e5b95f;"></i> إيميل استلام إشعارات الطلبات الجديدة (Order Notifications Email) *</label>
+              <input type="email" id="setOrderEmail" value="Velenoffical@gmail.com" placeholder="Velenoffical@gmail.com" required>
+              <span class="sub-tip" style="color:#888; font-size:12px; display:block; margin-top:4px;">
+                يتم إرسال تفاصيل الفاتورة والمقاسات واسم ورقم الزبون تلقائياً إلى هذا الإيميل فور إتمام كل طلب.
+              </span>
+            </div>
+
+            <!-- Social Media Customizable Links (Requirements 4 & 17) -->
+            <div style="margin-top:24px; padding-top:16px; border-top:1px solid rgba(255,255,255,0.08);">
+              <h4 style="font-size:14px; color:#fff; margin-bottom:12px;"><i class="fa-solid fa-share-nodes" style="color:#e5b95f;"></i> روابط منصات التواصل الاجتماعي الرسمية</h4>
+              <p class="sub-tip" style="color:#888; font-size:12px; margin-bottom:14px;">يمكنك تغيير الروابط أو اليوزرات في أي وقت وتحديثها مباشرة على المتجر:</p>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label><i class="fa-brands fa-instagram" style="color:#e1306c;"></i> رابط حساب إنستغرام (Instagram)</label>
+                  <input type="text" id="setSocialInstagram" value="https://instagram.com/velenofficial" placeholder="https://instagram.com/velenofficial">
+                </div>
+                <div class="form-group">
+                  <label><i class="fa-brands fa-tiktok" style="color:#00f2fe;"></i> رابط حساب تيك توك (TikTok)</label>
+                  <input type="text" id="setSocialTiktok" value="https://tiktok.com/@velenofficial" placeholder="https://tiktok.com/@velenofficial">
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label><i class="fa-brands fa-whatsapp" style="color:#25d366;"></i> رقم واتساب لخدمة العملاء (WhatsApp)</label>
+                  <input type="text" id="setSocialWhatsapp" value="+962790000000" placeholder="+9627XXXXXXXX">
+                </div>
+                <div class="form-group">
+                  <label><i class="fa-brands fa-facebook" style="color:#1877f2;"></i> رابط فيسبوك (Facebook - اختياري)</label>
+                  <input type="text" id="setSocialFacebook" value="https://facebook.com/velenofficial" placeholder="https://facebook.com/velenofficial">
+                </div>
+              </div>
+            </div>
+
+            <button type="submit" class="btn-primary-action" style="margin-top:18px;">
               <i class="fa-solid fa-floppy-disk"></i> حفظ الإعدادات وتحديث المتجر فوراً
+            </button>
+          </form>
+        </div>
+      </section>
+
+      <!-- ================= TAB 6: PROMO CODES (Item 11) ================= -->
+      <section class="admin-tab-pane" id="tab-promos">
+        <div class="tab-action-bar">
+          <div class="search-filter-box">
+            <div class="input-with-icon">
+              <i class="fa-solid fa-magnifying-glass"></i>
+              <input type="text" id="promoSearchInput" placeholder="بحث باسم كود الخصم...">
+            </div>
+          </div>
+          <button id="openNewPromoModalBtn" class="btn-primary-action">
+            <i class="fa-solid fa-plus"></i> إنشاء كود خصم جديد
+          </button>
+        </div>
+
+        <div class="dash-block" style="margin-top:20px;">
+          <div class="block-header">
+            <h3><i class="fa-solid fa-ticket" style="color:#e5b95f;"></i> كودات الخصم الفعالة في المتجر (Promo Codes)</h3>
+          </div>
+          <div class="table-responsive">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>كود الخصم (Code)</th>
+                  <th>نوع الخصم</th>
+                  <th>قيمة الخصم</th>
+                  <th>الحد الأدنى للطلب</th>
+                  <th>مرات الاستخدام</th>
+                  <th>الحالة</th>
+                  <th>إجراء</th>
+                </tr>
+              </thead>
+              <tbody id="promoCodesTableBody">
+                <!-- Rendered dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= TAB 7: VELEN AI COPILOT (Item 9) ================= -->
+      <section class="admin-tab-pane" id="tab-ai">
+        <div class="ai-copilot-container">
+          <div class="ai-header-card">
+            <div class="ai-badge"><i class="fa-solid fa-robot"></i> AI Powered Assistant</div>
+            <h2>Velen Store AI Copilot & ChatGPT Advisor</h2>
+            <p>مساعدك الذكي المربوط ببيانات متجرك وسلات التسوق. اسأله عن أي تحليل للمبيعات، اقتراح أفكار حملات، كودات خصم، واستراتيجيات تسعير.</p>
+          </div>
+
+          <!-- Suggested prompts -->
+          <div class="ai-quick-prompts">
+            <button class="ai-prompt-chip" data-prompt="حلل لي أداء المبيعات وسلات التسوق النشطة وأعطني ملخص سريع">
+              <i class="fa-solid fa-chart-line"></i> تحليل المبيعات والسلات
+            </button>
+            <button class="ai-prompt-chip" data-prompt="اقترح لي فكرة كود خصم وعرض خاص لنهاية الأسبوع لزيادة الطلبات">
+              <i class="fa-solid fa-tags"></i> اقتراح كود خصم جذاب
+            </button>
+            <button class="ai-prompt-chip" data-prompt="ما هي المنتجات أو المقاسات الأكثر طلباً وكيف أزيد متوسط قيمة السلة AOV؟">
+              <i class="fa-solid fa-arrow-trend-up"></i> رفع متوسط قيمة السلة
+            </button>
+            <button class="ai-prompt-chip" data-prompt="اقترح لي نص جذاب لإعلان تيك توك وإنستغرام عن تيشيرتات البوكسي قطن 260 GSM">
+              <i class="fa-solid fa-pen-nib"></i> أفكار إعلانات تيك توك
+            </button>
+          </div>
+
+          <!-- Chat messages area -->
+          <div class="ai-chat-box" id="aiChatBox">
+            <div class="ai-msg ai-msg-bot">
+              <div class="ai-avatar"><img src="/assets/velen-logo.jpg" alt="Velen AI"></div>
+              <div class="ai-bubble">
+                <p>مرحباً بك في <strong>Velen AI Copilot</strong>! 🚀</p>
+                <p>أنا متصل مباشرة ببيانات متجرك الحية (المبيعات، الطلبات، الكتالوج، والسلات النشطة). اسألني عن أي تحليل، أفكار حملات تسويقية، أو استراتيجيات تسعير وسأجيبك فوراً بدقة واحترافية.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Chat Input -->
+          <form id="aiChatForm" class="ai-chat-input-wrap">
+            <input type="text" id="aiChatInput" placeholder="اكتب سؤالك أو استفسارك هنا (مثال: اقترح لي استراتيجية تسعير للدروب القادم)..." autocomplete="off" required>
+            <button type="submit" id="btnSendAiMessage" class="btn-primary-action btn-send-ai">
+              <i class="fa-solid fa-paper-plane"></i> إرسال
             </button>
           </form>
         </div>
@@ -869,6 +1048,58 @@
           <button type="button" class="btn-cancel" id="cancelProductBtn">إلغاء</button>
           <button type="submit" class="btn-primary-action" id="saveProductBtn">
             <i class="fa-solid fa-check"></i> حفظ ونشر فوراً على المتجر
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Add Promo Code Modal -->
+  <div id="promoModal" class="admin-modal" aria-hidden="true">
+    <div class="admin-modal-dialog">
+      <button id="closePromoModal" class="modal-close-icon"><i class="fa-solid fa-xmark"></i></button>
+      <div class="modal-head">
+        <h3>إنشاء كود خصم جديد (Promo Code)</h3>
+        <p>بمجرد الحفظ، سيتم تفعيل الكود فوراً ليستخدمه الزبائن عند الشراء.</p>
+      </div>
+
+      <form id="promoForm">
+        <div class="form-group">
+          <label>رمز الكود (Code Name) *</label>
+          <input type="text" id="promoCodeInput" placeholder="مثال: VELEN20 أو AMMAN" required style="text-transform:uppercase; font-weight:700; letter-spacing:1px;">
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>نوع الخصم *</label>
+            <select id="promoTypeSelect" required>
+              <option value="percentage">نسبة مئوية (%)</option>
+              <option value="fixed">مبلغ ثابت بالدينار (JOD)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>قيمة الخصم *</label>
+            <input type="number" step="0.5" id="promoValueInput" placeholder="10" required>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>الحد الأدنى للطلب لتفعيل الكود (JOD)</label>
+            <input type="number" step="1" id="promoMinOrderInput" value="0" placeholder="0">
+          </div>
+          <div class="form-group">
+            <label class="toggle-switch-label" style="margin-top:28px;">
+              <input type="checkbox" id="promoActiveCheck" checked>
+              <span>الكود نشط وفعال حالياً</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="modal-actions-bar">
+          <button type="button" class="btn-cancel" id="cancelPromoBtn">إلغاء</button>
+          <button type="submit" class="btn-primary-action">
+            <i class="fa-solid fa-check"></i> حفظ وتفعيل كود الخصم فوراً
           </button>
         </div>
       </form>

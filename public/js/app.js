@@ -8,12 +8,62 @@ document.addEventListener('DOMContentLoaded', () => {
     products: [],
     community: [],
     design: null,
+    settings: null,
+    appliedPromo: null,
+    activeLang: 'ar',
+    sessionId: localStorage.getItem('velen_session_id') || ('sess_' + Math.random().toString(36).substring(2, 10)),
     cart: JSON.parse(localStorage.getItem('velen_cart') || '[]'),
     activeCategory: 'all',
     activeCommFilter: 'all',
     currentProductForModal: null,
     selectedSize: 'M',
     selectedRating: 5
+  };
+
+  localStorage.setItem('velen_session_id', state.sessionId);
+
+  // Translations Dictionary (AR / EN)
+  const translations = {
+    ar: {
+      langToggle: 'EN',
+      shop: 'Shop / التسوق',
+      allProducts: 'جميع المنتجات',
+      teesRingers: 'Tees & Ringers',
+      community: 'COMMUNITY',
+      aboutUs: 'About us / عن البراند',
+      whyVelen: 'Why Velen / لماذا فيلين',
+      customerReviews: 'التقييمات وإطلالات الزبائن',
+      policyAndShipping: 'الشحن وسياسة التبديل',
+      stayConnected: 'STAY CONNECTED',
+      newsletterPrompt: 'اشترك بالنشرة البريدية واحصل على كود خصم فوري',
+      brandTitle: 'Velen Official',
+      cartTitle: 'حقيبة التسوق',
+      cartEmptyTitle: 'حقيبة التسوق فارغة',
+      cartEmptySub: 'تصفح المجموعة واكتشف ملابس Velen اليومية',
+      checkoutTitle: 'إتمام الطلب السريع',
+      subtotal: 'المجموع الفرعي:',
+      total: 'المجموع الإجمالي:'
+    },
+    en: {
+      langToggle: 'عربي',
+      shop: 'Shop',
+      allProducts: 'All Products',
+      teesRingers: 'Tees & Ringers',
+      community: 'COMMUNITY',
+      aboutUs: 'About us',
+      whyVelen: 'Why Velen?',
+      customerReviews: 'Reviews & Fit Checks',
+      policyAndShipping: 'Shipping & Policy',
+      stayConnected: 'STAY CONNECTED',
+      newsletterPrompt: 'Sign up for our newsletter for instant promo code',
+      brandTitle: 'Velen Official',
+      cartTitle: 'Shopping Bag',
+      cartEmptyTitle: 'Your shopping bag is empty',
+      cartEmptySub: 'Explore the collection and discover everyday Velen fits',
+      checkoutTitle: 'Express Checkout',
+      subtotal: 'Subtotal:',
+      total: 'Total Amount:'
+    }
   };
 
   // DOM Elements
@@ -43,15 +93,38 @@ document.addEventListener('DOMContentLoaded', () => {
   initApp();
 
   async function initApp() {
+    initLanguage();
     setupEventListeners();
+    setupMenuDrawerLinks();
+    setupNewsletterForms();
+    setupCheckoutUpsell();
+    setupPromoCodes();
+
+    await fetchSettings();
     await fetchDesign();
     await fetchProducts();
     await fetchCommunity();
     updateCartUI();
     initWebSocket();
+    initComingSoonTimer();
+
+    // Heartbeat for live active carts every 45s
+    setInterval(sendCartHeartbeat, 45000);
   }
 
   // ================= DATA FETCHING =================
+  async function fetchSettings() {
+    try {
+      const res = await fetch('/api/settings');
+      state.settings = await res.json();
+      if (state.settings && state.settings.social) {
+        applySocialLinks(state.settings.social);
+      }
+    } catch (err) {
+      console.error('Error fetching settings:', err);
+    }
+  }
+
   async function fetchDesign() {
     try {
       const res = await fetch('/api/design');
@@ -91,7 +164,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (navBrand && design.header.brandName) {
         navBrand.textContent = design.header.brandName;
       }
-      const logoImgs = document.querySelectorAll('.hero-logo-img, .drawer-logo-img, .modal-logo, .checkout-logo');
+      const logoImgs = document.querySelectorAll('.hero-logo-img, .drawer-logo-img, .modal-logo, .checkout-logo, .nav-brand-logo');
       if (design.header.logoUrl) {
         logoImgs.forEach(img => img.src = design.header.logoUrl);
       }
@@ -186,6 +259,9 @@ document.addEventListener('DOMContentLoaded', () => {
       const aQ = document.getElementById('aboutQuote');
       if (aQ && design.aboutSection.quote) aQ.textContent = `"${design.aboutSection.quote}"`;
     }
+
+    // Check Coming Soon Overlay
+    initComingSoonTimer();
   }
 
   async function fetchProducts() {
@@ -518,16 +594,38 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function saveCart() {
     localStorage.setItem('velen_cart', JSON.stringify(state.cart));
+    sendCartHeartbeat();
   }
 
   function updateCartUI() {
     const totalItems = state.cart.reduce((sum, item) => sum + item.quantity, 0);
     const subtotal = state.cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
 
+    let promoDiscount = 0;
+    if (state.appliedPromo && subtotal > 0) {
+      if (state.appliedPromo.discountType === 'percentage') {
+        promoDiscount = (subtotal * state.appliedPromo.discountValue) / 100;
+      } else {
+        promoDiscount = Math.min(subtotal, state.appliedPromo.discountValue);
+      }
+    }
+    const finalCartTotal = Math.max(0, subtotal - promoDiscount);
+
     if (cartCountBadge) cartCountBadge.textContent = totalItems;
     if (cartTotalItems) cartTotalItems.textContent = totalItems;
     if (cartSubtotal) cartSubtotal.textContent = subtotal.toFixed(3) + ' JOD';
-    if (cartTotal) cartTotal.textContent = subtotal.toFixed(3) + ' JOD';
+    if (cartTotal) cartTotal.textContent = finalCartTotal.toFixed(3) + ' JOD';
+
+    const cartPromoMsg = document.getElementById('cartPromoMsg');
+    if (cartPromoMsg) {
+      if (promoDiscount > 0) {
+        cartPromoMsg.style.display = 'block';
+        cartPromoMsg.style.color = '#2ecc71';
+        cartPromoMsg.textContent = `تم تطبيق الخصم: -${promoDiscount.toFixed(3)} JOD (${state.appliedPromo.code})`;
+      } else {
+        cartPromoMsg.style.display = 'none';
+      }
+    }
 
     if (state.cart.length === 0) {
       cartItemsList.innerHTML = `
@@ -676,21 +774,43 @@ document.addEventListener('DOMContentLoaded', () => {
     const checkoutShipping = document.getElementById('checkoutShipping');
     const checkoutFinalTotal = document.getElementById('checkoutFinalTotal');
     const custCity = document.getElementById('custCity');
+    const promoLine = document.getElementById('checkoutPromoLine');
+    const promoDiscountEl = document.getElementById('checkoutPromoDiscount');
 
     const subtotal = state.cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
     const shipping = custCity && custCity.value === 'Amman' ? 0.0 : 1.0;
-    const finalTotal = subtotal + shipping;
 
-    checkoutItemsList.innerHTML = state.cart.map(item => `
-      <div style="display:flex; justify-content:space-between; font-size:12px; color:#bbb;">
-        <span>${item.name} (${item.size}) × ${item.quantity}</span>
-        <span>${(item.price * item.quantity).toFixed(3)} JOD</span>
-      </div>
-    `).join('');
+    let promoDiscount = 0;
+    if (state.appliedPromo && subtotal > 0) {
+      if (state.appliedPromo.discountType === 'percentage') {
+        promoDiscount = (subtotal * state.appliedPromo.discountValue) / 100;
+      } else {
+        promoDiscount = Math.min(subtotal, state.appliedPromo.discountValue);
+      }
+    }
 
-    checkoutSubtotal.textContent = subtotal.toFixed(3) + ' JOD';
-    checkoutShipping.textContent = shipping === 0 ? 'مجاناً (عمّان)' : '1.000 JOD';
-    checkoutFinalTotal.textContent = finalTotal.toFixed(3) + ' JOD';
+    const finalTotal = Math.max(0, subtotal - promoDiscount) + shipping;
+
+    if (checkoutItemsList) {
+      checkoutItemsList.innerHTML = state.cart.map(item => `
+        <div style="display:flex; justify-content:space-between; font-size:12px; color:#bbb;">
+          <span>${item.name} (${item.size}) × ${item.quantity}</span>
+          <span>${(item.price * item.quantity).toFixed(3)} JOD</span>
+        </div>
+      `).join('');
+    }
+
+    if (checkoutSubtotal) checkoutSubtotal.textContent = subtotal.toFixed(3) + ' JOD';
+    if (promoLine && promoDiscountEl) {
+      if (promoDiscount > 0) {
+        promoLine.style.display = 'flex';
+        promoDiscountEl.textContent = `-${promoDiscount.toFixed(3)} JOD (${state.appliedPromo.code})`;
+      } else {
+        promoLine.style.display = 'none';
+      }
+    }
+    if (checkoutShipping) checkoutShipping.textContent = shipping === 0 ? 'مجاناً (عمّان)' : '1.000 JOD';
+    if (checkoutFinalTotal) checkoutFinalTotal.textContent = finalTotal.toFixed(3) + ' JOD';
   }
 
   // ================= COMMUNITY SUBMISSION =================
@@ -853,6 +973,38 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  // Phone normalization for Jordan (+962, 962, 07, 7)
+  function normalizeJordanPhone(phone) {
+    let cleaned = phone.replace(/[\s\-\(\)]/g, '');
+    if (cleaned.startsWith('+')) cleaned = cleaned.substring(1);
+    if (cleaned.startsWith('00962')) cleaned = cleaned.substring(5);
+    if (cleaned.startsWith('962')) {
+      return '+' + cleaned;
+    }
+    if (cleaned.startsWith('07')) {
+      return '+962' + cleaned.substring(1);
+    }
+    if (cleaned.startsWith('7') && cleaned.length === 9) {
+      return '+962' + cleaned;
+    }
+    return '+' + cleaned;
+  }
+
+  // Active Cart Heartbeat to server
+  function sendCartHeartbeat() {
+    const totalItems = state.cart.reduce((sum, item) => sum + item.quantity, 0);
+    const subtotal = state.cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    fetch('/api/cart/active', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        sessionId: state.sessionId,
+        itemsCount: totalItems,
+        totalValue: subtotal
+      })
+    }).catch(() => {});
+  }
+
   // ================= CHECKOUT ORDER SUBMISSION =================
   function setupCheckoutForm() {
     const custCity = document.getElementById('custCity');
@@ -866,15 +1018,30 @@ document.addEventListener('DOMContentLoaded', () => {
         e.preventDefault();
 
         const customerName = document.getElementById('custName').value.trim();
-        const phone = document.getElementById('custPhone').value.trim();
+        const rawPhone = document.getElementById('custPhone').value.trim();
+        const phone = normalizeJordanPhone(rawPhone);
         const city = document.getElementById('custCity').value;
         const paymentMethod = document.getElementById('custPayment').value;
         const address = document.getElementById('custAddress').value.trim();
         const notes = document.getElementById('custNotes').value.trim();
 
+        if (phone.replace(/[^0-9]/g, '').length < 8) {
+          showToast('يرجى التأكد من كتابة رقم الهاتف الأردني بشكل صحيح', 'error');
+          return;
+        }
+
         const subtotal = state.cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
         const shipping = city === 'Amman' ? 0.0 : 1.0;
-        const total = subtotal + shipping;
+
+        let promoDiscount = 0;
+        if (state.appliedPromo && subtotal > 0) {
+          if (state.appliedPromo.discountType === 'percentage') {
+            promoDiscount = (subtotal * state.appliedPromo.discountValue) / 100;
+          } else {
+            promoDiscount = Math.min(subtotal, state.appliedPromo.discountValue);
+          }
+        }
+        const total = Math.max(0, subtotal - promoDiscount) + shipping;
 
         const orderData = {
           customerName,
@@ -884,6 +1051,8 @@ document.addEventListener('DOMContentLoaded', () => {
           notes,
           paymentMethod,
           subtotal,
+          discount: promoDiscount,
+          promoCode: state.appliedPromo ? state.appliedPromo.code : null,
           shipping,
           total,
           items: state.cart
@@ -898,14 +1067,13 @@ document.addEventListener('DOMContentLoaded', () => {
           const result = await res.json();
 
           if (result.success) {
-            // Clear cart
             state.cart = [];
+            state.appliedPromo = null;
             saveCart();
             updateCartUI();
 
             closeCheckout();
 
-            // Show success modal
             const successOrderId = document.getElementById('successOrderId');
             if (successOrderId) successOrderId.textContent = result.order.id;
 
@@ -923,6 +1091,303 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       });
     }
+  }
+
+  // ================= PROMO CODES SETUP =================
+  function setupPromoCodes() {
+    // Cart drawer promo
+    const applyCartBtn = document.getElementById('applyCartPromoBtn');
+    const cartInput = document.getElementById('cartPromoInput');
+    applyCartBtn?.addEventListener('click', () => {
+      const code = cartInput?.value.trim();
+      applyPromoCode(code, 'cart');
+    });
+
+    // Checkout promo
+    const applyCheckoutBtn = document.getElementById('applyCheckoutPromoBtn');
+    const checkoutInput = document.getElementById('checkoutPromoInput');
+    applyCheckoutBtn?.addEventListener('click', () => {
+      const code = checkoutInput?.value.trim();
+      applyPromoCode(code, 'checkout');
+    });
+  }
+
+  async function applyPromoCode(code, source = 'cart') {
+    if (!code) {
+      showToast('يرجى إدخال كود الخصم', 'info');
+      return;
+    }
+    const subtotal = state.cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    if (subtotal <= 0) {
+      showToast('حقيبة التسوق فارغة', 'info');
+      return;
+    }
+
+    try {
+      const res = await fetch('/api/promo-codes/validate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code, orderTotal: subtotal })
+      });
+      const data = await res.json();
+      if (data.valid) {
+        state.appliedPromo = data.promo;
+        showToast(`تم تفعيل كود الخصم (${data.promo.code}) بنجاح!`, 'success');
+        updateCartUI();
+        renderCheckoutSummary();
+        const promoMsg = document.getElementById('checkoutPromoMsg');
+        if (promoMsg) {
+          promoMsg.style.display = 'block';
+          promoMsg.style.color = '#2ecc71';
+          promoMsg.textContent = `تم تطبيق الخصم: -${data.promo.discountAmount.toFixed(3)} JOD (${data.promo.code})`;
+        }
+      } else {
+        showToast(data.message || 'كود الخصم غير صالح أو منتهي الصلاحية', 'error');
+        const promoMsg = document.getElementById('checkoutPromoMsg');
+        if (promoMsg) {
+          promoMsg.style.display = 'block';
+          promoMsg.style.color = '#ff4757';
+          promoMsg.textContent = data.message || 'كود الخصم غير صالح';
+        }
+      }
+    } catch (err) {
+      showToast('حدث خطأ أثناء فحص كود الخصم', 'error');
+    }
+  }
+
+  // ================= CHECKOUT UPSELL SETUP =================
+  function setupCheckoutUpsell() {
+    const btn = document.getElementById('btnApplyUpsell');
+    if (!btn) return;
+    btn.addEventListener('click', () => {
+      const size = document.getElementById('upsellSizeSelect')?.value || 'M';
+      const upsellItem = {
+        id: 'upsell_ringer_tee',
+        name: 'VELEN Ringer Tee — Special Addon',
+        price: 9.500,
+        image: '/assets/velen-logo.jpg',
+        category: 'Ringer Edition',
+        fabric: '100% قطن أردني معالج نخب أول'
+      };
+      addToCart(upsellItem, size, 1);
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-check"></i> تمت الإضافة للطلب!';
+      btn.style.background = '#27ae60';
+      showToast('تمت إضافة القطعة بالعرض الخاص إلى طلبك!', 'success');
+    });
+  }
+
+  // ================= COMING SOON COUNTDOWN TIMER =================
+  function initComingSoonTimer() {
+    const csScreen = document.getElementById('comingSoonScreen');
+    if (!csScreen) return;
+
+    const csData = state.design?.comingSoon;
+    const urlParams = new URLSearchParams(window.location.search);
+    const isBypass = urlParams.get('preview') === 'true' || sessionStorage.getItem('velen_admin_unlocked') === 'true';
+
+    if (!csData || !csData.enabled || isBypass) {
+      csScreen.style.display = 'none';
+      return;
+    }
+
+    csScreen.style.display = 'flex';
+
+    if (csData.title) {
+      const csTitle = document.getElementById('csTitle');
+      if (csTitle) csTitle.textContent = csData.title;
+    }
+    if (csData.subtitle) {
+      const csSub = document.getElementById('csSubtitle');
+      if (csSub) csSub.textContent = csData.subtitle;
+    }
+
+    function updateTicker() {
+      const targetDate = new Date(csData.launchDate || '2026-12-01T00:00:00').getTime();
+      const now = Date.now();
+      const diff = Math.max(0, targetDate - now);
+
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      const secs = Math.floor((diff % (1000 * 60)) / 1000);
+
+      const dEl = document.getElementById('csDays');
+      const hEl = document.getElementById('csHours');
+      const mEl = document.getElementById('csMinutes');
+      const sEl = document.getElementById('csSeconds');
+
+      if (dEl) dEl.textContent = String(days).padStart(2, '0');
+      if (hEl) hEl.textContent = String(hours).padStart(2, '0');
+      if (mEl) mEl.textContent = String(mins).padStart(2, '0');
+      if (sEl) sEl.textContent = String(secs).padStart(2, '0');
+    }
+
+    updateTicker();
+    if (window._csTimerInterval) clearInterval(window._csTimerInterval);
+    window._csTimerInterval = setInterval(updateTicker, 1000);
+
+    const notifyForm = document.getElementById('csNotifyForm');
+    if (notifyForm) {
+      notifyForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const contact = document.getElementById('csNotifyContact')?.value.trim();
+        if (contact) {
+          showToast('تم تسجيل بياناتك بنجاح! ستصلك رسالة فور فتح الموقع 🔥', 'success');
+          notifyForm.reset();
+        }
+      });
+    }
+  }
+
+  // ================= LANGUAGE CONTROLLER (AR / EN) =================
+  function initLanguage() {
+    const savedLang = localStorage.getItem('velen_lang');
+    let lang = savedLang;
+    if (!lang) {
+      const phoneLang = (navigator.language || navigator.userLanguage || '').toLowerCase();
+      lang = phoneLang.startsWith('ar') ? 'ar' : 'en';
+    }
+    setLanguage(lang);
+
+    document.getElementById('langToggleBtn')?.addEventListener('click', () => {
+      const nextLang = state.activeLang === 'ar' ? 'en' : 'ar';
+      setLanguage(nextLang);
+      showToast(nextLang === 'ar' ? 'تم تغيير اللغة إلى العربية' : 'Language switched to English', 'info');
+    });
+  }
+
+  function setLanguage(lang) {
+    state.activeLang = lang;
+    localStorage.setItem('velen_lang', lang);
+    document.documentElement.setAttribute('lang', lang);
+    document.documentElement.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+
+    const langLabel = document.getElementById('langLabel');
+    if (langLabel) {
+      langLabel.textContent = lang === 'ar' ? 'EN' : 'عربي';
+    }
+
+    const dict = translations[lang] || translations.ar;
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const key = el.getAttribute('data-i18n');
+      if (dict[key]) {
+        el.textContent = dict[key];
+      }
+    });
+  }
+
+  // ================= DYNAMIC SOCIAL MEDIA LINKS =================
+  function applySocialLinks(social) {
+    if (!social) return;
+    const insta = social.instagram || 'https://instagram.com/velenofficial';
+    const tiktok = social.tiktok || 'https://tiktok.com/@velenofficial';
+    const wa = social.whatsapp ? (social.whatsapp.startsWith('http') ? social.whatsapp : `https://wa.me/${social.whatsapp.replace(/[^0-9]/g, '')}`) : 'https://wa.me/962790000000';
+    const fb = social.facebook || '#';
+
+    document.querySelectorAll('a[id*="Insta"], a[href*="instagram"]').forEach(a => a.href = insta);
+    document.querySelectorAll('a[id*="Tiktok"], a[href*="tiktok"]').forEach(a => a.href = tiktok);
+    document.querySelectorAll('a[id*="Wa"], a[href*="wa.me"]').forEach(a => {
+      if (!a.id.includes('whatsappTrackBtn')) {
+        a.href = wa;
+      }
+    });
+    document.querySelectorAll('a[id*="Fb"], a[href*="facebook"]').forEach(a => a.href = fb);
+  }
+
+  // ================= MENU DRAWER & FOOTER LINKS =================
+  function setupMenuDrawerLinks() {
+    const drawerLinks = document.querySelectorAll('#navDrawer a[href^="#"]');
+    drawerLinks.forEach(link => {
+      link.addEventListener('click', (e) => {
+        const href = link.getAttribute('href');
+        if (!href || href === '#') return;
+
+        e.preventDefault();
+        navDrawer.classList.remove('open');
+        drawerOverlay.classList.remove('active');
+
+        const filter = link.getAttribute('data-filter');
+        if (filter) {
+          state.activeCategory = filter;
+          const catPills = document.querySelectorAll('.cat-pill');
+          catPills.forEach(p => {
+            if (p.getAttribute('data-cat') === filter) p.classList.add('active');
+            else p.classList.remove('active');
+          });
+          renderProducts();
+        }
+
+        setTimeout(() => {
+          const targetEl = document.querySelector(href);
+          if (targetEl) {
+            targetEl.scrollIntoView({ behavior: 'smooth' });
+          }
+        }, 200);
+      });
+    });
+
+    const footerLinks = document.querySelectorAll('.footer-col a[href^="#"]');
+    footerLinks.forEach(link => {
+      link.addEventListener('click', (e) => {
+        const href = link.getAttribute('href');
+        if (!href || href === '#') return;
+        e.preventDefault();
+        const targetEl = document.querySelector(href);
+        if (targetEl) {
+          targetEl.scrollIntoView({ behavior: 'smooth' });
+        }
+      });
+    });
+
+    // Policy & Terms Modal
+    const openPolicyBtns = [
+      document.getElementById('drawerTermsBtn'),
+      ...document.querySelectorAll('.open-terms-link, .open-policy-btn')
+    ];
+    openPolicyBtns.forEach(btn => {
+      if (btn) {
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          navDrawer.classList.remove('open');
+          drawerOverlay.classList.remove('active');
+          const policyModal = document.getElementById('policyModal');
+          if (policyModal) policyModal.style.display = 'flex';
+        });
+      }
+    });
+
+    document.getElementById('policyModalClose')?.addEventListener('click', () => {
+      const policyModal = document.getElementById('policyModal');
+      if (policyModal) policyModal.style.display = 'none';
+    });
+
+    const policyModal = document.getElementById('policyModal');
+    if (policyModal) {
+      policyModal.addEventListener('click', (e) => {
+        if (e.target === policyModal) policyModal.style.display = 'none';
+      });
+    }
+  }
+
+  // ================= NEWSLETTER FORMS (STAY CONNECTED) =================
+  function setupNewsletterForms() {
+    const forms = [
+      document.getElementById('drawerNewsletterForm'),
+      document.getElementById('footerNewsletterForm')
+    ];
+    forms.forEach(form => {
+      if (!form) return;
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const input = form.querySelector('input[type="email"]');
+        const email = input?.value.trim();
+        if (email) {
+          showToast('شكراً لانضمامك إلى Velen! استخدم كود الخصم (VELEN10) للحصول على 10% خصم فوري 🎉', 'success');
+          form.reset();
+        }
+      });
+    });
   }
 
   // ================= EVENT LISTENERS =================
