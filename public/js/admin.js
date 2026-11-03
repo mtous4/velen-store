@@ -44,6 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setupLiveView();
     setupWaybillModal();
     setupAdminCommunityPost();
+    setupFinanceTracker();
     await fetchAllData();
     initWebSocket();
     setInterval(fetchActiveCarts, 15000);
@@ -53,7 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // ================= FETCH ALL DATA =================
   async function fetchAllData() {
     try {
-      const [pRes, oRes, cRes, sRes, statsRes, dRes, promoRes, cartRes] = await Promise.all([
+      const [pRes, oRes, cRes, sRes, statsRes, dRes, promoRes, cartRes, expRes] = await Promise.all([
         fetch('/api/products'),
         fetch('/api/orders'),
         fetch('/api/community'),
@@ -61,7 +62,8 @@ document.addEventListener('DOMContentLoaded', () => {
         fetch('/api/stats'),
         fetch('/api/design'),
         fetch('/api/promo-codes'),
-        fetch('/api/cart/active')
+        fetch('/api/cart/active'),
+        fetch('/api/expenses')
       ]);
 
       state.products = await pRes.json();
@@ -72,6 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
       state.design = await dRes.json();
       state.promos = await promoRes.json();
       state.activeCarts = await cartRes.json();
+      state.expenses = await expRes.json();
 
       renderDashboard();
       renderProducts();
@@ -81,6 +84,8 @@ document.addEventListener('DOMContentLoaded', () => {
       renderActiveCarts();
       populateSettings();
       populateDesignCustomizer();
+      renderExpenses();
+      renderFinanceStats();
       updateBadgeCounts();
     } catch (err) {
       console.error('Error fetching admin data:', err);
@@ -452,6 +457,12 @@ document.addEventListener('DOMContentLoaded', () => {
     if (state.settings.orderEmail && document.getElementById('setOrderEmail')) {
       document.getElementById('setOrderEmail').value = state.settings.orderEmail;
     }
+    if (document.getElementById('setGmailUser')) {
+      document.getElementById('setGmailUser').value = state.settings.gmailUser || state.settings.orderEmail || 'Velenoffical@gmail.com';
+    }
+    if (document.getElementById('setGmailAppPassword')) {
+      document.getElementById('setGmailAppPassword').value = state.settings.gmailAppPassword || '';
+    }
     if (state.settings.social) {
       const s = state.settings.social;
       if (s.instagram && document.getElementById('setSocialInstagram')) document.getElementById('setSocialInstagram').value = s.instagram;
@@ -577,6 +588,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       });
 
+      const costPriceVal = document.getElementById('prodCostPrice')?.value;
+      const costPrice = costPriceVal !== '' && costPriceVal !== undefined ? parseFloat(costPriceVal) : 5.000;
       const totalStock = Object.values(sizeInventory).reduce((acc, q) => acc + q, 0);
       const finalImage = state.uploadedProductImageUrl || imageUrlInput || '/assets/velen-logo.jpg';
 
@@ -584,6 +597,7 @@ document.addEventListener('DOMContentLoaded', () => {
         name,
         price,
         comparePrice,
+        costPrice,
         category,
         stock: totalStock,
         sizeInventory,
@@ -634,6 +648,8 @@ document.addEventListener('DOMContentLoaded', () => {
         slogan: document.getElementById('setSlogan').value.trim(),
         subSlogan: document.getElementById('setSubSlogan').value.trim(),
         orderEmail: document.getElementById('setOrderEmail')?.value.trim() || 'Velenoffical@gmail.com',
+        gmailUser: document.getElementById('setGmailUser')?.value.trim() || 'Velenoffical@gmail.com',
+        gmailAppPassword: document.getElementById('setGmailAppPassword')?.value.trim() || '',
         social: {
           instagram: document.getElementById('setSocialInstagram')?.value.trim() || 'https://instagram.com/velenofficial',
           tiktok: document.getElementById('setSocialTiktok')?.value.trim() || 'https://tiktok.com/@velenofficial',
@@ -664,6 +680,9 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('editProductId').value = '';
     document.getElementById('productModalTitle').textContent = 'إضافة قطعة جديدة إلى Velen Collection';
     state.uploadedProductImageUrl = null;
+    if (document.getElementById('prodCostPrice')) {
+      document.getElementById('prodCostPrice').value = '5.000';
+    }
     
     const dropzone = document.getElementById('prodDropzone');
     const preview = document.getElementById('prodPreviewArea');
@@ -720,7 +739,6 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('cancelProductBtn')?.addEventListener('click', closeProductModal);
 
     // Filter Listeners
-    // Filter Listeners
     document.getElementById('productSearchInput')?.addEventListener('input', renderProducts);
     document.getElementById('productCategoryFilter')?.addEventListener('change', renderProducts);
     document.getElementById('orderSearchInput')?.addEventListener('input', renderOrders);
@@ -737,6 +755,53 @@ document.addEventListener('DOMContentLoaded', () => {
         const text = r.textContent.toLowerCase();
         r.style.display = text.includes(q) ? '' : 'none';
       });
+    });
+
+    // Test Email Button
+    document.getElementById('testEmailBtn')?.addEventListener('click', async () => {
+      const btn = document.getElementById('testEmailBtn');
+      const origHtml = btn.innerHTML;
+      btn.disabled = true;
+      btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> جاري فحص الاتصال وإرسال إيميل تجريبي...`;
+
+      const toEmail = document.getElementById('setOrderEmail')?.value.trim() || 'Velenoffical@gmail.com';
+      const gmailUser = document.getElementById('setGmailUser')?.value.trim() || 'Velenoffical@gmail.com';
+      const gmailAppPassword = document.getElementById('setGmailAppPassword')?.value.trim() || '';
+
+      try {
+        const res = await fetch('/api/admin/test-email', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ toEmail, gmailUser, gmailAppPassword })
+        });
+        const data = await res.json();
+        if (data.success) {
+          showAdminToast('✅ تم إرسال الإيميل التجريبي بنجاح عبر سيرفرات Gmail!', 'success');
+          alert(`✅ نجح الإرسال!\n\nتم إرسال إيميل تجريبي إلى: ${toEmail}\nمرسلاً عبر: ${gmailUser}\nيرجى تفقد بريدك الوارد (Inbox) أو مجلد البريد غير المرغوب فيه (Spam).`);
+        } else {
+          showAdminToast(`❌ فشل إرسال الإيميل: ${data.message || 'خطأ في المصادقة'}`, 'error');
+          alert(`❌ فشل إرسال الإيميل:\n\n${data.message}\n\nيرجى التأكد من إنشاء App Password مخصص من 16 حرفاً من حساب جوجل الخاص بك.`);
+        }
+      } catch (err) {
+        showAdminToast('حدث خطأ أثناء فحص الإيميل', 'error');
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = origHtml;
+      }
+    });
+
+    // Toggle Gmail Password visibility
+    document.getElementById('toggleGmailPassBtn')?.addEventListener('click', () => {
+      const inp = document.getElementById('setGmailAppPassword');
+      const btn = document.getElementById('toggleGmailPassBtn');
+      if (!inp) return;
+      if (inp.type === 'password') {
+        inp.type = 'text';
+        btn.innerHTML = '<i class="fa-solid fa-eye-slash"></i>';
+      } else {
+        inp.type = 'password';
+        btn.innerHTML = '<i class="fa-solid fa-eye"></i>';
+      }
     });
 
     // Forms
@@ -845,6 +910,8 @@ document.addEventListener('DOMContentLoaded', () => {
       const discountType = document.getElementById('promoTypeSelect')?.value;
       const discountValue = parseFloat(document.getElementById('promoValueInput')?.value) || 0;
       const minOrder = parseFloat(document.getElementById('promoMinOrderInput')?.value) || 0;
+      const usageLimitVal = document.getElementById('promoUsageLimitInput')?.value;
+      const usageLimit = usageLimitVal ? (parseInt(usageLimitVal, 10) || null) : null;
       const active = Boolean(document.getElementById('promoActiveCheck')?.checked);
 
       if (!code || discountValue <= 0) {
@@ -861,6 +928,7 @@ document.addEventListener('DOMContentLoaded', () => {
             discountType,
             discountValue,
             minOrder,
+            usageLimit,
             active
           })
         });
@@ -904,7 +972,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <td>${p.discountType === 'percentage' ? 'نسبة مئوية (%)' : 'مبلغ ثابت (JOD)'}</td>
         <td><strong>${p.discountType === 'percentage' ? `${p.discountValue}%` : `${Number(p.discountValue).toFixed(3)} JOD`}</strong></td>
         <td>${p.minOrder > 0 ? `${Number(p.minOrder).toFixed(3)} JOD` : 'بدون حد أدنى'}</td>
-        <td><span style="font-weight:700;">${p.timesUsed || 0}</span></td>
+        <td><span style="font-weight:700;">${p.timesUsed || 0}</span> / <span style="color:#aaa;">${p.usageLimit ? `${p.usageLimit} مرة` : 'غير محدود'}</span></td>
         <td><span class="${p.active !== false ? 'status-active-promo' : 'status-inactive-promo'}">${p.active !== false ? 'فعال' : 'معطل'}</span></td>
         <td>
           <button class="link-btn" style="color:#ff6b6b;" onclick="window.velenAdmin.deletePromo('${p.code}')" title="حذف الكود">
@@ -1018,6 +1086,7 @@ document.addEventListener('DOMContentLoaded', () => {
       orders: 'الطلبات والمبيعات وإدارة التوصيل',
       community: 'مشاركات المجتمع وتقييمات الـ 5 نجوم',
       promos: 'إدارة كودات الخصم والعروض الترويجية',
+      finance: 'المالية والأرباح وحساب التكاليف (Finance & P&L)',
       design: 'تخصيص التصميم والتركيبة وهيكلية المتجر',
       settings: 'إعدادات متجر Velen الرسمية',
       ai: 'Velen AI Copilot — مستشار الذكاء الاصطناعي'
@@ -1550,6 +1619,9 @@ document.addEventListener('DOMContentLoaded', () => {
       document.getElementById('prodName').value = p.name;
       document.getElementById('prodPrice').value = p.price;
       document.getElementById('prodComparePrice').value = p.comparePrice || '';
+      if (document.getElementById('prodCostPrice')) {
+        document.getElementById('prodCostPrice').value = p.costPrice !== undefined ? p.costPrice : 5.000;
+      }
       document.getElementById('prodCategory').value = p.category;
       document.getElementById('prodStock').value = p.stock || 20;
       document.getElementById('prodOnSale').checked = Boolean(p.onSale);
@@ -1726,10 +1798,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
           <!-- Financials & COD Box -->
           <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 20px;">
-            <div style="font-size: 11px; color: #666; line-height: 1.6; max-width: 320px;">
-              <strong>سياسة التوصيل والتبديل:</strong><br>
-              • يحق للعميل معاينة المقاس عند الاستلام.<br>
-              • التبديل متاح خلال 3 أيام من تاريخ الاستلام.<br>
+            <div style="font-size: 11px; color: #666; line-height: 1.6; max-width: 340px;">
+              <strong>سياسة التوصيل والتبديل والترجيع:</strong><br>
+              • الترجيع متاح فقط في حال وجود خلل أو عيب مصنعي في القطعة.<br>
+              • التبديل متاح خلال 24 ساعة من تاريخ الاستلام في حال كانت القطعة بحالتها الأصلية.<br>
               • خدمة العملاء والواتساب: <strong>+962 7 7018 8144</strong>
             </div>
 
@@ -1761,6 +1833,59 @@ document.addEventListener('DOMContentLoaded', () => {
 
       document.getElementById('waybillModal').classList.add('active');
     },
+    printWaybill: () => {
+      const area = document.getElementById('waybillPrintArea');
+      if (!area || !area.innerHTML.trim()) {
+        showAdminToast('يرجى فتح بوليصة طلب أولاً للطباعة', 'error');
+        return;
+      }
+      const printWindow = window.open('', '_blank', 'width=850,height=900');
+      if (!printWindow) {
+        alert('يرجى السماح بالنوافذ المنبثقة (Popups) في المتصفح لطباعة البوليصة مباشرة');
+        return;
+      }
+      printWindow.document.write(`
+        <!DOCTYPE html>
+        <html dir="rtl" lang="ar">
+        <head>
+          <meta charset="UTF-8">
+          <title>بوليصة شحن وتوصيل — VELEN OFFICIAL</title>
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+          <style>
+            * { box-sizing: border-box; }
+            body {
+              font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+              margin: 15px;
+              padding: 0;
+              background: #fff !important;
+              color: #000 !important;
+            }
+            @media print {
+              @page {
+                margin: 10mm;
+                size: auto;
+              }
+              body {
+                margin: 0;
+                background: #fff !important;
+                color: #000 !important;
+              }
+            }
+          </style>
+        </head>
+        <body>
+          ${area.innerHTML}
+          <script>
+            window.onload = function() {
+              window.focus();
+              window.print();
+            };
+          </script>
+        </body>
+        </html>
+      `);
+      printWindow.document.close();
+    },
     deletePromo: async (code) => {
       if (!confirm(`هل أنت متأكد من حذف كود الخصم (${code})؟`)) return;
       try {
@@ -1773,6 +1898,23 @@ document.addEventListener('DOMContentLoaded', () => {
           showAdminToast(`تم حذف كود الخصم (${code}) بنجاح`, 'success');
         } else {
           showAdminToast(data.error || 'فشل حذف كود الخصم', 'error');
+        }
+      } catch (e) {
+        showAdminToast('حدث خطأ في الاتصال بالخادم', 'error');
+      }
+    },
+    deleteExpense: async (id) => {
+      if (!confirm('هل أنت متأكد من حذف هذا المصروف / التكلفة؟')) return;
+      try {
+        const res = await fetch(`/api/expenses/${id}`, { method: 'DELETE' });
+        const data = await res.json();
+        if (data.success) {
+          state.expenses = (state.expenses || []).filter(e => e.id !== id);
+          renderExpenses();
+          renderFinanceStats();
+          showAdminToast('تم حذف المصروف بنجاح', 'success');
+        } else {
+          showAdminToast(data.message || 'فشل حذف المصروف', 'error');
         }
       } catch (e) {
         showAdminToast('حدث خطأ في الاتصال بالخادم', 'error');
@@ -2242,5 +2384,141 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       });
     }
+  }
+
+  // ================= FINANCE & EXPENSES MANAGEMENT =================
+  function setupFinanceTracker() {
+    const openBtn = document.getElementById('openAddExpenseBtn');
+    const modal = document.getElementById('expenseModal');
+    const closeBtn = document.getElementById('closeExpenseModal');
+    const cancelBtn = document.getElementById('cancelExpenseBtn');
+    const form = document.getElementById('expenseForm');
+    const dateInput = document.getElementById('expDate');
+
+    if (dateInput && !dateInput.value) {
+      dateInput.value = new Date().toISOString().split('T')[0];
+    }
+
+    const openModal = () => {
+      if (form) form.reset();
+      if (dateInput) dateInput.value = new Date().toISOString().split('T')[0];
+      if (modal) modal.classList.add('active');
+    };
+
+    const closeModal = () => {
+      if (modal) modal.classList.remove('active');
+    };
+
+    if (openBtn) openBtn.addEventListener('click', openModal);
+    if (closeBtn) closeBtn.addEventListener('click', closeModal);
+    if (cancelBtn) cancelBtn.addEventListener('click', closeModal);
+
+    if (form) {
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const category = document.getElementById('expCategory')?.value || 'Manufacturing';
+        const title = document.getElementById('expTitle')?.value.trim();
+        const amount = parseFloat(document.getElementById('expAmount')?.value || 0);
+        const date = document.getElementById('expDate')?.value || new Date().toISOString().split('T')[0];
+        const notes = document.getElementById('expNotes')?.value.trim() || '';
+
+        if (!title || !amount || amount <= 0) {
+          showAdminToast('يرجى إدخال بند التكلفة والمبلغ بشكل صحيح', 'error');
+          return;
+        }
+
+        try {
+          const res = await fetch('/api/expenses', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ category, title, amount, date, notes })
+          });
+          const data = await res.json();
+          if (data.success) {
+            closeModal();
+            state.expenses = state.expenses || [];
+            state.expenses.unshift(data.expense);
+            renderExpenses();
+            renderFinanceStats();
+            showAdminToast(`تم تسجيل التكلفة "${title}" بقيمة ${amount.toFixed(3)} JOD بنجاح!`, 'success');
+          } else {
+            showAdminToast(data.message || 'فشل حفظ المصروف', 'error');
+          }
+        } catch (err) {
+          console.error(err);
+          showAdminToast('حدث خطأ في الاتصال بالخادم', 'error');
+        }
+      });
+    }
+  }
+
+  function renderFinanceStats() {
+    const validOrders = (state.orders || []).filter(o => o.status !== 'Cancelled');
+    const totalRevenue = validOrders.reduce((sum, o) => sum + (Number(o.total) || 0), 0);
+
+    // Calculate COGS based on each item's costPrice in valid orders
+    let totalCOGS = 0;
+    validOrders.forEach(o => {
+      (o.items || []).forEach(item => {
+        const prod = (state.products || []).find(p => p.id === item.id || p.name === item.name);
+        const unitCost = prod && prod.costPrice !== undefined ? Number(prod.costPrice) : 5.000;
+        const qty = Number(item.quantity) || 1;
+        totalCOGS += unitCost * qty;
+      });
+    });
+
+    const expensesList = state.expenses || [];
+    const totalExpenses = expensesList.reduce((sum, e) => sum + (Number(e.amount) || 0), 0);
+
+    const grossProfit = totalRevenue - totalCOGS;
+    const netProfit = grossProfit - totalExpenses;
+    const netMargin = totalRevenue > 0 ? ((netProfit / totalRevenue) * 100).toFixed(1) : '0.0';
+
+    if (document.getElementById('finTotalRevenue')) document.getElementById('finTotalRevenue').textContent = totalRevenue.toFixed(3) + ' JOD';
+    if (document.getElementById('finTotalCOGS')) document.getElementById('finTotalCOGS').textContent = totalCOGS.toFixed(3) + ' JOD';
+    if (document.getElementById('finTotalExpenses')) document.getElementById('finTotalExpenses').textContent = totalExpenses.toFixed(3) + ' JOD';
+    
+    const netEl = document.getElementById('finNetProfit');
+    if (netEl) {
+      netEl.textContent = (netProfit >= 0 ? '+' : '') + netProfit.toFixed(3) + ' JOD';
+      netEl.style.color = netProfit >= 0 ? 'var(--admin-success, #2ed573)' : '#ff4757';
+    }
+
+    if (document.getElementById('finNetMargin')) document.getElementById('finNetMargin').textContent = `${netMargin}% هامش الربح الصافي`;
+    if (document.getElementById('finGrossProfit')) document.getElementById('finGrossProfit').textContent = grossProfit.toFixed(3) + ' JOD';
+  }
+
+  function renderExpenses() {
+    const tbody = document.getElementById('expensesTableBody');
+    if (!tbody) return;
+
+    const list = state.expenses || [];
+    if (list.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#777; padding:25px;">لا توجد مصاريف أو تكاليف مسجلة حتى الآن. اضغط على "+ تسجيل تكلفة / مصروف" للإضافة.</td></tr>`;
+      return;
+    }
+
+    const categoryIcons = {
+      Manufacturing: '<span class="status-pill" style="background:rgba(229,185,95,0.15); color:var(--gold-accent);"><i class="fa-solid fa-scissors"></i> تصنيع وقماش</span>',
+      Packaging: '<span class="status-pill" style="background:rgba(52,152,219,0.15); color:#3498db;"><i class="fa-solid fa-box-open"></i> تغليف وأكياس</span>',
+      Delivery: '<span class="status-pill" style="background:rgba(46,213,115,0.15); color:#2ed573;"><i class="fa-solid fa-truck-fast"></i> شحن وتوصيل</span>',
+      Marketing: '<span class="status-pill" style="background:rgba(155,89,182,0.15); color:#9b59b6;"><i class="fa-solid fa-bullhorn"></i> تسويق وإعلانات</span>',
+      Operations: '<span class="status-pill" style="background:rgba(230,126,34,0.15); color:#e67e22;"><i class="fa-solid fa-gears"></i> تشغيل وعام</span>'
+    };
+
+    tbody.innerHTML = list.map(exp => `
+      <tr>
+        <td>${categoryIcons[exp.category] || exp.category}</td>
+        <td><strong>${exp.title}</strong></td>
+        <td><strong style="color:#ff6b6b; font-size:14px;">${Number(exp.amount).toFixed(3)} JOD</strong></td>
+        <td>${exp.date || '-'}</td>
+        <td style="color:#aaa; font-size:12px;">${exp.notes || '-'}</td>
+        <td>
+          <button class="link-btn" style="color:#ff4757;" onclick="window.velenAdmin.deleteExpense('${exp.id}')" title="حذف هذا المصروف">
+            <i class="fa-solid fa-trash"></i>
+          </button>
+        </td>
+      </tr>
+    `).join('');
   }
 });

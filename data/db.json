@@ -15,7 +15,9 @@
       "whatsapp": "962770188144",
       "facebook": "https://facebook.com/velenofficial"
     },
-    "instagram": "velenofficial"
+    "instagram": "velenofficial",
+    "gmailUser": "Velenoffical@gmail.com",
+    "gmailAppPassword": ""
   },
   "products": [
     {
@@ -51,7 +53,8 @@
         "M": 8,
         "L": 5,
         "XL": 2
-      }
+      },
+      "costPrice": 9.5
     },
     {
       "id": "prod-1",
@@ -87,7 +90,8 @@
         "M": 10,
         "L": 6,
         "XL": 2
-      }
+      },
+      "costPrice": 4.8
     },
     {
       "id": "prod-2",
@@ -123,7 +127,8 @@
         "M": 8,
         "L": 4,
         "XL": 3
-      }
+      },
+      "costPrice": 4
     },
     {
       "id": "prod-3",
@@ -158,7 +163,8 @@
         "M": 13,
         "L": 8,
         "XL": 3
-      }
+      },
+      "costPrice": 4.8
     },
     {
       "id": "prod-4",
@@ -193,7 +199,8 @@
         "M": 12,
         "L": 7,
         "XL": 2
-      }
+      },
+      "costPrice": 4
     }
   ],
   "community": [
@@ -444,7 +451,9 @@
       "value": 10,
       "active": true,
       "uses": 0,
-      "minOrder": 0
+      "minOrder": 0,
+      "usageLimit": 50,
+      "timesUsed": 0
     },
     {
       "code": "FREESHIP",
@@ -452,7 +461,81 @@
       "value": 1,
       "active": true,
       "uses": 0,
-      "minOrder": 15
+      "minOrder": 15,
+      "usageLimit": 50,
+      "timesUsed": 0
+    }
+  ],
+  "expenses": [
+    {
+      "id": "exp-101",
+      "title": "دفعة أقمشة قطن 260 GSM معالج (150 متر)",
+      "category": "تصنيع وأقمشة",
+      "amount": 420,
+      "date": "2026-10-25",
+      "notes": "شراء رولات قطن نخب أول لمجموعة التيشيرتات والرينجر"
+    },
+    {
+      "id": "exp-102",
+      "title": "طباعة وتطريز ليبلات وعلامات Brand Tags",
+      "category": "ليبلات وتغليف",
+      "amount": 65,
+      "date": "2026-10-27",
+      "notes": "بوكسات Velen فاخرة وليبل الرقبة الداخلي"
+    },
+    {
+      "id": "exp-103",
+      "title": "إعلانات سبونسر Instagram & TikTok",
+      "category": "تسويق وإعلانات",
+      "amount": 85,
+      "date": "2026-11-01",
+      "notes": "حملة ترويجية لدروب الخريف دروب 2026"
+    }
+  ],
+  "reviews": [
+    {
+      "id": "rev-1",
+      "productId": "prod-1793258212025",
+      "author": "عمر القاسم",
+      "rating": 5,
+      "comment": "الهودي فخم بشكل مش طبيعي، القماش ثقيل والقصة البوكسي مع الجينز طالعة رهيبة. التوصيل وصلني بعمان بنفس اليوم!",
+      "fitFeedback": "True to size (مطابق للمقاس تماماً)",
+      "sizePurchased": "L",
+      "verified": true,
+      "createdAt": "2026-11-01T14:20:00.000Z"
+    },
+    {
+      "id": "rev-2",
+      "productId": "prod-1793258212025",
+      "author": "سند الخياط",
+      "rating": 5,
+      "comment": "Double layer hood واقفة صح بدون خيطان، خياطة أردنية تضاهي البراندات العالمية.",
+      "fitFeedback": "Relaxed Streetwear Fit",
+      "sizePurchased": "XL",
+      "verified": true,
+      "createdAt": "2026-11-02T18:10:00.000Z"
+    },
+    {
+      "id": "rev-3",
+      "productId": "prod-1",
+      "author": "حمزة النجار",
+      "rating": 5,
+      "comment": "الرينجر تي لون Sky Blue رائع بالواقع أكثر من الصور، القبة البيضاء قوية وما بتتمدد مع الغسيل.",
+      "fitFeedback": "Perfect Fit",
+      "sizePurchased": "M",
+      "verified": true,
+      "createdAt": "2026-10-30T16:00:00.000Z"
+    },
+    {
+      "id": "rev-4",
+      "productId": "prod-2",
+      "author": "راشد الزعبي",
+      "rating": 5,
+      "comment": "القصة البوكسي نمرة واحد، قطن مريح وبارد وصيفي ممتاز. شكر خاص لفيلين على سرعة التبديل.",
+      "fitFeedback": "True to size",
+      "sizePurchased": "M",
+      "verified": true,
+      "createdAt": "2026-10-31T11:45:00.000Z"
     }
   ]
 }

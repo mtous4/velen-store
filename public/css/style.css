@@ -2710,3 +2710,378 @@ html[dir="ltr"] .nav-brand-logo {
   margin-top: 10px;
 }
 
+/* ================= TEMU-STYLE PRODUCT REVIEWS SECTION ================= */
+.prod-reviews-section {
+  margin-top: 40px;
+  padding-top: 30px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.reviews-header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.reviews-main-title {
+  font-size: 20px;
+  font-weight: 800;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+}
+
+.temu-verified-badge {
+  font-size: 11px;
+  font-weight: 700;
+  color: #2ed573;
+  background: rgba(46, 213, 115, 0.12);
+  padding: 3px 8px;
+  border-radius: 4px;
+  border: 1px solid rgba(46, 213, 115, 0.3);
+}
+
+.reviews-sub-title {
+  font-size: 13px;
+  color: #888;
+  margin: 4px 0 0 0;
+}
+
+.btn-write-review {
+  background: transparent;
+  border: 1px solid var(--accent-gold, #e5b95f);
+  color: var(--accent-gold, #e5b95f);
+  font-size: 13px;
+  font-weight: 700;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-write-review:hover {
+  background: var(--accent-gold, #e5b95f);
+  color: #000;
+}
+
+.reviews-score-card {
+  display: grid;
+  grid-template-columns: auto 1fr 1fr;
+  gap: 25px;
+  background: #0f0f0f;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  padding: 22px;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+@media (max-width: 768px) {
+  .reviews-score-card {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+}
+
+.score-big-box {
+  text-align: center;
+  padding-inline-end: 20px;
+  border-inline-end: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+@media (max-width: 768px) {
+  .score-big-box {
+    border-inline-end: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    padding-bottom: 14px;
+  }
+}
+
+.score-num {
+  font-size: 44px;
+  font-weight: 900;
+  color: #fff;
+  line-height: 1;
+}
+
+.score-stars {
+  color: #ffca28;
+  font-size: 18px;
+  letter-spacing: 2px;
+  margin: 6px 0;
+}
+
+.score-count {
+  font-size: 11px;
+  color: #888;
+}
+
+.score-bars-box {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.score-bar-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: #aaa;
+}
+
+.bar-track {
+  flex: 1;
+  height: 6px;
+  background: #222;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.bar-fill {
+  height: 100%;
+  background: #ffca28;
+  border-radius: 3px;
+}
+
+.bar-pct {
+  font-size: 11px;
+  color: #666;
+  width: 28px;
+  text-align: end;
+}
+
+.score-consensus-box {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  border-inline-start: 1px solid rgba(255, 255, 255, 0.08);
+  padding-inline-start: 20px;
+}
+
+@media (max-width: 768px) {
+  .score-consensus-box {
+    border-inline-start: none;
+    padding-inline-start: 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    padding-top: 14px;
+  }
+}
+
+.consensus-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.consensus-item i {
+  color: var(--accent-gold, #e5b95f);
+  font-size: 16px;
+  margin-top: 2px;
+}
+
+.consensus-item strong {
+  display: block;
+  font-size: 13px;
+  color: #eee;
+}
+
+.consensus-item small {
+  font-size: 11px;
+  color: #777;
+}
+
+.write-review-drawer {
+  background: #141414;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 25px;
+  animation: fadeIn 0.3s ease;
+}
+
+.write-review-drawer h4 {
+  font-size: 15px;
+  margin: 0 0 16px 0;
+  color: #fff;
+}
+
+.review-form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 14px;
+}
+
+.write-review-drawer label {
+  display: block;
+  font-size: 12px;
+  color: #aaa;
+  margin-bottom: 6px;
+}
+
+.write-review-drawer input,
+.write-review-drawer select,
+.write-review-drawer textarea {
+  width: 100%;
+  background: #080808;
+  border: 1px solid #333;
+  color: #fff;
+  padding: 10px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-family: inherit;
+  box-sizing: border-box;
+}
+
+.write-review-drawer input:focus,
+.write-review-drawer select:focus,
+.write-review-drawer textarea:focus {
+  border-color: var(--accent-gold, #e5b95f);
+  outline: none;
+}
+
+.btn-submit-review {
+  background: #fff;
+  color: #000;
+  font-weight: 700;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.btn-cancel-review {
+  background: transparent;
+  color: #aaa;
+  border: 1px solid #333;
+  padding: 10px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.product-reviews-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.temu-review-card {
+  background: #0c0c0c;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 8px;
+  padding: 18px;
+  transition: border-color 0.2s;
+}
+
+.temu-review-card:hover {
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.temu-rev-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.temu-rev-user {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.temu-rev-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #222;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 13px;
+}
+
+.temu-rev-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.temu-rev-verified {
+  font-size: 11px;
+  color: #2ed573;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-inline-start: 6px;
+}
+
+.temu-rev-date {
+  font-size: 12px;
+  color: #666;
+}
+
+.temu-rev-stars {
+  color: #ffca28;
+  font-size: 13px;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+
+.temu-rev-badges {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+
+.temu-pill-tag {
+  font-size: 11px;
+  background: #181818;
+  color: #aaa;
+  padding: 3px 9px;
+  border-radius: 4px;
+  border: 1px solid #2a2a2a;
+}
+
+.temu-rev-comment {
+  font-size: 13px;
+  line-height: 1.5;
+  color: #ddd;
+  margin: 0 0 10px 0;
+}
+
+.temu-rev-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  color: #777;
+}
+
+.btn-helpful-thumb {
+  background: transparent;
+  border: 1px solid #2a2a2a;
+  color: #aaa;
+  border-radius: 12px;
+  padding: 3px 10px;
+  font-size: 11px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: all 0.2s;
+}
+
+.btn-helpful-thumb:hover {
+  color: #fff;
+  border-color: #555;
+}
+

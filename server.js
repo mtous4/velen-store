@@ -277,6 +277,7 @@ app.post('/api/products', async (req, res) => {
     name: req.body.name || 'Untitled Velen Piece',
     category: req.body.category || 'Tees',
     price: parseFloat(req.body.price) || 0.0,
+    costPrice: parseFloat(req.body.costPrice) || 0.0,
     comparePrice: req.body.comparePrice ? parseFloat(req.body.comparePrice) : null,
     onSale: req.body.onSale !== undefined ? Boolean(req.body.onSale) : true,
     featured: req.body.featured !== undefined ? Boolean(req.body.featured) : false,
@@ -310,6 +311,7 @@ app.put('/api/products/:id', async (req, res) => {
     ...existing,
     ...req.body,
     price: parseFloat(req.body.price !== undefined ? req.body.price : existing.price),
+    costPrice: req.body.costPrice !== undefined ? (parseFloat(req.body.costPrice) || 0) : (existing.costPrice || 0),
     comparePrice: req.body.comparePrice !== undefined ? (req.body.comparePrice ? parseFloat(req.body.comparePrice) : null) : existing.comparePrice,
     stock: parseInt(req.body.stock !== undefined ? req.body.stock : existing.stock, 10)
   };
@@ -456,6 +458,19 @@ app.post('/api/orders', async (req, res) => {
     }
   }
 
+  // Increment promo code usage count if used in order
+  const appliedCode = req.body.promoCode || (req.body.appliedPromo && req.body.appliedPromo.code);
+  if (appliedCode) {
+    const pCodeUpper = appliedCode.trim().toUpperCase();
+    const pObj = (db.promoCodes || []).find(p => p.code === pCodeUpper);
+    if (pObj) {
+      pObj.timesUsed = (pObj.timesUsed || 0) + 1;
+      pObj.uses = pObj.timesUsed;
+      await firebaseService.savePromoCode(pObj);
+      broadcast('PROMO_CODES_UPDATED', db.promoCodes);
+    }
+  }
+
   writeDB(db);
   await firebaseService.saveOrder(newOrder);
 
@@ -471,6 +486,9 @@ app.post('/api/orders', async (req, res) => {
 // Helper: Send order notification email to Velenoffical@gmail.com
 async function sendOrderNotificationEmail(order, settings) {
   const recipient = settings?.orderEmail || 'Velenoffical@gmail.com';
+  const gmailUser = process.env.GMAIL_USER || settings?.gmailUser || 'Velenoffical@gmail.com';
+  const rawPass = process.env.GMAIL_APP_PASSWORD || settings?.gmailAppPassword;
+  const gmailPass = rawPass ? rawPass.replace(/\s+/g, '') : null;
   
   const itemsRows = (order.items || []).map(item => `
     <tr>
@@ -525,28 +543,75 @@ async function sendOrderNotificationEmail(order, settings) {
   `;
 
   try {
-    if (process.env.GMAIL_USER && process.env.GMAIL_APP_PASSWORD) {
+    if (gmailPass) {
       const transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
-          user: process.env.GMAIL_USER,
-          pass: process.env.GMAIL_APP_PASSWORD
+          user: gmailUser,
+          pass: gmailPass
         }
       });
       await transporter.sendMail({
-        from: `"Velen Store Orders" <${process.env.GMAIL_USER}>`,
+        from: `"Velen Store Orders" <${gmailUser}>`,
         to: recipient,
         subject: `⚡ طلب جديد #${order.id} بقيمة ${Number(order.total).toFixed(3)} JOD - ${order.customerName}`,
         html: htmlContent
       });
       console.log(`✉️ Order email notification sent successfully to ${recipient}`);
     } else {
-      console.log(`✉️ [Order Notification] Dispatched to ${recipient} for Order #${order.id} (${Number(order.total).toFixed(3)} JOD).`);
+      console.log(`✉️ [Order Notification] Dispatched to ${recipient} for Order #${order.id} (${Number(order.total).toFixed(3)} JOD). (Enter Gmail App Password in Admin Settings to deliver to inbox)`);
     }
   } catch (err) {
     console.error('Email notification error:', err.message);
   }
 }
+
+// Test Email Endpoint for Admin Settings
+app.post('/api/admin/test-email', async (req, res) => {
+  try {
+    const db = readDB();
+    const settings = await firebaseService.getSettings(db);
+    const recipient = req.body.recipient || settings?.orderEmail || 'Velenoffical@gmail.com';
+    const gmailUser = req.body.gmailUser || process.env.GMAIL_USER || settings?.gmailUser || 'Velenoffical@gmail.com';
+    const rawPass = req.body.gmailAppPassword || process.env.GMAIL_APP_PASSWORD || settings?.gmailAppPassword;
+
+    if (!rawPass) {
+      return res.status(400).json({
+        success: false,
+        error: 'يرجى إدخال كلمة مرور تطبيقات Google (16 حرفاً) أولاً لحساب Gmail الخاص بك.'
+      });
+    }
+
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: gmailUser,
+        pass: rawPass.replace(/\s+/g, '')
+      }
+    });
+
+    await transporter.sendMail({
+      from: `"Velen Store Test" <${gmailUser}>`,
+      to: recipient,
+      subject: '🔔 فحص نظام إشعارات الإيميل — Velen Official Test',
+      html: `
+        <div dir="rtl" style="font-family:Arial, sans-serif; background:#000; color:#fff; padding:24px; border-radius:8px; max-width:600px; margin:auto;">
+          <h2 style="color:#e5b95f; margin-top:0;">تهانينا! نظام إشعارات الإيميل يعمل بنجاح 🎉</h2>
+          <p>تم ربط إيميلك <strong>${recipient}</strong> بنجاح مع متجر Velen Official.</p>
+          <p>من الآن فصاعداً، ستصلك رسالة فورية عند إتمام أي طلب شراء جديد من المتجر تلقائياً!</p>
+          <div style="background:#111; padding:12px; border-radius:4px; border:1px solid #222; margin-top:15px; color:#aaa; font-size:12px;">
+            توقيت الفحص: ${new Date().toLocaleString('ar-JO')}
+          </div>
+        </div>
+      `
+    });
+
+    res.json({ success: true, message: `تم إرسال إيميل فحص تجريبي بنجاح إلى ${recipient}!` });
+  } catch (err) {
+    console.error('Test email error:', err);
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
 
 // Admin updates order status
 app.patch('/api/orders/:id/status', async (req, res) => {
@@ -750,7 +815,7 @@ app.get('/api/promo-codes', async (req, res) => {
 
 app.post('/api/promo-codes', async (req, res) => {
   const db = readDB();
-  const { code, type, discountType, value, discountValue, minOrder, active } = req.body;
+  const { code, type, discountType, value, discountValue, minOrder, active, usageLimit } = req.body;
   if (!code) return res.status(400).json({ success: false, message: 'Code is required' });
 
   const finalType = discountType || type || 'percentage';
@@ -764,6 +829,7 @@ app.post('/api/promo-codes', async (req, res) => {
     discountValue: finalVal,
     minOrder: parseFloat(minOrder) || 0,
     active: active !== false,
+    usageLimit: usageLimit ? parseInt(usageLimit, 10) : null,
     timesUsed: parseInt(req.body.timesUsed || req.body.uses, 10) || 0,
     createdAt: new Date().toISOString()
   };
@@ -802,6 +868,16 @@ app.post('/api/promo-codes/validate', async (req, res) => {
     return res.status(400).json({ valid: false, success: false, message: 'كود الخصم غير صحيح أو غير مفعل' });
   }
 
+  // Check usage limit
+  const used = parseInt(promo.timesUsed || promo.uses || 0, 10);
+  if (promo.usageLimit && used >= promo.usageLimit) {
+    return res.status(400).json({
+      valid: false,
+      success: false,
+      message: `عذراً، وصل هذا الكود إلى الحد الأقصى لمرات الاستخدام المسموحة (${promo.usageLimit} مرات).`
+    });
+  }
+
   const sub = parseFloat(orderTotal !== undefined ? orderTotal : subtotal) || 0;
   if (promo.minOrder && sub < promo.minOrder) {
     return res.status(400).json({
@@ -836,6 +912,74 @@ app.post('/api/promo-codes/validate', async (req, res) => {
     },
     message: `تم تطبيق خصم بقيمة ${discount.toFixed(3)} JOD بنجاح!`
   });
+});
+
+// ================= API: Expenses & Finance Tracking =================
+app.get('/api/expenses', (req, res) => {
+  const db = readDB();
+  res.json(db.expenses || []);
+});
+
+app.post('/api/expenses', (req, res) => {
+  const db = readDB();
+  const { title, category, amount, date, notes } = req.body;
+  if (!title || !amount) {
+    return res.status(400).json({ success: false, message: 'العنوان والمبلغ مطلوبان' });
+  }
+  const newExp = {
+    id: 'exp-' + Date.now(),
+    title: title.trim(),
+    category: category || 'عام',
+    amount: parseFloat(amount) || 0,
+    date: date || new Date().toISOString().split('T')[0],
+    notes: notes || '',
+    createdAt: new Date().toISOString()
+  };
+  db.expenses = db.expenses || [];
+  db.expenses.unshift(newExp);
+  writeDB(db);
+  broadcast('EXPENSES_UPDATED', db.expenses);
+  res.status(201).json({ success: true, expense: newExp });
+});
+
+app.delete('/api/expenses/:id', (req, res) => {
+  const db = readDB();
+  db.expenses = (db.expenses || []).filter(e => e.id !== req.params.id);
+  writeDB(db);
+  broadcast('EXPENSES_UPDATED', db.expenses);
+  res.json({ success: true, message: 'تم حذف المصروف بنجاح' });
+});
+
+// ================= API: Product Reviews (Like Temu) =================
+app.get('/api/products/:id/reviews', (req, res) => {
+  const db = readDB();
+  db.reviews = db.reviews || [];
+  const prodReviews = db.reviews.filter(r => r.productId === req.params.id);
+  res.json(prodReviews);
+});
+
+app.post('/api/products/:id/reviews', (req, res) => {
+  const db = readDB();
+  const { author, rating, comment, fitFeedback, sizePurchased } = req.body;
+  if (!author || !comment) {
+    return res.status(400).json({ success: false, message: 'الاسم والتقييم مطلوبان' });
+  }
+  const newReview = {
+    id: 'rev-' + Date.now(),
+    productId: req.params.id,
+    author: author.trim(),
+    rating: parseInt(rating, 10) || 5,
+    comment: comment.trim(),
+    fitFeedback: fitFeedback || 'True to size (مطابق للمقاس تماماً)',
+    sizePurchased: sizePurchased || 'M',
+    verified: true,
+    createdAt: new Date().toISOString()
+  };
+  db.reviews = db.reviews || [];
+  db.reviews.unshift(newReview);
+  writeDB(db);
+  broadcast('REVIEW_ADDED', newReview);
+  res.status(201).json({ success: true, review: newReview });
 });
 
 // ================= API: AI Copilot Assistant =================
