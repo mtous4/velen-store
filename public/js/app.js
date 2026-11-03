@@ -26,43 +26,151 @@ document.addEventListener('DOMContentLoaded', () => {
   const translations = {
     ar: {
       langToggle: 'EN',
-      shop: 'Shop / التسوق',
+      announcement: 'توصيل مجاني في عمّان • 1 دينار لباقي المحافظات',
+      brandTitle: 'Velen Official',
+      shop: 'تسوق الكولكشن',
       allProducts: 'جميع المنتجات',
-      teesRingers: 'Tees & Ringers',
-      community: 'COMMUNITY',
-      aboutUs: 'About us / عن البراند',
-      whyVelen: 'Why Velen / لماذا فيلين',
+      teesRingers: 'تيشيرتات & رينجر',
+      community: 'المجتمع والريفيوز',
+      aboutUs: 'عن البراند',
+      whyVelen: 'لماذا فيلين؟',
       customerReviews: 'التقييمات وإطلالات الزبائن',
       policyAndShipping: 'الشحن وسياسة التبديل',
-      stayConnected: 'STAY CONNECTED',
-      newsletterPrompt: 'اشترك بالنشرة البريدية واحصل على كود خصم فوري',
-      brandTitle: 'Velen Official',
+      stayConnected: 'تواصل معنا',
+      stayConnectedNote: 'تابعنا على منصاتنا لتكون أول من يعرف عن الدروبات الجديدة والخصومات:',
+      newsletterHeading: 'النشرة البريدية الحصرية',
+      newsletterPrompt: 'اشترك بالنشرة البريدية واحصل على كود خصم 10% فوري',
+      newsletterDesc: 'اشترك لتحصل على كود خصم 10% (VELEN10) على طلبك القادم ووصول مبكر للدروبات الحصرية.',
+      searchPlaceholder: 'ابحث عن التيشيرتات، المقاسات، الألوان...',
+      heroShopBtn: 'تسوق الكولكشن الآن',
+      prop1: 'توصيل مجاني في عمّان وبدينار لكافة المحافظات',
+      prop2: 'قطن أردني فاخر 260 GSM معالج ومثبت',
+      prop3: 'تبديل فوري للمقاس عند باب البيت',
+      allEssentials: 'جميع القطع',
+      hoodies: 'هوديز وسويت شيرت',
+      pants: 'بناطيل وبوتومز',
+      communityTitle: 'COMMUNITY WEARS VELEN',
+      communitySubtitle: 'أشخاص حقيقيون. ستايل حقيقي.',
+      communityDesc: 'شاركنا لوكك اليومي وفيديوهاتك مع قطع Velen، وقيم تجربتك من 5 نجوم لتدخل السحب الأسبوعي على بوكس إسنشيلز كامل!',
+      addLookBtn: 'شارك صورتك أو ريلز ستايلك + تقييم 5 نجوم',
+      allPosts: 'جميع المشاركات',
+      videoReels: 'فيديو ريلز',
+      fiveStarsOnly: '★★★★★ (5 نجوم فقط)',
       cartTitle: 'حقيبة التسوق',
       cartEmptyTitle: 'حقيبة التسوق فارغة',
       cartEmptySub: 'تصفح المجموعة واكتشف ملابس Velen اليومية',
+      cartPromoPlaceholder: 'رمز كود الخصم...',
+      applyBtn: 'تطبيق',
+      checkoutBtn: 'المتابعة لإتمام الطلب',
       checkoutTitle: 'إتمام الطلب السريع',
+      orderSummary: 'ملخص مشترياتك:',
+      upsellTitle: 'عرض خاص وحصري مع طلبك 🔥',
+      upsellSub: 'أضف تيشيرت رينجر إضافي إلى طلبك الآن بخصم خاص (9.500 JOD بدل 13.000)!',
+      addUpsellBtn: 'أضف للطلب (+9.500 JOD)',
+      upsellAdded: '✓ تمت الإضافة للطلب',
+      fullNameLabel: 'الاسم الكامل *',
+      fullNamePlaceholder: 'مثال: زيد الكردي',
+      phoneLabel: 'رقم الهاتف للتوصيل *',
+      phonePlaceholder: '079XXXXXXX أو +9627XXXXXXXX',
+      cityLabel: 'المدينة / المحافظة *',
+      addressLabel: 'العنوان التفصيلي للتوصيل *',
+      addressPlaceholder: 'اسم المنطقة، الشارع، المعلم المميز أو رقم العمارة',
+      notesLabel: 'ملاحظات لمندوب التوصيل (اختياري)',
+      notesPlaceholder: 'مثال: يرجى الاتصال قبل الوصول بربع ساعة',
+      paymentLabel: 'طريقة الدفع المعتمدة',
+      codOption: 'الدفع نقداً عند الاستلام (COD) — متاح لجميع مناطق المملكة',
+      cliqOption: 'تحويل فوري عبر CliQ — الدفع عند استلام الطرد',
+      confirmOrderBtn: 'تأكيد الطلب فوراً',
+      safeCheckoutNote: 'سيتم معالجة طلبك وإرسال تأكيد مباشر',
       subtotal: 'المجموع الفرعي:',
-      total: 'المجموع الإجمالي:'
+      shippingFee: 'أجرة التوصيل:',
+      discount: 'الخصم:',
+      total: 'المجموع الإجمالي:',
+      orderSuccessTitle: 'تم استلام طلبك بنجاح!',
+      orderSuccessSub: 'شكراً لاختيارك Velen. فريق التوصيل سيتواصل معك هاتفياً لتسليم طلبك في أقرب وقت.',
+      whatsappTrackBtn: 'متابعة الطلب عبر واتساب',
+      continueShopping: 'متابعة التسوق',
+      addToBag: 'أضف إلى السلة',
+      soldOut: 'نفد من المخزون',
+      quickView: 'معاينة سريعة',
+      sizeGuide: 'دليل المقاسات',
+      selectSize: 'اختر المقاس:',
+      careInstructions: 'تعليمات العناية',
+      footerCopyright: '© 2026 VELEN OFFICIAL. صنع بكل فخر في عمّان، الأردن 🇯🇴'
     },
     en: {
       langToggle: 'عربي',
-      shop: 'Shop',
+      announcement: 'FREE DELIVERY IN AMMAN • 1 JD ACROSS JORDAN',
+      brandTitle: 'Velen Official',
+      shop: 'SHOP COLLECTION',
       allProducts: 'All Products',
       teesRingers: 'Tees & Ringers',
       community: 'COMMUNITY',
-      aboutUs: 'About us',
+      aboutUs: 'About Us',
       whyVelen: 'Why Velen?',
-      customerReviews: 'Reviews & Fit Checks',
-      policyAndShipping: 'Shipping & Policy',
+      customerReviews: 'Customer Reviews & Fits',
+      policyAndShipping: 'Shipping & Exchange Policy',
       stayConnected: 'STAY CONNECTED',
-      newsletterPrompt: 'Sign up for our newsletter for instant promo code',
-      brandTitle: 'Velen Official',
+      stayConnectedNote: 'Follow our channels to be first to know about new drops and exclusive offers:',
+      newsletterHeading: 'Exclusive Newsletter',
+      newsletterPrompt: 'Subscribe to newsletter for instant 10% promo code',
+      newsletterDesc: 'Subscribe to get 10% off code (VELEN10) on your order and early drop access.',
+      searchPlaceholder: 'Search tees, hoodies, sizes, colors...',
+      heroShopBtn: 'SHOP THE COLLECTION',
+      prop1: 'Free Delivery in Amman • 1 JD Jordan-wide',
+      prop2: 'Jordanian Luxury Heavyweight Cotton 260 GSM',
+      prop3: 'Hassle-free doorstep size exchange',
+      allEssentials: 'All Pieces',
+      hoodies: 'Hoodies & Sweats',
+      pants: 'Pants & Bottoms',
+      communityTitle: 'COMMUNITY WEARS VELEN',
+      communitySubtitle: 'Real people. Real style.',
+      communityDesc: 'Share your everyday fit check with Velen pieces, review with 5 stars, and enter the weekly essential box draw!',
+      addLookBtn: 'Share your look & 5-star review',
+      allPosts: 'All Looks',
+      videoReels: 'Reels Videos',
+      fiveStarsOnly: '★★★★★ (5 Stars Only)',
       cartTitle: 'Shopping Bag',
       cartEmptyTitle: 'Your shopping bag is empty',
       cartEmptySub: 'Explore the collection and discover everyday Velen fits',
+      cartPromoPlaceholder: 'Promo code...',
+      applyBtn: 'Apply',
+      checkoutBtn: 'Proceed to Checkout',
       checkoutTitle: 'Express Checkout',
+      orderSummary: 'Order Summary:',
+      upsellTitle: 'Exclusive Add-on Offer 🔥',
+      upsellSub: 'Add an extra Ringer Tee to your order now at special discount (9.500 JOD instead of 13.000)!',
+      addUpsellBtn: 'Add to Order (+9.500 JOD)',
+      upsellAdded: '✓ Added to Order',
+      fullNameLabel: 'Full Name *',
+      fullNamePlaceholder: 'e.g. Zaid Kurdi',
+      phoneLabel: 'Phone Number *',
+      phonePlaceholder: '079XXXXXXX or +9627XXXXXXXX',
+      cityLabel: 'City / Governorate *',
+      addressLabel: 'Delivery Address *',
+      addressPlaceholder: 'Area, street name, building number, nearby landmark',
+      notesLabel: 'Delivery Notes (Optional)',
+      notesPlaceholder: 'e.g. Please call 15 minutes before arrival',
+      paymentLabel: 'Payment Method',
+      codOption: 'Cash on Delivery (COD) — Available across Jordan',
+      cliqOption: 'Instant CliQ Transfer — Pay upon parcel arrival',
+      confirmOrderBtn: 'Place Order Now',
+      safeCheckoutNote: 'Your order will be processed and confirmed immediately',
       subtotal: 'Subtotal:',
-      total: 'Total Amount:'
+      shippingFee: 'Delivery Fee:',
+      discount: 'Discount:',
+      total: 'Total Amount:',
+      orderSuccessTitle: 'Order Received Successfully!',
+      orderSuccessSub: 'Thank you for choosing Velen. Delivery driver will contact you shortly to deliver your order.',
+      whatsappTrackBtn: 'Track Order via WhatsApp',
+      continueShopping: 'Continue Shopping',
+      addToBag: 'Add to Bag',
+      soldOut: 'Sold Out',
+      quickView: 'Quick View',
+      sizeGuide: 'Size Guide',
+      selectSize: 'Select Size:',
+      careInstructions: 'Care Instructions',
+      footerCopyright: '© 2026 VELEN OFFICIAL. Made with pride in Amman, Jordan 🇯🇴'
     }
   };
 
@@ -99,6 +207,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setupNewsletterForms();
     setupCheckoutUpsell();
     setupPromoCodes();
+    setupCommunityForm();
 
     await fetchSettings();
     await fetchDesign();
@@ -107,6 +216,10 @@ document.addEventListener('DOMContentLoaded', () => {
     updateCartUI();
     initWebSocket();
     initComingSoonTimer();
+
+    // Visitor Live Funnel Tracking initial pulse & heartbeat
+    sendVisitorPulse('home', 'الصفحة الرئيسية');
+    setInterval(() => sendVisitorPulse(state.currentStage || 'home'), 25000);
 
     // Heartbeat for live active carts every 45s
     setInterval(sendCartHeartbeat, 45000);
@@ -582,6 +695,21 @@ document.addEventListener('DOMContentLoaded', () => {
     showToast(`تمت إضافة "${product.name}" إلى حقيبة التسوق!`, 'success');
   }
 
+  function openCart() {
+    cartDrawer.classList.add('open');
+    cartOverlay.classList.add('active');
+    state.currentStage = 'cart';
+    const totalItems = state.cart.reduce((sum, item) => sum + item.quantity, 0);
+    const subtotal = state.cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    sendVisitorPulse('cart', `${totalItems} قطع (${subtotal.toFixed(3)} JOD)`);
+  }
+
+  function closeCart() {
+    cartDrawer.classList.remove('open');
+    cartOverlay.classList.remove('active');
+    state.currentStage = 'home';
+  }
+
   function updateCartQuantity(index, delta) {
     if (!state.cart[index]) return;
     state.cart[index].quantity += delta;
@@ -675,6 +803,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!product) return;
     state.currentProductForModal = product;
     state.selectedSize = (product.sizes && product.sizes[0]) || 'M';
+    state.currentStage = 'product';
+    sendVisitorPulse('product', product.name);
 
     const priceFormatted = Number(product.price).toFixed(3) + ' JOD';
     const comparePriceFormatted = product.comparePrice ? Number(product.comparePrice).toFixed(3) + ' JOD' : null;
@@ -821,8 +951,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const dropzone = document.getElementById('commDropzone');
     const fileInput = document.getElementById('commFileInput');
     const preview = document.getElementById('commFilePreview');
-
     const clearMediaBtn = document.getElementById('clearCommMediaBtn');
+
     if (clearMediaBtn) {
       clearMediaBtn.addEventListener('click', () => {
         uploadedMediaUrl = null;
@@ -843,42 +973,66 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }
 
+    async function handleFileUpload(file) {
+      if (!file) return;
+      const formData = new FormData();
+      formData.append('media', file);
+
+      if (dropzone) dropzone.innerHTML = `<i class="fa-solid fa-spinner fa-spin upload-icon"></i><p>جاري رفع الملف إلى السيرفر...</p>`;
+
+      try {
+        const res = await fetch('/api/upload', {
+          method: 'POST',
+          body: formData
+        });
+        const data = await res.json();
+        if (data.success) {
+          uploadedMediaUrl = data.url;
+          uploadedMediaType = data.mediaType;
+
+          if (dropzone) dropzone.style.display = 'none';
+          if (preview) {
+            preview.style.display = 'block';
+            if (uploadedMediaType === 'video') {
+              preview.innerHTML = `<video src="${uploadedMediaUrl}" controls autoplay muted style="width:100%; height:200px; object-fit:cover; border-radius:6px;"></video>`;
+            } else {
+              preview.innerHTML = `<img src="${uploadedMediaUrl}" style="width:100%; height:200px; object-fit:cover; border-radius:6px;">`;
+            }
+          }
+          if (clearMediaBtn) clearMediaBtn.style.display = 'inline-block';
+          showToast('تم رفع الصورة / الفيديو بنجاح! 🎉', 'success');
+        } else {
+          showToast('فشل رفع الملف', 'error');
+        }
+      } catch (err) {
+        console.error('Upload error:', err);
+        if (dropzone) dropzone.innerHTML = `<p style="color:#ff4757;">فشل الرفع، يرجى المحاولة ثانية</p>`;
+      }
+    }
+
     if (dropzone && fileInput) {
       dropzone.addEventListener('click', () => fileInput.click());
 
-      fileInput.addEventListener('change', async (e) => {
-        const file = e.target.files[0];
-        if (!file) return;
+      dropzone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropzone.style.borderColor = 'var(--accent-gold)';
+      });
+      dropzone.addEventListener('dragleave', (e) => {
+        e.preventDefault();
+        dropzone.style.borderColor = '';
+      });
+      dropzone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropzone.style.borderColor = '';
+        if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+          fileInput.files = e.dataTransfer.files;
+          handleFileUpload(e.dataTransfer.files[0]);
+        }
+      });
 
-        const formData = new FormData();
-        formData.append('media', file);
-
-        dropzone.innerHTML = `<i class="fa-solid fa-spinner fa-spin upload-icon"></i><p>جاري رفع الملف إلى السيرفر...</p>`;
-
-        try {
-          const res = await fetch('/api/upload', {
-            method: 'POST',
-            body: formData
-          });
-          const data = await res.json();
-          if (data.success) {
-            uploadedMediaUrl = data.url;
-            uploadedMediaType = data.mediaType;
-
-            dropzone.style.display = 'none';
-            preview.style.display = 'block';
-            if (clearMediaBtn) clearMediaBtn.style.display = 'inline-block';
-
-            if (uploadedMediaType === 'video') {
-              preview.innerHTML = `<video src="${uploadedMediaUrl}" controls autoplay muted style="width:100%; height:180px; object-fit:cover;"></video>`;
-            } else {
-              preview.innerHTML = `<img src="${uploadedMediaUrl}" style="width:100%; height:180px; object-fit:cover;">`;
-            }
-            showToast('تم رفع الميديا بنجاح!', 'success');
-          }
-        } catch (err) {
-          console.error('Upload error:', err);
-          dropzone.innerHTML = `<p style="color:#ff4757;">فشل الرفع، يرجى المحاولة ثانية</p>`;
+      fileInput.addEventListener('change', (e) => {
+        if (e.target.files && e.target.files[0]) {
+          handleFileUpload(e.target.files[0]);
         }
       });
     }
@@ -1085,6 +1239,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             successModal.classList.add('active');
+            sendVisitorPulse('ordered', `أتم الطلب بنجاح #${result.order.id}`);
           }
         } catch (err) {
           console.error('Order submit error:', err);
@@ -1276,6 +1431,49 @@ document.addEventListener('DOMContentLoaded', () => {
         el.textContent = dict[key];
       }
     });
+
+    document.querySelectorAll('[data-i18n-ph]').forEach(el => {
+      const key = el.getAttribute('data-i18n-ph');
+      if (dict[key]) {
+        el.setAttribute('placeholder', dict[key]);
+      }
+    });
+
+    if (state.products && state.products.length > 0) renderProducts();
+    if (state.community && state.community.length > 0) renderCommunity();
+    updateCartUI();
+  }
+
+  // ================= VISITOR TRACKING & LIVE FUNNEL (5-MIN WINDOW) =================
+  function sendVisitorPulse(stage = 'home', detail = '') {
+    try {
+      const cartCount = state.cart.reduce((sum, i) => sum + (i.quantity || 1), 0);
+      const cartTotal = state.cart.reduce((sum, i) => sum + ((i.price || 0) * (i.quantity || 1)), 0);
+      
+      const stageLabels = {
+        home: 'يتصفح الصفحة الرئيسية',
+        product: 'يشاهد تفاصيل منتج',
+        cart: 'في سلة التسوق',
+        checkout: 'في صفحة تأكيد الطلب',
+        ordered: 'أتم الطلب بنجاح'
+      };
+
+      fetch('/api/visitor/pulse', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          visitorId: state.sessionId,
+          stage: stage,
+          stageLabel: stageLabels[stage] || 'يتصفح المتجر',
+          detail: detail,
+          itemsCount: cartCount,
+          cartTotal: cartTotal,
+          device: /Mobi|Android|iPhone/i.test(navigator.userAgent) ? 'Mobile 📱' : 'Desktop 💻',
+          city: 'Jordan 🇯🇴',
+          page: window.location.pathname
+        })
+      }).catch(() => {});
+    } catch (e) {}
   }
 
   // ================= DYNAMIC SOCIAL MEDIA LINKS =================
@@ -1426,6 +1624,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Community Share Modal
     document.getElementById('addLookBtn')?.addEventListener('click', () => {
+      const commItemSelect = document.getElementById('commItemWorn');
+      if (commItemSelect && state.products.length > 0) {
+        commItemSelect.innerHTML = state.products.map(p => `
+          <option value="${p.name}">${p.name} (${p.category})</option>
+        `).join('') + '<option value="Velen Signature Piece">Velen Signature Piece</option>';
+      }
       communityModal.classList.add('active');
     });
     document.getElementById('communityModalClose')?.addEventListener('click', () => {

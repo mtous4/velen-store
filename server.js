@@ -14,6 +14,17 @@ const wss = new WebSocketServer({ server });
 // Active shopping carts memory tracker
 const activeCarts = new Map();
 
+// Real-Time Live Visitors memory tracker (5-minute active window)
+const activeVisitors = new Map();
+
+function purgeExpiredVisitors() {
+  const cutoff = Date.now() - (5 * 60 * 1000); // 5 minutes
+  for (const [id, v] of activeVisitors.entries()) {
+    if (v.lastSeen < cutoff) activeVisitors.delete(id);
+  }
+}
+setInterval(purgeExpiredVisitors, 10000);
+
 // Load environment variables from .env file if it exists
 const ENV_FILE = path.join(__dirname, '.env');
 if (fs.existsSync(ENV_FILE)) {
@@ -392,10 +403,21 @@ app.get('/api/orders', async (req, res) => {
   res.json(orders || []);
 });
 
-// Customer places an order
+// Helper: Sequential order numbering starting from 1000
+function getNextOrderNumber(db) {
+  let next = parseInt(db.settings?.nextOrderNumber, 10);
+  if (isNaN(next) || next < 1000) {
+    next = 1000;
+  }
+  db.settings = db.settings || {};
+  db.settings.nextOrderNumber = next + 1;
+  return 'ORD-' + next;
+}
+
+// Customer or Admin places an order (Storefront or Instagram/Manual)
 app.post('/api/orders', async (req, res) => {
   const db = readDB();
-  const orderNumber = 'ORD-' + Math.floor(1000 + Math.random() * 9000);
+  const orderNumber = req.body.id || getNextOrderNumber(db);
   const newOrder = {
     id: orderNumber,
     customerName: req.body.customerName || 'Customer',
@@ -403,13 +425,14 @@ app.post('/api/orders', async (req, res) => {
     city: req.body.city || 'Amman',
     address: req.body.address || '',
     notes: req.body.notes || '',
+    source: req.body.source || 'Storefront (المتجر الإلكتروني)',
     items: req.body.items || [],
     subtotal: parseFloat(req.body.subtotal) || 0,
     shipping: parseFloat(req.body.shipping) || 0,
     total: parseFloat(req.body.total) || 0,
     paymentMethod: req.body.paymentMethod || 'Cash on Delivery (دفع عند الاستلام)',
-    status: 'Pending',
-    createdAt: new Date().toISOString()
+    status: req.body.status || 'Pending',
+    createdAt: req.body.createdAt || new Date().toISOString()
   };
 
   db.orders = db.orders || [];
@@ -642,6 +665,78 @@ app.get('/api/cart/active', (req, res) => {
     totalValue: totalRevenue,
     potentialRevenue: totalRevenue.toFixed(3) + ' JOD',
     carts: list
+  });
+});
+
+// ================= API: Real-Time Live Visitors (5-Min Funnel Tracking) =================
+app.post('/api/visitor/pulse', (req, res) => {
+  const { visitorId, stage, stageLabel, detail, itemsCount, cartTotal, device, city, page } = req.body;
+  const id = visitorId || ('v-' + Math.random().toString(36).substring(2, 9));
+  const now = Date.now();
+
+  const existing = activeVisitors.get(id) || {
+    visitorId: id,
+    firstSeen: now,
+    history: []
+  };
+
+  const actionEntry = {
+    stage: stage || 'home',
+    label: stageLabel || (stage === 'checkout' ? 'في صفحة تأكيد الطلب' : (stage === 'cart' ? 'في سلة التسوق' : (stage === 'product' ? 'يشاهد منتجاً' : 'يتصفح المتجر'))),
+    detail: detail || '',
+    time: now
+  };
+
+  const history = existing.history || [];
+  if (history.length === 0 || history[history.length - 1].stage !== actionEntry.stage || history[history.length - 1].detail !== actionEntry.detail) {
+    history.push(actionEntry);
+    if (history.length > 6) history.shift();
+  }
+
+  const visitor = {
+    ...existing,
+    visitorId: id,
+    lastSeen: now,
+    stage: stage || 'home',
+    stageLabel: actionEntry.label,
+    detail: detail || (stage === 'home' ? 'الصفحة الرئيسية' : ''),
+    itemsCount: parseInt(itemsCount, 10) || 0,
+    cartTotal: parseFloat(cartTotal) || 0,
+    device: device || (req.headers['user-agent']?.toLowerCase().includes('mobi') ? 'Mobile 📱' : 'Desktop 💻'),
+    ip: req.ip || req.headers['x-forwarded-for'] || '127.0.0.1',
+    city: city || 'Jordan 🇯🇴',
+    page: page || '/',
+    history
+  };
+
+  activeVisitors.set(id, visitor);
+  broadcast('VISITOR_UPDATE', { activeCount: activeVisitors.size, visitor });
+  res.json({ success: true, visitorId: id, activeCount: activeVisitors.size });
+});
+
+app.get('/api/admin/live-visitors', (req, res) => {
+  purgeExpiredVisitors();
+  const visitors = Array.from(activeVisitors.values()).sort((a, b) => b.lastSeen - a.lastSeen);
+  
+  const funnel = {
+    home: 0,
+    product: 0,
+    cart: 0,
+    checkout: 0,
+    ordered: 0
+  };
+
+  visitors.forEach(v => {
+    if (funnel[v.stage] !== undefined) funnel[v.stage]++;
+    else funnel.home++;
+  });
+
+  res.json({
+    success: true,
+    activeCount: visitors.length,
+    windowMinutes: 5,
+    funnel,
+    visitors
   });
 });
 

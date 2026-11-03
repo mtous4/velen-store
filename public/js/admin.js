@@ -40,9 +40,13 @@ document.addEventListener('DOMContentLoaded', () => {
     setupEventListeners();
     setupAiChat();
     setupPromoCodes();
+    setupManualOrders();
+    setupLiveView();
+    setupWaybillModal();
     await fetchAllData();
     initWebSocket();
     setInterval(fetchActiveCarts, 15000);
+    setInterval(fetchLiveVisitors, 5000);
   }
 
   // ================= FETCH ALL DATA =================
@@ -150,6 +154,8 @@ document.addEventListener('DOMContentLoaded', () => {
         renderDashboard();
         updateBadgeCounts();
       }
+    } else if (evType === 'VISITOR_UPDATE') {
+      if (typeof fetchLiveVisitors === 'function') fetchLiveVisitors();
     }
   }
 
@@ -233,9 +239,12 @@ document.addEventListener('DOMContentLoaded', () => {
             <td>${o.city}</td>
             <td><strong>${Number(o.total).toFixed(3)} JOD</strong></td>
             <td><span class="status-pill status-${getStatusClass(o.status)}">${getStatusLabel(o.status)}</span></td>
-            <td>
+            <td style="white-space:nowrap;">
               <button class="link-btn" onclick="window.velenAdmin.openWhatsApp('${o.phone}', '${o.id}', '${o.customerName}')" title="مراسلة عبر واتساب">
                 <i class="fa-brands fa-whatsapp" style="color:#25d366; font-size:16px;"></i>
+              </button>
+              <button class="link-btn" onclick="window.velenAdmin.openWaybill('${o.id}')" title="طباعة بوليصة التوصيل" style="margin-right:4px;">
+                <i class="fa-solid fa-print" style="color:#fff; font-size:14px;"></i>
               </button>
             </td>
           </tr>
@@ -373,10 +382,12 @@ document.addEventListener('DOMContentLoaded', () => {
               <option value="Delivered" ${o.status === 'Delivered' ? 'selected' : ''}>🟢 تم التسليم</option>
               <option value="Cancelled" ${o.status === 'Cancelled' ? 'selected' : ''}>🔴 ملغي</option>
             </select>
-          </td>
-          <td>
-            <button class="link-btn" onclick="window.velenAdmin.openWhatsApp('${o.phone}', '${o.id}', '${o.customerName}')" style="background:#25d366; color:#fff; padding:6px 12px; border-radius:4px; font-size:11px; font-weight:700;">
+          <td style="white-space:nowrap;">
+            <button class="link-btn" onclick="window.velenAdmin.openWhatsApp('${o.phone}', '${o.id}', '${o.customerName}')" style="background:#25d366; color:#fff; padding:6px 10px; border-radius:4px; font-size:11px; font-weight:700;">
               <i class="fa-brands fa-whatsapp"></i> تواصل
+            </button>
+            <button class="link-btn" onclick="window.velenAdmin.openWaybill('${o.id}')" style="background:#fff; color:#000; padding:6px 10px; border-radius:4px; font-size:11px; font-weight:700; margin-right:4px;">
+              <i class="fa-solid fa-print"></i> بوليصة
             </button>
           </td>
         </tr>
@@ -1631,6 +1642,124 @@ document.addEventListener('DOMContentLoaded', () => {
       const msg = encodeURIComponent(`مرحباً أستاذ ${name}، نتواصل معك من Velen Official بخصوص طلبك رقم ${orderId}. هل ترغب بتأكيد عنوان التوصيل؟`);
       window.open(`https://wa.me/${cleanPhone}?text=${msg}`, '_blank');
     },
+    openWaybill: (orderId) => {
+      const o = state.orders.find(ord => ord.id === orderId);
+      if (!o) return;
+      const area = document.getElementById('waybillPrintArea');
+      if (!area) return;
+
+      const itemsHtml = (o.items || []).map((item, idx) => `
+        <tr style="border-bottom: 1px solid #ddd;">
+          <td style="padding: 10px; font-weight: 600;">${idx + 1}</td>
+          <td style="padding: 10px; font-weight: 700; font-size: 14px;">${item.name}</td>
+          <td style="padding: 10px; text-align: center;">
+            <span style="display:inline-block; padding: 4px 12px; background: #000; color: #fff; border-radius: 4px; font-size: 14px; font-weight: 900; letter-spacing: 1px;">
+              ${item.size || 'M'}
+            </span>
+          </td>
+          <td style="padding: 10px; text-align: center; font-weight: 700; font-size: 14px;">${item.quantity || 1}</td>
+          <td style="padding: 10px; text-align: left; font-weight: 700;">${Number(item.price || 0).toFixed(3)} JOD</td>
+          <td style="padding: 10px; text-align: left; font-weight: 800;">${(Number(item.price || 0) * (item.quantity || 1)).toFixed(3)} JOD</td>
+        </tr>
+      `).join('');
+
+      area.innerHTML = `
+        <div style="border: 2px solid #000; padding: 22px; border-radius: 6px; background: #fff; color: #000;">
+          <!-- Header -->
+          <div style="display:flex; justify-content:space-between; align-items:center; border-bottom: 2px solid #000; padding-bottom: 15px; margin-bottom: 15px;">
+            <div style="display:flex; align-items:center; gap: 14px;">
+              <img src="/assets/velen-logo.jpg" alt="Velen" style="width: 55px; height: 55px; object-fit: cover; border-radius: 4px; border: 1px solid #000;">
+              <div>
+                <h2 style="margin:0; font-size: 24px; font-weight: 900; letter-spacing: 1px;">VELEN OFFICIAL</h2>
+                <p style="margin:2px 0 0 0; font-size: 12px; color: #555;">Amman, Jordan • بوليصة شحن وتوصيل رسمي</p>
+              </div>
+            </div>
+            <div style="text-align: left;">
+              <div style="font-size: 18px; font-weight: 900; background: #000; color: #fff; padding: 6px 14px; border-radius: 4px; display: inline-block;">
+                ${o.id}
+              </div>
+              <div style="font-size: 11px; color: #555; margin-top: 4px;">${formatDate(o.createdAt)}</div>
+            </div>
+          </div>
+
+          <!-- Recipient & Delivery Details -->
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; background: #f8f8f8; padding: 14px; border-radius: 6px; border: 1px solid #e0e0e0; margin-bottom: 18px;">
+            <div>
+              <div style="font-size: 11px; color: #666; font-weight: 600;">اسم العميل (المستلم):</div>
+              <div style="font-size: 16px; font-weight: 800; margin-top: 2px;">${o.customerName}</div>
+              
+              <div style="font-size: 11px; color: #666; font-weight: 600; margin-top: 10px;">رقم هاتف العميل للتوصيل:</div>
+              <div style="font-size: 19px; font-weight: 900; color: #000; direction: ltr; text-align: right; display: flex; align-items: center; gap: 6px; margin-top: 2px;">
+                <i class="fa-brands fa-whatsapp" style="color: #25d366;"></i> ${o.phone}
+              </div>
+            </div>
+
+            <div>
+              <div style="font-size: 11px; color: #666; font-weight: 600;">المدينة والمحافظة:</div>
+              <div style="font-size: 15px; font-weight: 800; margin-top: 2px;">${o.city}</div>
+
+              <div style="font-size: 11px; color: #666; font-weight: 600; margin-top: 10px;">العنوان التفصيلي:</div>
+              <div style="font-size: 13px; font-weight: 600; color: #222; margin-top: 2px; line-height: 1.4;">
+                ${o.address}
+              </div>
+              ${o.notes ? `<div style="font-size: 12px; color: #c0392b; font-weight: 700; margin-top: 6px;">ملاحظة: ${o.notes}</div>` : ''}
+            </div>
+          </div>
+
+          <!-- Items Table with SIZES -->
+          <table style="width: 100%; border-collapse: collapse; margin-bottom: 18px; font-size: 13px;">
+            <thead>
+              <tr style="background: #000; color: #fff; text-align: right;">
+                <th style="padding: 8px 10px;">#</th>
+                <th style="padding: 8px 10px;">اسم القطعة</th>
+                <th style="padding: 8px 10px; text-align: center;">المقاس (SIZE)</th>
+                <th style="padding: 8px 10px; text-align: center;">الكمية</th>
+                <th style="padding: 8px 10px; text-align: left;">السعر</th>
+                <th style="padding: 8px 10px; text-align: left;">المجموع</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${itemsHtml}
+            </tbody>
+          </table>
+
+          <!-- Financials & COD Box -->
+          <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 20px;">
+            <div style="font-size: 11px; color: #666; line-height: 1.6; max-width: 320px;">
+              <strong>سياسة التوصيل والتبديل:</strong><br>
+              • يحق للعميل معاينة المقاس عند الاستلام.<br>
+              • التبديل متاح خلال 3 أيام من تاريخ الاستلام.<br>
+              • خدمة العملاء والواتساب: <strong>+962 7 7018 8144</strong>
+            </div>
+
+            <div style="min-width: 270px;">
+              <div style="display: flex; justify-content: space-between; padding: 4px 0; font-size: 13px;">
+                <span>المجموع الفرعي:</span>
+                <strong>${Number(o.subtotal || o.total).toFixed(3)} JOD</strong>
+              </div>
+              <div style="display: flex; justify-content: space-between; padding: 4px 0; font-size: 13px;">
+                <span>أجرة التوصيل والشحن:</span>
+                <strong>${Number(o.shipping || 0) === 0 ? 'مجاناً (عمّان)' : Number(o.shipping).toFixed(3) + ' JOD'}</strong>
+              </div>
+              <div style="display: flex; justify-content: space-between; align-items: center; border: 2px solid #000; background: #fff8e7; padding: 12px; border-radius: 6px; margin-top: 8px;">
+                <div style="font-size: 13px; font-weight: 800;">المبلغ المطلوب تحصيله نقداً:</div>
+                <div style="font-size: 20px; font-weight: 900; color: #000;">
+                  ${Number(o.total).toFixed(3)} JOD
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Signatures -->
+          <div style="display: flex; justify-content: space-between; border-top: 1px dashed #aaa; padding-top: 15px; font-size: 12px; color: #444;">
+            <div>توقيع المستلم: ___________________</div>
+            <div>توقيع مندوب التوصيل: ___________________</div>
+          </div>
+        </div>
+      `;
+
+      document.getElementById('waybillModal').classList.add('active');
+    },
     deletePromo: async (code) => {
       if (!confirm(`هل أنت متأكد من حذف كود الخصم (${code})؟`)) return;
       try {
@@ -1649,4 +1778,290 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
   };
+
+  // ================= SETUP MANUAL ORDERS (INSTAGRAM / PHONE) =================
+  function setupManualOrders() {
+    const modal = document.getElementById('manualOrderModal');
+    const openBtn = document.getElementById('btnOpenManualOrderModal');
+    const closeBtn = document.getElementById('closeManualOrderModal');
+    const cancelBtn = document.getElementById('cancelManualOrderBtn');
+    const form = document.getElementById('manualOrderForm');
+    const prodSelect = document.getElementById('manProdSelect');
+    const sizeSelect = document.getElementById('manSizeSelect');
+    const addItemBtn = document.getElementById('btnAddManualItem');
+    const citySelect = document.getElementById('manCustCity');
+    const shippingInput = document.getElementById('manShipping');
+    const discountInput = document.getElementById('manDiscount');
+
+    let currentManualItems = [];
+
+    function updateCityShipping() {
+      if (!shippingInput) return;
+      if (citySelect.value === 'Amman') {
+        shippingInput.value = '0.000';
+      } else {
+        shippingInput.value = '1.000';
+      }
+      recalculateManualTotals();
+    }
+
+    function recalculateManualTotals() {
+      const subtotal = currentManualItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+      const shipping = parseFloat(shippingInput?.value || 0) || 0;
+      const discount = parseFloat(discountInput?.value || 0) || 0;
+      const total = Math.max(0, subtotal + shipping - discount);
+
+      if (document.getElementById('manSubtotal')) document.getElementById('manSubtotal').value = subtotal.toFixed(3) + ' JOD';
+      if (document.getElementById('manTotal')) document.getElementById('manTotal').value = total.toFixed(3) + ' JOD';
+    }
+
+    function populateProductsDropdown() {
+      if (!prodSelect) return;
+      prodSelect.innerHTML = state.products.map(p => `
+        <option value="${p.id}">${p.name} — ${Number(p.price).toFixed(3)} JOD</option>
+      `).join('');
+      updateSizesDropdown();
+    }
+
+    function updateSizesDropdown() {
+      if (!prodSelect || !sizeSelect) return;
+      const prod = state.products.find(p => p.id === prodSelect.value);
+      if (!prod) return;
+
+      const sizes = prod.sizes || ['S', 'M', 'L', 'XL'];
+      sizeSelect.innerHTML = sizes.map(s => {
+        const stock = (prod.sizeInventory && prod.sizeInventory[s] !== undefined) ? prod.sizeInventory[s] : (prod.stock || 0);
+        return `<option value="${s}">${s} (متوفر: ${stock} قطع)</option>`;
+      }).join('');
+    }
+
+    function renderManualItemsTable() {
+      const tbody = document.getElementById('manualItemsTableBody');
+      const wrap = document.getElementById('manualItemsListWrap');
+      if (!tbody || !wrap) return;
+
+      if (currentManualItems.length === 0) {
+        wrap.style.display = 'none';
+        tbody.innerHTML = '';
+        return;
+      }
+
+      wrap.style.display = 'block';
+      tbody.innerHTML = currentManualItems.map((item, idx) => `
+        <tr style="border-bottom:1px solid #222;">
+          <td style="padding:8px 6px;"><strong>${item.name}</strong></td>
+          <td style="padding:8px 6px;"><span style="background:#222; color:#fff; padding:2px 8px; border-radius:4px; font-weight:700;">${item.size}</span></td>
+          <td style="padding:8px 6px;">${item.quantity}</td>
+          <td style="padding:8px 6px;">${(item.price * item.quantity).toFixed(3)} JOD</td>
+          <td style="padding:8px 6px; text-align:center;">
+            <button type="button" class="del-manual-item" data-idx="${idx}" style="background:transparent; border:none; color:#ff4757; cursor:pointer;" title="حذف">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </td>
+        </tr>
+      `).join('');
+
+      tbody.querySelectorAll('.del-manual-item').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const idx = parseInt(btn.getAttribute('data-idx'), 10);
+          currentManualItems.splice(idx, 1);
+          renderManualItemsTable();
+          recalculateManualTotals();
+        });
+      });
+    }
+
+    if (openBtn) {
+      openBtn.addEventListener('click', () => {
+        currentManualItems = [];
+        populateProductsDropdown();
+        renderManualItemsTable();
+        updateCityShipping();
+        modal.classList.add('active');
+      });
+    }
+
+    if (closeBtn) closeBtn.addEventListener('click', () => modal.classList.remove('active'));
+    if (cancelBtn) cancelBtn.addEventListener('click', () => modal.classList.remove('active'));
+
+    if (prodSelect) prodSelect.addEventListener('change', updateSizesDropdown);
+    if (citySelect) citySelect.addEventListener('change', updateCityShipping);
+    if (shippingInput) shippingInput.addEventListener('input', recalculateManualTotals);
+    if (discountInput) discountInput.addEventListener('input', recalculateManualTotals);
+
+    if (addItemBtn) {
+      addItemBtn.addEventListener('click', () => {
+        const prod = state.products.find(p => p.id === prodSelect.value);
+        if (!prod) return;
+        const size = sizeSelect.value;
+        const qty = parseInt(document.getElementById('manQty')?.value || '1', 10) || 1;
+
+        currentManualItems.push({
+          id: prod.id,
+          name: prod.name,
+          size: size,
+          price: prod.price,
+          quantity: qty,
+          image: prod.image
+        });
+
+        renderManualItemsTable();
+        recalculateManualTotals();
+        showAdminToast(`تمت إضافة ${prod.name} (${size}) إلى الطلب`, 'success');
+      });
+    }
+
+    if (form) {
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        if (currentManualItems.length === 0) {
+          showAdminToast('يرجى إضافة قطعة واحدة على الأقل للطلب قبل الحفظ', 'error');
+          return;
+        }
+
+        const custName = document.getElementById('manCustName').value.trim();
+        const custPhone = document.getElementById('manCustPhone').value.trim();
+        const city = citySelect.value;
+        const address = document.getElementById('manCustAddress').value.trim();
+        const notes = document.getElementById('manCustNotes').value.trim();
+        const source = document.getElementById('manCustSource').value;
+        const subtotal = currentManualItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+        const shipping = parseFloat(shippingInput?.value || 0) || 0;
+        const discount = parseFloat(discountInput?.value || 0) || 0;
+        const total = Math.max(0, subtotal + shipping - discount);
+
+        const payload = {
+          customerName: custName,
+          phone: custPhone,
+          city: city,
+          address: address,
+          notes: notes ? `${notes} • [${source}]` : `[${source}]`,
+          source: source,
+          items: currentManualItems,
+          subtotal: subtotal,
+          shipping: shipping,
+          total: total,
+          paymentMethod: 'Cash on Delivery (دفع عند الاستلام)'
+        };
+
+        try {
+          const res = await fetch('/api/orders', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+          const data = await res.json();
+          if (data.success) {
+            modal.classList.remove('active');
+            form.reset();
+            currentManualItems = [];
+            showAdminToast(`تم حفظ طلب انستغرام رقم ${data.order.id} بنجاح!`, 'success');
+            await fetchAllData();
+            window.velenAdmin.openWaybill(data.order.id);
+          } else {
+            showAdminToast('فشل حفظ الطلب، يرجى التحقق من المدخلات', 'error');
+          }
+        } catch (err) {
+          showAdminToast('حدث خطأ في الاتصال بالسيرفر', 'error');
+        }
+      });
+    }
+  }
+
+  // ================= SETUP LIVE VIEW (5-MINUTE VISITOR TRACKING) =================
+  function setupLiveView() {
+    const container = document.getElementById('liveVisitorsContainer');
+    const refreshBtn = document.getElementById('btnRefreshLiveView');
+
+    if (refreshBtn) refreshBtn.addEventListener('click', fetchLiveVisitors);
+
+    async function fetchLiveVisitors() {
+      try {
+        const res = await fetch('/api/admin/live-visitors');
+        const data = await res.json();
+        if (!data.success) return;
+
+        const activeCount = data.activeCount || 0;
+        const activeEl = document.getElementById('liveActiveVisitorsCount');
+        if (activeEl) activeEl.textContent = activeCount;
+
+        const navLiveCount = document.getElementById('navLiveCount');
+        if (navLiveCount) navLiveCount.textContent = activeCount;
+
+        const funnel = data.funnel || {};
+        if (document.getElementById('funnelHomeCount')) document.getElementById('funnelHomeCount').textContent = funnel.home || 0;
+        if (document.getElementById('funnelProductCount')) document.getElementById('funnelProductCount').textContent = funnel.product || 0;
+        if (document.getElementById('funnelCartCount')) document.getElementById('funnelCartCount').textContent = funnel.cart || 0;
+        if (document.getElementById('funnelCheckoutCount')) document.getElementById('funnelCheckoutCount').textContent = funnel.checkout || 0;
+
+        if (!container) return;
+
+        if (!data.visitors || data.visitors.length === 0) {
+          container.innerHTML = `
+            <div style="text-align:center; padding:35px 20px; color:#666;">
+              <i class="fa-solid fa-radar" style="font-size:24px; color:var(--admin-border); margin-bottom:10px;"></i>
+              <p>لا يوجد زوار نشطين في آخر 5 دقائق. الزوار الجدد سيظهرون هنا لحظياً بمجرد فتح المتجر.</p>
+            </div>
+          `;
+          return;
+        }
+
+        container.innerHTML = data.visitors.map(v => {
+          const elapsedSec = Math.round((Date.now() - v.lastSeen) / 1000);
+          let timeStr = elapsedSec < 15 ? 'نشط الآن 🟢' : (elapsedSec < 60 ? `منذ ${elapsedSec} ثانية` : `منذ ${Math.round(elapsedSec / 60)} دقيقة`);
+
+          const isMobi = v.device?.includes('Mobile') || v.device?.includes('📱');
+          const devIcon = isMobi ? 'fa-mobile-screen-button' : 'fa-laptop';
+
+          let stageClass = 'stage-home';
+          let stageIcon = 'fa-house';
+          if (v.stage === 'product') { stageClass = 'stage-product'; stageIcon = 'fa-shirt'; }
+          else if (v.stage === 'cart') { stageClass = 'stage-cart'; stageIcon = 'fa-cart-shopping'; }
+          else if (v.stage === 'checkout') { stageClass = 'stage-checkout'; stageIcon = 'fa-cash-register'; }
+          else if (v.stage === 'ordered') { stageClass = 'stage-ordered'; stageIcon = 'fa-circle-check'; }
+
+          return `
+            <div class="visitor-item-card">
+              <div class="visitor-left-info">
+                <div class="visitor-device-badge">
+                  <i class="fa-solid ${devIcon}"></i>
+                </div>
+                <div class="visitor-meta">
+                  <h4>
+                    <span>${v.visitorId}</span>
+                    <small style="color:#777; font-weight:normal;">• ${v.device || 'Mobile'}</small>
+                    <small style="color:#888; font-weight:normal;">• ${v.city || 'Jordan'}</small>
+                  </h4>
+                  <p>
+                    <strong>${v.stageLabel || 'يتصفح المتجر'}</strong>
+                    ${v.detail ? ` <span style="color:var(--gold-accent);">(${v.detail})</span>` : ''}
+                    ${v.itemsCount ? ` • سلة: ${v.itemsCount} قطع [${Number(v.cartTotal || 0).toFixed(3)} JOD]` : ''}
+                  </p>
+                </div>
+              </div>
+
+              <div style="display:flex; align-items:center; gap:12px;">
+                <span class="visitor-stage-badge ${stageClass}">
+                  <i class="fa-solid ${stageIcon}"></i> ${v.stage}
+                </span>
+                <span style="font-size:12px; color:#aaa; min-width:85px; text-align:left;">${timeStr}</span>
+              </div>
+            </div>
+          `;
+        }).join('');
+
+      } catch (err) {
+        console.error('Error fetching live visitors:', err);
+      }
+    }
+
+    window.fetchLiveVisitors = fetchLiveVisitors;
+  }
+
+  // ================= SETUP WAYBILL MODAL =================
+  function setupWaybillModal() {
+    const modal = document.getElementById('waybillModal');
+    const closeBtn = document.getElementById('closeWaybillModal');
+    if (closeBtn) closeBtn.addEventListener('click', () => modal.classList.remove('active'));
+  }
 });

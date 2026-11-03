@@ -1796,5 +1796,111 @@ input:focus, select:focus, textarea:focus {
   gap: 8px;
 }
 
+/* ================= LIVE VIEW & VISITOR TRACKING ================= */
+@keyframes pulseDot {
+  0% { transform: scale(0.95); opacity: 0.7; }
+  50% { transform: scale(1.2); opacity: 1; }
+  100% { transform: scale(0.95); opacity: 0.7; }
+}
+
+.visitor-item-card {
+  background: #141414;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 14px 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.2s ease;
+}
+
+.visitor-item-card:hover {
+  border-color: rgba(229, 185, 95, 0.3);
+  background: #181818;
+}
+
+.visitor-left-info {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.visitor-device-badge {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  color: #fff;
+}
+
+.visitor-meta h4 {
+  font-size: 13px;
+  font-weight: 700;
+  color: #fff;
+  margin: 0 0 4px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.visitor-meta p {
+  font-size: 12px;
+  color: #aaa;
+  margin: 0;
+}
+
+.visitor-stage-badge {
+  padding: 6px 14px;
+  border-radius: 50px;
+  font-size: 12px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.stage-home { background: rgba(255, 255, 255, 0.1); color: #fff; }
+.stage-product { background: rgba(56, 103, 214, 0.2); color: #70a1ff; border: 1px solid rgba(56, 103, 214, 0.4); }
+.stage-cart { background: rgba(255, 165, 2, 0.2); color: #ffa502; border: 1px solid rgba(255, 165, 2, 0.4); }
+.stage-checkout { background: rgba(46, 213, 115, 0.2); color: #2ed573; border: 1px solid rgba(46, 213, 115, 0.4); }
+.stage-ordered { background: rgba(229, 185, 95, 0.25); color: var(--gold-accent, #e5b95f); border: 1px solid var(--gold-accent, #e5b95f); }
+
+/* ================= PRINT WAYBILL STYLES ================= */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  #waybillModal, #waybillModal * {
+    visibility: visible;
+  }
+  #waybillModal {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    background: #fff !important;
+  }
+  .admin-sidebar, .admin-topbar, .no-print, .modal-close-icon {
+    display: none !important;
+  }
+  .admin-modal-dialog {
+    max-width: 100% !important;
+    width: 100% !important;
+    box-shadow: none !important;
+    border: none !important;
+    background: #fff !important;
+  }
+  .waybill-sheet {
+    padding: 10px !important;
+    color: #000 !important;
+  }
+}
+
 
 

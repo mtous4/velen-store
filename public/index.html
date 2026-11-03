@@ -73,7 +73,7 @@
   <!-- Announcement Bar (Free Delivery in Amman) -->
   <header class="announcement-bar" id="announcementBar">
     <div class="announcement-content">
-      <span id="announcementText">FREE DELIVERY IN AMMAN • 1 JD ACROSS JORDAN</span>
+      <span id="announcementText" data-i18n="announcement">FREE DELIVERY IN AMMAN • 1 JD ACROSS JORDAN</span>
     </div>
   </header>
 
@@ -172,7 +172,7 @@
     <div class="search-modal-container">
       <div class="search-input-wrap">
         <i class="fa-solid fa-magnifying-glass search-icon"></i>
-        <input type="text" id="searchInput" placeholder="ابحث عن التيشيرتات، المقاسات، الألوان..." autofocus>
+        <input type="text" id="searchInput" placeholder="ابحث عن التيشيرتات، المقاسات، الألوان..." data-i18n-ph="searchPlaceholder" autofocus>
         <button id="searchCloseBtn" class="icon-btn"><i class="fa-solid fa-xmark"></i></button>
       </div>
       <div id="searchResults" class="search-results-grid"></div>
@@ -197,7 +197,7 @@
         <h2 class="hero-main-heading" id="heroMainHeading">Premium Everyday Essentials. Made in Jordan.</h2>
         <p class="hero-tagline" id="heroTagline">CLEAN FITS. PREMIUM FEEL. BUILT FOR EVERYDAY WEAR.</p>
         <div class="hero-cta-wrap">
-          <a href="#collection" class="btn-velen-primary" id="heroShopBtn">
+          <a href="#collection" class="btn-velen-primary" id="heroShopBtn" data-i18n="heroShopBtn">
             SHOP THE COLLECTION
           </a>
         </div>
@@ -208,15 +208,15 @@
     <div class="value-props-bar" id="sec-valueProps">
       <div class="prop-item">
         <i class="fa-solid fa-truck-fast"></i>
-        <span id="propText1">توصيل مجاني في عمّان وبدينار لكافة المحافظات</span>
+        <span id="propText1" data-i18n="prop1">توصيل مجاني في عمّان وبدينار لكافة المحافظات</span>
       </div>
       <div class="prop-item">
         <i class="fa-solid fa-crown"></i>
-        <span id="propText2">قطن أردني فاخر 260 GSM معالج ومثبت</span>
+        <span id="propText2" data-i18n="prop2">قطن أردني فاخر 260 GSM معالج ومثبت</span>
       </div>
       <div class="prop-item">
         <i class="fa-solid fa-rotate-left"></i>
-        <span id="propText3">تبديل فوري للمقاس عند باب البيت</span>
+        <span id="propText3" data-i18n="prop3">تبديل فوري للمقاس عند باب البيت</span>
       </div>
     </div>
 
@@ -260,13 +260,13 @@
           <p class="community-desc" id="communityDesc">شاركنا لوكك اليومي وفيديوهاتك مع قطع Velen، وقيم تجربتك من 5 نجوم لتدخل السحب الأسبوعي على بوكس إسنشيلز كامل!</p>
           
           <div class="community-actions-bar">
-            <button id="addLookBtn" class="btn-community-share">
+            <button id="addLookBtn" class="btn-community-share" data-i18n="addLookBtn">
               <i class="fa-solid fa-camera"></i> شارك صورتك أو ريلز ستايلك + تقييم 5 نجوم
             </button>
             <div class="community-filter-pills">
-              <button class="comm-pill active" data-comm-filter="all">جميع المشاركات</button>
-              <button class="comm-pill" data-comm-filter="video"><i class="fa-solid fa-play"></i> فيديو ريلز</button>
-              <button class="comm-pill" data-comm-filter="5star">★★★★★ (5 نجوم فقط)</button>
+              <button class="comm-pill active" data-comm-filter="all" data-i18n="allPosts">جميع المشاركات</button>
+              <button class="comm-pill" data-comm-filter="video" data-i18n="videoReels"><i class="fa-solid fa-play"></i> فيديو ريلز</button>
+              <button class="comm-pill" data-comm-filter="5star" data-i18n="fiveStarsOnly">★★★★★ (5 نجوم فقط)</button>
             </div>
           </div>
         </div>
@@ -647,10 +647,10 @@
               </div>
             </div>
 
-            <button type="submit" id="confirmOrderBtn" class="btn-confirm-order">
+            <button type="submit" id="confirmOrderBtn" class="btn-confirm-order" data-i18n="confirmOrderBtn">
               <i class="fa-solid fa-check"></i> تأكيد الطلب فوراً
             </button>
-            <p class="safe-checkout-note"><i class="fa-solid fa-shield"></i> سيتم معالجة طلبك وإرسال تأكيد مباشر</p>
+            <p class="safe-checkout-note" data-i18n="safeCheckoutNote"><i class="fa-solid fa-shield"></i> سيتم معالجة طلبك وإرسال تأكيد مباشر</p>
           </div>
         </div>
       </form>
@@ -661,14 +661,14 @@
   <div id="successModal" class="success-modal" aria-hidden="true">
     <div class="success-dialog">
       <div class="success-icon"><i class="fa-solid fa-circle-check"></i></div>
-      <h2>تم استلام طلبك بنجاح!</h2>
+      <h2 data-i18n="orderSuccessTitle">تم استلام طلبك بنجاح!</h2>
       <p class="order-id-label">رقم الطلب: <strong id="successOrderId">ORD-0000</strong></p>
-      <p class="success-sub">شكراً لاختيارك Velen. فريق التوصيل سيتواصل معك هاتفياً لتسليم طلبك في أقرب وقت.</p>
+      <p class="success-sub" data-i18n="orderSuccessSub">شكراً لاختيارك Velen. فريق التوصيل سيتواصل معك هاتفياً لتسليم طلبك في أقرب وقت.</p>
       <div class="success-actions">
-        <a id="whatsappTrackBtn" href="#" target="_blank" class="btn-whatsapp-track">
+        <a id="whatsappTrackBtn" href="#" target="_blank" class="btn-whatsapp-track" data-i18n="whatsappTrackBtn">
           <i class="fa-brands fa-whatsapp"></i> متابعة الطلب عبر واتساب
         </a>
-        <button id="closeSuccessBtn" class="btn-continue-shopping">متابعة التسوق</button>
+        <button id="closeSuccessBtn" class="btn-continue-shopping" data-i18n="continueShopping">متابعة التسوق</button>
       </div>
     </div>
   </div>
