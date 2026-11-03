@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     design: null,
     settings: null,
     appliedPromo: null,
-    activeLang: 'ar',
+    activeLang: 'en',
     sessionId: localStorage.getItem('velen_session_id') || ('sess_' + Math.random().toString(36).substring(2, 10)),
     cart: JSON.parse(localStorage.getItem('velen_cart') || '[]'),
     activeCategory: 'all',
@@ -38,17 +38,20 @@ document.addEventListener('DOMContentLoaded', () => {
       policyAndShipping: 'الشحن وسياسة التبديل',
       stayConnected: 'تواصل معنا',
       stayConnectedNote: 'تابعنا على منصاتنا لتكون أول من يعرف عن الدروبات الجديدة والخصومات:',
-      newsletterHeading: 'النشرة البريدية الحصرية',
-      newsletterPrompt: 'اشترك بالنشرة البريدية واحصل على كود خصم 10% فوري',
-      newsletterDesc: 'اشترك لتحصل على كود خصم 10% (VELEN10) على طلبك القادم ووصول مبكر للدروبات الحصرية.',
       searchPlaceholder: 'ابحث عن التيشيرتات، المقاسات، الألوان...',
       heroShopBtn: 'تسوق الكولكشن الآن',
+      heroSubHeading: 'قصات بوكسي ستريت وير عصرية مصممة يومياً لتلائم تفاصيل يومك بجودة أردنية تدوم.',
+      heroMainHeading: 'THE NEW STANDARD OF STREETWEAR',
       prop1: 'توصيل مجاني في عمّان وبدينار لكافة المحافظات',
       prop2: 'قطن أردني فاخر 260 GSM معالج ومثبت',
       prop3: 'تبديل فوري للمقاس عند باب البيت',
-      allEssentials: 'جميع القطع',
-      hoodies: 'هوديز وسويت شيرت',
-      pants: 'بناطيل وبوتومز',
+      collectionSubtitle: 'VELEN APPAREL 2026',
+      collectionTitle: 'DAILY ESSENTIALS DROP',
+      catAll: 'جميع القطع',
+      catTees: 'تيشيرتات',
+      catRinger: 'رينجر',
+      catBoxy: 'بوكسي وتيشيرتات',
+      catHoodies: 'هوديز وسويت شيرت',
       communityTitle: 'COMMUNITY WEARS VELEN',
       communitySubtitle: 'أشخاص حقيقيون. ستايل حقيقي.',
       communityDesc: 'شاركنا لوكك اليومي وفيديوهاتك مع قطع Velen، وقيم تجربتك من 5 نجوم لتدخل السحب الأسبوعي على بوكس إسنشيلز كامل!',
@@ -56,30 +59,44 @@ document.addEventListener('DOMContentLoaded', () => {
       allPosts: 'جميع المشاركات',
       videoReels: 'فيديو ريلز',
       fiveStarsOnly: '★★★★★ (5 نجوم فقط)',
+      aboutSub: 'THE VELEN PHILOSOPHY',
+      aboutTitle: 'صنع في عمّان بمعايير عالمية',
+      aboutP1: 'انطلقت VELEN من فكرة واضحة: تقديم قطع ملابس يومية بجودة تصنيع متفوقة وقصات مريحة تدوم لسنوات.',
+      featTitle1: 'قطن معالج 260 GSM',
+      featDesc1: 'نسيج قطني ثقيل يمنح القطعة قواماً ثابتاً ومظهراً فخماً لا يتغير مع الغسيل المتكرر.',
+      featTitle2: 'قصّة Boxy Fit مثالية',
+      featDesc2: 'أكتاف ساقطة ووسع متوازن يعطيك الراحة التامة والمظهر العصري في آن واحد.',
+      featTitle3: 'صنع محلياً 100%',
+      featDesc3: 'كل درزة تم تفصيلها وتصنيعها بأيدي أمهر الخياطين في الأردن مع رقابة جودة دقيقة.',
       cartTitle: 'حقيبة التسوق',
       cartEmptyTitle: 'حقيبة التسوق فارغة',
       cartEmptySub: 'تصفح المجموعة واكتشف ملابس Velen اليومية',
       cartPromoPlaceholder: 'رمز كود الخصم...',
       applyBtn: 'تطبيق',
       checkoutBtn: 'المتابعة لإتمام الطلب',
-      checkoutTitle: 'إتمام الطلب السريع',
+      checkoutTitle: 'تأكيد الطلب السريع — Velen Jordan',
+      checkoutSub: 'التوصيل مجاناً في عمّان • 1 دينار لجميع المحافظات • الدفع عند الاستلام',
       orderSummary: 'ملخص مشترياتك:',
       upsellTitle: 'عرض خاص وحصري مع طلبك 🔥',
       upsellSub: 'أضف تيشيرت رينجر إضافي إلى طلبك الآن بخصم خاص (9.500 JOD بدل 13.000)!',
       addUpsellBtn: 'أضف للطلب (+9.500 JOD)',
       upsellAdded: '✓ تمت الإضافة للطلب',
       fullNameLabel: 'الاسم الكامل *',
-      fullNamePlaceholder: 'مثال: زيد الكردي',
-      phoneLabel: 'رقم الهاتف للتوصيل *',
-      phonePlaceholder: '079XXXXXXX أو +9627XXXXXXXX',
-      cityLabel: 'المدينة / المحافظة *',
-      addressLabel: 'العنوان التفصيلي للتوصيل *',
-      addressPlaceholder: 'اسم المنطقة، الشارع، المعلم المميز أو رقم العمارة',
-      notesLabel: 'ملاحظات لمندوب التوصيل (اختياري)',
-      notesPlaceholder: 'مثال: يرجى الاتصال قبل الوصول بربع ساعة',
-      paymentLabel: 'طريقة الدفع المعتمدة',
+      fullNamePlaceholder: 'مثال: يوسف الخالد',
+      checkoutPhoneLabel: 'رقم الهاتف (07XXXXXXXX) *',
+      phoneLabel: 'رقم الهاتف (07XXXXXXXX) *',
+      phonePlaceholder: '07XXXXXXXX',
+      phoneHelper: 'رقم هاتف أردني يتكون من 10 أرقام يبدأ بـ 07 (مثال: 0791234567)',
+      cityLabel: 'المحافظة / المدينة *',
+      addressLabel: 'العنوان بالتفصيل (المنطقة، الشارع، رقم البناية) *',
+      addressPlaceholder: 'مثال: الصويفية، شارع باريس، عمارة 12، بجانب...',
+      notesLabel: 'ملاحظات إضافية للتوصيل (اختياري)',
+      notesPlaceholder: 'مثال: يرجى الاتصال قبل الوصول بنصف ساعة',
+      paymentLabel: 'طريقة الدفع *',
       codOption: 'الدفع نقداً عند الاستلام (COD) — متاح لجميع مناطق المملكة',
       cliqOption: 'تحويل فوري عبر CliQ — الدفع عند استلام الطرد',
+      codBadge: 'الدفع نقداً عند الاستلام (COD)',
+      cliqBadge: 'تحويل CliQ عند الاستلام',
       confirmOrderBtn: 'تأكيد الطلب فوراً',
       safeCheckoutNote: 'سيتم معالجة طلبك وإرسال تأكيد مباشر',
       subtotal: 'المجموع الفرعي:',
@@ -90,14 +107,19 @@ document.addEventListener('DOMContentLoaded', () => {
       orderSuccessSub: 'شكراً لاختيارك Velen. فريق التوصيل سيتواصل معك هاتفياً لتسليم طلبك في أقرب وقت.',
       whatsappTrackBtn: 'متابعة الطلب عبر واتساب',
       continueShopping: 'متابعة التسوق',
-      addToBag: 'أضف إلى السلة',
+      addToBag: 'أضف إلى الحقيبة',
       soldOut: 'نفد من المخزون',
       quickView: 'معاينة سريعة',
       sizeGuide: 'دليل المقاسات',
       selectSize: 'اختر المقاس:',
       careInstructions: 'تعليمات العناية',
-      checkoutPhoneLabel: 'رقم الهاتف (07XXXXXXXX) *',
-      phonePlaceholder: '07XXXXXXXX',
+      backToStore: 'العودة للمتجر',
+      boxyRelaxedFit: '(قصّة Boxy مريحة)',
+      fabricDetails: 'تفاصيل القماش:',
+      description: 'الوصف:',
+      freeDeliveryAmman: 'توصيل مجاني وسريع داخل عمّان • 1 دينار للمحافظات',
+      fabricCare: 'دليل العناية بالأقمشة',
+      termsOfService: 'الشروط والأحكام والتوصيل',
       footerCopyright: '© 2026 VELEN OFFICIAL. صنع بكل فخر في عمّان، الأردن 🇯🇴'
     },
     en: {
@@ -114,17 +136,20 @@ document.addEventListener('DOMContentLoaded', () => {
       policyAndShipping: 'Shipping & Exchange Policy',
       stayConnected: 'STAY CONNECTED',
       stayConnectedNote: 'Follow our channels to be first to know about new drops and exclusive offers:',
-      newsletterHeading: 'Exclusive Newsletter',
-      newsletterPrompt: 'Subscribe to newsletter for instant 10% promo code',
-      newsletterDesc: 'Subscribe to get 10% off code (VELEN10) on your order and early drop access.',
       searchPlaceholder: 'Search tees, hoodies, sizes, colors...',
       heroShopBtn: 'SHOP THE COLLECTION',
+      heroSubHeading: 'Relaxed boxy fits designed for everyday streetwear with durable Jordanian premium craftsmanship.',
+      heroMainHeading: 'THE NEW STANDARD OF STREETWEAR',
       prop1: 'Free Delivery in Amman • 1 JD Jordan-wide',
       prop2: 'Jordanian Luxury Heavyweight Cotton 260 GSM',
       prop3: 'Hassle-free doorstep size exchange',
-      allEssentials: 'All Pieces',
-      hoodies: 'Hoodies & Sweats',
-      pants: 'Pants & Bottoms',
+      collectionSubtitle: 'VELEN APPAREL 2026',
+      collectionTitle: 'DAILY ESSENTIALS DROP',
+      catAll: 'All Pieces',
+      catTees: 'T-Shirts',
+      catRinger: 'Ringers',
+      catBoxy: 'Boxy & Tees',
+      catHoodies: 'Hoodies & Sweats',
       communityTitle: 'COMMUNITY WEARS VELEN',
       communitySubtitle: 'Real people. Real style.',
       communityDesc: 'Share your everyday fit check with Velen pieces, review with 5 stars, and enter the weekly essential box draw!',
@@ -132,31 +157,44 @@ document.addEventListener('DOMContentLoaded', () => {
       allPosts: 'All Looks',
       videoReels: 'Reels Videos',
       fiveStarsOnly: '★★★★★ (5 Stars Only)',
+      aboutSub: 'THE VELEN PHILOSOPHY',
+      aboutTitle: 'Crafted in Amman to Global Standards',
+      aboutP1: 'VELEN was founded on a simple vision: uncompromising heavyweight streetwear built with thoughtful everyday fits that last.',
+      featTitle1: 'Heavyweight 260 GSM Cotton',
+      featDesc1: 'Ultra-dense combed cotton structure that retains clean silhouette wash after wash.',
+      featTitle2: 'Signature Boxy Fit',
+      featDesc2: 'Relaxed drop-shoulders with balanced proportions for clean modern aesthetics.',
+      featTitle3: '100% Ethically Made in Jordan',
+      featDesc3: 'Handcrafted by expert local garment makers under rigorous quality control.',
       cartTitle: 'Shopping Bag',
       cartEmptyTitle: 'Your shopping bag is empty',
       cartEmptySub: 'Explore the collection and discover everyday Velen fits',
       cartPromoPlaceholder: 'Promo code...',
       applyBtn: 'Apply',
       checkoutBtn: 'Proceed to Checkout',
-      checkoutTitle: 'Express Checkout',
+      checkoutTitle: 'Express Checkout — Velen Jordan',
+      checkoutSub: 'Free Delivery in Amman • 1 JD Jordan-wide • Cash on Delivery',
       orderSummary: 'Order Summary:',
       upsellTitle: 'Exclusive Add-on Offer 🔥',
       upsellSub: 'Add an extra Ringer Tee to your order now at special discount (9.500 JOD instead of 13.000)!',
       addUpsellBtn: 'Add to Order (+9.500 JOD)',
       upsellAdded: '✓ Added to Order',
       fullNameLabel: 'Full Name *',
-      fullNamePlaceholder: 'e.g. Zaid Kurdi',
+      fullNamePlaceholder: 'e.g. Yousef Al-Khaled',
       checkoutPhoneLabel: 'Phone Number (07XXXXXXXX) *',
       phoneLabel: 'Phone Number (07XXXXXXXX) *',
       phonePlaceholder: '07XXXXXXXX',
+      phoneHelper: 'Jordanian 10-digit mobile number starting with 07 (e.g. 0791234567)',
       cityLabel: 'City / Governorate *',
-      addressLabel: 'Delivery Address *',
-      addressPlaceholder: 'Area, street name, building number, nearby landmark',
+      addressLabel: 'Delivery Address (Area, street, building number) *',
+      addressPlaceholder: 'e.g. Sweifieh, Paris St, Building 12...',
       notesLabel: 'Delivery Notes (Optional)',
-      notesPlaceholder: 'e.g. Please call 15 minutes before arrival',
-      paymentLabel: 'Payment Method',
+      notesPlaceholder: 'e.g. Please call 30 minutes before arrival',
+      paymentLabel: 'Payment Method *',
       codOption: 'Cash on Delivery (COD) — Available across Jordan',
       cliqOption: 'Instant CliQ Transfer — Pay upon parcel arrival',
+      codBadge: 'Cash on Delivery (COD)',
+      cliqBadge: 'Instant CliQ Transfer',
       confirmOrderBtn: 'Place Order Now',
       safeCheckoutNote: 'Your order will be processed and confirmed immediately',
       subtotal: 'Subtotal:',
@@ -164,7 +202,7 @@ document.addEventListener('DOMContentLoaded', () => {
       discount: 'Discount:',
       total: 'Total Amount:',
       orderSuccessTitle: 'Order Received Successfully!',
-      orderSuccessSub: 'Thank you for choosing Velen. Delivery driver will contact you shortly to deliver your order.',
+      orderSuccessSub: 'Thank you for choosing Velen. Delivery team will contact you shortly to deliver your order.',
       whatsappTrackBtn: 'Track Order via WhatsApp',
       continueShopping: 'Continue Shopping',
       addToBag: 'Add to Bag',
@@ -173,6 +211,13 @@ document.addEventListener('DOMContentLoaded', () => {
       sizeGuide: 'Size Guide',
       selectSize: 'Select Size:',
       careInstructions: 'Care Instructions',
+      backToStore: 'Back to Store',
+      boxyRelaxedFit: '(Boxy Relaxed Fit)',
+      fabricDetails: 'Fabric Details:',
+      description: 'Description:',
+      freeDeliveryAmman: 'Fast & Free Delivery in Amman • 1 JD Jordan-wide',
+      fabricCare: 'Fabric & Care Guide',
+      termsOfService: 'Terms & Shipping Policy',
       footerCopyright: '© 2026 VELEN OFFICIAL. Made with pride in Amman, Jordan 🇯🇴'
     }
   };
@@ -207,7 +252,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initLanguage();
     setupEventListeners();
     setupMenuDrawerLinks();
-    setupNewsletterForms();
+    setupDedicatedProductPage();
     setupCheckoutUpsell();
     setupPromoCodes();
     setupCommunityForm();
@@ -744,6 +789,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (cartCountBadge) cartCountBadge.textContent = totalItems;
     if (cartTotalItems) cartTotalItems.textContent = totalItems;
+    const prodPageCartBadge = document.getElementById('prodPageCartBadge');
+    if (prodPageCartBadge) prodPageCartBadge.textContent = totalItems;
     if (cartSubtotal) cartSubtotal.textContent = subtotal.toFixed(3) + ' JOD';
     if (cartTotal) cartTotal.textContent = finalCartTotal.toFixed(3) + ' JOD';
 
@@ -800,21 +847,17 @@ document.addEventListener('DOMContentLoaded', () => {
     cartOverlay.classList.remove('active');
   }
 
-  // ================= MODALS & DRAWERS TOGGLES =================
-  function openProductModal(productId) {
+  // ================= DEDICATED PRODUCT PAGE CONTROLLER (Fixes Mobile Freezing) =================
+  function openProductPage(productId) {
     const product = state.products.find(p => p.id === productId);
     if (!product) return;
     state.currentProductForModal = product;
-    state.selectedSize = (product.sizes && product.sizes[0]) || 'M';
     state.currentStage = 'product';
     sendVisitorPulse('product', product.name);
 
-    const priceFormatted = Number(product.price).toFixed(3) + ' JOD';
-    const comparePriceFormatted = product.comparePrice ? Number(product.comparePrice).toFixed(3) + ' JOD' : null;
     const sizes = product.sizes || ['S', 'M', 'L', 'XL'];
     const sizeInv = product.sizeInventory || null;
 
-    // Pick initial selected size: first size that has stock > 0
     let initialSize = 'M';
     if (sizeInv) {
       const available = sizes.find(s => typeof sizeInv[s] === 'undefined' || sizeInv[s] > 0);
@@ -824,25 +867,75 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     state.selectedSize = initialSize;
 
-    productModalDetails.innerHTML = `
-      <div class="product-modal-grid">
-        <div class="modal-gallery">
-          <img src="${product.image || '/assets/velen-logo.jpg'}" alt="${product.name}" class="modal-gallery-main">
+    renderProductPageContent(product);
+
+    const homeView = document.getElementById('homeView');
+    const prodPage = document.getElementById('productPage');
+    if (homeView) homeView.style.display = 'none';
+    if (prodPage) prodPage.style.display = 'block';
+
+    if (cartDrawer) cartDrawer.classList.remove('open');
+    if (cartOverlay) cartOverlay.classList.remove('active');
+    if (navDrawer) navDrawer.classList.remove('open');
+    if (drawerOverlay) drawerOverlay.classList.remove('active');
+    if (searchModal) searchModal.classList.remove('active');
+
+    window.scrollTo({ top: 0, behavior: 'instant' });
+
+    if (window.history && window.history.pushState) {
+      window.history.pushState({ page: 'product', id: productId }, '', `#product-${productId}`);
+    }
+  }
+
+  function closeProductPage(updateHistory = true) {
+    const homeView = document.getElementById('homeView');
+    const prodPage = document.getElementById('productPage');
+    if (prodPage) prodPage.style.display = 'none';
+    if (homeView) homeView.style.display = 'block';
+
+    state.currentStage = 'home';
+    sendVisitorPulse('home', 'الصفحة الرئيسية');
+
+    if (updateHistory && window.history && window.history.pushState && window.location.hash.startsWith('#product')) {
+      window.history.pushState({ page: 'home' }, '', window.location.pathname);
+    }
+  }
+
+  function renderProductPageContent(product) {
+    const container = document.getElementById('productPageDetails');
+    if (!container || !product) return;
+
+    const isAr = state.activeLang === 'ar';
+    const dict = translations[state.activeLang] || translations.en;
+    const priceFormatted = Number(product.price).toFixed(3) + ' JOD';
+    const comparePriceFormatted = product.comparePrice ? Number(product.comparePrice).toFixed(3) + ' JOD' : null;
+    const sizes = product.sizes || ['S', 'M', 'L', 'XL'];
+    const sizeInv = product.sizeInventory || null;
+
+    let allOutOfStock = false;
+    if (sizeInv) {
+      allOutOfStock = sizes.every(s => typeof sizeInv[s] !== 'undefined' && sizeInv[s] <= 0);
+    }
+
+    container.innerHTML = `
+      <div class="prod-page-grid">
+        <div class="prod-page-gallery">
+          <img src="${product.image || '/assets/velen-logo.jpg'}" alt="${product.name}" class="prod-page-main-img" onerror="this.src='/assets/velen-logo.jpg'">
         </div>
-        <div class="modal-info">
-          <span class="section-sub">${product.category} • MADE IN JORDAN</span>
-          <h2 class="modal-product-title">${product.name}</h2>
-          <div class="modal-price-row">
-            <span class="modal-price-current">${priceFormatted}</span>
-            ${comparePriceFormatted ? `<span class="modal-price-strike">${comparePriceFormatted}</span>` : ''}
+        <div class="prod-page-info">
+          <span class="prod-page-cat">${product.category || 'ESSENTIALS'} • MADE IN JORDAN</span>
+          <h1 class="prod-page-title">${product.name}</h1>
+          <div class="prod-page-price-row">
+            <span class="prod-page-price-current">${priceFormatted}</span>
+            ${comparePriceFormatted ? `<span class="prod-page-price-strike">${comparePriceFormatted}</span>` : ''}
           </div>
 
-          <div class="size-selector-wrap">
-            <div class="size-selector-label">
-              <span>اختر المقاس:</span>
-              <span style="color:#aaa; font-weight:400;">(Boxy Relaxed Fit)</span>
+          <div class="prod-size-section">
+            <div class="prod-size-header">
+              <span class="prod-size-label">${dict.selectSize || 'Select Size:'} <strong id="prodSelectedSizeLabel">${state.selectedSize}</strong></span>
+              <span class="prod-fit-tag">${dict.boxyRelaxedFit || '(Boxy Relaxed Fit)'}</span>
             </div>
-            <div class="size-boxes" id="modalSizeBoxes">
+            <div class="prod-size-boxes" id="pageProductSizeBoxes">
               ${sizes.map(size => {
                 const qty = sizeInv ? (typeof sizeInv[size] !== 'undefined' ? sizeInv[size] : 99) : 99;
                 const isOutOfStock = qty <= 0;
@@ -850,15 +943,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 if (isOutOfStock) {
                   return `
-                    <button class="size-box out-of-stock" disabled title="نفذ">
+                    <button type="button" class="prod-size-box out-of-stock" disabled title="${dict.soldOut}">
                       <span class="size-letter">${size}</span>
-                      <span class="stock-sub-badge">نفذ</span>
+                      <span class="stock-badge">${isAr ? 'نفذ' : 'Out'}</span>
                     </button>
                   `;
                 }
 
                 return `
-                  <button class="size-box ${isSelected ? 'selected' : ''}" onclick="window.velenApp.selectModalSize('${size}')">
+                  <button type="button" class="prod-size-box ${isSelected ? 'selected' : ''}" onclick="window.velenApp.selectModalSize('${size}')">
                     <span class="size-letter">${size}</span>
                   </button>
                 `;
@@ -866,24 +959,53 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
           </div>
 
-          <button class="btn-add-to-bag" onclick="window.velenApp.addCurrentModalToCart()">
-            <i class="fa-solid fa-bag-shopping"></i> إضافة إلى الحقيبة (${priceFormatted})
+          <button type="button" class="btn-add-to-bag-page" id="btnPageAddToBag" onclick="window.velenApp.addCurrentModalToCart()" ${allOutOfStock ? 'disabled' : ''}>
+            <i class="fa-solid fa-bag-shopping"></i>
+            <span>${allOutOfStock ? dict.soldOut : `${dict.addToBag} (${priceFormatted})`}</span>
           </button>
 
-          <div class="product-specs">
-            <p><strong>تفاصيل القماش:</strong> ${product.fabric || '100% قطن أردني معالج نخب أول (260 GSM)'}</p>
-            <p style="margin-top:6px;"><strong>الوصف:</strong> ${product.description || 'تصميم ستريت وير يومي يجمع بين الراحة والأناقة المينيمالية.'}</p>
-            <p style="margin-top:6px; color:#4cd137;"><i class="fa-solid fa-truck"></i> توصيل مجاني وسريع داخل عمّان.</p>
+          <div class="prod-page-specs">
+            <div class="spec-item">
+              <strong>${dict.fabricDetails || 'Fabric Details:'}</strong>
+              <p>${product.fabric || (isAr ? '100% قطن أردني معالج نخب أول (260 GSM)' : '100% Luxury Combed Heavyweight Cotton (260 GSM)')}</p>
+            </div>
+            <div class="spec-item">
+              <strong>${dict.description || 'Description:'}</strong>
+              <p>${product.description || (isAr ? 'تصميم ستريت وير يومي يجمع بين الراحة والأناقة المينيمالية مع خياطة متينة.' : 'Everyday luxury streetwear crafted with precision fits and lasting durability.')}</p>
+            </div>
+            <div class="spec-delivery-perk">
+              <i class="fa-solid fa-truck-fast"></i>
+              <span>${dict.freeDeliveryAmman || 'Fast & Free Delivery in Amman • 1 JD Jordan-wide'}</span>
+            </div>
           </div>
         </div>
       </div>
     `;
+  }
 
-    productModal.classList.add('active');
+  function setupDedicatedProductPage() {
+    const btnBack = document.getElementById('btnBackToStore');
+    if (btnBack) {
+      btnBack.addEventListener('click', () => closeProductPage(true));
+    }
+    const prodCartBtn = document.getElementById('prodPageCartBtn');
+    if (prodCartBtn) {
+      prodCartBtn.addEventListener('click', openCart);
+    }
+    window.addEventListener('popstate', () => {
+      const prodPage = document.getElementById('productPage');
+      if (prodPage && prodPage.style.display === 'block') {
+        closeProductPage(false);
+      }
+    });
+  }
+
+  function openProductModal(productId) {
+    openProductPage(productId);
   }
 
   function closeProductModal() {
-    productModal.classList.remove('active');
+    closeProductPage(true);
   }
 
   function openCheckout() {
@@ -1410,17 +1532,14 @@ document.addEventListener('DOMContentLoaded', () => {
   // ================= LANGUAGE CONTROLLER (AR / EN) =================
   function initLanguage() {
     const savedLang = localStorage.getItem('velen_lang');
-    let lang = savedLang;
-    if (!lang) {
-      const phoneLang = (navigator.language || navigator.userLanguage || '').toLowerCase();
-      lang = phoneLang.startsWith('ar') ? 'ar' : 'en';
-    }
+    // Base language requested by user is English ('en')
+    let lang = savedLang || 'en';
     setLanguage(lang);
 
     document.getElementById('langToggleBtn')?.addEventListener('click', () => {
       const nextLang = state.activeLang === 'ar' ? 'en' : 'ar';
       setLanguage(nextLang);
-      showToast(nextLang === 'ar' ? 'تم تغيير اللغة إلى العربية' : 'Language switched to English', 'info');
+      showToast(nextLang === 'ar' ? 'تم تغيير لغة الموقع إلى العربية' : 'Switched store language to English', 'info');
     });
   }
 
@@ -1435,7 +1554,7 @@ document.addEventListener('DOMContentLoaded', () => {
       langLabel.textContent = lang === 'ar' ? 'EN' : 'عربي';
     }
 
-    const dict = translations[lang] || translations.ar;
+    const dict = translations[lang] || translations.en;
     document.querySelectorAll('[data-i18n]').forEach(el => {
       const key = el.getAttribute('data-i18n');
       if (dict[key]) {
@@ -1453,6 +1572,12 @@ document.addEventListener('DOMContentLoaded', () => {
     if (state.products && state.products.length > 0) renderProducts();
     if (state.community && state.community.length > 0) renderCommunity();
     updateCartUI();
+
+    // Re-render product page if open to reflect new language
+    const prodPage = document.getElementById('productPage');
+    if (prodPage && prodPage.style.display === 'block' && state.currentProductForModal) {
+      renderProductPageContent(state.currentProductForModal);
+    }
   }
 
   // ================= VISITOR TRACKING & LIVE FUNNEL (5-MIN WINDOW) =================
@@ -1511,17 +1636,29 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('a[id*="Fb"], a[href*="facebook"]').forEach(a => a.href = fb);
   }
 
-  // ================= MENU DRAWER & FOOTER LINKS =================
+  // ================= MENU DRAWER & FOOTER NAVIGATION =================
   function setupMenuDrawerLinks() {
-    const drawerLinks = document.querySelectorAll('#navDrawer a[href^="#"]');
+    const drawerLinks = document.querySelectorAll('#navDrawer .drawer-link, #navDrawer a[href^="#"]');
     drawerLinks.forEach(link => {
       link.addEventListener('click', (e) => {
+        if (link.id === 'drawerTermsBtn' || link.getAttribute('href') === '#terms' || link.getAttribute('href') === '#policy') {
+          e.preventDefault();
+          navDrawer.classList.remove('open');
+          drawerOverlay.classList.remove('active');
+          const policyModal = document.getElementById('policyModal');
+          if (policyModal) policyModal.style.display = 'flex';
+          return;
+        }
+
         const href = link.getAttribute('href');
         if (!href || href === '#') return;
 
         e.preventDefault();
         navDrawer.classList.remove('open');
         drawerOverlay.classList.remove('active');
+
+        // Close standalone product page if user was in it
+        closeProductPage(false);
 
         const filter = link.getAttribute('data-filter');
         if (filter) {
@@ -1535,11 +1672,21 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         setTimeout(() => {
-          const targetEl = document.querySelector(href);
+          let targetEl = document.querySelector(href);
+          if (!targetEl && href === '#community') targetEl = document.getElementById('sec-community');
+          if (!targetEl && href === '#about') targetEl = document.getElementById('sec-about');
+          if (!targetEl && href === '#collection') targetEl = document.getElementById('sec-collection');
+
           if (targetEl) {
-            targetEl.scrollIntoView({ behavior: 'smooth' });
+            const headerOffset = 70;
+            const elementPosition = targetEl.getBoundingClientRect().top;
+            const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+            window.scrollTo({
+              top: Math.max(0, offsetPosition),
+              behavior: 'smooth'
+            });
           }
-        }, 200);
+        }, 120);
       });
     });
 
@@ -1549,10 +1696,35 @@ document.addEventListener('DOMContentLoaded', () => {
         const href = link.getAttribute('href');
         if (!href || href === '#') return;
         e.preventDefault();
-        const targetEl = document.querySelector(href);
-        if (targetEl) {
-          targetEl.scrollIntoView({ behavior: 'smooth' });
+        closeProductPage(false);
+
+        const fFilter = link.getAttribute('data-footer-filter');
+        if (fFilter) {
+          state.activeCategory = fFilter;
+          const catPills = document.querySelectorAll('.cat-pill');
+          catPills.forEach(p => {
+            if (p.getAttribute('data-cat') === fFilter) p.classList.add('active');
+            else p.classList.remove('active');
+          });
+          renderProducts();
         }
+
+        setTimeout(() => {
+          let targetEl = document.querySelector(href);
+          if (!targetEl && href === '#community') targetEl = document.getElementById('sec-community');
+          if (!targetEl && href === '#about') targetEl = document.getElementById('sec-about');
+          if (!targetEl && href === '#collection') targetEl = document.getElementById('sec-collection');
+
+          if (targetEl) {
+            const headerOffset = 70;
+            const elementPosition = targetEl.getBoundingClientRect().top;
+            const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+            window.scrollTo({
+              top: Math.max(0, offsetPosition),
+              behavior: 'smooth'
+            });
+          }
+        }, 100);
       });
     });
 
@@ -1584,26 +1756,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (e.target === policyModal) policyModal.style.display = 'none';
       });
     }
-  }
-
-  // ================= NEWSLETTER FORMS (STAY CONNECTED) =================
-  function setupNewsletterForms() {
-    const forms = [
-      document.getElementById('drawerNewsletterForm'),
-      document.getElementById('footerNewsletterForm')
-    ];
-    forms.forEach(form => {
-      if (!form) return;
-      form.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const input = form.querySelector('input[type="email"]');
-        const email = input?.value.trim();
-        if (email) {
-          showToast('شكراً لانضمامك إلى Velen! استخدم كود الخصم (VELEN10) للحصول على 10% خصم فوري 🎉', 'success');
-          form.reset();
-        }
-      });
-    });
   }
 
   // ================= EVENT LISTENERS =================
@@ -1735,12 +1887,14 @@ document.addEventListener('DOMContentLoaded', () => {
       if (state.currentProductForModal?.sizeInventory) {
         const qty = state.currentProductForModal.sizeInventory[size];
         if (typeof qty !== 'undefined' && qty <= 0) {
-          showToast('هذا المقاس غير متوفر حالياً', 'info');
+          showToast(state.activeLang === 'ar' ? 'هذا المقاس غير متوفر حالياً' : 'This size is currently out of stock', 'info');
           return;
         }
       }
       state.selectedSize = size;
-      const boxes = document.querySelectorAll('#modalSizeBoxes .size-box');
+      const selectedLabel = document.getElementById('prodSelectedSizeLabel');
+      if (selectedLabel) selectedLabel.textContent = size;
+      const boxes = document.querySelectorAll('#pageProductSizeBoxes .prod-size-box, #modalSizeBoxes .size-box');
       boxes.forEach(b => {
         const letter = b.querySelector('.size-letter')?.textContent.trim() || b.textContent.trim();
         if (letter === size) b.classList.add('selected');
@@ -1749,15 +1903,17 @@ document.addEventListener('DOMContentLoaded', () => {
     },
     addCurrentModalToCart: () => {
       if (state.currentProductForModal) {
-        if (state.currentProductForModal.sizeInventory) {
-          const qty = state.currentProductForModal.sizeInventory[state.selectedSize];
+        const p = state.currentProductForModal;
+        const size = state.selectedSize || 'M';
+        if (p.sizeInventory) {
+          const qty = p.sizeInventory[size];
           if (typeof qty !== 'undefined' && qty <= 0) {
-            showToast('عذراً، هذا المقاس نفذت كميته', 'info');
+            showToast(state.activeLang === 'ar' ? 'عذراً، هذا المقاس نفذت كميته' : 'Sorry, this size is sold out', 'info');
             return;
           }
         }
-        addToCart(state.currentProductForModal, state.selectedSize, 1);
-        closeProductModal();
+        addToCart(p, size, 1);
+        openCart();
       }
     },
     quickAddToCart: (productId) => {

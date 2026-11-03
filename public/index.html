@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en" dir="ltr">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -151,14 +151,6 @@
         </div>
       </div>
 
-      <div class="drawer-newsletter">
-        <p class="newsletter-label" data-i18n="newsletterPrompt">Sign up for our newsletter</p>
-        <form id="drawerNewsletterForm" class="newsletter-form">
-          <input type="email" placeholder="Email address" required>
-          <button type="submit" aria-label="Subscribe"><i class="fa-solid fa-arrow-right"></i></button>
-        </form>
-      </div>
-
       <div class="drawer-bottom-brand">
         <h2>Velen Official</h2>
         <p class="origin-tag">Made with pride in Amman, Jordan 🇯🇴</p>
@@ -179,6 +171,8 @@
     </div>
   </div>
 
+  <!-- Home View Wrapper -->
+  <div id="homeView">
   <!-- Main Sections Container (Allows dynamic re-ordering and visibility by Admin) -->
   <main id="mainSectionsContainer">
     <!-- Hero Section (Exact design matching Screenshot 4) -->
@@ -194,8 +188,8 @@
           <img src="/assets/velen-logo.jpg" alt="Velen Logo" class="hero-logo-img" id="heroLogoImg">
         </div>
         <h1 class="hero-brand-name" id="heroBrandName">VELEN</h1>
-        <h2 class="hero-main-heading" id="heroMainHeading">Premium Everyday Essentials. Made in Jordan.</h2>
-        <p class="hero-tagline" id="heroTagline">CLEAN FITS. PREMIUM FEEL. BUILT FOR EVERYDAY WEAR.</p>
+        <h2 class="hero-main-heading" id="heroMainHeading" data-i18n="heroMainHeading">Premium Everyday Essentials. Made in Jordan.</h2>
+        <p class="hero-tagline" id="heroTagline" data-i18n="heroTagline">CLEAN FITS. PREMIUM FEEL. BUILT FOR EVERYDAY WEAR.</p>
         <div class="hero-cta-wrap">
           <a href="#collection" class="btn-velen-primary" id="heroShopBtn" data-i18n="heroShopBtn">
             SHOP THE COLLECTION
@@ -208,15 +202,15 @@
     <div class="value-props-bar" id="sec-valueProps">
       <div class="prop-item">
         <i class="fa-solid fa-truck-fast"></i>
-        <span id="propText1" data-i18n="prop1">توصيل مجاني في عمّان وبدينار لكافة المحافظات</span>
+        <span id="propText1" data-i18n="prop1">Free Delivery in Amman • 1 JD Jordan-wide</span>
       </div>
       <div class="prop-item">
         <i class="fa-solid fa-crown"></i>
-        <span id="propText2" data-i18n="prop2">قطن أردني فاخر 260 GSM معالج ومثبت</span>
+        <span id="propText2" data-i18n="prop2">Jordanian Luxury Heavyweight Cotton 260 GSM</span>
       </div>
       <div class="prop-item">
         <i class="fa-solid fa-rotate-left"></i>
-        <span id="propText3" data-i18n="prop3">تبديل فوري للمقاس عند باب البيت</span>
+        <span id="propText3" data-i18n="prop3">Hassle-free doorstep size exchange</span>
       </div>
     </div>
 
@@ -225,18 +219,18 @@
     <section class="collection-section" id="sec-collection">
       <div class="section-container">
         <div class="collection-header">
-          <span class="section-sub" id="collectionSubtitle">AUTUMN / ESSENTIALS 2026</span>
-          <h2 class="section-title" id="collectionTitle">THE COLLECTION</h2>
+          <span class="section-sub" id="collectionSubtitle" data-i18n="collectionSubtitle">AUTUMN / ESSENTIALS 2026</span>
+          <h2 class="section-title" id="collectionTitle" data-i18n="collectionTitle">THE COLLECTION</h2>
           <div class="collection-line"></div>
         </div>
 
         <!-- Categories Filter Tabs -->
         <div class="category-tabs" id="categoryTabs">
-          <button class="cat-pill active" data-cat="all">All Essentials</button>
-          <button class="cat-pill" data-cat="Tees">Tees</button>
-          <button class="cat-pill" data-cat="Ringer">Ringer Edition</button>
-          <button class="cat-pill" data-cat="Boxy">Boxy & Cropped</button>
-          <button class="cat-pill" data-cat="Hoodies">Hoodies</button>
+          <button class="cat-pill active" data-cat="all" data-i18n="catAll">All Essentials</button>
+          <button class="cat-pill" data-cat="Tees" data-i18n="catTees">Tees</button>
+          <button class="cat-pill" data-cat="Ringer" data-i18n="catRinger">Ringer Edition</button>
+          <button class="cat-pill" data-cat="Boxy" data-i18n="catBoxy">Boxy & Cropped</button>
+          <button class="cat-pill" data-cat="Hoodies" data-i18n="catHoodies">Hoodies</button>
         </div>
 
         <!-- Realtime Admin Notification Banner -->
@@ -255,18 +249,18 @@
     <section class="community-section" id="sec-community">
       <div class="section-container">
         <div class="community-header">
-          <h2 class="community-title" id="communityTitle">COMMUNITY WEARS VELEN</h2>
-          <p class="community-subtitle" id="communitySubtitle">Real people. Real style.</p>
-          <p class="community-desc" id="communityDesc">شاركنا لوكك اليومي وفيديوهاتك مع قطع Velen، وقيم تجربتك من 5 نجوم لتدخل السحب الأسبوعي على بوكس إسنشيلز كامل!</p>
+          <h2 class="community-title" id="communityTitle" data-i18n="communityTitle">COMMUNITY WEARS VELEN</h2>
+          <p class="community-subtitle" id="communitySubtitle" data-i18n="communitySubtitle">Real people. Real style.</p>
+          <p class="community-desc" id="communityDesc" data-i18n="communityDesc">Share your daily looks and videos in VELEN and rate your experience out of 5 stars for a chance to win a full essentials box in our weekly draw</p>
           
           <div class="community-actions-bar">
             <button id="addLookBtn" class="btn-community-share" data-i18n="addLookBtn">
-              <i class="fa-solid fa-camera"></i> شارك صورتك أو ريلز ستايلك + تقييم 5 نجوم
+              <i class="fa-solid fa-camera"></i> Share your look & 5-star review
             </button>
             <div class="community-filter-pills">
-              <button class="comm-pill active" data-comm-filter="all" data-i18n="allPosts">جميع المشاركات</button>
-              <button class="comm-pill" data-comm-filter="video" data-i18n="videoReels"><i class="fa-solid fa-play"></i> فيديو ريلز</button>
-              <button class="comm-pill" data-comm-filter="5star" data-i18n="fiveStarsOnly">★★★★★ (5 نجوم فقط)</button>
+              <button class="comm-pill active" data-comm-filter="all" data-i18n="allPosts">All Looks</button>
+              <button class="comm-pill" data-comm-filter="video" data-i18n="videoReels"><i class="fa-solid fa-play"></i> Reels Videos</button>
+              <button class="comm-pill" data-comm-filter="5star" data-i18n="fiveStarsOnly">★★★★★ (5 Stars Only)</button>
             </div>
           </div>
         </div>
@@ -345,23 +339,11 @@
 
         <div class="footer-col">
           <h4 class="footer-heading" data-i18n="stayConnected">STAY CONNECTED</h4>
-          <p class="footer-note" data-i18n="stayConnectedNote">تابعنا على منصاتنا لتكون أول من يعرف عن الدروبات الجديدة والخصومات:</p>
+          <p class="footer-note" data-i18n="stayConnectedNote">Follow our official channels to be the first to know about new drops and exclusive offers:</p>
           <div class="footer-social-links">
             <a href="https://instagram.com/velenofficial" target="_blank" class="social-icon" id="footerInstaLink" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
             <a href="https://tiktok.com/@velenofficial" target="_blank" class="social-icon" id="footerTiktokLink" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
             <a href="https://wa.me/962770188144" target="_blank" class="social-icon" id="footerWaLink" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
-          </div>
-        </div>
-
-        <div class="footer-col newsletter-col">
-          <h4 class="footer-heading" data-i18n="newsletterHeading">Sign up for our newsletter</h4>
-          <p class="footer-note" data-i18n="newsletterDesc">اشترك لتحصل على كود خصم 10% (VELEN10) على طلبك القادم ووصول مبكر للدروبات الحصرية.</p>
-          <form id="footerNewsletterForm" class="footer-form">
-            <input type="email" placeholder="Email address" required>
-            <button type="submit" aria-label="Subscribe"><i class="fa-solid fa-arrow-right"></i></button>
-          </form>
-          <div id="footerNewsletterSuccess" style="display:none; color:#2ecc71; font-size:12px; margin-top:6px;">
-            🎉 شكراً لاشتراكك! كود خصمك هو: <strong>VELEN10</strong>
           </div>
         </div>
       </div>
@@ -372,16 +354,40 @@
       </div>
 
       <div class="footer-bottom-bar">
-        <div class="copyright">
-          © 2026 VELEN OFFICIAL. ALL RIGHTS RESERVED. MADE IN JORDAN 🇯🇴
+        <div class="copyright" data-i18n="footerCopyright">
+          © 2026 VELEN OFFICIAL. MADE WITH PRIDE IN AMMAN, JORDAN 🇯🇴
         </div>
         <div class="payment-methods">
-          <span><i class="fa-solid fa-money-bill-wave"></i> الدفع عند الاستلام (COD)</span>
-          <span><i class="fa-solid fa-bolt"></i> كليك CliQ</span>
+          <span data-i18n="codBadge"><i class="fa-solid fa-money-bill-wave"></i> Cash on Delivery (COD)</span>
+          <span data-i18n="cliqBadge"><i class="fa-solid fa-bolt"></i> Instant CliQ</span>
         </div>
       </div>
     </div>
   </footer>
+  </div> <!-- end #homeView -->
+
+  <!-- ================= DEDICATED FULL PRODUCT PAGE VIEW (Zero stacking, zero freeze) ================= -->
+  <section id="productPage" class="dedicated-product-page" style="display:none;">
+    <!-- Sticky Product Page Top Bar -->
+    <header class="product-page-nav">
+      <button type="button" id="btnBackToStore" class="btn-back-link">
+        <i class="fa-solid fa-arrow-left rtl-flip"></i>
+        <span data-i18n="backToStore">Back to Store</span>
+      </button>
+      <div class="product-page-brand">
+        <img src="/assets/velen-logo.jpg" alt="Velen" class="nav-brand-logo">
+        <span>Velen Official</span>
+      </div>
+      <button type="button" class="icon-btn cart-btn" id="prodPageCartBtn" aria-label="Shopping Cart">
+        <i class="fa-solid fa-bag-shopping"></i>
+        <span id="prodPageCartBadge" class="cart-badge">0</span>
+      </button>
+    </header>
+
+    <div class="product-page-container" id="productPageDetails">
+      <!-- Populated dynamically -->
+    </div>
+  </section>
 
   <!-- ================= MODALS & DRAWERS ================= -->
 
@@ -531,60 +537,60 @@
       <button id="checkoutModalClose" class="modal-close-icon"><i class="fa-solid fa-xmark"></i></button>
       <div class="checkout-head">
         <img src="/assets/velen-logo.jpg" alt="Velen" class="checkout-logo">
-        <h3>تأكيد الطلب السريع — Velen Jordan</h3>
-        <p>التوصيل مجاناً في عمّان • 1 دينار لجميع المحافظات • الدفع عند الاستلام</p>
+        <h3 data-i18n="checkoutTitle">Express Checkout — Velen Jordan</h3>
+        <p data-i18n="checkoutSub">Free Delivery in Amman • 1 JD Nationwide • Cash on Delivery</p>
       </div>
 
       <form id="checkoutForm" class="checkout-form">
         <div class="checkout-body-grid">
           <div class="checkout-inputs">
             <div class="form-group">
-              <label>الاسم الكامل *</label>
-              <input type="text" id="custName" placeholder="مثال: يوسف الخالد" required>
+              <label data-i18n="fullNameLabel">Full Name *</label>
+              <input type="text" id="custName" placeholder="e.g. Zaid Kurdi" data-i18n-ph="fullNamePlaceholder" required>
             </div>
 
             <div class="form-group">
-              <label data-i18n="checkoutPhoneLabel">رقم الهاتف (07XXXXXXXX) *</label>
+              <label data-i18n="checkoutPhoneLabel">Phone Number (07XXXXXXXX) *</label>
               <input type="tel" id="custPhone" placeholder="07XXXXXXXX" pattern="07[0-9]{8}" maxlength="10" required>
-              <small style="color:#888; font-size:10px;">رقم هاتف أردني يتكون من 10 أرقام يبدأ بـ 07 (مثال: 0791234567)</small>
+              <small data-i18n="phoneHelper" style="color:#888; font-size:10px;">Jordan mobile number (10 digits starting with 07, e.g. 0791234567)</small>
             </div>
 
             <div class="form-row">
               <div class="form-group">
-                <label>المحافظة / المدينة *</label>
+                <label data-i18n="cityLabel">City / Governorate *</label>
                 <select id="custCity" required>
-                  <option value="Amman" data-shipping="0">عمّان (توصيل مجاني)</option>
-                  <option value="Zarqa" data-shipping="1">الزرقاء (1 دينار)</option>
-                  <option value="Irbid" data-shipping="1">إربد (1 دينار)</option>
-                  <option value="Balqa" data-shipping="1">البلقاء / السلط (1 دينار)</option>
-                  <option value="Madaba" data-shipping="1">مأدبا (1 دينار)</option>
-                  <option value="Aqaba" data-shipping="1">العقبة (1 دينار)</option>
-                  <option value="Mafraq" data-shipping="1">المفرق (1 دينار)</option>
-                  <option value="Jerash" data-shipping="1">جرش (1 دينار)</option>
-                  <option value="Ajloun" data-shipping="1">عجلون (1 دينار)</option>
-                  <option value="Karak" data-shipping="1">الكرك (1 دينار)</option>
-                  <option value="Tafilah" data-shipping="1">الطفيلة (1 دينار)</option>
-                  <option value="Maan" data-shipping="1">معان (1 دينار)</option>
+                  <option value="Amman" data-shipping="0">Amman (Free Delivery)</option>
+                  <option value="Zarqa" data-shipping="1">Zarqa (1 JD)</option>
+                  <option value="Irbid" data-shipping="1">Irbid (1 JD)</option>
+                  <option value="Balqa" data-shipping="1">Balqa / Salt (1 JD)</option>
+                  <option value="Madaba" data-shipping="1">Madaba (1 JD)</option>
+                  <option value="Aqaba" data-shipping="1">Aqaba (1 JD)</option>
+                  <option value="Mafraq" data-shipping="1">Mafraq (1 JD)</option>
+                  <option value="Jerash" data-shipping="1">Jerash (1 JD)</option>
+                  <option value="Ajloun" data-shipping="1">Ajloun (1 JD)</option>
+                  <option value="Karak" data-shipping="1">Karak (1 JD)</option>
+                  <option value="Tafilah" data-shipping="1">Tafilah (1 JD)</option>
+                  <option value="Maan" data-shipping="1">Ma'an (1 JD)</option>
                 </select>
               </div>
 
               <div class="form-group">
-                <label>طريقة الدفع *</label>
+                <label data-i18n="paymentLabel">Payment Method *</label>
                 <select id="custPayment" required>
-                  <option value="Cash on Delivery (دفع عند الاستلام)">الدفع نقداً عند الاستلام (COD)</option>
-                  <option value="CliQ (كليك)">تحويل فوري كليك (CliQ)</option>
+                  <option value="Cash on Delivery (دفع عند الاستلام)">Cash on Delivery (COD)</option>
+                  <option value="CliQ (كليك)">Instant CliQ Transfer</option>
                 </select>
               </div>
             </div>
 
             <div class="form-group">
-              <label>العنوان بالتفصيل (المنطقة، الشارع، رقم البناية) *</label>
-              <input type="text" id="custAddress" placeholder="مثال: الصويفية، شارع باريس، عمارة 12، بجانب..." required>
+              <label data-i18n="addressLabel">Delivery Address *</label>
+              <input type="text" id="custAddress" placeholder="Area, street name, building number..." data-i18n-ph="addressPlaceholder" required>
             </div>
 
             <div class="form-group">
-              <label>ملاحظات إضافية للتوصيل (اختياري)</label>
-              <input type="text" id="custNotes" placeholder="مثال: يرجى الاتصال قبل الوصول بنصف ساعة">
+              <label data-i18n="notesLabel">Delivery Notes (Optional)</label>
+              <input type="text" id="custNotes" placeholder="e.g. Please call 15 minutes before arrival" data-i18n-ph="notesPlaceholder">
             </div>
           </div>
 
