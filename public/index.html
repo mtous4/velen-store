@@ -544,9 +544,9 @@
             </div>
 
             <div class="form-group">
-              <label>رقم الهاتف (أردني) *</label>
-              <input type="tel" id="custPhone" placeholder="07XXXXXXXX أو 9627XXXXXXXX أو +9627XXXXXXXX" required>
-              <small style="color:#888; font-size:10px;">يقبل الأرقام بصيغة 07... أو 962... أو +962...</small>
+              <label data-i18n="checkoutPhoneLabel">رقم الهاتف (07XXXXXXXX) *</label>
+              <input type="tel" id="custPhone" placeholder="07XXXXXXXX" pattern="07[0-9]{8}" maxlength="10" required>
+              <small style="color:#888; font-size:10px;">رقم هاتف أردني يتكون من 10 أرقام يبدأ بـ 07 (مثال: 0791234567)</small>
             </div>
 
             <div class="form-row">

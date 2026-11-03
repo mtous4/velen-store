@@ -194,6 +194,7 @@ app.use((req, res, next) => {
   next();
 });
 
+app.use('/uploads', express.static(UPLOADS_DIR));
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Configure Multer for media uploads (Images and Videos)

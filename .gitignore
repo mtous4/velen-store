@@ -16,4 +16,6 @@ Thumbs.db
 .env.local
 firebase-key.json
 serviceAccountKey.json
-
+# Uploads
+public/uploads/*
+!public/uploads/.gitkeep

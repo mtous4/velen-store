@@ -96,6 +96,8 @@ document.addEventListener('DOMContentLoaded', () => {
       sizeGuide: 'دليل المقاسات',
       selectSize: 'اختر المقاس:',
       careInstructions: 'تعليمات العناية',
+      checkoutPhoneLabel: 'رقم الهاتف (07XXXXXXXX) *',
+      phonePlaceholder: '07XXXXXXXX',
       footerCopyright: '© 2026 VELEN OFFICIAL. صنع بكل فخر في عمّان، الأردن 🇯🇴'
     },
     en: {
@@ -144,8 +146,9 @@ document.addEventListener('DOMContentLoaded', () => {
       upsellAdded: '✓ Added to Order',
       fullNameLabel: 'Full Name *',
       fullNamePlaceholder: 'e.g. Zaid Kurdi',
-      phoneLabel: 'Phone Number *',
-      phonePlaceholder: '079XXXXXXX or +9627XXXXXXXX',
+      checkoutPhoneLabel: 'Phone Number (07XXXXXXXX) *',
+      phoneLabel: 'Phone Number (07XXXXXXXX) *',
+      phonePlaceholder: '07XXXXXXXX',
       cityLabel: 'City / Governorate *',
       addressLabel: 'Delivery Address *',
       addressPlaceholder: 'Area, street name, building number, nearby landmark',
@@ -633,12 +636,12 @@ document.addEventListener('DOMContentLoaded', () => {
         <div class="comm-card" data-comm-id="${item.id}">
           <div class="comm-media-wrap">
             ${isVideo ? `
-              <video src="${item.videoUrl || item.mediaUrl}" poster="${item.mediaUrl}" loop muted playsinline autoplay></video>
+              <video src="${item.videoUrl || item.mediaUrl}" poster="${item.mediaUrl || '/assets/velen-boxy-white.jpg'}" loop muted playsinline autoplay onerror="this.style.display='none';"></video>
               <button class="comm-sound-btn" onclick="window.velenApp.toggleVideoSound(this)" title="كتم/تشغيل الصوت">
                 <i class="fa-solid fa-volume-xmark"></i>
               </button>
             ` : `
-              <img src="${item.mediaUrl}" alt="${item.subtitle || 'Velen Fit'}" loading="lazy">
+              <img src="${item.mediaUrl}" alt="${item.subtitle || 'Velen Fit'}" loading="lazy" onerror="this.onerror=null; this.src='/assets/velen-boxy-white.jpg';">
             `}
             <span class="comm-tag-badge">${item.subtitle || 'ستايل Velen'}</span>
           </div>
@@ -847,7 +850,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 if (isOutOfStock) {
                   return `
-                    <button class="size-box out-of-stock" disabled title="هذا المقاس نفذت كميته حالياً">
+                    <button class="size-box out-of-stock" disabled title="نفذ">
                       <span class="size-letter">${size}</span>
                       <span class="stock-sub-badge">نفذ</span>
                     </button>
@@ -855,9 +858,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
 
                 return `
-                  <button class="size-box ${isSelected ? 'selected' : ''}" onclick="window.velenApp.selectModalSize('${size}')" title="${qty <= 5 ? `متبقي ${qty} فقط!` : 'متوفر'}">
+                  <button class="size-box ${isSelected ? 'selected' : ''}" onclick="window.velenApp.selectModalSize('${size}')">
                     <span class="size-letter">${size}</span>
-                    ${qty <= 3 ? `<span class="stock-sub-badge low">بقي ${qty}</span>` : ''}
                   </button>
                 `;
               }).join('')}
@@ -1127,21 +1129,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // Phone normalization for Jordan (+962, 962, 07, 7)
+  // Phone normalization for Jordan - strictly 07XXXXXXXX format
   function normalizeJordanPhone(phone) {
-    let cleaned = phone.replace(/[\s\-\(\)]/g, '');
-    if (cleaned.startsWith('+')) cleaned = cleaned.substring(1);
+    let cleaned = (phone || '').replace(/[\s\-\(\)\+]/g, '');
     if (cleaned.startsWith('00962')) cleaned = cleaned.substring(5);
-    if (cleaned.startsWith('962')) {
-      return '+' + cleaned;
-    }
-    if (cleaned.startsWith('07')) {
-      return '+962' + cleaned.substring(1);
-    }
+    if (cleaned.startsWith('962')) cleaned = cleaned.substring(3);
     if (cleaned.startsWith('7') && cleaned.length === 9) {
-      return '+962' + cleaned;
+      cleaned = '0' + cleaned;
     }
-    return '+' + cleaned;
+    return cleaned;
   }
 
   // Active Cart Heartbeat to server
@@ -1166,6 +1162,20 @@ document.addEventListener('DOMContentLoaded', () => {
       custCity.addEventListener('change', renderCheckoutSummary);
     }
 
+    const phoneInput = document.getElementById('custPhone');
+    if (phoneInput) {
+      phoneInput.addEventListener('input', (e) => {
+        let val = e.target.value.replace(/[^0-9]/g, '');
+        if (val.length > 10) val = val.substring(0, 10);
+        e.target.value = val;
+      });
+      phoneInput.addEventListener('blur', (e) => {
+        if (e.target.value) {
+          e.target.value = normalizeJordanPhone(e.target.value);
+        }
+      });
+    }
+
     const checkoutForm = document.getElementById('checkoutForm');
     if (checkoutForm) {
       checkoutForm.addEventListener('submit', async (e) => {
@@ -1179,8 +1189,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const address = document.getElementById('custAddress').value.trim();
         const notes = document.getElementById('custNotes').value.trim();
 
-        if (phone.replace(/[^0-9]/g, '').length < 8) {
-          showToast('يرجى التأكد من كتابة رقم الهاتف الأردني بشكل صحيح', 'error');
+        if (!/^07\d{8}$/.test(phone)) {
+          showToast('يرجى كتابة رقم الهاتف الأردني بصيغة 07XXXXXXXX (10 أرقام، مثال: 0791234567)', 'error');
+          document.getElementById('custPhone').focus();
           return;
         }
 

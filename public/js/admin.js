@@ -43,6 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setupManualOrders();
     setupLiveView();
     setupWaybillModal();
+    setupAdminCommunityPost();
     await fetchAllData();
     initWebSocket();
     setInterval(fetchActiveCarts, 15000);
@@ -409,9 +410,9 @@ document.addEventListener('DOMContentLoaded', () => {
       <div class="admin-comm-card">
         <div class="admin-comm-media">
           ${c.mediaType === 'video' || c.videoUrl ? `
-            <video src="${c.videoUrl || c.mediaUrl}" poster="${c.mediaUrl}" controls></video>
+            <video src="${c.videoUrl || c.mediaUrl}" poster="${c.mediaUrl || '/assets/velen-boxy-white.jpg'}" controls onerror="this.style.display='none';"></video>
           ` : `
-            <img src="${c.mediaUrl}">
+            <img src="${c.mediaUrl}" onerror="this.onerror=null; this.src='/assets/velen-boxy-white.jpg';">
           `}
         </div>
         <div class="admin-comm-body">
@@ -1690,7 +1691,7 @@ document.addEventListener('DOMContentLoaded', () => {
               
               <div style="font-size: 11px; color: #666; font-weight: 600; margin-top: 10px;">رقم هاتف العميل للتوصيل:</div>
               <div style="font-size: 19px; font-weight: 900; color: #000; direction: ltr; text-align: right; display: flex; align-items: center; gap: 6px; margin-top: 2px;">
-                <i class="fa-brands fa-whatsapp" style="color: #25d366;"></i> ${o.phone}
+                <i class="fa-brands fa-whatsapp" style="color: #25d366;"></i> ${formatCleanPhone(o.phone)}
               </div>
             </div>
 
@@ -1920,7 +1921,18 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         const custName = document.getElementById('manCustName').value.trim();
-        const custPhone = document.getElementById('manCustPhone').value.trim();
+        const rawPhone = document.getElementById('manCustPhone').value.trim();
+        let custPhone = rawPhone.replace(/[\s\-\(\)\+]/g, '');
+        if (custPhone.startsWith('00962')) custPhone = custPhone.substring(5);
+        if (custPhone.startsWith('962')) custPhone = custPhone.substring(3);
+        if (custPhone.startsWith('7') && custPhone.length === 9) custPhone = '0' + custPhone;
+
+        if (!/^07\d{8}$/.test(custPhone)) {
+          showAdminToast('يرجى إدخال رقم هاتف يبدأ بـ 07 ويتكون من 10 أرقام (مثال: 0791234567)', 'error');
+          document.getElementById('manCustPhone').focus();
+          return;
+        }
+
         const city = citySelect.value;
         const address = document.getElementById('manCustAddress').value.trim();
         const notes = document.getElementById('manCustNotes').value.trim();
@@ -2063,5 +2075,172 @@ document.addEventListener('DOMContentLoaded', () => {
     const modal = document.getElementById('waybillModal');
     const closeBtn = document.getElementById('closeWaybillModal');
     if (closeBtn) closeBtn.addEventListener('click', () => modal.classList.remove('active'));
+  }
+
+  function formatCleanPhone(phone) {
+    let cleaned = (phone || '').replace(/[\s\-\(\)\+]/g, '');
+    if (cleaned.startsWith('00962')) cleaned = cleaned.substring(5);
+    if (cleaned.startsWith('962')) cleaned = cleaned.substring(3);
+    if (cleaned.startsWith('7') && cleaned.length === 9) cleaned = '0' + cleaned;
+    return cleaned;
+  }
+
+  // ================= SETUP ADMIN OFFICIAL COMMUNITY POST =================
+  function setupAdminCommunityPost() {
+    const openBtn = document.getElementById('adminAddCommunityLookBtn');
+    const modal = document.getElementById('adminCommunityPostModal');
+    const closeBtn = document.getElementById('closeAdminCommModal');
+    const cancelBtn = document.getElementById('cancelAdminCommModal');
+    const form = document.getElementById('adminCommPostForm');
+    const dropzone = document.getElementById('adminCommDropzone');
+    const fileInput = document.getElementById('adminCommFileInput');
+    const preview = document.getElementById('adminCommFilePreview');
+    const itemSelect = document.getElementById('adminCommItemWorn');
+    const urlInput = document.getElementById('adminCommUrlInput');
+
+    let uploadedMediaUrl = null;
+    let uploadedMediaType = 'photo';
+
+    if (!openBtn || !modal) return;
+
+    function populateItemWornDropdown() {
+      if (!itemSelect) return;
+      itemSelect.innerHTML = (state.products || []).map(p => `
+        <option value="${p.name}">${p.name} (${p.category})</option>
+      `).join('');
+    }
+
+    openBtn.addEventListener('click', () => {
+      populateItemWornDropdown();
+      modal.classList.add('active');
+    });
+
+    const closeModal = () => {
+      modal.classList.remove('active');
+      form.reset();
+      uploadedMediaUrl = null;
+      if (preview) {
+        preview.style.display = 'none';
+        preview.innerHTML = '';
+      }
+      if (dropzone) {
+        dropzone.style.display = 'block';
+        dropzone.innerHTML = `
+          <i class="fa-solid fa-cloud-arrow-up" style="font-size:28px; color:var(--gold-accent); margin-bottom:8px; display:block;"></i>
+          <p style="margin:0; font-size:13px; color:#fff;">اسحب وأفلت الفيديو أو الصورة هنا أو اضغط للاختيار</p>
+          <span style="font-size:11px; color:#777; display:block; margin-top:4px;">يدعم MP4, MOV, JPG, PNG حتى 50MB</span>
+        `;
+      }
+    };
+
+    if (closeBtn) closeBtn.addEventListener('click', closeModal);
+    if (cancelBtn) cancelBtn.addEventListener('click', closeModal);
+
+    async function handleAdminUpload(file) {
+      if (!file) return;
+      const formData = new FormData();
+      formData.append('media', file);
+
+      if (dropzone) dropzone.innerHTML = `<i class="fa-solid fa-spinner fa-spin" style="font-size:24px; color:var(--gold-accent);"></i><p style="margin-top:6px; color:#fff;">جاري رفع الملف للسيرفر...</p>`;
+
+      try {
+        const res = await fetch('/api/upload', {
+          method: 'POST',
+          body: formData
+        });
+        const data = await res.json();
+        if (data.success) {
+          uploadedMediaUrl = data.url;
+          uploadedMediaType = data.mediaType;
+
+          if (dropzone) dropzone.style.display = 'none';
+          if (preview) {
+            preview.style.display = 'block';
+            if (uploadedMediaType === 'video') {
+              preview.innerHTML = `<video src="${uploadedMediaUrl}" controls autoplay muted style="width:100%; height:200px; object-fit:cover;"></video>`;
+            } else {
+              preview.innerHTML = `<img src="${uploadedMediaUrl}" style="width:100%; height:200px; object-fit:cover;">`;
+            }
+          }
+          showAdminToast('تم رفع ملف الوسائط بنجاح!', 'success');
+        } else {
+          showAdminToast('فشل رفع الملف', 'error');
+          closeModal();
+        }
+      } catch (err) {
+        console.error('Admin comm upload error:', err);
+        showAdminToast('خطأ في الاتصال أثناء الرفع', 'error');
+      }
+    }
+
+    if (dropzone && fileInput) {
+      dropzone.addEventListener('click', () => fileInput.click());
+      dropzone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropzone.style.borderColor = 'var(--gold-accent)';
+      });
+      dropzone.addEventListener('dragleave', (e) => {
+        e.preventDefault();
+        dropzone.style.borderColor = '#444';
+      });
+      dropzone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropzone.style.borderColor = '#444';
+        const file = e.dataTransfer.files[0];
+        if (file) handleAdminUpload(file);
+      });
+      fileInput.addEventListener('change', () => {
+        const file = fileInput.files[0];
+        if (file) handleAdminUpload(file);
+      });
+    }
+
+    if (form) {
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const author = document.getElementById('adminCommAuthor').value.trim();
+        const authorTag = document.getElementById('adminCommTag').value.trim();
+        const itemWorn = itemSelect ? itemSelect.value : 'VELEN Essential';
+        const rating = parseInt(document.getElementById('adminCommRating').value, 10) || 5;
+        const comment = document.getElementById('adminCommComment').value.trim();
+        const extUrl = urlInput ? urlInput.value.trim() : '';
+
+        const finalMediaUrl = uploadedMediaUrl || (extUrl !== '' ? extUrl : '/assets/velen-boxy-white.jpg');
+        const isVideo = finalMediaUrl && (uploadedMediaType === 'video' || finalMediaUrl.endsWith('.mp4') || finalMediaUrl.includes('video'));
+
+        const payload = {
+          author,
+          authorTag,
+          avatar: '/assets/velen-logo.jpg',
+          mediaType: isVideo ? 'video' : 'photo',
+          mediaUrl: finalMediaUrl,
+          videoUrl: isVideo ? finalMediaUrl : null,
+          subtitle: `${itemWorn} - VELEN Official`,
+          rating,
+          comment,
+          itemWorn
+        };
+
+        try {
+          const res = await fetch('/api/community', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+          const data = await res.json();
+          if (data.success) {
+            closeModal();
+            showAdminToast('تم نشر البوست الرسمي في مجتمع VELEN بنجاح!', 'success');
+            state.community.unshift(data.post);
+            renderCommunity();
+          } else {
+            showAdminToast(data.message || 'فشل نشر البوست', 'error');
+          }
+        } catch (err) {
+          console.error('Post submit error:', err);
+          showAdminToast('خطأ في الاتصال بالخادم', 'error');
+        }
+      });
+    }
   }
 });
