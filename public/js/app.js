@@ -166,9 +166,62 @@ document.addEventListener('DOMContentLoaded', () => {
       fabricDetails: 'تفاصيل القماش:',
       description: 'الوصف:',
       freeDeliveryAmman: 'توصيل مجاني وسريع داخل عمّان • 1 دينار للمحافظات',
-      fabricCare: 'دليل العناية بالأقمشة',
+      fabricCare: 'دليل العناية بالملابس (260 GSM)',
       termsOfService: 'الشروط والأحكام والتوصيل',
-      footerCopyright: '© 2026 VELEN OFFICIAL. صنع بكل فخر في عمّان، الأردن 🇯🇴'
+      footerCopyright: '© 2026 VELEN OFFICIAL. صنع بكل فخر في عمّان، الأردن 🇯🇴',
+      // Cart Drawer Footer
+      cartSubtotalLabel: 'المجموع الفرعي:',
+      cartDeliveryLabel: 'التوصيل (عمّان):',
+      cartTotalLabel: 'الإجمالي النهائي:',
+      cartCheckoutBtn: 'المتابعة لإتمام الطلب (الدفع عند الاستلام)',
+      promoDiscountLabel: 'خصم كود الترويجي:',
+      freeDeliveryTag: 'مجاناً (0.000 JOD)',
+      promoPlaceholder: 'كود الخصم (Promo Code)',
+      applyPromoBtn: 'تطبيق',
+      // Community Form
+      commAuthorLabel: 'اسم حسابك على انستغرام أو اسمك *',
+      commAuthorPh: 'مثال: @khalid.jo',
+      commMediaLabel: 'الصورة أو الفيديو / الريلز',
+      requiredLabel: '*مطلوب',
+      cancelMediaBtn: 'إلغاء الميديا',
+      commDropzoneText: 'اسحب وأفلت الصورة أو الفيديو هنا أو اضغط للاختيار',
+      commDropzoneHint: 'يدعم MP4, MOV, JPG, PNG حتى 50MB',
+      commOrUrl: 'أو رابط مباشر للصورة / الفيديو:',
+      commUrlPh: 'https://example.com/photo.jpg',
+      commCaptionLabel: 'كابشن / تعليق (اختياري)',
+      commCaptionPh: 'شاركنا رأيك في المقاس أو القطعة أو ستايلك!',
+      commSubmitBtn: 'نشر في المجتمع الآن',
+      // Policy View
+      breadcrumbShipping: 'الشحن والتبديل',
+      policyShippingTitle: 'سياسة الشحن والتبديل',
+      policyShippingSub: 'معاينة المقاس عند الاستلام • توصيل مجاني في عمّان • 1 دينار للمحافظات',
+      shippingBadgeRates: 'توصيل سريع وموثوق',
+      policyDeliveryHeading: 'مواعيد وأسعار التوصيل',
+      shippingBadgeExchange: 'بدون أي مخاطرة',
+      policyExchangeHeading: 'التبديل الفوري عند باب البيت',
+      shippingBadgePayment: 'مرونة الدفع',
+      policyPaymentHeading: 'خيارات الدفع المتاحة',
+      policyContactHeading: 'هل تحتاج مساعدة في طلبك؟',
+      policyContactText: 'فريق فيلين متواجد يومياً عبر واتساب لمساعدتك في اختيار المقاس أو تعديل العنوان فوراً.',
+      // Care View
+      breadcrumbCare: 'دليل العناية بالملابس',
+      carePageTitle: 'دليل العناية بالقطن الثقيل 260 GSM',
+      carePageSub: 'بروتوكول الحفاظ على النسيج وقَصّة البوكسي لسنوات طويلة',
+      careBadge: 'ميزات قطن 260 GSM',
+      careIntroTitle: 'صُنعت لتدوم طويلاً',
+      careIntroDesc: 'قطع فيلين مصنوعة من قطن ممشط ثقيل وفاخر بوزن 260 GSM. للحفاظ على كثافة النسيج، ونقاء الألوان، وقَصّة البوكسي الفاخرة لسنوات طويلة، يرجى اتباع التعليمات المعتمدة أدناه.',
+      careStep1Title: 'غسيل بالماء البارد (30°C)',
+      careStep1Desc: 'غسيل بحد أقصى 30 درجة مئوية مع ألوان مماثلة للحفاظ على نعومة الألياف ومنع انكماش الغزل.',
+      careStep2Title: 'الغسيل من الداخل للخارج',
+      careStep2Desc: 'اقلب القطعة دائماً قبل وضعها في الغسالة لحماية الطباعة وتفاصيل البراند من الاحتكاك.',
+      careStep3Title: 'تجنب مبيضات الكلور',
+      careStep3Desc: 'استخدم مسحوق غسيل معتدل خالي من الكلور أو المبيضات القوية لحماية صبغة القماش الطبيعية.',
+      careStep4Title: 'التجفيف في الظل',
+      careStep4Desc: 'انشر القطعة في الظل وتجنب التجفيف بالنشافة الحرارية الساخنة للحفاظ على أبعاد القطن.',
+      careStep5Title: 'الكي بدرجة حرارة خفيفة',
+      careStep5Desc: 'عند الحاجة للكي، اكوي القطعة من الداخل بدرجة حرارة منخفضة، وتجنب ملامسة المكواة للطباعة مباشرة.',
+      careStep6Title: 'الطي بدلاً من الشماعات الرفيعة',
+      careStep6Desc: 'نظراً لوزن القماش الفاخر 260 GSM، يفضل طي التيشيرت على الرف بدلاً من تعليقه على شماعات سلكية رفيعة لمنع تمدد الأكتاف.'
     },
     en: {
       langToggle: 'عربي',
@@ -311,11 +364,81 @@ document.addEventListener('DOMContentLoaded', () => {
       fabricDetails: 'Fabric Details:',
       description: 'Description:',
       freeDeliveryAmman: 'Fast & Free Delivery in Amman • 1 JD Jordan-wide',
-      fabricCare: 'Fabric & Care Guide',
+      fabricCare: 'Fabric & Garment Care Guide (260 GSM)',
       termsOfService: 'Terms & Shipping Policy',
-      footerCopyright: '© 2026 VELEN OFFICIAL. Made with pride in Amman, Jordan 🇯🇴'
+      footerCopyright: '© 2026 VELEN OFFICIAL. Made with pride in Amman, Jordan 🇯🇴',
+      // Cart Drawer Footer
+      cartSubtotalLabel: 'Subtotal:',
+      cartDeliveryLabel: 'Delivery (Amman):',
+      cartTotalLabel: 'Final Total:',
+      cartCheckoutBtn: 'Proceed to Checkout (Cash on Delivery)',
+      promoDiscountLabel: 'Promo Discount:',
+      freeDeliveryTag: 'Free (0.000 JOD)',
+      promoPlaceholder: 'Promo Code (كود الخصم)',
+      applyPromoBtn: 'Apply',
+      // Community Form
+      commAuthorLabel: 'Instagram Handle or Your Name *',
+      commAuthorPh: 'e.g. @khalid.jo',
+      commMediaLabel: 'Photo or Video / Reels',
+      requiredLabel: '*Required',
+      cancelMediaBtn: 'Cancel Media',
+      commDropzoneText: 'Drag & drop photo or video here, or click to browse',
+      commDropzoneHint: 'Supports MP4, MOV, JPG, PNG up to 50MB',
+      commOrUrl: 'Or direct photo/video URL:',
+      commUrlPh: 'https://example.com/photo.jpg',
+      commCaptionLabel: 'Caption / Thoughts (Optional)',
+      commCaptionPh: 'Tell us how you styled it, fit details, or thoughts!',
+      commSubmitBtn: 'Post to Community Now',
+      // Policy View
+      breadcrumbShipping: 'Shipping & Policy',
+      policyShippingTitle: 'SHIPPING & EXCHANGE POLICY',
+      policyShippingSub: 'DOORSTEP SIZE INSPECTION • FREE AMMAN DELIVERY • 1 JD GOVERNORATES',
+      shippingBadgeRates: 'FAST & RELIABLE',
+      policyDeliveryHeading: 'Delivery Timeline & Rates',
+      shippingBadgeExchange: 'ZERO RISK',
+      policyExchangeHeading: 'Instant Doorstep Size Exchange',
+      shippingBadgePayment: 'PAYMENT FLEXIBILITY',
+      policyPaymentHeading: 'Flexible Payment Options',
+      policyContactHeading: 'Need Help with Your Order?',
+      policyContactText: 'Our team in Amman is available on WhatsApp daily for instant size recommendations, address adjustments, or order questions.',
+      // Care View
+      breadcrumbCare: 'Fabric Care Guide',
+      carePageTitle: 'FABRIC & GARMENT CARE GUIDE (260 GSM)',
+      carePageSub: 'HEAVYWEIGHT COMBED COTTON LONGEVITY PROTOCOL',
+      careBadge: 'THE 260 GSM ADVANTAGE',
+      careIntroTitle: 'Engineered to Endure',
+      careIntroDesc: 'VELEN essentials are crafted from custom heavyweight 260 GSM combed cotton. To preserve its dense weave, rich color depth, and signature boxy drape, follow our tested garment longevity protocol below.',
+      careStep1Title: 'Cold Machine Wash (Max 30°C / 86°F)',
+      careStep1Desc: 'Wash on a gentle cold cycle with similar colors. Cold water preserves the cotton fibers and prevents yarn tightening.',
+      careStep2Title: 'Wash Inside Out',
+      careStep2Desc: 'Turn the garment inside out before washing to safeguard the exterior finish, screen prints, and branding from friction.',
+      careStep3Title: 'No Chlorine Bleach',
+      careStep3Desc: 'Use mild, liquid detergent. Avoid harsh chlorine bleaches or aggressive stain removers that weaken combed fibers.',
+      careStep4Title: 'Air Dry in Shade',
+      careStep4Desc: 'Reshape while damp and hang or lay flat to dry in a shaded area. Avoid tumble drying, as excessive drum heat causes shrinkage.',
+      careStep5Title: 'Reverse Low-Heat Iron',
+      careStep5Desc: 'If pressing is needed, iron on low temperature from the inside out. Never apply direct iron heat over prints or labels.',
+      careStep6Title: 'Fold, Don\'t Wire Hang',
+      careStep6Desc: 'Because of the substantial 260 GSM fabric weight, store folded on a shelf rather than on thin wire hangers to prevent shoulder stretching.'
     }
   };
+
+  // Centralized Modal / Drawer Body Scroll Lock
+  let activeLockCount = 0;
+  function lockBodyScroll() {
+    activeLockCount++;
+    document.body.classList.add('body-scroll-locked');
+  }
+  function unlockBodyScroll() {
+    activeLockCount = Math.max(0, activeLockCount - 1);
+    if (activeLockCount === 0) {
+      document.body.classList.remove('body-scroll-locked');
+    }
+  }
+  function forceUnlockBodyScroll() {
+    activeLockCount = 0;
+    document.body.classList.remove('body-scroll-locked');
+  }
 
   // DOM Elements
   const productsGrid = document.getElementById('productsGrid');
@@ -341,7 +464,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const commItemWorn = document.getElementById('commItemWorn');
 
   // ================= MULTI-PAGE VIEW ROUTER =================
-  const SITE_VIEWS = ['home', 'shop', 'about', 'community', 'reviews', 'track'];
+  const SITE_VIEWS = ['home', 'shop', 'about', 'community', 'reviews', 'track', 'shipping', 'care'];
 
   // Initialize
   initApp();
@@ -405,6 +528,10 @@ document.addEventListener('DOMContentLoaded', () => {
       showView('reviews', false);
     } else if (hash === '#track') {
       showView('track', false);
+    } else if (hash === '#shipping' || hash === '#terms' || hash === '#policy') {
+      showView('shipping', false);
+    } else if (hash === '#care' || hash === '#fabric' || hash === '#fabric-care') {
+      showView('care', false);
     } else {
       showView('home', false);
     }
@@ -470,6 +597,53 @@ document.addEventListener('DOMContentLoaded', () => {
       renderProducts();
     } else if (viewName === 'home') {
       renderFeaturedProducts();
+    } else if (viewName === 'shipping' || viewName === 'care') {
+      renderDynamicPolicies();
+    }
+  }
+
+  function renderDynamicPolicies() {
+    const policies = state.settings?.policies;
+    const isAr = state.activeLang === 'ar';
+    
+    // Shipping Policy Dynamic Render
+    const shippingDeliveryEl = document.getElementById('policyDeliveryContent');
+    const shippingExchangeEl = document.getElementById('policyExchangeContent');
+    const pageShippingTitleEl = document.getElementById('pageShippingMainTitle');
+    
+    if (policies?.shipping) {
+      if (shippingDeliveryEl) {
+        const text = isAr ? policies.shipping.deliveryAr : policies.shipping.deliveryEn;
+        if (text) shippingDeliveryEl.innerHTML = `<p>${text.replace(/\n/g, '<br>')}</p>`;
+      }
+      if (shippingExchangeEl) {
+        const text = isAr ? policies.shipping.exchangeAr : policies.shipping.exchangeEn;
+        if (text) shippingExchangeEl.innerHTML = `<p>${text.replace(/\n/g, '<br>')}</p>`;
+      }
+      if (pageShippingTitleEl) {
+        const title = isAr ? policies.shipping.titleAr : policies.shipping.titleEn;
+        if (title) pageShippingTitleEl.textContent = title;
+      }
+    }
+    
+    // Care Guide Dynamic Render
+    const careIntroDescEl = document.getElementById('careIntroDesc');
+    const careIntroTitleEl = document.getElementById('careIntroTitle');
+    const pageCareTitleEl = document.getElementById('pageCareMainTitle');
+    
+    if (policies?.care) {
+      if (careIntroDescEl) {
+        const text = isAr ? policies.care.introAr : policies.care.introEn;
+        if (text) careIntroDescEl.textContent = text;
+      }
+      if (careIntroTitleEl) {
+        const title = isAr ? (policies.care.titleAr || 'دليل العناية بالقطن') : (policies.care.titleEn || 'Engineered to Endure');
+        if (title) careIntroTitleEl.textContent = title;
+      }
+      if (pageCareTitleEl) {
+        const title = isAr ? policies.care.titleAr : policies.care.titleEn;
+        if (title) pageCareTitleEl.textContent = title;
+      }
     }
   }
 
@@ -626,6 +800,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (state.settings && state.settings.social) {
         applySocialLinks(state.settings.social);
       }
+      if (typeof renderDynamicPolicies === 'function') renderDynamicPolicies();
     } catch (err) {
       console.error('Error fetching settings:', err);
     }
@@ -898,9 +1073,13 @@ document.addEventListener('DOMContentLoaded', () => {
         if (likeCountEl) likeCountEl.textContent = payload.likes;
       }
     } else if (event === 'SETTINGS_UPDATED') {
+      state.settings = { ...state.settings, ...payload };
       if (payload.announcement) {
         const annText = document.getElementById('announcementText');
         if (annText) annText.textContent = payload.announcement;
+      }
+      if (typeof renderDynamicPolicies === 'function') {
+        renderDynamicPolicies();
       }
     } else if (event === 'DESIGN_UPDATED') {
       applyDesign(payload);
@@ -1135,16 +1314,18 @@ document.addEventListener('DOMContentLoaded', () => {
   function openCart() {
     cartDrawer.classList.add('open');
     cartOverlay.classList.add('active');
+    lockBodyScroll();
     state.currentStage = 'cart';
     const totalItems = state.cart.reduce((sum, item) => sum + item.quantity, 0);
     const subtotal = state.cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-    sendVisitorPulse('cart', `${totalItems} قطع (${subtotal.toFixed(3)} JOD)`);
+    sendVisitorPulse('cart', `${totalItems} items (${subtotal.toFixed(3)} JOD)`);
   }
 
   function closeCart() {
     cartDrawer.classList.remove('open');
     cartOverlay.classList.remove('active');
-    state.currentStage = 'home';
+    unlockBodyScroll();
+    state.currentStage = state.activeView || 'home';
   }
 
   function updateCartQuantity(index, delta) {
@@ -1229,15 +1410,7 @@ document.addEventListener('DOMContentLoaded', () => {
     `).join('');
   }
 
-  function openCart() {
-    cartDrawer.classList.add('open');
-    cartOverlay.classList.add('active');
-  }
 
-  function closeCart() {
-    cartDrawer.classList.remove('open');
-    cartOverlay.classList.remove('active');
-  }
 
   // ================= DEDICATED PRODUCT PAGE CONTROLLER (Fixes Mobile Freezing) =================
   function openProductPage(productId) {
@@ -1693,16 +1866,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function openCheckout() {
     if (state.cart.length === 0) {
-      showToast('حقيبة التسوق فارغة!', 'info');
+      showToast(state.activeLang === 'ar' ? 'حقيبة التسوق فارغة!' : 'Your shopping bag is empty!', 'info');
       return;
     }
     closeCart();
     renderCheckoutSummary();
     checkoutModal.classList.add('active');
+    lockBodyScroll();
   }
 
   function closeCheckout() {
     checkoutModal.classList.remove('active');
+    unlockBodyScroll();
   }
 
   function renderCheckoutSummary() {
@@ -1753,12 +1928,18 @@ document.addEventListener('DOMContentLoaded', () => {
   // ================= COMMUNITY SUBMISSION =================
   let uploadedMediaUrl = null;
   let uploadedMediaType = 'photo';
+  let commFormInitialized = false;
 
   function setupCommunityForm() {
+    if (commFormInitialized) return;
+    commFormInitialized = true;
+
     const dropzone = document.getElementById('commDropzone');
     const fileInput = document.getElementById('commFileInput');
     const preview = document.getElementById('commFilePreview');
     const clearMediaBtn = document.getElementById('clearCommMediaBtn');
+    const commForm = document.getElementById('communityForm');
+    const dropzoneText = document.getElementById('commDropzoneText');
 
     if (clearMediaBtn) {
       clearMediaBtn.addEventListener('click', () => {
@@ -1773,10 +1954,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (dropzone) {
           dropzone.style.display = 'block';
-          dropzone.innerHTML = `<i class="fa-solid fa-cloud-arrow-up upload-icon"></i><p>اسحب وأفلت الفيديو أو الصورة هنا أو اضغط للاختيار (اختياري)</p><span class="upload-hint">يدعم MP4, MOV, JPG, PNG حتى 50MB</span>`;
         }
         clearMediaBtn.style.display = 'none';
-        showToast('تم إلغاء الميديا، يمكنك إرسال التقييم بالكلام والنجوم فقط', 'info');
+        showToast(state.activeLang === 'ar' ? 'تم إلغاء الميديا' : 'Media cleared', 'info');
       });
     }
 
@@ -1785,7 +1965,9 @@ document.addEventListener('DOMContentLoaded', () => {
       const formData = new FormData();
       formData.append('media', file);
 
-      if (dropzone) dropzone.innerHTML = `<i class="fa-solid fa-spinner fa-spin upload-icon"></i><p>جاري رفع الملف إلى السيرفر...</p>`;
+      if (dropzoneText) {
+        dropzoneText.textContent = state.activeLang === 'ar' ? 'جاري رفع الملف إلى السيرفر...' : 'Uploading file to server...';
+      }
 
       try {
         const res = await fetch('/api/upload', {
@@ -1801,24 +1983,37 @@ document.addEventListener('DOMContentLoaded', () => {
           if (preview) {
             preview.style.display = 'block';
             if (uploadedMediaType === 'video') {
-              preview.innerHTML = `<video src="${uploadedMediaUrl}" controls autoplay muted style="width:100%; height:200px; object-fit:cover; border-radius:6px;"></video>`;
+              preview.innerHTML = `<video src="${uploadedMediaUrl}" controls autoplay muted style="width:100%; height:200px; object-fit:cover; border-radius:8px;"></video>`;
             } else {
-              preview.innerHTML = `<img src="${uploadedMediaUrl}" style="width:100%; height:200px; object-fit:cover; border-radius:6px;">`;
+              preview.innerHTML = `<img src="${uploadedMediaUrl}" alt="Preview" style="width:100%; height:200px; object-fit:cover; border-radius:8px;">`;
             }
           }
           if (clearMediaBtn) clearMediaBtn.style.display = 'inline-block';
-          showToast('تم رفع الصورة / الفيديو بنجاح! 🎉', 'success');
+          showToast(state.activeLang === 'ar' ? 'تم رفع الصورة / الفيديو بنجاح! 🎉' : 'Photo/video uploaded successfully! 🎉', 'success');
         } else {
-          showToast('فشل رفع الملف', 'error');
+          showToast(data.message || 'Upload failed', 'error');
+          if (dropzoneText) {
+            dropzoneText.textContent = state.activeLang === 'ar' ? 'اسحب وأفلت الصورة أو الفيديو هنا أو اضغط للاختيار' : 'Drag & drop photo or video here, or click to choose';
+          }
         }
       } catch (err) {
         console.error('Upload error:', err);
-        if (dropzone) dropzone.innerHTML = `<p style="color:#ff4757;">فشل الرفع، يرجى المحاولة ثانية</p>`;
+        showToast(state.activeLang === 'ar' ? 'فشل الرفع، يرجى المحاولة ثانية' : 'Upload failed, please try again', 'error');
+        if (dropzoneText) {
+          dropzoneText.textContent = state.activeLang === 'ar' ? 'اسحب وأفلت الصورة أو الفيديو هنا أو اضغط للاختيار' : 'Drag & drop photo or video here, or click to choose';
+        }
       }
     }
 
     if (dropzone && fileInput) {
-      dropzone.addEventListener('click', () => fileInput.click());
+      dropzone.addEventListener('click', (e) => {
+        e.preventDefault();
+        fileInput.click();
+      });
+
+      fileInput.addEventListener('click', (e) => {
+        e.stopPropagation();
+      });
 
       dropzone.addEventListener('dragover', (e) => {
         e.preventDefault();
@@ -1844,66 +2039,27 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }
 
-    // Star Rating Click Handlers
-    const starPicker = document.getElementById('starRatingPicker');
-    const starRatingLabel = document.getElementById('starRatingLabel');
-    const ratingInput = document.getElementById('commRatingVal');
-
-    if (starPicker) {
-      const stars = starPicker.querySelectorAll('.star-btn');
-      stars.forEach(star => {
-        star.addEventListener('click', () => {
-          const val = parseInt(star.getAttribute('data-value'), 10);
-          state.selectedRating = val;
-          ratingInput.value = val;
-
-          stars.forEach((s, idx) => {
-            if (idx < val) {
-              s.classList.add('active');
-            } else {
-              s.classList.remove('active');
-            }
-          });
-
-          const labels = {
-            1: '1 من 5 (سيء)',
-            2: '2 من 5 (مقبول)',
-            3: '3 من 5 (جيد)',
-            4: '4 من 5 (رائع جداً)',
-            5: '5 من 5 (ممتاز وفوق الخيال 🔥)'
-          };
-          starRatingLabel.textContent = labels[val] || `${val} من 5`;
-        });
-      });
-    }
-
-    // Form Submit
-    const commForm = document.getElementById('communityForm');
     if (commForm) {
       commForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         const author = document.getElementById('commAuthor').value.trim();
         const comment = document.getElementById('commComment') ? document.getElementById('commComment').value.trim() : '';
-        const externalUrl = document.getElementById('commUrlInput').value.trim();
-        // Community posts don't require rating — it's pure social sharing
-        const rating = 0; // No rating for community
-        const itemWorn = 'Velen Community Post';
+        const externalUrl = document.getElementById('commUrlInput') ? document.getElementById('commUrlInput').value.trim() : '';
 
-        // Photos/videos are completely optional!
         const finalMediaUrl = uploadedMediaUrl || (externalUrl !== '' ? externalUrl : null);
         const isVideo = finalMediaUrl && (uploadedMediaType === 'video' || finalMediaUrl.endsWith('.mp4') || finalMediaUrl.includes('video'));
 
         const payload = {
           author,
-          authorTag: '@' + author.toLowerCase().replace(/\s+/g, '_'),
+          authorTag: author.startsWith('@') ? author : '@' + author.toLowerCase().replace(/\s+/g, '_'),
           avatar: `https://images.unsplash.com/photo-${1500000000000 + Math.floor(Math.random() * 9000000)}?auto=format&fit=crop&w=150&q=80`,
           mediaType: finalMediaUrl ? (isVideo ? 'video' : 'photo') : 'text',
           mediaUrl: finalMediaUrl,
           videoUrl: isVideo ? finalMediaUrl : null,
-          subtitle: `${itemWorn} - الأردن`,
-          rating,
+          subtitle: 'Amman - الأردن',
+          rating: 5,
           comment,
-          itemWorn
+          itemWorn: 'Velen Community Look'
         };
 
         try {
@@ -1915,6 +2071,7 @@ document.addEventListener('DOMContentLoaded', () => {
           const result = await res.json();
           if (result.success) {
             communityModal.classList.remove('active');
+            unlockBodyScroll();
             commForm.reset();
             uploadedMediaUrl = null;
             if (clearMediaBtn) clearMediaBtn.style.display = 'none';
@@ -1924,12 +2081,14 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             if (dropzone) {
               dropzone.style.display = 'block';
-              dropzone.innerHTML = `<i class="fa-solid fa-cloud-arrow-up upload-icon"></i><p>اسحب وأفلت الفيديو أو الصورة هنا أو اضغط للاختيار (اختياري)</p><span class="upload-hint">يدعم MP4, MOV, JPG, PNG حتى 50MB</span>`;
             }
-            showToast('شكراً لك! تم نشر تقييمك وإطلالتك في مجتمع Velen 🎉', 'success');
+            showToast(state.activeLang === 'ar' ? 'شكراً لك! تم نشر إطلالتك في مجتمع Velen 🎉' : 'Thank you! Your look was posted to VELEN Community 🎉', 'success');
+          } else {
+            showToast(result.message || 'Submission failed', 'error');
           }
         } catch (err) {
           console.error('Community submit error:', err);
+          showToast('Failed to post, please try again', 'error');
         }
       });
     }
@@ -2441,6 +2600,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     if (state.community && state.community.length > 0) renderCommunity();
     if (typeof renderReviews === 'function') renderReviews();
+    if (typeof renderDynamicPolicies === 'function') renderDynamicPolicies();
     updateCartUI();
 
     // Re-render product page if open to reflect new language
@@ -2687,14 +2847,17 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('menuToggleBtn')?.addEventListener('click', () => {
       navDrawer.classList.add('open');
       drawerOverlay.classList.add('active');
+      lockBodyScroll();
     });
     document.getElementById('navDrawerClose')?.addEventListener('click', () => {
       navDrawer.classList.remove('open');
       drawerOverlay.classList.remove('active');
+      unlockBodyScroll();
     });
     drawerOverlay?.addEventListener('click', () => {
       navDrawer.classList.remove('open');
       drawerOverlay.classList.remove('active');
+      unlockBodyScroll();
     });
 
     // Cart Drawer
@@ -2707,18 +2870,26 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('btnBackToStore')?.addEventListener('click', () => closeProductPage(true));
     document.getElementById('productModalClose')?.addEventListener('click', closeProductModal);
     document.getElementById('checkoutModalClose')?.addEventListener('click', closeCheckout);
-    document.getElementById('closeSuccessBtn')?.addEventListener('click', () => successModal.classList.remove('active'));
+    document.getElementById('closeSuccessBtn')?.addEventListener('click', () => {
+      successModal.classList.remove('active');
+      unlockBodyScroll();
+    });
 
     // Community Share Modal
     document.getElementById('addLookBtn')?.addEventListener('click', () => {
       communityModal.classList.add('active');
+      lockBodyScroll();
     });
     document.getElementById('communityModalClose')?.addEventListener('click', () => {
       communityModal.classList.remove('active');
+      unlockBodyScroll();
     });
     // Community modal background click to close
     communityModal?.addEventListener('click', (e) => {
-      if (e.target === communityModal) communityModal.classList.remove('active');
+      if (e.target === communityModal) {
+        communityModal.classList.remove('active');
+        unlockBodyScroll();
+      }
     });
 
     // Category Filter Pills
@@ -2746,10 +2917,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // Search Modal
     document.getElementById('searchOpenBtn')?.addEventListener('click', () => {
       searchModal.classList.add('active');
+      lockBodyScroll();
       searchInput.focus();
     });
     document.getElementById('searchCloseBtn')?.addEventListener('click', () => {
       searchModal.classList.remove('active');
+      unlockBodyScroll();
     });
 
     searchInput?.addEventListener('input', (e) => {

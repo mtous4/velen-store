@@ -147,8 +147,8 @@
       <div class="drawer-section">
         <h3 class="drawer-heading" data-i18n="aboutUs">INFORMATION • معلومات</h3>
         <ul class="drawer-links">
-          <li><a href="#" class="drawer-link" id="drawerTermsBtn"><i class="fa-solid fa-file-contract"></i> <span data-i18n="policyAndShipping">Shipping & Exchange Policy</span> <i class="fa-solid fa-angle-right rtl-flip"></i></a></li>
-          <li><a href="#" class="drawer-link open-terms-link" data-tab="care"><i class="fa-solid fa-jug-detergent"></i> <span data-i18n="fabricCare">Fabric Care Guide</span> <i class="fa-solid fa-angle-right rtl-flip"></i></a></li>
+          <li><a href="#shipping" class="drawer-link" data-nav="shipping" onclick="window.velenApp?.navigateTo('shipping'); document.getElementById('navDrawerClose')?.click();"><i class="fa-solid fa-file-contract"></i> <span data-i18n="policyAndShipping">Shipping & Exchange Policy</span> <i class="fa-solid fa-angle-right rtl-flip"></i></a></li>
+          <li><a href="#care" class="drawer-link" data-nav="care" onclick="window.velenApp?.navigateTo('care'); document.getElementById('navDrawerClose')?.click();"><i class="fa-solid fa-jug-detergent"></i> <span data-i18n="fabricCare">Fabric & Garment Care Guide</span> <i class="fa-solid fa-angle-right rtl-flip"></i></a></li>
         </ul>
       </div>
 
@@ -616,6 +616,157 @@
       </section>
     </div> <!-- end #view-track -->
 
+    <!-- ================= VIEW 7: DEDICATED SHIPPING & EXCHANGE POLICY ================= -->
+    <div id="view-shipping" class="site-view" style="display:none;">
+      <div class="page-header-banner">
+        <div class="page-breadcrumb">
+          <a onclick="window.velenApp?.navigateTo('home')"><span data-i18n="breadcrumbHome">Home</span></a>
+          <span>/</span>
+          <span data-i18n="breadcrumbShipping">Shipping & Policy</span>
+        </div>
+        <h1 class="page-main-title" id="pageShippingMainTitle" data-i18n="policyShippingTitle">SHIPPING & EXCHANGE POLICY</h1>
+        <p class="page-sub-title" id="pageShippingSubTitle" data-i18n="policyShippingSub">DOORSTEP SIZE INSPECTION • FREE AMMAN DELIVERY • 1 JD GOVERNORATES</p>
+      </div>
+
+      <section class="policy-page-section">
+        <div class="section-container">
+          <div class="policy-cards-grid">
+            <!-- 1. Delivery Rates & Timeline -->
+            <div class="policy-card">
+              <div class="policy-card-icon gold-glow">
+                <i class="fa-solid fa-truck-fast"></i>
+              </div>
+              <div class="policy-card-content">
+                <span class="policy-badge" data-i18n="shippingBadgeRates">FAST & RELIABLE</span>
+                <h3 id="policyDeliveryHeading" data-i18n="policyDeliveryHeading">Delivery Timeline & Rates</h3>
+                <div class="policy-card-text" id="policyDeliveryContent">
+                  <p><strong>Amman:</strong> Free delivery to all areas within 24 to 48 hours.</p>
+                  <p><strong>Other Governorates:</strong> Flat 1 JOD delivery fee across Jordan (Irbid, Zarqa, Aqaba, Salt, Madaba, Mafraq, etc.).</p>
+                  <p>Orders are dispatched daily from our Amman fulfillment center.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- 2. Instant Doorstep Size Exchange -->
+            <div class="policy-card">
+              <div class="policy-card-icon">
+                <i class="fa-solid fa-rotate-left"></i>
+              </div>
+              <div class="policy-card-content">
+                <span class="policy-badge" data-i18n="shippingBadgeExchange">ZERO RISK</span>
+                <h3 id="policyExchangeHeading" data-i18n="policyExchangeHeading">Instant Doorstep Size Exchange</h3>
+                <div class="policy-card-text" id="policyExchangeContent">
+                  <p>You are fully entitled to inspect the garment and try your size upon delivery before paying the courier.</p>
+                  <p>If you prefer another size or color, we provide a smooth, hassle-free doorstep exchange within 3 business days from your delivery date.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- 3. Payment Methods -->
+            <div class="policy-card">
+              <div class="policy-card-icon">
+                <i class="fa-solid fa-money-bill-wave"></i>
+              </div>
+              <div class="policy-card-content">
+                <span class="policy-badge" data-i18n="shippingBadgePayment">PAYMENT FLEXIBILITY</span>
+                <h3 id="policyPaymentHeading" data-i18n="policyPaymentHeading">Flexible Payment Options</h3>
+                <div class="policy-card-text" id="policyPaymentContent">
+                  <p><strong>Cash on Delivery (COD):</strong> Pay in cash when the courier hands you your package.</p>
+                  <p><strong>Instant CliQ:</strong> Transfer instantly via CliQ upon parcel delivery.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- 4. Direct Assistance -->
+            <div class="policy-card policy-highlight-card">
+              <div class="policy-card-icon wa-glow">
+                <i class="fa-brands fa-whatsapp"></i>
+              </div>
+              <div class="policy-card-content">
+                <span class="policy-badge wa-badge">DIRECT ASSISTANCE</span>
+                <h3 data-i18n="policyContactHeading">Need Help with Your Order?</h3>
+                <p data-i18n="policyContactText">Our team in Amman is available on WhatsApp daily for instant size recommendations, address adjustments, or order questions.</p>
+                <a href="https://wa.me/962770188144" target="_blank" class="btn-velen-primary" style="margin-top:12px; display:inline-flex; align-items:center; gap:8px;">
+                  <i class="fa-brands fa-whatsapp"></i> <span data-i18n="chatWithUs">Chat on WhatsApp</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div> <!-- end #view-shipping -->
+
+    <!-- ================= VIEW 8: DEDICATED FABRIC & GARMENT CARE GUIDE ================= -->
+    <div id="view-care" class="site-view" style="display:none;">
+      <div class="page-header-banner">
+        <div class="page-breadcrumb">
+          <a onclick="window.velenApp?.navigateTo('home')"><span data-i18n="breadcrumbHome">Home</span></a>
+          <span>/</span>
+          <span data-i18n="breadcrumbCare">Fabric Care Guide</span>
+        </div>
+        <h1 class="page-main-title" id="pageCareMainTitle" data-i18n="carePageTitle">FABRIC & GARMENT CARE GUIDE</h1>
+        <p class="page-sub-title" id="pageCareSubTitle" data-i18n="carePageSub">260 GSM HEAVYWEIGHT COMBED COTTON LONGEVITY PROTOCOL</p>
+      </div>
+
+      <section class="care-page-section">
+        <div class="section-container">
+          <!-- Intro Card -->
+          <div class="care-intro-card">
+            <div class="care-intro-badge"><i class="fa-solid fa-gem"></i> <span data-i18n="careBadge">THE 260 GSM ADVANTAGE</span></div>
+            <h2 id="careIntroTitle" data-i18n="careIntroTitle">Engineered to Endure</h2>
+            <p id="careIntroDesc" class="care-intro-p" data-i18n="careIntroDesc">
+              VELEN essentials are crafted from custom heavyweight 260 GSM combed cotton. To preserve its dense weave, rich color depth, and signature boxy drape, follow our tested garment longevity protocol below.
+            </p>
+          </div>
+
+          <!-- Step Protocol Grid -->
+          <div class="care-steps-grid">
+            <div class="care-step-item">
+              <div class="care-step-num">01</div>
+              <div class="care-step-icon"><i class="fa-solid fa-temperature-arrow-down"></i></div>
+              <h3 id="careStep1Title" data-i18n="careStep1Title">Cold Machine Wash</h3>
+              <p id="careStep1Desc" data-i18n="careStep1Desc">Wash at max 30°C (86°F) on a gentle cycle with similar colors. Cold water preserves the cotton fibers and prevents yarn tightening.</p>
+            </div>
+
+            <div class="care-step-item">
+              <div class="care-step-num">02</div>
+              <div class="care-step-icon"><i class="fa-solid fa-shirt"></i></div>
+              <h3 id="careStep2Title" data-i18n="careStep2Title">Wash Inside Out</h3>
+              <p id="careStep2Desc" data-i18n="careStep2Desc">Turn the garment inside out before washing to safeguard the exterior finish, screen prints, and high-density branding from friction.</p>
+            </div>
+
+            <div class="care-step-item">
+              <div class="care-step-num">03</div>
+              <div class="care-step-icon"><i class="fa-solid fa-ban"></i></div>
+              <h3 id="careStep3Title" data-i18n="careStep3Title">No Chlorine Bleach</h3>
+              <p id="careStep3Desc" data-i18n="careStep3Desc">Use mild, liquid detergent. Avoid harsh chlorine bleaches or aggressive stain removers that weaken the organic combed fibers.</p>
+            </div>
+
+            <div class="care-step-item">
+              <div class="care-step-num">04</div>
+              <div class="care-step-icon"><i class="fa-solid fa-wind"></i></div>
+              <h3 id="careStep4Title" data-i18n="careStep4Title">Air Dry in Shade</h3>
+              <p id="careStep4Desc" data-i18n="careStep4Desc">Reshape while damp and hang or lay flat to dry in a shaded area. Avoid tumble drying, as excessive drum heat causes shrinkage.</p>
+            </div>
+
+            <div class="care-step-item">
+              <div class="care-step-num">05</div>
+              <div class="care-step-icon"><i class="fa-solid fa-fire-burner"></i></div>
+              <h3 id="careStep5Title" data-i18n="careStep5Title">Reverse Low-Heat Iron</h3>
+              <p id="careStep5Desc" data-i18n="careStep5Desc">If pressing is needed, iron on low temperature from the inside out. Never apply direct iron heat over prints or labels.</p>
+            </div>
+
+            <div class="care-step-item care-storage-item">
+              <div class="care-step-num">06</div>
+              <div class="care-step-icon"><i class="fa-solid fa-box-archive"></i></div>
+              <h3 id="careStep6Title" data-i18n="careStep6Title">Fold, Don't Wire Hang</h3>
+              <p id="careStep6Desc" data-i18n="careStep6Desc">Because of the substantial 260 GSM fabric weight, store folded on a shelf rather than on thin wire hangers to prevent shoulder stretching.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div> <!-- end #view-care -->
+
   </main>
 
   <!-- Footer -->
@@ -637,8 +788,8 @@
           <h4 class="footer-heading" data-i18n="aboutUs">Brand & Info</h4>
           <ul class="footer-menu">
             <li><a href="#about" onclick="window.velenApp?.navigateTo('about')"><span data-i18n="whyVelen">Why Velen?</span></a></li>
-            <li><a href="#" class="open-terms-link" data-tab="care"><span data-i18n="fabricCare">Fabric Care Guide</span></a></li>
-            <li><a href="#" class="open-terms-link" data-tab="terms"><span data-i18n="termsOfService">Shipping & Returns</span></a></li>
+            <li><a href="#care" onclick="window.velenApp?.navigateTo('care')"><span data-i18n="fabricCare">Fabric & Garment Care Guide</span></a></li>
+            <li><a href="#shipping" onclick="window.velenApp?.navigateTo('shipping')"><span data-i18n="policyAndShipping">Shipping & Exchange Policy</span></a></li>
           </ul>
         </div>
 
@@ -718,31 +869,31 @@
       <!-- Promo Code Box in Cart Drawer (Item 11) -->
       <div class="cart-promo-box">
         <div class="promo-input-row">
-          <input type="text" id="cartPromoInput" placeholder="كود الخصم (Promo Code)">
-          <button type="button" id="applyCartPromoBtn" class="btn-apply-promo">تطبيق</button>
+          <input type="text" id="cartPromoInput" placeholder="Promo Code (كود الخصم)" data-i18n-ph="promoPlaceholder">
+          <button type="button" id="applyCartPromoBtn" class="btn-apply-promo" data-i18n="applyPromoBtn">Apply</button>
         </div>
         <div id="cartPromoMsg" class="promo-msg" style="display:none;"></div>
       </div>
 
       <div class="cart-subtotal-row">
-        <span>المجموع الفرعي:</span>
+        <span data-i18n="cartSubtotalLabel">Subtotal:</span>
         <span id="cartSubtotal" class="subtotal-amount">0.000 JOD</span>
       </div>
       <div class="cart-subtotal-row promo-discount-row" id="cartPromoDiscountRow" style="display:none; color:#2ecc71;">
-        <span>خصم كود الترويجي:</span>
+        <span data-i18n="promoDiscountLabel">Promo Discount:</span>
         <span id="cartPromoDiscount">-0.000 JOD</span>
       </div>
       <div class="cart-subtotal-row delivery-row">
-        <span>التوصيل (عمّان):</span>
-        <span class="free-tag">مجاناً (0.000 JOD)</span>
+        <span data-i18n="cartDeliveryLabel">Delivery (Amman):</span>
+        <span class="free-tag" id="cartDeliveryTag" data-i18n="freeDeliveryTag">Free (0.000 JOD)</span>
       </div>
       <div class="cart-total-row">
-        <span>الإجمالي النهائي:</span>
+        <span data-i18n="cartTotalLabel">Final Total:</span>
         <span id="cartTotal" class="total-amount">0.000 JOD</span>
       </div>
 
       <button id="openCheckoutBtn" class="btn-checkout-now">
-        إتمام الطلب الآن (الدفع عند الاستلام) <i class="fa-solid fa-arrow-left"></i>
+        <span data-i18n="cartCheckoutBtn">Proceed to Checkout (COD)</span> <i class="fa-solid fa-arrow-right rtl-flip"></i>
       </button>
     </div>
   </div>
@@ -771,40 +922,43 @@
 
         <form id="communityForm" class="community-form">
           <div class="form-group">
-            <label><i class="fa-brands fa-instagram" style="color:#e1306c;"></i> اسم حسابك على انستغرام</label>
-            <input type="text" id="commAuthor" placeholder="@your.handle مثال: @ahmad.jo" required>
+            <label><i class="fa-brands fa-instagram" style="color:#e1306c;"></i> <span data-i18n="commAuthorLabel">Instagram Handle / Your Name</span></label>
+            <input type="text" id="commAuthor" placeholder="@your.handle (e.g. @khalid.jo)" data-i18n-ph="commAuthorPh" required>
           </div>
 
           <!-- Media Upload: Photo or Video (Required for community) -->
           <div class="form-group media-upload-group">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
-              <label>الصورة أو الفيديو / الريلز <span style="color:#ff4757; font-size:11px;">*مطلوب</span></label>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+              <label><span data-i18n="commMediaLabel">Photo or Video / Reels</span> <span style="color:#ff4757; font-size:11px;" data-i18n="requiredLabel">*Required</span></label>
               <button type="button" id="clearCommMediaBtn" style="display:none; color:#ff4757; font-size:11px; background:transparent; border:none; cursor:pointer;" title="إزالة الوسائط">
-                <i class="fa-solid fa-trash"></i> إلغاء
+                <i class="fa-solid fa-trash"></i> <span data-i18n="cancelMediaBtn">Cancel</span>
               </button>
             </div>
-            <div class="upload-dropzone" id="commDropzone">
+            
+            <div class="upload-dropzone" id="commDropzone" style="cursor:pointer;">
               <i class="fa-solid fa-cloud-arrow-up upload-icon"></i>
-              <p>اسحب وأفلت الصورة أو الفيديو هنا أو اضغط للاختيار</p>
-              <span class="upload-hint">يدعم MP4, MOV, JPG, PNG حتى 50MB</span>
-              <input type="file" id="commFileInput" accept="image/*,video/*" style="display:none;">
+              <p id="commDropzoneText" data-i18n="commDropzoneText">Drag & drop photo or video here, or click to choose</p>
+              <span class="upload-hint" data-i18n="commDropzoneHint">Supports MP4, MOV, JPG, PNG up to 50MB</span>
             </div>
+            <!-- File input placed safely outside dropzone to eliminate click recursion -->
+            <input type="file" id="commFileInput" accept="image/*,video/*" style="display:none;">
+            
             <div id="commFilePreview" class="upload-preview-area" style="display:none;"></div>
             
             <div class="url-fallback-wrap">
-              <span class="or-separator">أو رابط مباشر للصورة / الفيديو:</span>
-              <input type="url" id="commUrlInput" placeholder="https://example.com/photo.jpg">
+              <span class="or-separator" data-i18n="commOrUrl">Or direct photo/video URL:</span>
+              <input type="url" id="commUrlInput" placeholder="https://example.com/photo.jpg" data-i18n-ph="commUrlPh">
             </div>
           </div>
 
           <div class="form-group">
-            <label>كابشن / تعليق (اختياري)</label>
-            <textarea id="commComment" rows="2" placeholder="شاركنا رأيك في القطعة أو اي شي تبيه!"></textarea>
+            <label data-i18n="commCaptionLabel">Caption / Thoughts (Optional)</label>
+            <textarea id="commComment" rows="2" placeholder="Tell us about your sizing, how you styled it, or feedback!" data-i18n-ph="commCaptionPh"></textarea>
           </div>
 
           <button type="submit" id="commSubmitBtn" class="btn-submit-look">
             <i class="fa-brands fa-instagram"></i>
-            <span>نشر في المجتمع الآن</span>
+            <span data-i18n="commSubmitBtn">Post to Community Now</span>
           </button>
         </form>
       </div>

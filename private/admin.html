@@ -828,8 +828,84 @@
               </div>
             </div>
 
+            <!-- Store Policies & Care Guide Management (Requirement: Edit Shipping & Care pages) -->
+            <div style="margin-top:28px; padding-top:20px; border-top:1px solid rgba(229, 185, 95, 0.25);">
+              <div style="display:flex; align-items:center; gap:10px; margin-bottom:14px;">
+                <i class="fa-solid fa-file-shield" style="font-size:20px; color:#e5b95f;"></i>
+                <h4 style="font-size:16px; color:#fff; margin:0;">إدارة محتوى صفحات الشحن والعناية بالملابس (Policies & Care Pages)</h4>
+              </div>
+              <p class="sub-tip" style="color:#aaa; font-size:12px; margin-bottom:18px;">
+                يمكنك تعديل النصوص المعروضة على صفحتي المتجر المخصصتين (Shipping & Exchange Policy و Fabric Care Guide) باللغتين الإنجليزية والعربية:
+              </p>
+
+              <!-- 1. Shipping & Exchange Policy -->
+              <div style="background:#0a0a0a; border:1px solid rgba(255,255,255,0.08); border-radius:10px; padding:18px; margin-bottom:18px;">
+                <h5 style="color:#e5b95f; font-size:14px; margin:0 0 12px 0;"><i class="fa-solid fa-truck-fast"></i> 1. سياسة الشحن والتوصيل والتبديل (Shipping & Exchange Policy)</h5>
+                
+                <div class="form-row">
+                  <div class="form-group">
+                    <label>عنوان الصفحة (EN)</label>
+                    <input type="text" id="polShippingTitleEn" placeholder="Shipping & Exchange Policy">
+                  </div>
+                  <div class="form-group">
+                    <label>عنوان الصفحة (العربية)</label>
+                    <input type="text" id="polShippingTitleAr" placeholder="سياسة الشحن والتبديل">
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group">
+                    <label>نص الشحن والتوصيل (Delivery Timeline & Rates - EN)</label>
+                    <textarea id="polDeliveryEn" rows="3" placeholder="Free delivery in Amman within 24-48h..."></textarea>
+                  </div>
+                  <div class="form-group">
+                    <label>نص الشحن والتوصيل (العربية)</label>
+                    <textarea id="polDeliveryAr" rows="3" placeholder="التوصيل داخل عمّان مجاناً..."></textarea>
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group">
+                    <label>نص التبديل الفوري عند الباب (Instant Exchange Guarantee - EN)</label>
+                    <textarea id="polExchangeEn" rows="3" placeholder="Inspect and try size upon delivery..."></textarea>
+                  </div>
+                  <div class="form-group">
+                    <label>نص التبديل الفوري عند الباب (العربية)</label>
+                    <textarea id="polExchangeAr" rows="3" placeholder="يحق لك معاينة وتجربة المقاس فوراً..."></textarea>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 2. Fabric & Garment Care Guide -->
+              <div style="background:#0a0a0a; border:1px solid rgba(255,255,255,0.08); border-radius:10px; padding:18px; margin-bottom:18px;">
+                <h5 style="color:#e5b95f; font-size:14px; margin:0 0 12px 0;"><i class="fa-solid fa-jug-detergent"></i> 2. دليل العناية بالقطن الثقيل 260 GSM (Fabric & Care Guide)</h5>
+
+                <div class="form-row">
+                  <div class="form-group">
+                    <label>عنوان صفحة العناية (EN)</label>
+                    <input type="text" id="polCareTitleEn" placeholder="Fabric & Garment Care Guide (260 GSM)">
+                  </div>
+                  <div class="form-group">
+                    <label>عنوان صفحة العناية (العربية)</label>
+                    <input type="text" id="polCareTitleAr" placeholder="دليل العناية بالقطن الثقيل 260 GSM">
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group">
+                    <label>مقدمة القطن 260 GSM (Cotton Science Intro - EN)</label>
+                    <textarea id="polCareIntroEn" rows="3" placeholder="VELEN essentials are crafted from custom heavyweight 260 GSM combed cotton..."></textarea>
+                  </div>
+                  <div class="form-group">
+                    <label>مقدمة القطن 260 GSM (العربية)</label>
+                    <textarea id="polCareIntroAr" rows="3" placeholder="قطع فيلين مصنوعة من قطن ممشط ثقيل وفاخر بوزن 260 GSM..."></textarea>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             <button type="submit" class="btn-primary-action" style="margin-top:18px;">
-              <i class="fa-solid fa-floppy-disk"></i> حفظ الإعدادات وتحديث المتجر فوراً
+              <i class="fa-solid fa-floppy-disk"></i> حفظ الإعدادات والسياسات وتحديث المتجر فوراً
             </button>
           </form>
         </div>

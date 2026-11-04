@@ -470,6 +470,23 @@ document.addEventListener('DOMContentLoaded', () => {
       if (s.whatsapp && document.getElementById('setSocialWhatsapp')) document.getElementById('setSocialWhatsapp').value = s.whatsapp;
       if (s.facebook && document.getElementById('setSocialFacebook')) document.getElementById('setSocialFacebook').value = s.facebook;
     }
+    if (state.settings.policies) {
+      const p = state.settings.policies;
+      if (p.shipping) {
+        if (document.getElementById('polShippingTitleEn')) document.getElementById('polShippingTitleEn').value = p.shipping.titleEn || '';
+        if (document.getElementById('polShippingTitleAr')) document.getElementById('polShippingTitleAr').value = p.shipping.titleAr || '';
+        if (document.getElementById('polDeliveryEn')) document.getElementById('polDeliveryEn').value = p.shipping.deliveryEn || '';
+        if (document.getElementById('polDeliveryAr')) document.getElementById('polDeliveryAr').value = p.shipping.deliveryAr || '';
+        if (document.getElementById('polExchangeEn')) document.getElementById('polExchangeEn').value = p.shipping.exchangeEn || '';
+        if (document.getElementById('polExchangeAr')) document.getElementById('polExchangeAr').value = p.shipping.exchangeAr || '';
+      }
+      if (p.care) {
+        if (document.getElementById('polCareTitleEn')) document.getElementById('polCareTitleEn').value = p.care.titleEn || '';
+        if (document.getElementById('polCareTitleAr')) document.getElementById('polCareTitleAr').value = p.care.titleAr || '';
+        if (document.getElementById('polCareIntroEn')) document.getElementById('polCareIntroEn').value = p.care.introEn || '';
+        if (document.getElementById('polCareIntroAr')) document.getElementById('polCareIntroAr').value = p.care.introAr || '';
+      }
+    }
   }
 
   // ================= PRODUCT FORM ACTIONS (UNLIMITED PRODUCT GALLERY & COLOR VARIANTS) =================
@@ -790,6 +807,22 @@ document.addEventListener('DOMContentLoaded', () => {
           tiktok: document.getElementById('setSocialTiktok')?.value.trim() || 'https://tiktok.com/@velenofficial',
           whatsapp: document.getElementById('setSocialWhatsapp')?.value.trim() || '+962 7 7018 8144',
           facebook: document.getElementById('setSocialFacebook')?.value.trim() || 'https://facebook.com/velenofficial'
+        },
+        policies: {
+          shipping: {
+            titleEn: document.getElementById('polShippingTitleEn')?.value.trim() || 'Shipping & Exchange Policy',
+            titleAr: document.getElementById('polShippingTitleAr')?.value.trim() || 'سياسة الشحن والتبديل',
+            deliveryEn: document.getElementById('polDeliveryEn')?.value.trim() || '',
+            deliveryAr: document.getElementById('polDeliveryAr')?.value.trim() || '',
+            exchangeEn: document.getElementById('polExchangeEn')?.value.trim() || '',
+            exchangeAr: document.getElementById('polExchangeAr')?.value.trim() || ''
+          },
+          care: {
+            titleEn: document.getElementById('polCareTitleEn')?.value.trim() || 'Fabric & Garment Care Guide (260 GSM)',
+            titleAr: document.getElementById('polCareTitleAr')?.value.trim() || 'دليل العناية بالقطن الثقيل 260 GSM',
+            introEn: document.getElementById('polCareIntroEn')?.value.trim() || '',
+            introAr: document.getElementById('polCareIntroAr')?.value.trim() || ''
+          }
         }
       };
 

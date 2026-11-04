@@ -21,6 +21,22 @@
     "instagramUrl": "https://www.instagram.com/velen.offical?dlrf=c3I5MGh6eTZneGYy",
     "socialLinks": {
       "instagram": "https://www.instagram.com/velen.offical?dlrf=c3I5MGh6eTZneGYy"
+    },
+    "policies": {
+      "shipping": {
+        "titleEn": "Shipping & Seamless Exchange Policy",
+        "titleAr": "سياسة الشحن والتبديل",
+        "deliveryEn": "Free delivery inside Amman within 24 to 48 hours. Flat 1 JOD delivery fee across all other Jordanian governorates (Irbid, Zarqa, Aqaba, Salt, etc.). Cash on Delivery (COD) and instant CliQ payment available upon package arrival.",
+        "deliveryAr": "التوصيل داخل عمّان مجاناً لكافة المناطق خلال 24 - 48 ساعة. التوصيل لكافة محافظات المملكة (إربد، الزرقاء، العقبة، السلط...) 1 دينار فقط. الدفع نقداً عند الاستلام (COD) أو تحويل فوري عبر CliQ.",
+        "exchangeEn": "You are fully entitled to inspect the garment and try your size upon delivery before the courier leaves. If you need a size exchange, we provide a smooth, doorstep exchange within 3 business days from your delivery date with zero complications.",
+        "exchangeAr": "يحق لك تماماً معاينة القطعة وتجربة المقاس فوراً عند الاستلام. في حال الرغبة بتبديل المقاس، يتم التبديل فوري وبكل سلاسة عند باب بيتك خلال 3 أيام من تاريخ الاستلام دون أي تعقيد."
+      },
+      "care": {
+        "titleEn": "Fabric & Garment Care Guide (260 GSM)",
+        "titleAr": "دليل العناية بالقطن الثقيل 260 GSM",
+        "introEn": "VELEN essentials are crafted from custom heavyweight 260 GSM combed cotton. To preserve its dense weave, rich color depth, and signature boxy drape, follow our tested garment longevity protocol below.",
+        "introAr": "قطع فيلين مصنوعة من قطن ممشط ثقيل وفاخر بوزن 260 GSM. للحفاظ على كثافة النسيج، ونقاء الألوان، وقَصّة البوكسي الفاخرة لسنوات طويلة، يرجى اتباع التعليمات المعتمدة أدناه."
+      }
     }
   },
   "products": [
