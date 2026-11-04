@@ -17,7 +17,8 @@ document.addEventListener('DOMContentLoaded', () => {
     activeCommFilter: 'all',
     currentProductForModal: null,
     selectedSize: 'M',
-    selectedRating: 5
+    selectedRating: 5,
+    activeView: 'home'
   };
 
   localStorage.setItem('velen_session_id', state.sessionId);
@@ -28,6 +29,52 @@ document.addEventListener('DOMContentLoaded', () => {
       langToggle: 'EN',
       announcement: 'توصيل مجاني في عمّان • 1 دينار لباقي المحافظات',
       brandTitle: 'Velen Official',
+      navHome: 'الرئيسية',
+      navShop: 'المتجر',
+      navStory: 'قصتنا',
+      navCommunity: 'المجتمع',
+      navReviews: 'التقييمات',
+      navTrack: 'تتبع الطلب',
+      heroStoryBtn: 'قصة فيلين',
+      manifestoBadge: 'عن البراند • هوية فيلين',
+      brandIntroTitle: 'تعريف جديد للملابس الأساسية في عمّان',
+      brandIntroSub: 'فصل جديد في صناعة الأزياء الأردنية الفاخرة',
+      brandIntroText: 'انطلقت VELEN من عمّان برؤية استثنائية: تقديم ملابس ستريت وير أساسية تجمع بين القطن الأردني الثقيل 260 GSM، والقصّات البوكسي المريحة، وجودة تدوم لسنوات. كل درزة تم تفصيلها وتصنيعها محلياً لتقديم قطعة ملابس تشعر بفخامتها من أول ارتداء.',
+      portalsSub: 'اكتشف أقسام فيلين',
+      portalsTitle: 'تصفح الموقع حسب القسم',
+      portalBadgeShop: 'كولكشن 2026',
+      portalShopTitle: 'جميع المنتجات والتصاميم',
+      portalShopSub: 'تصفح التيشيرتات البوكسي، الرينجر، الهوديز والتصاميم اليومية بخيارات ألوان متعددة.',
+      portalShopBtn: 'تصفح المتجر ←',
+      portalBadgeAbout: 'الفلسفة والحرفية',
+      portalAboutTitle: 'قصتنا وحرفيتنا',
+      portalAboutSub: 'سر اختيار قطن 260 GSM، وتفصيل مشاغلنا في عمّان، ودليل العناية بالملابس.',
+      portalAboutBtn: 'اكتشف القصة ←',
+      portalBadgeCommunity: 'إطلالات حقيقية',
+      portalCommunityTitle: 'مجتمع فيلين',
+      portalCommunitySub: 'إطلالات حقيقية لزبائننا وفيديوهات ريلز من جميع أنحاء الأردن.',
+      portalCommunityBtn: 'تصفح المجتمع ←',
+      portalBadgeReviews: '5.0 ★ تقييمات موثقة',
+      portalReviewsTitle: 'آراء وتقييمات العملاء',
+      portalReviewsSub: 'تقييمات موثقة 5 نجوم حول جودة القماش، دقة المقاسات، وسرعة التوصيل.',
+      portalReviewsBtn: 'قراءة التقييمات ←',
+      portalBadgeTrack: 'تتبع فوري',
+      portalTrackTitle: 'تتبع طلبك والدعم',
+      portalTrackSub: 'أدخل رقم هاتفك لتتبع حالة طردك وتوصيله فوراً في أي محافظة.',
+      portalTrackBtn: 'تتبع طلبك الآن ←',
+      featuredSub: 'مختارات مميزة',
+      featuredTitle: 'قطع مختارة ومميزة',
+      viewAllInShop: 'تصفح جميع المنتجات في المتجر ←',
+      breadcrumbHome: 'الرئيسية',
+      breadcrumbShop: 'المتجر والكولكشن',
+      breadcrumbAbout: 'قصة البراند والفلسفة',
+      breadcrumbCommunity: 'إطلالات المجتمع',
+      breadcrumbReviews: 'آراء وتقييمات العملاء',
+      breadcrumbTrack: 'تتبع الطلب وخدمة العملاء',
+      trackTitle: 'تتبع طلبك فوراً',
+      trackSub: 'أدخل رقم هاتفك المكون من 10 أرقام (07XXXXXXXX)',
+      trackBtn: 'تتبع الطلب',
+      reviewsPageSub: 'تقييمات موثقة 5 نجوم لزبائننا في الأردن',
       shop: 'تسوق الكولكشن',
       allProducts: 'جميع المنتجات',
       teesRingers: 'تيشيرتات & رينجر',
@@ -127,6 +174,52 @@ document.addEventListener('DOMContentLoaded', () => {
       langToggle: 'عربي',
       announcement: 'FREE DELIVERY IN AMMAN • 1 JD ACROSS JORDAN',
       brandTitle: 'Velen Official',
+      navHome: 'Home',
+      navShop: 'Shop',
+      navStory: 'Our Story',
+      navCommunity: 'Community',
+      navReviews: 'Reviews',
+      navTrack: 'Track Order',
+      heroStoryBtn: 'OUR STORY',
+      manifestoBadge: 'ABOUT THE BRAND',
+      brandIntroTitle: 'DEFINING MODERN STREETWEAR IN AMMAN',
+      brandIntroSub: 'A NEW CHAPTER IN JORDANIAN APPAREL CRAFTSMANSHIP',
+      brandIntroText: 'Velen was born in Amman from a distinct vision: creating luxury streetwear essentials that balance heavyweight 260 GSM combed cotton, relaxed contemporary boxy cuts, and unmatched durability. Every seam is cut, sewn, and inspected locally to deliver a garment that feels substantial from the first wear and endures for years.',
+      portalsSub: 'DISCOVER VELEN SECTIONS',
+      portalsTitle: 'EXPLORE BY DESTINATION',
+      portalBadgeShop: 'CATALOG 2026',
+      portalShopTitle: 'ALL PRODUCTS & DROPS',
+      portalShopSub: 'Explore heavyweight boxy tees, ringers, hoodies and daily essentials with multi-color options.',
+      portalShopBtn: 'ENTER SHOPPING CATALOG →',
+      portalBadgeAbout: 'THE PHILOSOPHY',
+      portalAboutTitle: 'OUR STORY & CRAFTSMANSHIP',
+      portalAboutSub: 'Discover the journey of creating Jordan\'s finest everyday streetwear with custom 260 GSM fabrics.',
+      portalAboutBtn: 'DISCOVER THE STORY →',
+      portalBadgeCommunity: 'COMMUNITY WEARS VELEN',
+      portalCommunityTitle: 'COMMUNITY & FITS',
+      portalCommunitySub: 'Real people, real fits. Browse our community lookbook, customer stylings, and video reels.',
+      portalCommunityBtn: 'VIEW COMMUNITY →',
+      portalBadgeReviews: '5.0 ★ VERIFIED RATINGS',
+      portalReviewsTitle: 'CUSTOMER REVIEWS',
+      portalReviewsSub: 'Read verified customer feedback on sizing, heavyweight cotton texture, and fast delivery.',
+      portalReviewsBtn: 'READ REVIEWS →',
+      portalBadgeTrack: 'LIVE COURIER STATUS',
+      portalTrackTitle: 'TRACK ORDER & SUPPORT',
+      portalTrackSub: 'Check your live order delivery status with your phone number, or get instant WhatsApp assistance.',
+      portalTrackBtn: 'TRACK ORDER NOW →',
+      featuredSub: 'CURATED ESSENTIALS',
+      featuredTitle: 'FEATURED RELEASES',
+      viewAllInShop: 'VIEW FULL COLLECTION IN SHOP →',
+      breadcrumbHome: 'Home',
+      breadcrumbShop: 'Shop Collection',
+      breadcrumbAbout: 'Our Story & Philosophy',
+      breadcrumbCommunity: 'Community Looks',
+      breadcrumbReviews: 'Customer Reviews',
+      breadcrumbTrack: 'Track Order & Support',
+      trackTitle: 'TRACK YOUR ORDER',
+      trackSub: 'ENTER YOUR 10-DIGIT MOBILE NUMBER (07XXXXXXXX)',
+      trackBtn: 'Track Order',
+      reviewsPageSub: 'VERIFIED 5-STAR RATINGS ACROSS JORDAN',
       shop: 'SHOP COLLECTION',
       allProducts: 'All Products',
       teesRingers: 'Tees & Ringers',
@@ -247,11 +340,15 @@ document.addEventListener('DOMContentLoaded', () => {
   const toastContainer = document.getElementById('toastContainer');
   const commItemWorn = document.getElementById('commItemWorn');
 
+  // ================= MULTI-PAGE VIEW ROUTER =================
+  const SITE_VIEWS = ['home', 'shop', 'about', 'community', 'reviews', 'track'];
+
   // Initialize
   initApp();
 
   async function initApp() {
     initLanguage();
+    initRouter();
     setupEventListeners();
     setupMenuDrawerLinks();
     setupDedicatedProductPage();
@@ -271,11 +368,254 @@ document.addEventListener('DOMContentLoaded', () => {
     setupWaybillModal();
 
     // Visitor Live Funnel Tracking initial pulse & heartbeat
-    sendVisitorPulse('home', 'الصفحة الرئيسية');
+    sendVisitorPulse('home', 'Home Page');
     setInterval(() => sendVisitorPulse(state.currentStage || 'home'), 25000);
 
     // Heartbeat for live active carts every 45s
     setInterval(sendCartHeartbeat, 45000);
+  }
+
+  function initRouter() {
+    window.addEventListener('hashchange', handleHashRoute);
+    window.addEventListener('popstate', (e) => {
+      if (e.state && e.state.page === 'product' && e.state.id) {
+        openProductPage(e.state.id, false);
+      } else if (e.state && e.state.view) {
+        showView(e.state.view, false);
+      } else {
+        handleHashRoute();
+      }
+    });
+
+    handleHashRoute();
+  }
+
+  function handleHashRoute() {
+    const hash = window.location.hash || '#home';
+    if (hash.startsWith('#product-')) {
+      const id = hash.replace('#product-', '');
+      openProductPage(id, false);
+    } else if (hash === '#shop' || hash === '#collection') {
+      showView('shop', false);
+    } else if (hash === '#about') {
+      showView('about', false);
+    } else if (hash === '#community') {
+      showView('community', false);
+    } else if (hash === '#reviews') {
+      showView('reviews', false);
+    } else if (hash === '#track') {
+      showView('track', false);
+    } else {
+      showView('home', false);
+    }
+  }
+
+  function navigateTo(viewName, pushState = true) {
+    if (!SITE_VIEWS.includes(viewName)) viewName = 'home';
+    showView(viewName, pushState);
+  }
+
+  function showView(viewName, pushState = true) {
+    state.activeView = viewName;
+
+    // Hide product page view if open
+    const prodPage = document.getElementById('productPage');
+    if (prodPage) prodPage.style.display = 'none';
+
+    const homeView = document.getElementById('homeView');
+    if (homeView) homeView.style.display = 'block';
+
+    // Show only the selected view
+    SITE_VIEWS.forEach(v => {
+      const el = document.getElementById(`view-${v}`);
+      if (el) {
+        if (v === viewName) {
+          el.style.display = 'block';
+          el.classList.add('active');
+        } else {
+          el.style.display = 'none';
+          el.classList.remove('active');
+        }
+      }
+    });
+
+    // Sync Desktop Nav Active State
+    document.querySelectorAll('#desktopNavMenu .nav-link-item').forEach(link => {
+      if (link.getAttribute('data-nav') === viewName) {
+        link.classList.add('active');
+      } else {
+        link.classList.remove('active');
+      }
+    });
+
+    // Sync Mobile Drawer Active State
+    document.querySelectorAll('#navDrawer .drawer-link').forEach(link => {
+      if (link.getAttribute('data-nav') === viewName) {
+        link.classList.add('active');
+      } else {
+        link.classList.remove('active');
+      }
+    });
+
+    if (pushState && window.history && window.history.pushState) {
+      window.history.pushState({ view: viewName }, '', `#${viewName}`);
+    }
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    state.currentStage = viewName;
+    sendVisitorPulse(viewName, `View: ${viewName}`);
+
+    if (viewName === 'shop') {
+      renderProducts();
+    } else if (viewName === 'home') {
+      renderFeaturedProducts();
+    }
+  }
+
+  // Render Featured Drops on the Home Page
+  function renderFeaturedProducts() {
+    const grid = document.getElementById('homeFeaturedGrid');
+    if (!grid) return;
+    if (!state.products || state.products.length === 0) {
+      grid.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; color: #888; padding: 30px;">Loading featured pieces...</div>';
+      return;
+    }
+
+    const featured = state.products.slice(0, 4);
+    const isAr = state.activeLang === 'ar';
+    const dict = translations[state.activeLang] || translations.en;
+
+    grid.innerHTML = featured.map(product => {
+      const priceFormatted = Number(product.price).toFixed(3) + ' JOD';
+      const comparePriceFormatted = product.comparePrice ? Number(product.comparePrice).toFixed(3) + ' JOD' : null;
+      const mainImg = product.image || (product.images && product.images[0]) || '/assets/velen-hero-clean.jpg';
+
+      return `
+        <div class="product-card" data-product-id="${product.id}">
+          <div class="product-img-wrapper" onclick="window.velenApp.openProductModal('${product.id}')">
+            ${product.onSale ? '<span class="badge-sale">SALE</span>' : ''}
+            <img src="${mainImg}" alt="${product.name}" class="product-img" loading="lazy" onerror="this.src='/assets/velen-hero-clean.jpg'">
+            <button class="btn-floating-bag" onclick="event.stopPropagation(); window.velenApp.quickAddToCart('${product.id}')" title="${dict.addToBag}" aria-label="Add to bag">
+              <i class="fa-solid fa-cart-plus"></i>
+            </button>
+          </div>
+          <div class="product-info" onclick="window.velenApp.openProductModal('${product.id}')">
+            <h3 class="product-title">${product.name}</h3>
+            <div class="price-row">
+              <span class="current-price">${priceFormatted}</span>
+              ${comparePriceFormatted ? `<span class="strike-price">${comparePriceFormatted}</span>` : ''}
+            </div>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  // Live Order Tracking Lookup by Phone Number
+  async function handleOrderLookup(e) {
+    if (e && e.preventDefault) e.preventDefault();
+    const input = document.getElementById('trackPhoneInput');
+    const resultsContainer = document.getElementById('orderLookupResults');
+    if (!input || !resultsContainer) return;
+
+    const rawPhone = input.value.trim().replace(/\D/g, '');
+    const isAr = state.activeLang === 'ar';
+
+    if (!rawPhone.startsWith('07') || rawPhone.length !== 10) {
+      showToast(isAr ? 'يرجى إدخال رقم هاتف أردني صحيح يبدأ بـ 07 (10 أرقام)' : 'Please enter a valid 10-digit Jordanian phone starting with 07', 'warning');
+      return;
+    }
+
+    resultsContainer.style.display = 'block';
+    resultsContainer.innerHTML = `
+      <div class="order-loading-box">
+        <i class="fa-solid fa-spinner fa-spin"></i>
+        <span>${isAr ? 'جاري البحث عن طلباتك في النظام...' : 'Searching for your orders in our system...'}</span>
+      </div>
+    `;
+
+    try {
+      const res = await fetch('/api/orders');
+      if (!res.ok) throw new Error('Failed to fetch orders');
+      const allOrders = await res.json();
+      const matched = (allOrders || []).filter(o => {
+        const orderPhone = String(o.phone || o.customerPhone || '').replace(/\D/g, '');
+        return orderPhone.endsWith(rawPhone.slice(-8));
+      });
+
+      if (matched.length === 0) {
+        resultsContainer.innerHTML = `
+          <div class="order-not-found-box">
+            <i class="fa-solid fa-box-open"></i>
+            <h4>${isAr ? 'لم يتم العثور على طلبات مرتبطة بهذا الرقم' : 'No Orders Found for This Number'}</h4>
+            <p>${isAr ? 'تأكد من إدخال نفس الرقم المسجل أثناء إتمام الطلب، أو تواصل مع خدمة العملاء مباشرة عبر واتساب.' : 'Please check the mobile number used at checkout, or contact our customer support team directly on WhatsApp.'}</p>
+            <a href="https://wa.me/962770188144?text=${encodeURIComponent('مرحباً، أود الاستفسار عن حالة طلبي لرقم الهاتف: ' + rawPhone)}" target="_blank" class="btn-wa-direct">
+              <i class="fa-brands fa-whatsapp"></i> ${isAr ? 'تواصل معنا عبر واتساب' : 'Chat on WhatsApp'}
+            </a>
+          </div>
+        `;
+        return;
+      }
+
+      resultsContainer.innerHTML = `
+        <div class="orders-matched-list">
+          <h4 class="matched-title">${isAr ? `الطلبات المسجلة (${matched.length})` : `Found Orders (${matched.length})`}</h4>
+          ${matched.map(ord => {
+            const status = ord.status || 'pending';
+            let statusBadge = '';
+            if (status === 'completed' || status === 'delivered') {
+              statusBadge = `<span class="badge-status delivered"><i class="fa-solid fa-circle-check"></i> ${isAr ? 'تم التسليم بنجاح' : 'Delivered'}</span>`;
+            } else if (status === 'shipped' || status === 'out_for_delivery') {
+              statusBadge = `<span class="badge-status out-delivery"><i class="fa-solid fa-truck-fast"></i> ${isAr ? 'مع المندوب للتوصيل' : 'Out for Delivery'}</span>`;
+            } else {
+              statusBadge = `<span class="badge-status pending"><i class="fa-solid fa-clock"></i> ${isAr ? 'قيد التجهيز والتغليف' : 'Processing'}</span>`;
+            }
+
+            const items = Array.isArray(ord.items) ? ord.items : [];
+            const dateStr = ord.createdAt ? new Date(ord.createdAt).toLocaleDateString(isAr ? 'ar-JO' : 'en-US', { day:'numeric', month:'short', year:'numeric' }) : '';
+            const totalF = Number(ord.total || 0).toFixed(3) + ' JOD';
+
+            return `
+              <div class="matched-order-card">
+                <div class="order-card-top">
+                  <div>
+                    <span class="order-number-tag">#${ord.orderNumber || ord.id}</span>
+                    <span class="order-date-tag">${dateStr}</span>
+                  </div>
+                  ${statusBadge}
+                </div>
+                <div class="order-card-items">
+                  ${items.map(it => `
+                    <div class="track-item-row">
+                      <span>• ${it.name} ${it.size ? `(${it.size})` : ''} ${it.color ? `— ${it.color}` : ''} × ${it.qty || 1}</span>
+                      <span class="track-item-price">${Number(it.price * (it.qty || 1)).toFixed(3)} JOD</span>
+                    </div>
+                  `).join('')}
+                </div>
+                <div class="order-card-footer">
+                  <div class="order-dest">
+                    <i class="fa-solid fa-location-dot"></i> ${ord.city || 'Amman'} — ${ord.address || ''}
+                  </div>
+                  <div class="order-total-highlight">
+                    <span>${isAr ? 'المجموع:' : 'Total:'}</span> <strong>${totalF}</strong>
+                  </div>
+                </div>
+              </div>
+            `;
+          }).join('')}
+        </div>
+      `;
+    } catch (err) {
+      console.error(err);
+      resultsContainer.innerHTML = `
+        <div class="order-not-found-box">
+          <i class="fa-solid fa-triangle-exclamation"></i>
+          <h4>${isAr ? 'حدث خطأ أثناء الاتصال بالخادم' : 'Error connecting to server'}</h4>
+          <p>${err.message}</p>
+        </div>
+      `;
+    }
   }
 
   // ================= DATA FETCHING =================
@@ -367,14 +707,12 @@ document.addEventListener('DOMContentLoaded', () => {
       if (p3 && design.valueProps.prop3) p3.textContent = design.valueProps.prop3;
     }
 
-    // 5. Sections Re-ordering & Visibility
-    const container = document.getElementById('mainSectionsContainer');
-    if (container && design.sectionsOrder && Array.isArray(design.sectionsOrder)) {
-      design.sectionsOrder.forEach(secKey => {
+    // 5. Sections Visibility
+    if (design.sectionsVisibility) {
+      Object.keys(design.sectionsVisibility).forEach(secKey => {
         const secEl = document.getElementById(`sec-${secKey}`);
         if (secEl) {
-          container.appendChild(secEl);
-          const isVisible = design.sectionsVisibility ? (design.sectionsVisibility[secKey] !== false) : true;
+          const isVisible = design.sectionsVisibility[secKey] !== false;
           secEl.style.display = isVisible ? (secKey === 'hero' ? 'flex' : (secKey === 'valueProps' ? 'flex' : 'block')) : 'none';
         }
       });
@@ -435,6 +773,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const res = await fetch('/api/products');
       state.products = await res.json();
       renderProducts();
+      renderFeaturedProducts();
       populateProductSelect();
     } catch (err) {
       console.error('Error fetching products:', err);
@@ -948,17 +1287,14 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function closeProductPage(updateHistory = true) {
-    const homeView = document.getElementById('homeView');
     const prodPage = document.getElementById('productPage');
     if (prodPage) prodPage.style.display = 'none';
+
+    const homeView = document.getElementById('homeView');
     if (homeView) homeView.style.display = 'block';
 
-    state.currentStage = 'home';
-    sendVisitorPulse('home', 'الصفحة الرئيسية');
-
-    if (updateHistory && window.history && window.history.pushState && window.location.hash.startsWith('#product')) {
-      window.history.pushState({ page: 'home' }, '', window.location.pathname);
-    }
+    const targetView = state.activeView || 'shop';
+    showView(targetView, updateHistory);
   }
 
   function renderProductPageContent(product) {
@@ -2061,8 +2397,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // ================= LANGUAGE CONTROLLER (AR / EN) =================
   function initLanguage() {
     const savedLang = localStorage.getItem('velen_lang');
-    // Default store language is Arabic ('ar')
-    let lang = savedLang || 'ar';
+    // Default store language is English ('en') as requested by user
+    let lang = savedLang || 'en';
     setLanguage(lang);
 
     document.getElementById('langToggleBtn')?.addEventListener('click', () => {
@@ -2077,13 +2413,14 @@ document.addEventListener('DOMContentLoaded', () => {
     localStorage.setItem('velen_lang', lang);
     document.documentElement.setAttribute('lang', lang);
     document.documentElement.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+    document.body.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
 
     const langLabel = document.getElementById('langLabel');
     if (langLabel) {
       langLabel.textContent = lang === 'ar' ? 'EN' : 'عربي';
     }
 
-    const dict = translations[lang] || translations.ar;
+    const dict = translations[lang] || translations.en;
     document.querySelectorAll('[data-i18n]').forEach(el => {
       const key = el.getAttribute('data-i18n');
       if (dict[key]) {
@@ -2098,7 +2435,10 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
 
-    if (state.products && state.products.length > 0) renderProducts();
+    if (state.products && state.products.length > 0) {
+      renderProducts();
+      if (typeof renderFeaturedProducts === 'function') renderFeaturedProducts();
+    }
     if (state.community && state.community.length > 0) renderCommunity();
     if (typeof renderReviews === 'function') renderReviews();
     updateCartUI();
@@ -2206,18 +2546,33 @@ document.addEventListener('DOMContentLoaded', () => {
   window._scrollToSection = scrollToSection;
 
   function setupMenuDrawerLinks() {
-    // Brand link (logo) scrolls to top
+    // Brand link (logo) navigates to home
     document.querySelectorAll('.brand-link').forEach(link => {
       link.addEventListener('click', (e) => {
         e.preventDefault();
-        scrollToSection('#hero');
+        navigateTo('home');
       });
     });
 
     // Hero Shop Button
     document.getElementById('heroShopBtn')?.addEventListener('click', (e) => {
       e.preventDefault();
-      scrollToSection('#collection');
+      navigateTo('shop');
+    });
+
+    // Hero Story Button
+    document.getElementById('heroStoryBtn')?.addEventListener('click', (e) => {
+      e.preventDefault();
+      navigateTo('about');
+    });
+
+    // Desktop Nav Links
+    document.querySelectorAll('#desktopNavMenu .nav-link-item').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const targetView = link.getAttribute('data-nav') || link.getAttribute('href')?.replace('#', '');
+        if (targetView) navigateTo(targetView);
+      });
     });
 
     const drawerLinks = document.querySelectorAll('#navDrawer .drawer-link, #navDrawer a[href^="#"]');
@@ -2233,7 +2588,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         const href = link.getAttribute('href');
-        if (!href || href === '#') return;
+        const targetView = link.getAttribute('data-nav') || href?.replace('#', '');
+        if (!targetView || targetView === '#') return;
 
         e.preventDefault();
         navDrawer.classList.remove('open');
@@ -2250,7 +2606,11 @@ document.addEventListener('DOMContentLoaded', () => {
           renderProducts();
         }
 
-        setTimeout(() => scrollToSection(href), 100);
+        if (SITE_VIEWS.includes(targetView)) {
+          navigateTo(targetView);
+        } else {
+          scrollToSection(href);
+        }
       });
     });
 
@@ -2258,9 +2618,10 @@ document.addEventListener('DOMContentLoaded', () => {
     footerLinks.forEach(link => {
       link.addEventListener('click', (e) => {
         const href = link.getAttribute('href');
-        if (!href || href === '#') return;
+        if (!href || href === '#' || href === '#terms') return;
         e.preventDefault();
 
+        const targetView = href.replace('#', '');
         const fFilter = link.getAttribute('data-footer-filter');
         if (fFilter) {
           state.activeCategory = fFilter;
@@ -2272,7 +2633,11 @@ document.addEventListener('DOMContentLoaded', () => {
           renderProducts();
         }
 
-        setTimeout(() => scrollToSection(href), 80);
+        if (SITE_VIEWS.includes(targetView)) {
+          navigateTo(targetView);
+        } else {
+          scrollToSection(href);
+        }
       });
     });
 
@@ -2439,6 +2804,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Expose global helpers to window for inline onclick handlers
   window.velenApp = {
+    navigateTo: (viewName) => navigateTo(viewName, true),
+    showView: (viewName) => showView(viewName, true),
+    handleOrderLookup: (e) => handleOrderLookup(e),
     openProductModal,
     selectModalSize: (size) => {
       if (state.currentProductForModal?.sizeInventory) {

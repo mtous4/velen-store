@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en" dir="ltr">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Velen Official — ملابس أساسية فاخرة | Made in Jordan</title>
-  <meta name="description" content="قصات بوكسي عصرية. قطن أردني ثقيل 260 GSM. تسوق تشكيلة Velen الرسمية مع توصيل مجاني داخل عمّان ودينار لكافة محافظات الأردن.">
+  <title>Velen Official — Luxury Everyday Essentials | Made in Jordan</title>
+  <meta name="description" content="Velen Official — Heavyweight 260 GSM combed cotton. Modern relaxed boxy fits. Handcrafted in Amman, Jordan. Free delivery in Amman & 1 JD Jordan-wide.">
   <link rel="icon" href="/assets/velen-logo.jpg">
   
   <!-- Modern Google Fonts -->
@@ -80,28 +80,36 @@
   <!-- Main Sticky Navigation -->
   <nav class="main-nav" id="mainNav">
     <div class="nav-container">
-      <!-- Left: Mobile Menu & Search -->
+      <!-- Left: Mobile Menu & Logo -->
       <div class="nav-left">
-        <button id="menuToggleBtn" class="icon-btn" aria-label="Open menu">
+        <button id="menuToggleBtn" class="icon-btn mobile-menu-btn" aria-label="Open menu">
           <i class="fa-solid fa-bars"></i>
         </button>
-        <button id="searchOpenBtn" class="icon-btn" aria-label="Search collection">
-          <i class="fa-solid fa-magnifying-glass"></i>
-        </button>
-      </div>
-
-      <!-- Center: Logo (Emblem image + Title) -->
-      <div class="nav-center">
-        <a href="#hero" class="brand-link">
+        <a href="#home" class="brand-link" onclick="window.velenApp?.navigateTo('home')">
           <img src="/assets/velen-logo.jpg" alt="Velen" class="nav-brand-logo" id="navBrandLogo" onerror="this.src='/assets/velen-logo.jpg'">
           <span class="brand-title">Velen Official</span>
         </a>
       </div>
 
-      <!-- Right: Language Switcher & Cart -->
+      <!-- Center: Desktop Navigation Links -->
+      <div class="nav-center">
+        <ul class="desktop-nav-menu" id="desktopNavMenu">
+          <li><a href="#home" class="nav-link-item active" data-nav="home" onclick="window.velenApp?.navigateTo('home')"><span data-i18n="navHome">Home</span></a></li>
+          <li><a href="#shop" class="nav-link-item" data-nav="shop" onclick="window.velenApp?.navigateTo('shop')"><span data-i18n="navShop">Shop</span></a></li>
+          <li><a href="#about" class="nav-link-item" data-nav="about" onclick="window.velenApp?.navigateTo('about')"><span data-i18n="navStory">Our Story</span></a></li>
+          <li><a href="#community" class="nav-link-item" data-nav="community" onclick="window.velenApp?.navigateTo('community')"><span data-i18n="navCommunity">Community</span></a></li>
+          <li><a href="#reviews" class="nav-link-item" data-nav="reviews" onclick="window.velenApp?.navigateTo('reviews')"><span data-i18n="navReviews">Reviews</span></a></li>
+          <li><a href="#track" class="nav-link-item" data-nav="track" onclick="window.velenApp?.navigateTo('track')"><span data-i18n="navTrack">Track Order</span></a></li>
+        </ul>
+      </div>
+
+      <!-- Right: Search, Language Switcher & Cart -->
       <div class="nav-right">
-        <button id="langToggleBtn" class="icon-btn lang-btn" title="تغيير اللغة / Switch Language" aria-label="Switch Language">
-          <span id="langLabel" class="lang-label-pill">EN</span>
+        <button id="searchOpenBtn" class="icon-btn" aria-label="Search collection" title="Search / بحث">
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </button>
+        <button id="langToggleBtn" class="icon-btn lang-btn" title="Switch Language / تغيير اللغة" aria-label="Switch Language">
+          <span id="langLabel" class="lang-label-pill">عربي</span>
         </button>
         <button id="cartToggleBtn" class="icon-btn cart-btn" aria-label="Shopping Cart">
           <i class="fa-solid fa-bag-shopping"></i>
@@ -114,7 +122,7 @@
   <!-- Fullscreen Slide Navigation Drawer (Matching Screenshot 5) -->
   <div id="navDrawer" class="nav-drawer" aria-hidden="true">
     <div class="drawer-header">
-      <div class="drawer-logo-wrap">
+      <div class="drawer-logo-wrap" onclick="window.velenApp?.navigateTo('home'); document.getElementById('navDrawerClose')?.click();" style="cursor:pointer;">
         <img src="/assets/velen-logo.jpg" alt="Velen" class="drawer-logo-img">
         <span>Velen Official</span>
       </div>
@@ -125,26 +133,27 @@
 
     <div class="drawer-body">
       <div class="drawer-section">
-        <h3 class="drawer-heading" data-i18n="shop">تسوق الكولكشن</h3>
+        <h3 class="drawer-heading" data-i18n="shop">PAGES • صفحات الموقع</h3>
         <ul class="drawer-links">
-          <li><a href="#collection" class="drawer-link" data-filter="all"><span data-i18n="allProducts">جميع المنتجات</span> <i class="fa-solid fa-angle-left"></i></a></li>
-          <li><a href="#collection" class="drawer-link" data-filter="Tees"><span data-i18n="teesRingers">تيشيرتات وبوكسي</span> <i class="fa-solid fa-angle-left"></i></a></li>
-          <li><a href="#community" class="drawer-link highlight-link"><span data-i18n="community">مجتمع فيلين</span> <span class="new-pill">COMMUNITY</span> <i class="fa-solid fa-angle-left"></i></a></li>
-          <li><a href="#reviews" class="drawer-link"><span data-i18n="customerReviews">آراء وتقييمات العملاء</span> <span class="new-pill" style="background:#e5b95f; color:#000;">★</span> <i class="fa-solid fa-angle-left"></i></a></li>
+          <li><a href="#home" class="drawer-link active" data-nav="home" onclick="window.velenApp?.navigateTo('home'); document.getElementById('navDrawerClose')?.click();"><i class="fa-solid fa-house"></i> <span data-i18n="navHome">Home</span> <i class="fa-solid fa-angle-right rtl-flip"></i></a></li>
+          <li><a href="#shop" class="drawer-link" data-nav="shop" onclick="window.velenApp?.navigateTo('shop'); document.getElementById('navDrawerClose')?.click();"><i class="fa-solid fa-shirt"></i> <span data-i18n="navShop">Shop Collection</span> <i class="fa-solid fa-angle-right rtl-flip"></i></a></li>
+          <li><a href="#about" class="drawer-link" data-nav="about" onclick="window.velenApp?.navigateTo('about'); document.getElementById('navDrawerClose')?.click();"><i class="fa-solid fa-gem"></i> <span data-i18n="navStory">Our Story & Craftsmanship</span> <i class="fa-solid fa-angle-right rtl-flip"></i></a></li>
+          <li><a href="#community" class="drawer-link highlight-link" data-nav="community" onclick="window.velenApp?.navigateTo('community'); document.getElementById('navDrawerClose')?.click();"><i class="fa-solid fa-users"></i> <span data-i18n="navCommunity">Community & Fits</span> <span class="new-pill">NEW</span> <i class="fa-solid fa-angle-right rtl-flip"></i></a></li>
+          <li><a href="#reviews" class="drawer-link" data-nav="reviews" onclick="window.velenApp?.navigateTo('reviews'); document.getElementById('navDrawerClose')?.click();"><i class="fa-solid fa-star"></i> <span data-i18n="navReviews">Customer Reviews</span> <span class="new-pill" style="background:#e5b95f; color:#000;">5.0 ★</span> <i class="fa-solid fa-angle-right rtl-flip"></i></a></li>
+          <li><a href="#track" class="drawer-link" data-nav="track" onclick="window.velenApp?.navigateTo('track'); document.getElementById('navDrawerClose')?.click();"><i class="fa-solid fa-truck-fast"></i> <span data-i18n="navTrack">Track Order & Support</span> <i class="fa-solid fa-angle-right rtl-flip"></i></a></li>
         </ul>
       </div>
 
       <div class="drawer-section">
-        <h3 class="drawer-heading" data-i18n="aboutUs">عن البراند</h3>
+        <h3 class="drawer-heading" data-i18n="aboutUs">INFORMATION • معلومات</h3>
         <ul class="drawer-links">
-          <li><a href="#about" class="drawer-link"><span data-i18n="whyVelen">لماذا فيلين؟</span> <i class="fa-solid fa-angle-left"></i></a></li>
-          <li><a href="#" class="drawer-link" id="drawerTermsBtn"><span data-i18n="policyAndShipping">الشحن وسياسة التبديل</span> <i class="fa-solid fa-angle-left"></i></a></li>
-          <li><a href="#" class="drawer-link open-terms-link" data-tab="care"><span data-i18n="fabricCare">دليل الأقمشة والعناية</span> <i class="fa-solid fa-angle-left"></i></a></li>
+          <li><a href="#" class="drawer-link" id="drawerTermsBtn"><i class="fa-solid fa-file-contract"></i> <span data-i18n="policyAndShipping">Shipping & Exchange Policy</span> <i class="fa-solid fa-angle-right rtl-flip"></i></a></li>
+          <li><a href="#" class="drawer-link open-terms-link" data-tab="care"><i class="fa-solid fa-jug-detergent"></i> <span data-i18n="fabricCare">Fabric Care Guide</span> <i class="fa-solid fa-angle-right rtl-flip"></i></a></li>
         </ul>
       </div>
 
       <div class="drawer-section">
-        <h3 class="drawer-heading" data-i18n="stayConnected">تواصل معنا</h3>
+        <h3 class="drawer-heading" data-i18n="stayConnected">CONNECT • تواصل معنا</h3>
         <div class="social-pills">
           <a href="https://www.instagram.com/velen.offical?dlrf=c3I5MGh6eTZneGYy" target="_blank" class="social-pill" id="drawerInstaLink"><i class="fa-brands fa-instagram"></i> Instagram</a>
           <a href="https://tiktok.com/@velenofficial" target="_blank" class="social-pill" id="drawerTiktokLink"><i class="fa-brands fa-tiktok"></i> TikTok</a>
@@ -154,7 +163,7 @@
 
       <div class="drawer-bottom-brand">
         <h2>Velen Official</h2>
-        <p class="origin-tag">صُنع بفخر في عمّان، الأردن 🇯🇴</p>
+        <p class="origin-tag">Handcrafted with pride in Amman, Jordan 🇯🇴</p>
       </div>
     </div>
   </div>
@@ -174,172 +183,439 @@
 
   <!-- Home View Wrapper -->
   <div id="homeView">
-  <!-- Main Sections Container (Allows dynamic re-ordering and visibility by Admin) -->
+  <!-- Main Sections Container with Dedicated Views for Multi-Page Website Experience -->
   <main id="mainSectionsContainer">
-    <!-- Hero Section -->
-    <div id="hero"></div>
-    <section class="hero-section" id="sec-hero">
-      <div class="hero-media-wrapper">
-        <img src="/assets/velen-hero-clean.jpg" alt="Velen Essentials" class="hero-banner-img" id="heroBannerImg" onerror="this.onerror=null;this.src='/assets/velen-hero-clean.jpg';">
-        <div class="hero-vignette-overlay"></div>
-      </div>
 
-      <div class="hero-content">
-        <div class="hero-logo-emblem">
-          <img src="/assets/velen-logo.jpg" alt="Velen Logo" class="hero-logo-img" id="heroLogoImg" onerror="this.onerror=null;this.src='/assets/velen-logo.jpg';">
-        </div>
-        <h1 class="hero-brand-name" id="heroBrandName">VELEN</h1>
-        <h2 class="hero-main-heading" id="heroMainHeading" data-i18n="heroMainHeading">ملابس أساسية فاخرة لكل يوم. صُنع بفخر في الأردن.</h2>
-        <p class="hero-tagline" id="heroTagline" data-i18n="heroTagline">قصّات نظيفة • ملمس فخم • صُممت لتدوم</p>
-        <div class="hero-cta-wrap">
-          <button type="button" class="btn-velen-primary" id="heroShopBtn" data-i18n="heroShopBtn">
-            تسوق الكولكشن الآن
-          </button>
-        </div>
-      </div>
-    </section>
-
-    <!-- Quick Value Props Strip -->
-    <div class="value-props-bar" id="sec-valueProps">
-      <div class="prop-item">
-        <i class="fa-solid fa-truck-fast"></i>
-        <span id="propText1" data-i18n="prop1">توصيل مجاني في عمّان • 1 دينار لباقي المحافظات</span>
-      </div>
-      <div class="prop-item">
-        <i class="fa-solid fa-crown"></i>
-        <span id="propText2" data-i18n="prop2">قطن أردني فاخر 260 GSM معالج ومثبت</span>
-      </div>
-      <div class="prop-item">
-        <i class="fa-solid fa-rotate-left"></i>
-        <span id="propText3" data-i18n="prop3">تبديل فوري للمقاس عند باب البيت</span>
-      </div>
-    </div>
-
-    <!-- Collection Section -->
-    <div id="collection"></div>
-    <section class="collection-section" id="sec-collection">
-      <div class="section-container">
-        <div class="collection-header">
-          <span class="section-sub" id="collectionSubtitle" data-i18n="collectionSubtitle">تشكيلة 2026 الحصرية</span>
-          <h2 class="section-title" id="collectionTitle" data-i18n="collectionTitle">DAILY ESSENTIALS</h2>
-          <div class="collection-line"></div>
+    <!-- ================= VIEW 1: HOME ================= -->
+    <div id="view-home" class="site-view active">
+      <!-- Hero Section -->
+      <div id="hero"></div>
+      <section class="hero-section" id="sec-hero">
+        <div class="hero-media-wrapper">
+          <img src="/assets/velen-hero-clean.jpg" alt="Velen Essentials" class="hero-banner-img" id="heroBannerImg" onerror="this.onerror=null;this.src='/assets/velen-hero-clean.jpg';">
+          <div class="hero-vignette-overlay"></div>
         </div>
 
-        <!-- Categories Filter Tabs -->
-        <div class="category-tabs" id="categoryTabs">
-          <button class="cat-pill active" data-cat="all" data-i18n="catAll">جميع القطع</button>
-          <button class="cat-pill" data-cat="Tees" data-i18n="catTees">تيشيرتات</button>
-          <button class="cat-pill" data-cat="Ringer" data-i18n="catRinger">رينجر</button>
-          <button class="cat-pill" data-cat="Boxy" data-i18n="catBoxy">قصّة بوكسي</button>
-          <button class="cat-pill" data-cat="Hoodies" data-i18n="catHoodies">هوديز</button>
-        </div>
-
-        <!-- Realtime Admin Notification Banner -->
-        <div id="newProductToast" class="live-toast" style="display:none;">
-          <i class="fa-solid fa-bell"></i> تم إضافة منتج جديد بواسطة الأدمن للتو!
-        </div>
-
-        <!-- Products Grid -->
-        <div class="products-grid" id="productsGrid">
-          <!-- Rendered dynamically from backend / db.json -->
-        </div>
-      </div>
-    </section>
-
-    <!-- ===== VELEN COMMUNITY SECTION (Social Sharing — No Rating Required) ===== -->
-    <div id="community"></div>
-    <section class="community-section" id="sec-community">
-      <div class="section-container">
-        <div class="community-header">
-          <span class="section-sub">VELEN COMMUNITY</span>
-          <h2 class="community-title" id="communityTitle" data-i18n="communityTitle">مجتمع فيلين</h2>
-          <p class="community-subtitle" id="communitySubtitle" data-i18n="communitySubtitle">أشخاص حقيقيون • ستايل حقيقي</p>
-          <p class="community-desc" id="communityDesc" data-i18n="communityDesc">شارك إطلالتك وفيديوهاتك مع مجتمع Velen — اكتب اسم حسابك على إنستغرام وارفع صورتك أو مقطع الريلز بدون تقييم نجوم!</p>
-          
-          <div class="community-actions-bar">
-            <button id="addLookBtn" class="btn-community-share">
-              <i class="fa-brands fa-instagram"></i> <span data-i18n="addLookBtn">شارك إطلالتك في المجتمع</span>
+        <div class="hero-content">
+          <div class="hero-logo-emblem">
+            <img src="/assets/velen-logo.jpg" alt="Velen Logo" class="hero-logo-img" id="heroLogoImg" onerror="this.onerror=null;this.src='/assets/velen-logo.jpg';">
+          </div>
+          <h1 class="hero-brand-name" id="heroBrandName">VELEN</h1>
+          <h2 class="hero-main-heading" id="heroMainHeading" data-i18n="heroMainHeading">THE NEW STANDARD OF STREETWEAR</h2>
+          <p class="hero-tagline" id="heroTagline" data-i18n="heroTagline">Luxury Everyday Essentials • 260 GSM Combed Cotton • Crafted in Jordan</p>
+          <div class="hero-cta-wrap">
+            <button type="button" class="btn-velen-primary" id="heroShopBtn" onclick="window.velenApp?.navigateTo('shop')" data-i18n="heroShopBtn">
+              SHOP THE COLLECTION
             </button>
-            <div class="community-filter-pills">
-              <button class="comm-pill active" data-comm-filter="all" data-i18n="allPosts">جميع الإطلالات</button>
-              <button class="comm-pill" data-comm-filter="video" data-i18n="videoReels"><i class="fa-solid fa-play"></i> فيديو ريلز</button>
+            <button type="button" class="btn-velen-secondary" id="heroStoryBtn" onclick="window.velenApp?.navigateTo('about')" data-i18n="heroStoryBtn">
+              OUR STORY
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Quick Value Props Strip -->
+      <div class="value-props-bar" id="sec-valueProps">
+        <div class="prop-item">
+          <i class="fa-solid fa-truck-fast"></i>
+          <span id="propText1" data-i18n="prop1">Free Delivery in Amman • 1 JD Jordan-wide</span>
+        </div>
+        <div class="prop-item">
+          <i class="fa-solid fa-crown"></i>
+          <span id="propText2" data-i18n="prop2">Jordanian Luxury Heavyweight Cotton 260 GSM</span>
+        </div>
+        <div class="prop-item">
+          <i class="fa-solid fa-rotate-left"></i>
+          <span id="propText3" data-i18n="prop3">Hassle-free doorstep size exchange</span>
+        </div>
+      </div>
+
+      <!-- ===== BRAND INTRODUCTION / MANIFESTO (تعريف عن Velen) ===== -->
+      <section class="home-brand-manifesto" id="homeBrandIntro">
+        <div class="section-container">
+          <div class="manifesto-card">
+            <div class="manifesto-badge-wrap">
+              <span class="manifesto-badge"><i class="fa-solid fa-gem"></i> <span data-i18n="manifestoBadge">ABOUT VELEN • هوية فيلين</span></span>
             </div>
-          </div>
-        </div>
-
-        <!-- Community Grid / Feed -->
-        <div class="community-feed-grid" id="communityGrid">
-          <!-- Rendered dynamically from backend -->
-        </div>
-      </div>
-    </section>
-
-    <!-- ===== PRODUCT REVIEWS SECTION (Pure Star Ratings — Separate from Community) ===== -->
-    <div id="reviews"></div>
-    <section class="reviews-section" id="sec-reviews">
-      <div class="section-container">
-        <div class="reviews-section-header">
-          <span class="section-sub">CUSTOMER REVIEWS</span>
-          <h2 class="section-title" id="reviewsTitle" data-i18n="customerReviews">آراء وتقييمات العملاء</h2>
-          <div class="collection-line"></div>
-          <p class="reviews-desc" id="reviewsDesc">تجارب حقيقية لزبائننا حول جودة الأقمشة ودقة المقاسات وسرعة التوصيل — تقييمات بسيطة وموثوقة.</p>
-          <div class="reviews-global-rating" id="reviewsGlobalRating">
-            <div class="global-stars" id="reviewsStarsDisplay">★★★★★</div>
-            <span class="global-score" id="reviewsScore">5.0</span>
-            <span class="global-count" id="reviewsCount">(0 تقييم)</span>
-          </div>
-          <button id="addReviewBtn" class="btn-add-review">
-            <i class="fa-solid fa-star"></i> <span data-i18n="writeReview">أضف تقييمك الآن</span>
-          </button>
-        </div>
-
-        <!-- Reviews Grid -->
-        <div class="reviews-grid" id="reviewsGrid">
-          <!-- Rendered dynamically from backend -->
-        </div>
-      </div>
-    </section>
-
-    <!-- About / Why Velen Section -->
-    <div id="about"></div>
-    <section class="about-section" id="sec-about">
-      <div class="section-container">
-        <div class="about-grid">
-          <div class="about-content">
-            <span class="section-sub" id="aboutSub">THE STORY</span>
-            <h2 class="section-title" id="aboutTitle">لماذا فيلين؟</h2>
-            <p class="about-p" id="aboutP1">
-              انطلقت <strong>Velen</strong> من عمّان لإعادة تعريف الملابس اليومية في الأردن. نركز على القصّات البوكسي المريحة (Boxy & Cropped Fit) والأقمشة القطنية الثقيلة 100% التي تحافظ على شكلها ونعومتها مع الاستخدام المتكرر.
+            <h2 class="manifesto-title" data-i18n="brandIntroTitle">DEFINING MODERN STREETWEAR IN AMMAN</h2>
+            <p class="manifesto-sub" data-i18n="brandIntroSub">A NEW CHAPTER IN JORDANIAN APPAREL CRAFTSMANSHIP</p>
+            <div class="manifesto-divider"></div>
+            <p class="manifesto-text" data-i18n="brandIntroText">
+              Velen was born in Amman from a distinct vision: creating luxury streetwear essentials that balance heavyweight 260 GSM combed cotton, relaxed contemporary boxy cuts, and unmatched durability. Every seam is cut, sewn, and inspected locally to deliver a garment that feels substantial from the first wear and endures for years.
             </p>
-            <div class="about-features">
-              <div class="feature-card">
-                <span class="num">01</span>
-                <h4 id="featTitle1">قطن محلي نخب أول</h4>
-                <p id="featDesc1">نسيج قطني محبوك بوزن 260 GSM معالجة ضد الانكماش والوبر.</p>
+
+            <div class="manifesto-pillars-grid">
+              <div class="pillar-box">
+                <div class="pillar-icon"><i class="fa-solid fa-feather-pointed"></i></div>
+                <h4 data-i18n="featTitle1">Heavyweight 260 GSM Cotton</h4>
+                <p data-i18n="featDesc1">Custom-spun combed cotton weave engineered for high density, rich hand-feel, and lifetime shape retention.</p>
               </div>
-              <div class="feature-card">
-                <span class="num">02</span>
-                <h4 id="featTitle2">قصّة بوكسي معاصرة</h4>
-                <p id="featDesc2">تصميم أكتاف منسدلة وطول متناسق يعطي إطلالة ستريت وير نظيفة وفخمة.</p>
+              <div class="pillar-box">
+                <div class="pillar-icon"><i class="fa-solid fa-ruler-combined"></i></div>
+                <h4 data-i18n="featTitle2">Signature Boxy Fit</h4>
+                <p data-i18n="featDesc2">Clean drop shoulders, balanced drape, and relaxed torso proportions tailored for effortless everyday styling.</p>
               </div>
-              <div class="feature-card">
-                <span class="num">03</span>
-                <h4 id="featTitle3">فخر الصناعة الأردنية</h4>
-                <p id="featDesc3">مُصمم ومُنتج بأيادٍ أردنية مبدعة لدعم الإنتاج المحلي بأعلى معايير العالمية.</p>
-              </div>
-            </div>
-          </div>
-          <div class="about-visual">
-            <div class="about-img-frame">
-              <img src="/assets/velen-logo.jpg" alt="Velen Identity" class="about-img" id="aboutImg" onerror="this.onerror=null;this.src='/assets/velen-logo.jpg';">
-              <div class="about-quote">
-                <p id="aboutQuote">"Clean fits. Premium feel. Built for everyday wear."</p>
+              <div class="pillar-box">
+                <div class="pillar-icon"><i class="fa-solid fa-scissors"></i></div>
+                <h4 data-i18n="featTitle3">100% Ethically Made in Jordan</h4>
+                <p data-i18n="featDesc3">Ethically crafted and finished by master Jordanian garment artisans under uncompromising quality inspection.</p>
               </div>
             </div>
           </div>
         </div>
+      </section>
+
+      <!-- ===== BIG PORTAL TILES ("كبسات كبيرة بتدخل علة صفحة لكل شي") ===== -->
+      <section class="home-portals-section" id="homePortalsSection">
+        <div class="section-container">
+          <div class="section-header-center">
+            <span class="section-sub" data-i18n="portalsSub">DISCOVER VELEN • تصفح الأقسام</span>
+            <h2 class="section-title" data-i18n="portalsTitle">EXPLORE BY DESTINATION</h2>
+            <div class="collection-line"></div>
+          </div>
+
+          <div class="portal-cards-grid">
+            <!-- Portal 1: Shop All Products -->
+            <div class="portal-card portal-card-lg" onclick="window.velenApp?.navigateTo('shop')">
+              <img src="/assets/velen-boxy-black.jpg" alt="Shop Collection" class="portal-bg-img" onerror="this.src='/assets/velen-hero-clean.jpg'">
+              <div class="portal-overlay"></div>
+              <div class="portal-content">
+                <span class="portal-badge"><i class="fa-solid fa-bag-shopping"></i> <span data-i18n="portalBadgeShop">CATALOG 2026</span></span>
+                <h3 class="portal-title" data-i18n="portalShopTitle">ALL PRODUCTS & DROPS</h3>
+                <p class="portal-desc" data-i18n="portalShopSub">Explore heavyweight boxy tees, ringers, hoodies and daily essentials with multi-color options.</p>
+                <button type="button" class="btn-portal-action">
+                  <span data-i18n="portalShopBtn">ENTER SHOPPING CATALOG →</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Portal 2: Our Story / Craftsmanship -->
+            <div class="portal-card portal-card-lg" onclick="window.velenApp?.navigateTo('about')">
+              <img src="/assets/velen-boxy-white.jpg" alt="Our Story" class="portal-bg-img" onerror="this.src='/assets/velen-hero-clean.jpg'">
+              <div class="portal-overlay"></div>
+              <div class="portal-content">
+                <span class="portal-badge"><i class="fa-solid fa-gem"></i> <span data-i18n="portalBadgeAbout">THE PHILOSOPHY</span></span>
+                <h3 class="portal-title" data-i18n="portalAboutTitle">OUR STORY & CRAFTSMANSHIP</h3>
+                <p class="portal-desc" data-i18n="portalAboutSub">Discover the journey of creating Jordan's finest everyday streetwear with custom 260 GSM fabrics.</p>
+                <button type="button" class="btn-portal-action">
+                  <span data-i18n="portalAboutBtn">DISCOVER THE STORY →</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Portal 3: Community Looks -->
+            <div class="portal-card" onclick="window.velenApp?.navigateTo('community')">
+              <img src="/assets/velen-community-1.jpg" alt="Community" class="portal-bg-img" onerror="this.src='/assets/velen-hero-clean.jpg'">
+              <div class="portal-overlay"></div>
+              <div class="portal-content">
+                <span class="portal-badge"><i class="fa-brands fa-instagram"></i> <span data-i18n="portalBadgeCommunity">COMMUNITY WEARS VELEN</span></span>
+                <h3 class="portal-title" data-i18n="portalCommunityTitle">COMMUNITY & FITS</h3>
+                <p class="portal-desc" data-i18n="portalCommunitySub">Real people, real fits. Browse our community lookbook, customer stylings, and video reels.</p>
+                <button type="button" class="btn-portal-action">
+                  <span data-i18n="portalCommunityBtn">VIEW COMMUNITY →</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Portal 4: Customer Reviews -->
+            <div class="portal-card" onclick="window.velenApp?.navigateTo('reviews')">
+              <div class="portal-bg-abstract reviews-accent-bg"></div>
+              <div class="portal-overlay"></div>
+              <div class="portal-content">
+                <span class="portal-badge" style="background:rgba(229,185,95,0.2); color:#e5b95f; border-color:rgba(229,185,95,0.4);"><i class="fa-solid fa-star"></i> <span data-i18n="portalBadgeReviews">5.0 ★ VERIFIED RATINGS</span></span>
+                <h3 class="portal-title" data-i18n="portalReviewsTitle">CUSTOMER REVIEWS</h3>
+                <p class="portal-desc" data-i18n="portalReviewsSub">Read verified customer feedback on sizing, heavyweight cotton texture, and fast delivery.</p>
+                <button type="button" class="btn-portal-action">
+                  <span data-i18n="portalReviewsBtn">READ REVIEWS →</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Portal 5: Track Order & Direct Support -->
+            <div class="portal-card" onclick="window.velenApp?.navigateTo('track')">
+              <div class="portal-bg-abstract track-accent-bg"></div>
+              <div class="portal-overlay"></div>
+              <div class="portal-content">
+                <span class="portal-badge"><i class="fa-solid fa-truck-fast"></i> <span data-i18n="portalBadgeTrack">LIVE COURIER STATUS</span></span>
+                <h3 class="portal-title" data-i18n="portalTrackTitle">TRACK ORDER & SUPPORT</h3>
+                <p class="portal-desc" data-i18n="portalTrackSub">Check your live order delivery status with your phone number, or get instant WhatsApp assistance.</p>
+                <button type="button" class="btn-portal-action">
+                  <span data-i18n="portalTrackBtn">TRACK ORDER NOW →</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== CURATED FEATURED DROPS PREVIEW ===== -->
+      <section class="home-featured-section" id="homeFeaturedSection">
+        <div class="section-container">
+          <div class="section-header-center">
+            <span class="section-sub" data-i18n="featuredSub">CURATED ESSENTIALS • مختارات مميزة</span>
+            <h2 class="section-title" data-i18n="featuredTitle">FEATURED RELEASES</h2>
+            <div class="collection-line"></div>
+          </div>
+          <div class="products-grid" id="homeFeaturedGrid">
+            <!-- Populated dynamically with top 4 items -->
+          </div>
+          <div class="featured-view-all-wrap">
+            <button type="button" class="btn-view-all-shop" onclick="window.velenApp?.navigateTo('shop')">
+              <span data-i18n="viewAllInShop">VIEW FULL COLLECTION IN SHOP →</span>
+            </button>
+          </div>
+        </div>
+      </section>
+    </div> <!-- end #view-home -->
+
+    <!-- ================= VIEW 2: DEDICATED SHOP / COLLECTION ================= -->
+    <div id="view-shop" class="site-view" style="display:none;">
+      <div class="page-header-banner">
+        <div class="page-breadcrumb">
+          <a onclick="window.velenApp?.navigateTo('home')"><span data-i18n="breadcrumbHome">Home</span></a>
+          <span>/</span>
+          <span data-i18n="breadcrumbShop">Shop Collection</span>
+        </div>
+        <h1 class="page-main-title" data-i18n="collectionTitle">DAILY ESSENTIALS DROP</h1>
+        <p class="page-sub-title" data-i18n="collectionSubtitle">HEAVYWEIGHT 260 GSM COMBED COTTON • CRAFTED IN AMMAN</p>
       </div>
-    </section>
+
+      <!-- Collection Section -->
+      <div id="collection"></div>
+      <section class="collection-section" id="sec-collection">
+        <div class="section-container">
+          <!-- Categories Filter Tabs -->
+          <div class="category-tabs" id="categoryTabs">
+            <button class="cat-pill active" data-cat="all" data-i18n="catAll">All Pieces</button>
+            <button class="cat-pill" data-cat="Tees" data-i18n="catTees">T-Shirts</button>
+            <button class="cat-pill" data-cat="Ringer" data-i18n="catRinger">Ringers</button>
+            <button class="cat-pill" data-cat="Boxy" data-i18n="catBoxy">Boxy & Tees</button>
+            <button class="cat-pill" data-cat="Hoodies" data-i18n="catHoodies">Hoodies & Sweats</button>
+          </div>
+
+          <!-- Realtime Admin Notification Banner -->
+          <div id="newProductToast" class="live-toast" style="display:none;">
+            <i class="fa-solid fa-bell"></i> New product added live!
+          </div>
+
+          <!-- Products Grid -->
+          <div class="products-grid" id="productsGrid">
+            <!-- Rendered dynamically from backend / db.json -->
+          </div>
+        </div>
+      </section>
+    </div> <!-- end #view-shop -->
+
+    <!-- ================= VIEW 3: DEDICATED ABOUT / OUR STORY ================= -->
+    <div id="view-about" class="site-view" style="display:none;">
+      <div class="page-header-banner">
+        <div class="page-breadcrumb">
+          <a onclick="window.velenApp?.navigateTo('home')"><span data-i18n="breadcrumbHome">Home</span></a>
+          <span>/</span>
+          <span data-i18n="breadcrumbAbout">Our Story & Philosophy</span>
+        </div>
+        <h1 class="page-main-title" data-i18n="aboutTitle">OUR STORY & CRAFTSMANSHIP</h1>
+        <p class="page-sub-title" data-i18n="aboutSub">THE VELEN PHILOSOPHY • CRAFTED IN AMMAN TO GLOBAL STANDARDS</p>
+      </div>
+
+      <!-- About / Why Velen Section -->
+      <div id="about"></div>
+      <section class="about-section" id="sec-about">
+        <div class="section-container">
+          <div class="about-grid">
+            <div class="about-content">
+              <span class="section-sub" id="aboutSub" data-i18n="aboutSub">THE STORY</span>
+              <h2 class="section-title" id="aboutTitle" data-i18n="aboutTitle">Crafted in Amman to Global Standards</h2>
+              <p class="about-p" id="aboutP1" data-i18n="aboutP1">
+                VELEN was founded in Amman on a clear premise: delivering premium everyday streetwear crafted from heavyweight 100% Jordanian combed cotton with balanced boxy proportions built for lasting comfort.
+              </p>
+              <div class="about-features">
+                <div class="feature-card">
+                  <span class="num">01</span>
+                  <h4 id="featTitle1" data-i18n="featTitle1">Heavyweight 260 GSM Cotton</h4>
+                  <p id="featDesc1" data-i18n="featDesc1">Ultra-dense combed cotton structure that retains clean silhouette wash after wash.</p>
+                </div>
+                <div class="feature-card">
+                  <span class="num">02</span>
+                  <h4 id="featTitle2" data-i18n="featTitle2">Signature Boxy Fit</h4>
+                  <p id="featDesc2" data-i18n="featDesc2">Relaxed drop-shoulders with balanced proportions for clean modern aesthetics.</p>
+                </div>
+                <div class="feature-card">
+                  <span class="num">03</span>
+                  <h4 id="featTitle3" data-i18n="featTitle3">100% Ethically Made in Jordan</h4>
+                  <p id="featDesc3" data-i18n="featDesc3">Handcrafted by expert local garment makers under rigorous quality control.</p>
+                </div>
+              </div>
+            </div>
+            <div class="about-visual">
+              <div class="about-img-frame">
+                <img src="/assets/velen-logo.jpg" alt="Velen Identity" class="about-img" id="aboutImg" onerror="this.onerror=null;this.src='/assets/velen-logo.jpg';">
+                <div class="about-quote">
+                  <p id="aboutQuote">"Clean fits. Premium feel. Built for everyday wear."</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Fabric Care Accordion Guide inside About Page -->
+          <div class="about-fabric-care-box">
+            <h3 class="fabric-box-title"><i class="fa-solid fa-jug-detergent"></i> <span data-i18n="fabricCare">Garment & Fabric Care Guide</span></h3>
+            <div class="fabric-steps-grid">
+              <div class="step-card">
+                <span class="step-num">30°C</span>
+                <h5>Wash Cold</h5>
+                <p>Always wash in cold water (maximum 30°C) with similar dark or light colors to preserve pigment density.</p>
+              </div>
+              <div class="step-card">
+                <span class="step-num"><i class="fa-solid fa-wind"></i></span>
+                <h5>Air Dry Only</h5>
+                <p>Never tumble dry heavyweight cotton. Lay flat or hang dry in the shade to maintain crisp boxy shape.</p>
+              </div>
+              <div class="step-card">
+                <span class="step-num"><i class="fa-solid fa-shirt"></i></span>
+                <h5>Iron Inside Out</h5>
+                <p>Iron inside-out on medium heat to protect the combed surface texture and neck ribbing.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div> <!-- end #view-about -->
+
+    <!-- ================= VIEW 4: DEDICATED COMMUNITY ================= -->
+    <div id="view-community" class="site-view" style="display:none;">
+      <div class="page-header-banner">
+        <div class="page-breadcrumb">
+          <a onclick="window.velenApp?.navigateTo('home')"><span data-i18n="breadcrumbHome">Home</span></a>
+          <span>/</span>
+          <span data-i18n="breadcrumbCommunity">Community Looks</span>
+        </div>
+        <h1 class="page-main-title" data-i18n="communityTitle">COMMUNITY WEARS VELEN</h1>
+        <p class="page-sub-title" data-i18n="communitySubtitle">REAL PEOPLE • REAL STREETWEAR STYLE</p>
+      </div>
+
+      <!-- ===== VELEN COMMUNITY SECTION ===== -->
+      <div id="community"></div>
+      <section class="community-section" id="sec-community">
+        <div class="section-container">
+          <div class="community-header">
+            <span class="section-sub">VELEN COMMUNITY</span>
+            <h2 class="community-title" id="communityTitle" data-i18n="communityTitle">Community Wears Velen</h2>
+            <p class="community-subtitle" id="communitySubtitle" data-i18n="communitySubtitle">Real People • Real Streetwear Style</p>
+            <p class="community-desc" id="communityDesc" data-i18n="communityDesc">Share your daily look and styling videos with Velen — tag your Instagram handle and share your fit!</p>
+            
+            <div class="community-actions-bar">
+              <button id="addLookBtn" class="btn-community-share">
+                <i class="fa-brands fa-instagram"></i> <span data-i18n="addLookBtn">Share Your Look in Community</span>
+              </button>
+              <div class="community-filter-pills">
+                <button class="comm-pill active" data-comm-filter="all" data-i18n="allPosts">All Looks</button>
+                <button class="comm-pill" data-comm-filter="video" data-i18n="videoReels"><i class="fa-solid fa-play"></i> Reels Videos</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Community Grid / Feed -->
+          <div class="community-feed-grid" id="communityGrid">
+            <!-- Rendered dynamically from backend -->
+          </div>
+        </div>
+      </section>
+    </div> <!-- end #view-community -->
+
+    <!-- ================= VIEW 5: DEDICATED REVIEWS ================= -->
+    <div id="view-reviews" class="site-view" style="display:none;">
+      <div class="page-header-banner">
+        <div class="page-breadcrumb">
+          <a onclick="window.velenApp?.navigateTo('home')"><span data-i18n="breadcrumbHome">Home</span></a>
+          <span>/</span>
+          <span data-i18n="breadcrumbReviews">Customer Reviews</span>
+        </div>
+        <h1 class="page-main-title" data-i18n="customerReviews">CUSTOMER REVIEWS & TESTIMONIALS</h1>
+        <p class="page-sub-title" data-i18n="reviewsPageSub">VERIFIED 5-STAR RATINGS ACROSS JORDAN</p>
+      </div>
+
+      <!-- ===== PRODUCT REVIEWS SECTION ===== -->
+      <div id="reviews"></div>
+      <section class="reviews-section" id="sec-reviews">
+        <div class="section-container">
+          <div class="reviews-section-header">
+            <span class="section-sub">CUSTOMER REVIEWS</span>
+            <h2 class="section-title" id="reviewsTitle" data-i18n="customerReviews">Customer Reviews & Ratings</h2>
+            <div class="collection-line"></div>
+            <p class="reviews-desc" id="reviewsDesc">Real reviews from our customers on fabric quality, sizing precision, and fast delivery.</p>
+            <div class="reviews-global-rating" id="reviewsGlobalRating">
+              <div class="global-stars" id="reviewsStarsDisplay">★★★★★</div>
+              <span class="global-score" id="reviewsScore">5.0</span>
+              <span class="global-count" id="reviewsCount">(0 reviews)</span>
+            </div>
+            <button id="addReviewBtn" class="btn-add-review">
+              <i class="fa-solid fa-star"></i> <span data-i18n="writeReview">Write a Review</span>
+            </button>
+          </div>
+
+          <!-- Reviews Grid -->
+          <div class="reviews-grid" id="reviewsGrid">
+            <!-- Rendered dynamically from backend -->
+          </div>
+        </div>
+      </section>
+    </div> <!-- end #view-reviews -->
+
+    <!-- ================= VIEW 6: DEDICATED TRACK ORDER & SUPPORT ================= -->
+    <div id="view-track" class="site-view" style="display:none;">
+      <div class="page-header-banner">
+        <div class="page-breadcrumb">
+          <a onclick="window.velenApp?.navigateTo('home')"><span data-i18n="breadcrumbHome">Home</span></a>
+          <span>/</span>
+          <span data-i18n="breadcrumbTrack">Track Order & Support</span>
+        </div>
+        <h1 class="page-main-title" data-i18n="trackTitle">TRACK YOUR ORDER</h1>
+        <p class="page-sub-title" data-i18n="trackSub">ENTER YOUR 10-DIGIT MOBILE NUMBER (07XXXXXXXX)</p>
+      </div>
+
+      <section class="track-order-section">
+        <div class="section-container">
+          <div class="order-tracker-box">
+            <form id="orderLookupForm" class="order-lookup-form" onsubmit="window.velenApp?.handleOrderLookup(event)">
+              <div class="lookup-input-group">
+                <i class="fa-solid fa-phone"></i>
+                <input type="tel" id="trackPhoneInput" placeholder="07XXXXXXXX" required maxlength="10" pattern="07[0-9]{8}">
+                <button type="submit" class="btn-lookup-submit" id="btnTrackSubmit">
+                  <span data-i18n="trackBtn">Track Order</span> <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
+              </div>
+              <p class="lookup-hint" data-i18n="phoneHelper">Enter the Jordanian mobile number starting with 07 used when placing your order.</p>
+            </form>
+
+            <div id="orderLookupResults" class="lookup-results-wrap" style="display:none;"></div>
+          </div>
+
+          <!-- Support Info & FAQs -->
+          <div class="track-support-cards">
+            <div class="track-support-card">
+              <i class="fa-brands fa-whatsapp support-icon wa-color"></i>
+              <h4>Direct WhatsApp Support</h4>
+              <p>Need urgent changes, size advice, or custom inquiries? Our team in Amman is ready to assist you.</p>
+              <a href="https://wa.me/962770188144" target="_blank" class="btn-wa-direct"><i class="fa-brands fa-whatsapp"></i> Chat on WhatsApp</a>
+            </div>
+
+            <div class="track-support-card">
+              <i class="fa-solid fa-truck-fast support-icon gold-color"></i>
+              <h4>Delivery Timeline</h4>
+              <p><strong>Amman:</strong> Same-day or next-day delivery (Free of charge).<br><strong>Other Governorates:</strong> 24 to 48 hours for only 1 JOD.</p>
+            </div>
+
+            <div class="track-support-card">
+              <i class="fa-solid fa-rotate-left support-icon"></i>
+              <h4>Doorstep Exchange Guarantee</h4>
+              <p>If the fit isn't 100% ideal, our courier will bring your preferred size right to your door with zero hassle.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div> <!-- end #view-track -->
+
   </main>
 
   <!-- Footer -->
@@ -347,27 +623,28 @@
     <div class="footer-container">
       <div class="footer-columns">
         <div class="footer-col">
-          <h4 class="footer-heading" data-i18n="shop">تسوق الكولكشن</h4>
+          <h4 class="footer-heading" data-i18n="shop">Shop Collection</h4>
           <ul class="footer-menu">
-            <li><a href="#collection" data-footer-filter="all"><span data-i18n="allProducts">جميع المنتجات</span></a></li>
-            <li><a href="#collection" data-footer-filter="Tees"><span data-i18n="teesRingers">تيشيرتات وبوكسي</span></a></li>
-            <li><a href="#community"><span data-i18n="community">مجتمع فيلين</span></a></li>
-            <li><a href="#reviews"><span data-i18n="customerReviews">آراء وتقييمات العملاء</span></a></li>
+            <li><a href="#shop" onclick="window.velenApp?.navigateTo('shop')"><span data-i18n="allProducts">All Products</span></a></li>
+            <li><a href="#about" onclick="window.velenApp?.navigateTo('about')"><span data-i18n="navStory">Our Story</span></a></li>
+            <li><a href="#community" onclick="window.velenApp?.navigateTo('community')"><span data-i18n="community">Community</span></a></li>
+            <li><a href="#reviews" onclick="window.velenApp?.navigateTo('reviews')"><span data-i18n="customerReviews">Customer Reviews</span></a></li>
+            <li><a href="#track" onclick="window.velenApp?.navigateTo('track')"><span data-i18n="navTrack">Track Order</span></a></li>
           </ul>
         </div>
 
         <div class="footer-col">
-          <h4 class="footer-heading" data-i18n="aboutUs">عن البراند</h4>
+          <h4 class="footer-heading" data-i18n="aboutUs">Brand & Info</h4>
           <ul class="footer-menu">
-            <li><a href="#about"><span data-i18n="whyVelen">لماذا فيلين؟</span></a></li>
-            <li><a href="#" class="open-terms-link" data-tab="care"><span data-i18n="fabricCare">دليل الأقمشة والعناية</span></a></li>
-            <li><a href="#" class="open-terms-link" data-tab="terms"><span data-i18n="termsOfService">الشحن وسياسة التبديل</span></a></li>
+            <li><a href="#about" onclick="window.velenApp?.navigateTo('about')"><span data-i18n="whyVelen">Why Velen?</span></a></li>
+            <li><a href="#" class="open-terms-link" data-tab="care"><span data-i18n="fabricCare">Fabric Care Guide</span></a></li>
+            <li><a href="#" class="open-terms-link" data-tab="terms"><span data-i18n="termsOfService">Shipping & Returns</span></a></li>
           </ul>
         </div>
 
         <div class="footer-col">
-          <h4 class="footer-heading" data-i18n="stayConnected">تواصل معنا</h4>
-          <p class="footer-note" data-i18n="stayConnectedNote">تابع قنواتنا الرسمية لتكون أول من يعرف عن الدروبات الجديدة والعروض الحصرية:</p>
+          <h4 class="footer-heading" data-i18n="stayConnected">Stay Connected</h4>
+          <p class="footer-note" data-i18n="stayConnectedNote">Follow our channels to be first to know about new drops and exclusive offers:</p>
           <div class="footer-social-links">
             <a href="https://www.instagram.com/velen.offical?dlrf=c3I5MGh6eTZneGYy" target="_blank" class="social-icon" id="footerInstaLink" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
             <a href="https://tiktok.com/@velenofficial" target="_blank" class="social-icon" id="footerTiktokLink" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
@@ -383,11 +660,11 @@
 
       <div class="footer-bottom-bar">
         <div class="copyright" data-i18n="footerCopyright">
-          © 2026 VELEN OFFICIAL. صُنع بفخر في عمّان، الأردن 🇯🇴
+          © 2026 VELEN OFFICIAL. Handcrafted with pride in Amman, Jordan 🇯🇴
         </div>
         <div class="payment-methods">
-          <span class="badge-item"><i class="fa-solid fa-money-bill-wave"></i> <span data-i18n="codBadge">الدفع عند الاستلام (COD)</span></span>
-          <span class="badge-item"><i class="fa-solid fa-bolt"></i> <span data-i18n="cliqBadge">تحويل فوري CliQ</span></span>
+          <span class="badge-item"><i class="fa-solid fa-money-bill-wave"></i> <span data-i18n="codBadge">Cash on Delivery (COD)</span></span>
+          <span class="badge-item"><i class="fa-solid fa-bolt"></i> <span data-i18n="cliqBadge">Instant CliQ</span></span>
         </div>
       </div>
     </div>
