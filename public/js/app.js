@@ -14,6 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
     sessionId: localStorage.getItem('velen_session_id') || ('sess_' + Math.random().toString(36).substring(2, 10)),
     cart: JSON.parse(localStorage.getItem('velen_cart') || '[]'),
     activeCategory: 'all',
+    categories: [],
     activeCommFilter: 'all',
     currentProductForModal: null,
     selectedSize: 'M',
@@ -151,6 +152,7 @@ document.addEventListener('DOMContentLoaded', () => {
       shippingFee: 'أجرة التوصيل:',
       discount: 'الخصم:',
       total: 'المجموع الإجمالي:',
+      orderNumberLabel: 'رقم الطلب:',
       orderSuccessTitle: 'تم استلام طلبك بنجاح!',
       orderSuccessSub: 'شكراً لاختيارك Velen. فريق التوصيل سيتواصل معك هاتفياً لتسليم طلبك في أقرب وقت.',
       whatsappTrackBtn: 'متابعة الطلب عبر واتساب',
@@ -349,6 +351,7 @@ document.addEventListener('DOMContentLoaded', () => {
       shippingFee: 'Delivery Fee:',
       discount: 'Discount:',
       total: 'Total Amount:',
+      orderNumberLabel: 'Order Number:',
       orderSuccessTitle: 'Order Received Successfully!',
       orderSuccessSub: 'Thank you for choosing Velen. Delivery team will contact you shortly to deliver your order.',
       whatsappTrackBtn: 'Track Order via WhatsApp',
@@ -424,7 +427,10 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   // Centralized Modal / Drawer Body Scroll Lock
-  let activeLockCount = 0;
+  var activeLockCount = 0;
+  var uploadedMediaUrl = null;
+  var uploadedMediaType = 'photo';
+  var commFormInitialized = false;
   function lockBodyScroll() {
     activeLockCount++;
     document.body.classList.add('body-scroll-locked');
@@ -481,6 +487,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     await fetchSettings();
     await fetchDesign();
+    await fetchCategories();
     await fetchProducts();
     await fetchCommunity();
     await fetchReviews();
@@ -950,6 +957,13 @@ document.addEventListener('DOMContentLoaded', () => {
       renderProducts();
       renderFeaturedProducts();
       populateProductSelect();
+
+      // If page was loaded directly with #product-id URL, open product page now
+      const hash = window.location.hash || '';
+      if (hash.startsWith('#product-')) {
+        const id = hash.replace('#product-', '');
+        openProductPage(id, false);
+      }
     } catch (err) {
       console.error('Error fetching products:', err);
     }
@@ -979,6 +993,58 @@ document.addEventListener('DOMContentLoaded', () => {
     } catch (err) {
       console.error('Error fetching reviews:', err);
     }
+  }
+
+  function escapeHtml(str) {
+    if (!str) return '';
+    return String(str).replace(/[&<>"']/g, m => ({
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#39;'
+    })[m]);
+  }
+
+  async function fetchCategories() {
+    try {
+      const res = await fetch('/api/categories');
+      if (res.ok) {
+        state.categories = await res.json();
+        renderCategoryTabs();
+      }
+    } catch (err) {
+      console.warn('Error fetching categories:', err);
+    }
+  }
+
+  function renderCategoryTabs() {
+    const tabsContainer = document.getElementById('categoryTabs');
+    if (!tabsContainer) return;
+    if (!Array.isArray(state.categories) || state.categories.length === 0) return;
+
+    const isAr = state.activeLang === 'ar';
+    const allLabel = isAr ? 'جميع القطع' : 'All Pieces';
+
+    let html = `<button class="cat-pill ${state.activeCategory === 'all' ? 'active' : ''}" data-cat="all">${allLabel}</button>`;
+
+    state.categories.forEach(cat => {
+      const label = isAr ? (cat.nameAr || cat.nameEn) : (cat.nameEn || cat.nameAr);
+      const targetVal = cat.nameEn || cat.id;
+      const isActive = state.activeCategory === targetVal || state.activeCategory === cat.id;
+      html += `<button class="cat-pill ${isActive ? 'active' : ''}" data-cat="${escapeHtml(targetVal)}">${escapeHtml(label)}</button>`;
+    });
+
+    tabsContainer.innerHTML = html;
+
+    tabsContainer.querySelectorAll('.cat-pill').forEach(pill => {
+      pill.addEventListener('click', () => {
+        tabsContainer.querySelectorAll('.cat-pill').forEach(p => p.classList.remove('active'));
+        pill.classList.add('active');
+        state.activeCategory = pill.getAttribute('data-cat');
+        renderProducts();
+      });
+    });
   }
 
   // ================= REAL-TIME WEBSOCKET SYNC =================
@@ -1084,6 +1150,8 @@ document.addEventListener('DOMContentLoaded', () => {
     } else if (event === 'DESIGN_UPDATED') {
       applyDesign(payload);
       showToast('تم تحديث مظهر وترتيب المتجر مباشرة من الأدمن!', 'info');
+    } else if (event === 'CATEGORIES_UPDATED') {
+      fetchCategories();
     }
   }
 
@@ -1092,28 +1160,26 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!productsGrid) return;
 
     let filtered = state.products;
-    if (state.activeCategory === 'Tees') {
-      filtered = state.products.filter(p => 
-        (p.category && p.category.toLowerCase().includes('tee')) || 
-        (p.name && p.name.toLowerCase().includes('tee'))
+    if (state.activeCategory && state.activeCategory !== 'all') {
+      const activeCat = (state.categories || []).find(c => 
+        (c.id && c.id.toLowerCase() === state.activeCategory.toLowerCase()) || 
+        (c.nameEn && c.nameEn.toLowerCase() === state.activeCategory.toLowerCase()) ||
+        c.nameAr === state.activeCategory
       );
-    } else if (state.activeCategory === 'Ringer') {
-      filtered = state.products.filter(p => 
-        (p.name && p.name.toLowerCase().includes('ringer')) ||
-        (p.category && p.category.toLowerCase().includes('ringer'))
-      );
-    } else if (state.activeCategory === 'Boxy') {
-      filtered = state.products.filter(p => 
-        (p.name && (p.name.toLowerCase().includes('boxy') || p.name.toLowerCase().includes('cropped'))) ||
-        (p.category && (p.category.toLowerCase().includes('boxy') || p.category.toLowerCase().includes('cropped')))
-      );
-    } else if (state.activeCategory === 'Hoodies') {
-      filtered = state.products.filter(p => 
-        (p.name && p.name.toLowerCase().includes('hoodie')) ||
-        (p.category && p.category.toLowerCase().includes('hoodie'))
-      );
-    } else if (state.activeCategory && state.activeCategory !== 'all') {
-      filtered = state.products.filter(p => p.category === state.activeCategory);
+      const catId = (activeCat?.id || '').toLowerCase();
+      const catEn = (activeCat?.nameEn || state.activeCategory).toLowerCase();
+      const catAr = (activeCat?.nameAr || '').toLowerCase();
+
+      filtered = state.products.filter(p => {
+        const pCat = (p.category || '').toLowerCase();
+        const pName = (p.name || '').toLowerCase();
+        return pCat === catEn || 
+               pCat === catId || 
+               (catId && pCat.includes(catId)) || 
+               (catEn && pCat.includes(catEn)) || 
+               (catEn && pName.includes(catEn)) ||
+               (catAr && (pCat.includes(catAr) || pName.includes(catAr)));
+      });
     }
 
     if (filtered.length === 0) {
@@ -1470,6 +1536,74 @@ document.addEventListener('DOMContentLoaded', () => {
     showView(targetView, updateHistory);
   }
 
+  function renderSizeBoxesForColor(product, color) {
+    if (!product) return;
+    const isAr = state.activeLang === 'ar';
+    const dict = translations[state.activeLang] || translations.en;
+
+    // Check if color has dedicated sizes or sizeInventory
+    let sizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
+    let sizeInv = null;
+
+    if (color && color.sizeInventory && Object.keys(color.sizeInventory).length > 0) {
+      sizeInv = color.sizeInventory;
+      sizes = Array.isArray(color.sizes) && color.sizes.length > 0 ? color.sizes : Object.keys(color.sizeInventory);
+    } else if (product.sizeInventory && Object.keys(product.sizeInventory).length > 0) {
+      sizeInv = product.sizeInventory;
+      sizes = Array.isArray(product.sizes) && product.sizes.length > 0 ? product.sizes : Object.keys(product.sizeInventory);
+    } else if (Array.isArray(product.sizes) && product.sizes.length > 0) {
+      sizes = product.sizes;
+    }
+
+    // Check if current state.selectedSize is valid and in stock
+    const isAvailable = (s) => !sizeInv || (typeof sizeInv[s] !== 'undefined' ? sizeInv[s] > 0 : true);
+    if (!sizes.includes(state.selectedSize) || !isAvailable(state.selectedSize)) {
+      const firstInStock = sizes.find(s => isAvailable(s));
+      state.selectedSize = firstInStock || sizes[0] || 'M';
+    }
+
+    const sizeLabel = document.getElementById('prodSelectedSizeLabel');
+    if (sizeLabel) sizeLabel.textContent = state.selectedSize;
+
+    const allOutOfStock = sizeInv ? sizes.every(s => typeof sizeInv[s] !== 'undefined' && sizeInv[s] <= 0) : false;
+    const addBtn = document.getElementById('btnPageAddToBag');
+    const buyBtn = document.getElementById('btnPageBuyNow');
+    if (addBtn) {
+      addBtn.disabled = allOutOfStock;
+      const span = addBtn.querySelector('span');
+      if (span) span.textContent = allOutOfStock ? dict.soldOut : dict.addToBag;
+    }
+    if (buyBtn) {
+      buyBtn.disabled = allOutOfStock;
+      const span = buyBtn.querySelector('span');
+      if (span) span.textContent = isAr ? 'اشتريها الآن ⚡' : 'Buy Now ⚡';
+    }
+
+    const sizeBoxesContainer = document.getElementById('pageProductSizeBoxes');
+    if (sizeBoxesContainer) {
+      sizeBoxesContainer.innerHTML = sizes.map(size => {
+        const qty = sizeInv ? (typeof sizeInv[size] !== 'undefined' ? sizeInv[size] : 99) : 99;
+        const isOutOfStock = qty <= 0;
+        const isSelected = size === state.selectedSize;
+
+        if (isOutOfStock) {
+          return `
+            <button type="button" class="prod-size-box out-of-stock" disabled title="${dict.soldOut || 'Sold out'}">
+              <span class="size-letter">${size}</span>
+              <span class="stock-badge">${isAr ? 'نفذ' : 'Out'}</span>
+            </button>
+          `;
+        }
+
+        return `
+          <button type="button" class="prod-size-box ${isSelected ? 'selected' : ''}" onclick="window.velenApp.selectModalSize('${size}')">
+            <span class="size-letter">${size}</span>
+          </button>
+        `;
+      }).join('');
+    }
+  }
+
   function renderProductPageContent(product) {
     const container = document.getElementById('productPageDetails');
     if (!container || !product) return;
@@ -1478,13 +1612,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const dict = translations[state.activeLang] || translations.en;
     const priceFormatted = Number(product.price).toFixed(3) + ' JOD';
     const comparePriceFormatted = product.comparePrice ? Number(product.comparePrice).toFixed(3) + ' JOD' : null;
-    const sizes = product.sizes || ['S', 'M', 'L', 'XL'];
-    const sizeInv = product.sizeInventory || null;
-
-    let allOutOfStock = false;
-    if (sizeInv) {
-      allOutOfStock = sizes.every(s => typeof sizeInv[s] !== 'undefined' && sizeInv[s] <= 0);
-    }
+    const sizes = product.sizes || ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
 
     // Colors processing
     const colors = Array.isArray(product.colors) && product.colors.length > 0 
@@ -1562,36 +1690,17 @@ document.addEventListener('DOMContentLoaded', () => {
               <span class="prod-fit-tag">${dict.boxyRelaxedFit || '(Boxy Relaxed Fit)'}</span>
             </div>
             <div class="prod-size-boxes" id="pageProductSizeBoxes">
-              ${sizes.map(size => {
-                const qty = sizeInv ? (typeof sizeInv[size] !== 'undefined' ? sizeInv[size] : 99) : 99;
-                const isOutOfStock = qty <= 0;
-                const isSelected = size === state.selectedSize;
-
-                if (isOutOfStock) {
-                  return `
-                    <button type="button" class="prod-size-box out-of-stock" disabled title="${dict.soldOut}">
-                      <span class="size-letter">${size}</span>
-                      <span class="stock-badge">${isAr ? 'نفذ' : 'Out'}</span>
-                    </button>
-                  `;
-                }
-
-                return `
-                  <button type="button" class="prod-size-box ${isSelected ? 'selected' : ''}" onclick="window.velenApp.selectModalSize('${size}')">
-                    <span class="size-letter">${size}</span>
-                  </button>
-                `;
-              }).join('')}
+              <!-- Rendered dynamically for active color -->
             </div>
           </div>
 
           <!-- Dual CTAs: Add to Bag AND Buy Now Direct -->
           <div class="prod-page-cta-row">
-            <button type="button" class="btn-add-to-bag-page" id="btnPageAddToBag" onclick="window.velenApp.addCurrentModalToCart()" ${allOutOfStock ? 'disabled' : ''}>
+            <button type="button" class="btn-add-to-bag-page" id="btnPageAddToBag" onclick="window.velenApp.addCurrentModalToCart()">
               <i class="fa-solid fa-bag-shopping"></i>
-              <span>${allOutOfStock ? dict.soldOut : `${dict.addToBag}`}</span>
+              <span>${dict.addToBag}</span>
             </button>
-            <button type="button" class="btn-buy-now-direct" id="btnPageBuyNow" onclick="window.velenApp.buyNowDirect()" ${allOutOfStock ? 'disabled' : ''}>
+            <button type="button" class="btn-buy-now-direct" id="btnPageBuyNow" onclick="window.velenApp.buyNowDirect()">
               <i class="fa-solid fa-bolt"></i>
               <span>${isAr ? 'اشتريها الآن ⚡' : 'Buy Now ⚡'}</span>
             </button>
@@ -1727,6 +1836,7 @@ document.addEventListener('DOMContentLoaded', () => {
       </section>
     `;
 
+    renderSizeBoxesForColor(product, state.selectedColor);
     loadProductReviews(product.id, isAr);
   }
 
@@ -1926,10 +2036,6 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ================= COMMUNITY SUBMISSION =================
-  let uploadedMediaUrl = null;
-  let uploadedMediaType = 'photo';
-  let commFormInitialized = false;
-
   function setupCommunityForm() {
     if (commFormInitialized) return;
     commFormInitialized = true;
@@ -2390,7 +2496,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const whatsappBtn = document.getElementById('whatsappTrackBtn');
             if (whatsappBtn) {
-              const msg = encodeURIComponent(`مرحباً Velen Official، قمت بالطلب رقم ${result.order.id} باسم ${customerName} بمبلغ ${total.toFixed(3)} JOD. أود متابعة حالة الشحن.`);
+              const msgText = state.activeLang === 'ar'
+                ? `مرحباً Velen Official، قمت بالطلب رقم ${result.order.id} باسم ${customerName} بمبلغ ${total.toFixed(3)} JOD. أود متابعة حالة الشحن.`
+                : `Hello Velen Official, I placed order #${result.order.id} under the name ${customerName} for ${total.toFixed(3)} JOD. I would like to track my order status.`;
+              const msg = encodeURIComponent(msgText);
               const cleanWa = (state.settings?.social?.whatsapp || '962770188144').replace(/[^0-9]/g, '');
               whatsappBtn.href = `https://wa.me/${cleanWa}?text=${msg}`;
             }
@@ -2594,6 +2703,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
 
+    renderCategoryTabs();
     if (state.products && state.products.length > 0) {
       renderProducts();
       if (typeof renderFeaturedProducts === 'function') renderFeaturedProducts();
@@ -2982,10 +3092,13 @@ document.addEventListener('DOMContentLoaded', () => {
     handleOrderLookup: (e) => handleOrderLookup(e),
     openProductModal,
     selectModalSize: (size) => {
-      if (state.currentProductForModal?.sizeInventory) {
-        const qty = state.currentProductForModal.sizeInventory[size];
+      const p = state.currentProductForModal;
+      const color = state.selectedColor || (p && p.colors && p.colors[0]) || null;
+      const inv = (color && color.sizeInventory && Object.keys(color.sizeInventory).length > 0) ? color.sizeInventory : (p && p.sizeInventory);
+      if (inv) {
+        const qty = inv[size];
         if (typeof qty !== 'undefined' && qty <= 0) {
-          showToast(state.activeLang === 'ar' ? 'هذا المقاس غير متوفر حالياً' : 'This size is currently out of stock', 'info');
+          showToast(state.activeLang === 'ar' ? 'هذا المقاس غير متوفر حالياً لهذا اللون' : 'This size is currently out of stock for this color', 'info');
           return;
         }
       }
@@ -3042,19 +3155,23 @@ document.addEventListener('DOMContentLoaded', () => {
           thumbsContainer.innerHTML = '';
         }
       }
+
+      // Switch sizes to this color's specific sizing/inventory
+      renderSizeBoxesForColor(p, c);
     },
     addCurrentModalToCart: () => {
       if (state.currentProductForModal) {
         const p = state.currentProductForModal;
         const size = state.selectedSize || 'M';
-        if (p.sizeInventory) {
-          const qty = p.sizeInventory[size];
+        const color = state.selectedColor || (p.colors && p.colors[0]) || null;
+        const inv = (color && color.sizeInventory && Object.keys(color.sizeInventory).length > 0) ? color.sizeInventory : p.sizeInventory;
+        if (inv) {
+          const qty = inv[size];
           if (typeof qty !== 'undefined' && qty <= 0) {
-            showToast(state.activeLang === 'ar' ? 'عذراً، هذا المقاس نفذت كميته' : 'Sorry, this size is sold out', 'info');
+            showToast(state.activeLang === 'ar' ? 'عذراً، هذا المقاس نفذت كميته لهذا اللون' : 'Sorry, this size is sold out for this color', 'info');
             return;
           }
         }
-        const color = state.selectedColor || (p.colors && p.colors[0]) || null;
         addToCart(p, size, 1, color);
         openCart();
       }
@@ -3063,14 +3180,15 @@ document.addEventListener('DOMContentLoaded', () => {
       if (state.currentProductForModal) {
         const p = state.currentProductForModal;
         const size = state.selectedSize || 'M';
-        if (p.sizeInventory) {
-          const qty = p.sizeInventory[size];
+        const color = state.selectedColor || (p.colors && p.colors[0]) || null;
+        const inv = (color && color.sizeInventory && Object.keys(color.sizeInventory).length > 0) ? color.sizeInventory : p.sizeInventory;
+        if (inv) {
+          const qty = inv[size];
           if (typeof qty !== 'undefined' && qty <= 0) {
-            showToast(state.activeLang === 'ar' ? 'عذراً، هذا المقاس نفذت كميته' : 'Sorry, this size is sold out', 'info');
+            showToast(state.activeLang === 'ar' ? 'عذراً، هذا المقاس نفذت كميته لهذا اللون' : 'Sorry, this size is sold out for this color', 'info');
             return;
           }
         }
-        const color = state.selectedColor || (p.colors && p.colors[0]) || null;
         addToCart(p, size, 1, color);
         closeCart();
         openCheckout();

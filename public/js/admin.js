@@ -54,7 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // ================= FETCH ALL DATA =================
   async function fetchAllData() {
     try {
-      const [pRes, oRes, cRes, sRes, statsRes, dRes, promoRes, cartRes, expRes] = await Promise.all([
+      const [pRes, oRes, cRes, sRes, statsRes, dRes, promoRes, cartRes, expRes, catRes] = await Promise.all([
         fetch('/api/products'),
         fetch('/api/orders'),
         fetch('/api/community'),
@@ -63,7 +63,8 @@ document.addEventListener('DOMContentLoaded', () => {
         fetch('/api/design'),
         fetch('/api/promo-codes'),
         fetch('/api/cart/active'),
-        fetch('/api/expenses')
+        fetch('/api/expenses'),
+        fetch('/api/categories')
       ]);
 
       state.products = await pRes.json();
@@ -75,6 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
       state.promos = await promoRes.json();
       state.activeCarts = await cartRes.json();
       state.expenses = await expRes.json();
+      state.categories = await catRes.json();
 
       renderDashboard();
       renderProducts();
@@ -86,6 +88,8 @@ document.addEventListener('DOMContentLoaded', () => {
       populateDesignCustomizer();
       renderExpenses();
       renderFinanceStats();
+      if (typeof renderCategoriesTable === 'function') renderCategoriesTable();
+      if (typeof populateCategoryDropdowns === 'function') populateCategoryDropdowns();
       updateBadgeCounts();
     } catch (err) {
       console.error('Error fetching admin data:', err);
@@ -160,6 +164,15 @@ document.addEventListener('DOMContentLoaded', () => {
         renderDashboard();
         updateBadgeCounts();
       }
+    } else if (evType === 'CATEGORIES_UPDATED') {
+      state.categories = payload;
+      if (typeof renderCategoriesTable === 'function') renderCategoriesTable();
+      if (typeof populateCategoryDropdowns === 'function') populateCategoryDropdowns();
+      showAdminToast('تم تحديث تصنيفات وكوليكشنز المتجر!', 'info');
+    } else if (evType === 'PROMO_CODES_UPDATED') {
+      state.promos = payload;
+      renderPromoCodes();
+      updateBadgeCounts();
     } else if (evType === 'VISITOR_UPDATE') {
       if (typeof fetchLiveVisitors === 'function') fetchLiveVisitors();
     }
@@ -517,36 +530,256 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   window._renderProductGalleryManager = renderProductGalleryManager;
 
+  // ================= COLOR VARIANTS SYSTEM (Dedicated Photos & Size Inventories per Color) =================
+  state.currentColorEditingImages = [];
+
+  function renderColorVarImagesGrid() {
+    const grid = document.getElementById('colorVarImagesGrid');
+    const badge = document.getElementById('colorVarImagesCount');
+    if (badge) badge.textContent = `${state.currentColorEditingImages.length} صور مضافة`;
+    if (!grid) return;
+
+    if (state.currentColorEditingImages.length === 0) {
+      grid.innerHTML = `<span style="font-size:11px; color:#777; width:100%; text-align:center; padding:6px 0;">لم يتم رفع أي صور لهذا اللون بعد.</span>`;
+      return;
+    }
+
+    grid.innerHTML = state.currentColorEditingImages.map((url, i) => `
+      <div style="position:relative; width:65px; height:65px; border-radius:6px; overflow:hidden; border:${i === 0 ? '2px solid var(--gold-accent)' : '1px solid #444'}; background:#111;">
+        <img src="${url}" style="width:100%; height:100%; object-fit:cover;" onerror="this.src='/assets/velen-logo.jpg'">
+        ${i === 0 ? '<span style="position:absolute; top:2px; right:2px; background:var(--gold-accent); color:#000; font-size:8px; font-weight:800; padding:1px 3px; border-radius:2px;">غلاف</span>' : ''}
+        <button type="button" onclick="window.velenAdmin.removeColorEditingImage(${i})" title="حذف الصورة" style="position:absolute; bottom:2px; left:2px; background:rgba(255,71,87,0.9); color:#fff; font-size:10px; border:none; width:18px; height:18px; border-radius:50%; cursor:pointer; display:flex; align-items:center; justify-content:center; line-height:1;">✕</button>
+      </div>
+    `).join('');
+  }
+
+  function recalculateColorVarStock() {
+    const grid = document.getElementById('colorVarSizeGrid');
+    if (!grid) return;
+    let total = 0;
+    const cards = grid.querySelectorAll('.size-stock-card');
+    cards.forEach(card => {
+      const check = card.querySelector('.color-size-enable-check');
+      const input = card.querySelector('.color-size-qty-input');
+      if (check && check.checked) {
+        const qty = parseInt(input.value, 10) || 0;
+        total += qty;
+      }
+    });
+    const badge = document.getElementById('colorVarTotalStockBadge');
+    if (badge) badge.textContent = total;
+  }
+
+  function openAddColorModal() {
+    const modal = document.getElementById('colorVariantModal');
+    if (!modal) return;
+    document.getElementById('editColorVariantIndex').value = '-1';
+    document.getElementById('colorVariantModalTitle').innerHTML = '<i class="fa-solid fa-palette" style="color:var(--gold-accent);"></i> إضافة لون جديد ومقاساته وصوره';
+    document.getElementById('colorVarName').value = '';
+    document.getElementById('colorVarPicker').value = '#000000';
+    document.getElementById('colorVarHex').value = '#000000';
+    state.currentColorEditingImages = [];
+    renderColorVarImagesGrid();
+
+    // Reset size grid to standard defaults
+    const grid = document.getElementById('colorVarSizeGrid');
+    if (grid) {
+      const cards = grid.querySelectorAll('.size-stock-card');
+      cards.forEach(card => {
+        const size = card.getAttribute('data-size');
+        const check = card.querySelector('.color-size-enable-check');
+        const input = card.querySelector('.color-size-qty-input');
+        const isDefault = ['S', 'M', 'L', 'XL'].includes(size);
+        check.checked = isDefault;
+        if (isDefault) {
+          card.classList.add('active');
+          input.value = 5;
+        } else {
+          card.classList.remove('active');
+          input.value = 0;
+        }
+      });
+      recalculateColorVarStock();
+    }
+
+    modal.classList.add('active');
+  }
+
+  function editColorVariant(idx) {
+    const modal = document.getElementById('colorVariantModal');
+    if (!modal || !state.productColors || !state.productColors[idx]) return;
+    const col = state.productColors[idx];
+
+    document.getElementById('editColorVariantIndex').value = idx;
+    document.getElementById('colorVariantModalTitle').innerHTML = `<i class="fa-solid fa-palette" style="color:var(--gold-accent);"></i> تعديل لون: ${col.name}`;
+    document.getElementById('colorVarName').value = col.name || '';
+    document.getElementById('colorVarPicker').value = col.hex || '#000000';
+    document.getElementById('colorVarHex').value = col.hex || '#000000';
+    state.currentColorEditingImages = Array.isArray(col.images) ? [...col.images] : (col.image ? [col.image] : []);
+    renderColorVarImagesGrid();
+
+    // Populate sizes
+    const grid = document.getElementById('colorVarSizeGrid');
+    if (grid) {
+      const cards = grid.querySelectorAll('.size-stock-card');
+      cards.forEach(card => {
+        const size = card.getAttribute('data-size');
+        const check = card.querySelector('.color-size-enable-check');
+        const input = card.querySelector('.color-size-qty-input');
+        if (col.sizeInventory && typeof col.sizeInventory[size] !== 'undefined') {
+          const qty = parseInt(col.sizeInventory[size], 10) || 0;
+          check.checked = qty > 0 || (Array.isArray(col.sizes) && col.sizes.includes(size));
+          if (check.checked) card.classList.add('active');
+          else card.classList.remove('active');
+          input.value = qty;
+        } else if (Array.isArray(col.sizes) && col.sizes.includes(size)) {
+          check.checked = true;
+          card.classList.add('active');
+          input.value = 5;
+        } else {
+          check.checked = false;
+          card.classList.remove('active');
+          input.value = 0;
+        }
+      });
+      recalculateColorVarStock();
+    }
+
+    modal.classList.add('active');
+  }
+
+  function closeColorVariantModal() {
+    const modal = document.getElementById('colorVariantModal');
+    if (modal) modal.classList.remove('active');
+  }
+
+  function recalculateOverallProductStock() {
+    if (Array.isArray(state.productColors) && state.productColors.length > 0) {
+      let total = 0;
+      state.productColors.forEach(c => {
+        const cStock = c.stock !== undefined ? c.stock : Object.values(c.sizeInventory || {}).reduce((s, q) => s + (parseInt(q, 10) || 0), 0);
+        total += cStock;
+      });
+      const prodStock = document.getElementById('prodStock');
+      const badge = document.getElementById('totalCalculatedStockBadge');
+      if (prodStock) prodStock.value = total;
+      if (badge) badge.textContent = total;
+    }
+  }
+
   function renderProductColorsManager() {
     const list = document.getElementById('adminProductColorsList');
     if (!list) return;
 
     if (!Array.isArray(state.productColors) || state.productColors.length === 0) {
-      list.innerHTML = `<p style="font-size:12px; color:#777; margin:0; padding:6px 0;">لم يتم تحديد ألوان منفصلة. اضغط بالأسفل لإضافة 3 ألوان أو أكثر للقطعة مع كود اللون والصور.</p>`;
+      list.innerHTML = `
+        <div style="background:#1a1a1a; padding:18px; border-radius:6px; border:1px dashed #444; text-align:center;">
+          <p style="font-size:12px; color:#aaa; margin:0 0 10px 0;">لم يتم إضافة أي لون للقطعة بعد. اضغط الزر أعلاه لإضافة ألوان وصور ومقاسات الموديل.</p>
+        </div>
+      `;
       return;
     }
 
     list.innerHTML = state.productColors.map((col, idx) => {
       const isLight = col.hex && ['#fff', '#ffffff', '#f5f5f5', '#eee', '#fafafa'].includes(col.hex.toLowerCase());
       const imgCount = Array.isArray(col.images) ? col.images.length : (col.image ? 1 : 0);
+      const colStock = col.stock !== undefined ? col.stock : Object.values(col.sizeInventory || {}).reduce((a, b) => a + (parseInt(b, 10) || 0), 0);
+      const sizeBreakdown = col.sizeInventory ? Object.entries(col.sizeInventory).filter(([s, q]) => q > 0).map(([s, q]) => `${s}: ${q}`).join(' | ') : (col.sizes || []).join(', ');
+
       return `
-        <div style="display:flex; align-items:center; justify-content:space-between; background:#1e1e1e; padding:8px 12px; border-radius:6px; border:1px solid #333;">
-          <div style="display:flex; align-items:center; gap:10px;">
-            <span style="display:inline-block; width:26px; height:26px; border-radius:50%; background-color:${col.hex || '#000'}; border:2px solid ${isLight ? '#555' : 'rgba(255,255,255,0.3)'}; box-shadow:0 2px 5px rgba(0,0,0,0.5);"></span>
-            <div>
-              <strong style="color:#fff; font-size:13px;">${col.name}</strong>
-              <span style="color:#aaa; font-size:11px; margin-right:6px; font-family:monospace;">${col.hex}</span>
-              ${imgCount > 0 ? `<span style="background:rgba(229,185,95,0.15); color:var(--gold-accent, #e5b95f); font-size:10px; padding:2px 6px; border-radius:3px; margin-right:6px;"><i class="fa-solid fa-camera"></i> ${imgCount} صور</span>` : ''}
+        <div style="background:#1a1a1a; padding:12px 14px; border-radius:8px; border:1px solid #333; display:flex; flex-direction:column; gap:10px;">
+          <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px;">
+            <div style="display:flex; align-items:center; gap:12px;">
+              <span style="display:inline-block; width:30px; height:30px; border-radius:50%; background-color:${col.hex || '#000'}; border:2px solid ${isLight ? '#555' : 'rgba(255,255,255,0.3)'}; box-shadow:0 2px 6px rgba(0,0,0,0.5);"></span>
+              <div>
+                <strong style="color:#fff; font-size:14px;">${col.name}</strong>
+                <span style="color:#aaa; font-size:11px; margin-right:6px; font-family:monospace;">${col.hex}</span>
+                <span style="background:rgba(229,185,95,0.15); color:var(--gold-accent, #e5b95f); font-size:11px; font-weight:700; padding:2px 8px; border-radius:4px; margin-right:6px;">
+                  المجموع: ${colStock} قطعة
+                </span>
+              </div>
+            </div>
+            <div style="display:flex; gap:6px;">
+              <button type="button" onclick="window.velenAdmin.editColorVariant(${idx})" style="background:#262626; color:#fff; border:1px solid #555; padding:6px 12px; border-radius:4px; font-size:11px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:5px;">
+                <i class="fa-solid fa-pen" style="color:var(--gold-accent);"></i> تعديل اللون والمقاسات
+              </button>
+              <button type="button" onclick="window.velenAdmin.removeProductColor(${idx})" style="background:rgba(255,71,87,0.15); color:#ff4757; border:1px solid rgba(255,71,87,0.3); padding:6px 12px; border-radius:4px; font-size:11px; font-weight:700; cursor:pointer;">
+                <i class="fa-solid fa-trash"></i> حذف
+              </button>
             </div>
           </div>
-          <button type="button" onclick="window.velenAdmin.removeProductColor(${idx})" style="background:rgba(255,71,87,0.15); color:#ff4757; border:1px solid rgba(255,71,87,0.3); padding:4px 8px; border-radius:4px; font-size:11px; cursor:pointer;">
-            <i class="fa-solid fa-trash"></i> حذف اللون
-          </button>
+
+          <!-- Sizes breakdown & photos preview for this color -->
+          <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; background:#141414; padding:8px 10px; border-radius:6px; border:1px solid #282828;">
+            <div style="font-size:11px; color:#bbb;">
+              <strong style="color:var(--gold-accent);">المقاسات:</strong> ${sizeBreakdown || 'لم يتم تحديد مقاسات'}
+            </div>
+            <div style="display:flex; align-items:center; gap:6px;">
+              ${(col.images || []).map(img => `
+                <img src="${img}" style="width:34px; height:34px; object-fit:cover; border-radius:4px; border:1px solid #444;" onerror="this.src='/assets/velen-logo.jpg'">
+              `).join('')}
+              <span style="font-size:11px; color:#888;">(${imgCount} صور)</span>
+            </div>
+          </div>
         </div>
       `;
     }).join('');
   }
   window._renderProductColorsManager = renderProductColorsManager;
+
+  // ================= COLLECTIONS / CATEGORIES MANAGEMENT =================
+  function populateCategoryDropdowns() {
+    const prodCategorySelect = document.getElementById('prodCategory');
+    const filterSelect = document.getElementById('productCategoryFilter');
+    const categories = state.categories || [];
+
+    if (prodCategorySelect && categories.length > 0) {
+      const currentVal = prodCategorySelect.value;
+      prodCategorySelect.innerHTML = categories.map(c => `
+        <option value="${c.nameEn}">${c.nameEn} (${c.nameAr || c.nameEn})</option>
+      `).join('');
+      if (currentVal && categories.some(c => c.nameEn === currentVal)) {
+        prodCategorySelect.value = currentVal;
+      }
+    }
+
+    if (filterSelect && categories.length > 0) {
+      const currentFilter = filterSelect.value || 'all';
+      filterSelect.innerHTML = `<option value="all">جميع التصنيفات</option>` + categories.map(c => `
+        <option value="${c.nameEn}">${c.nameEn} (${c.nameAr || c.nameEn})</option>
+      `).join('');
+      filterSelect.value = currentFilter;
+    }
+  }
+
+  function renderCategoriesTable() {
+    const tbody = document.getElementById('categoriesTableBody');
+    if (!tbody) return;
+    const categories = state.categories || [];
+
+    if (categories.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:#888; padding:18px;">لا توجد كوليكشنز مضافة حالياً.</td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = categories.map(c => `
+      <tr>
+        <td><strong>${c.nameEn}</strong></td>
+        <td><strong>${c.nameAr || '—'}</strong></td>
+        <td><code>${c.id || c.slug}</code></td>
+        <td>
+          <div style="display:flex; gap:6px;">
+            <button class="link-btn" style="color:var(--gold-accent);" onclick="window.velenAdmin.editCategory('${c.id}')" title="تعديل الاسم">
+              <i class="fa-solid fa-pen"></i> تعديل
+            </button>
+            <button class="link-btn" style="color:#ff6b6b;" onclick="window.velenAdmin.deleteCategory('${c.id}')" title="حذف الكوليكشن">
+              <i class="fa-solid fa-trash"></i> حذف
+            </button>
+          </div>
+        </td>
+      </tr>
+    `).join('');
+  }
 
   function setupProductForm() {
     const dropzone = document.getElementById('prodDropzone');
@@ -601,60 +834,204 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }
 
-    // Add Image URL button
-    document.getElementById('btnAddImageUrl')?.addEventListener('click', () => {
-      const inp = document.getElementById('prodImageUrl');
-      const val = inp ? inp.value.trim() : '';
-      if (val) {
-        state.productImages.push(val);
-        inp.value = '';
-        renderProductGalleryManager();
-        showAdminToast('تمت إضافة رابط الصورة إلى المعرض', 'success');
-      }
-    });
+    // Color Variant Modal Listeners
+    document.getElementById('btnOpenAddColorModal')?.addEventListener('click', openAddColorModal);
+    document.getElementById('closeColorVariantModal')?.addEventListener('click', closeColorVariantModal);
+    document.getElementById('cancelColorVariantBtn')?.addEventListener('click', closeColorVariantModal);
 
-    // Color picker and HEX synchronization
-    const newColorPicker = document.getElementById('newColorPicker');
-    const newColorHex = document.getElementById('newColorHex');
-    if (newColorPicker && newColorHex) {
-      newColorPicker.addEventListener('input', () => {
-        newColorHex.value = newColorPicker.value.toUpperCase();
+    // Color Hex & Picker sync in Color Variant Modal
+    const varPicker = document.getElementById('colorVarPicker');
+    const varHex = document.getElementById('colorVarHex');
+    if (varPicker && varHex) {
+      varPicker.addEventListener('input', () => {
+        varHex.value = varPicker.value.toUpperCase();
       });
-      newColorHex.addEventListener('input', () => {
-        let v = newColorHex.value.trim();
+      varHex.addEventListener('input', () => {
+        let v = varHex.value.trim();
         if (!v.startsWith('#')) v = '#' + v;
         if (/^#[0-9A-Fa-f]{6}$/.test(v)) {
-          newColorPicker.value = v;
+          varPicker.value = v;
         }
       });
     }
 
-    // Add Color Button listener
-    document.getElementById('btnAdminAddColor')?.addEventListener('click', () => {
-      const nameInp = document.getElementById('newColorName');
-      const hexInp = document.getElementById('newColorHex');
-      const imgInp = document.getElementById('newColorImg');
+    // Color Variant Dedicated Photos Dropzone
+    const colorDropzone = document.getElementById('colorVarDropzone');
+    const colorFileInput = document.getElementById('colorVarFileInput');
+    if (colorDropzone && colorFileInput) {
+      colorDropzone.addEventListener('click', () => colorFileInput.click());
 
-      const name = nameInp ? nameInp.value.trim() : '';
-      const hex = hexInp ? hexInp.value.trim() : '#000000';
-      const img = imgInp ? imgInp.value.trim() : '';
+      colorFileInput.addEventListener('change', async (e) => {
+        const files = Array.from(e.target.files);
+        if (!files || files.length === 0) return;
+
+        colorDropzone.innerHTML = `<i class="fa-solid fa-spinner fa-spin upload-icon" style="font-size:24px; color:var(--gold-accent);"></i><p style="margin:0; font-size:13px;">جاري رفع ${files.length} صورة لهذا اللون...</p>`;
+
+        const formData = new FormData();
+        files.forEach(f => formData.append('images', f));
+
+        try {
+          const res = await fetch('/api/upload-multiple', { method: 'POST', body: formData });
+          const data = await res.json();
+          if (data.success && data.urls && data.urls.length > 0) {
+            data.urls.forEach(u => state.currentColorEditingImages.push(u));
+            showAdminToast(`تم رفع ${data.urls.length} صور لهذا اللون!`, 'success');
+          } else {
+            for (const file of files) {
+              const singleData = new FormData();
+              singleData.append('media', file);
+              const singleRes = await fetch('/api/upload', { method: 'POST', body: singleData });
+              const sData = await singleRes.json();
+              if (sData.success && sData.url) state.currentColorEditingImages.push(sData.url);
+            }
+            showAdminToast(`تم رفع ${files.length} صور لهذا اللون!`, 'success');
+          }
+        } catch (err) {
+          showAdminToast('فشل في رفع صور اللون، يرجى المحاولة ثانية', 'error');
+        } finally {
+          colorDropzone.innerHTML = `
+            <i class="fa-solid fa-cloud-arrow-up upload-icon" style="font-size:24px; color:var(--gold-accent); margin-bottom:6px;"></i>
+            <p style="margin:0; font-size:13px; font-weight:600;">اضغط هنا لاختيار صور هذا اللون من جهازك</p>
+            <span style="font-size:11px; color:#888;">يمكنك اختيار صورة أو عدة صور معاً دفعة واحدة</span>
+            <input type="file" id="colorVarFileInput" accept="image/*" multiple style="display:none;">
+          `;
+          renderColorVarImagesGrid();
+        }
+      });
+    }
+
+    // Color Variant Size Grid Listeners
+    const colorSizeGrid = document.getElementById('colorVarSizeGrid');
+    if (colorSizeGrid) {
+      colorSizeGrid.addEventListener('change', (e) => {
+        if (e.target.classList.contains('color-size-enable-check')) {
+          const card = e.target.closest('.size-stock-card');
+          const input = card.querySelector('.color-size-qty-input');
+          if (e.target.checked) {
+            card.classList.add('active');
+            if ((parseInt(input.value, 10) || 0) === 0) input.value = 5;
+          } else {
+            card.classList.remove('active');
+          }
+          recalculateColorVarStock();
+        }
+      });
+
+      colorSizeGrid.addEventListener('input', (e) => {
+        if (e.target.classList.contains('color-size-qty-input')) {
+          const card = e.target.closest('.size-stock-card');
+          const check = card.querySelector('.color-size-enable-check');
+          const val = parseInt(e.target.value, 10) || 0;
+          if (val > 0 && !check.checked) {
+            check.checked = true;
+            card.classList.add('active');
+          }
+          recalculateColorVarStock();
+        }
+      });
+    }
+
+    // Save Color Variant Button
+    document.getElementById('colorVariantForm')?.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = document.getElementById('colorVarName')?.value.trim();
+      const hex = document.getElementById('colorVarHex')?.value.trim() || '#000000';
+      const editIdx = parseInt(document.getElementById('editColorVariantIndex')?.value, 10);
 
       if (!name) {
-        showAdminToast('يرجى إدخال اسم اللون (مثلاً: أسود، أبيض، أحمر عنابي)', 'error');
+        showAdminToast('يرجى كتابة اسم اللون', 'error');
         return;
       }
 
-      state.productColors = state.productColors || [];
-      state.productColors.push({
-        name,
-        hex,
-        images: img ? [img] : (state.productImages.length > 0 ? [...state.productImages] : [])
+      // Collect sizes & size inventory for this color
+      const sizeInventory = {};
+      const sizes = [];
+      let colorStock = 0;
+      const sizeCards = document.querySelectorAll('#colorVarSizeGrid .size-stock-card');
+      sizeCards.forEach(card => {
+        const size = card.getAttribute('data-size');
+        const check = card.querySelector('.color-size-enable-check');
+        const input = card.querySelector('.color-size-qty-input');
+        if (check && check.checked) {
+          const qty = parseInt(input.value, 10) || 0;
+          sizeInventory[size] = qty;
+          sizes.push(size);
+          colorStock += qty;
+        }
       });
 
-      if (nameInp) nameInp.value = '';
-      if (imgInp) imgInp.value = '';
+      const colorObj = {
+        name,
+        hex,
+        images: [...state.currentColorEditingImages],
+        image: state.currentColorEditingImages[0] || '',
+        sizeInventory,
+        sizes: sizes.length > 0 ? sizes : ['S', 'M', 'L', 'XL'],
+        stock: colorStock
+      };
+
+      state.productColors = state.productColors || [];
+      if (editIdx >= 0 && editIdx < state.productColors.length) {
+        state.productColors[editIdx] = colorObj;
+        showAdminToast(`تم تحديث اللون (${name}) بنجاح!`, 'success');
+      } else {
+        state.productColors.push(colorObj);
+        showAdminToast(`تمت إضافة اللون (${name}) بنجاح!`, 'success');
+      }
+
+      // Sync color images to general gallery if empty
+      if (state.productImages.length === 0 && colorObj.images.length > 0) {
+        colorObj.images.forEach(u => state.productImages.push(u));
+        renderProductGalleryManager();
+      }
+
+      closeColorVariantModal();
       renderProductColorsManager();
-      showAdminToast(`تمت إضافة اللون (${name}) بنجاح!`, 'success');
+      recalculateOverallProductStock();
+    });
+
+    // Collections Management Listeners
+    document.getElementById('openCollectionsModalBtn')?.addEventListener('click', () => {
+      renderCategoriesTable();
+      document.getElementById('collectionsModal')?.classList.add('active');
+    });
+    document.getElementById('closeCollectionsModal')?.addEventListener('click', () => {
+      document.getElementById('collectionsModal')?.classList.remove('active');
+    });
+
+    // Category Form Submit
+    document.getElementById('categoryForm')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const editId = document.getElementById('editCategoryId')?.value.trim();
+      const nameEn = document.getElementById('catNameEn')?.value.trim();
+      const nameAr = document.getElementById('catNameAr')?.value.trim();
+
+      if (!nameEn && !nameAr) {
+        showAdminToast('يرجى إدخال اسم الكوليكشن', 'error');
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/categories', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id: editId || undefined, nameEn, nameAr })
+        });
+        const data = await res.json();
+        if (data.success) {
+          state.categories = data.categories;
+          document.getElementById('categoryForm').reset();
+          document.getElementById('editCategoryId').value = '';
+          document.getElementById('categoryFormTitle').textContent = '+ إضافة كوليكشن جديد:';
+          renderCategoriesTable();
+          populateCategoryDropdowns();
+          showAdminToast('تم حفظ الكوليكشن وتحديث المتجر بالبث الحي!', 'success');
+        } else {
+          showAdminToast(data.message || 'فشل حفظ الكوليكشن', 'error');
+        }
+      } catch (err) {
+        showAdminToast('حدث خطأ أثناء حفظ الكوليكشن', 'error');
+      }
     });
 
     // Setup size inventory listeners
@@ -722,27 +1099,47 @@ document.addEventListener('DOMContentLoaded', () => {
       const featured = document.getElementById('prodFeatured').checked;
       const fabric = document.getElementById('prodFabric').value.trim();
       const description = document.getElementById('prodDescription').value.trim();
-      const imageUrlInput = document.getElementById('prodImageUrl').value.trim();
+      const imageUrlInput = document.getElementById('prodImageUrl')?.value?.trim() || '';
 
       // Collect sizeInventory and active sizes
-      const sizeInventory = {};
-      const sizes = [];
-      const cards = document.querySelectorAll('#sizeInventoryGrid .size-stock-card');
-      cards.forEach(card => {
-        const size = card.getAttribute('data-size');
-        const check = card.querySelector('.size-enable-check');
-        const input = card.querySelector('.size-qty-input');
-        if (check && check.checked) {
-          const qty = parseInt(input.value, 10) || 0;
-          sizeInventory[size] = qty;
-          sizes.push(size);
-        }
-      });
+      let sizeInventory = {};
+      let sizes = [];
+      let totalStock = 0;
+
+      if (state.productColors && state.productColors.length > 0) {
+        // Aggregate from color variants!
+        state.productColors.forEach(col => {
+          totalStock += (col.stock !== undefined ? col.stock : 0);
+          if (col.sizeInventory) {
+            Object.entries(col.sizeInventory).forEach(([s, q]) => {
+              sizeInventory[s] = (sizeInventory[s] || 0) + (parseInt(q, 10) || 0);
+              if (q > 0 && !sizes.includes(s)) sizes.push(s);
+            });
+          }
+        });
+      } else {
+        const cards = document.querySelectorAll('#sizeInventoryGrid .size-stock-card');
+        cards.forEach(card => {
+          const size = card.getAttribute('data-size');
+          const check = card.querySelector('.size-enable-check');
+          const input = card.querySelector('.size-qty-input');
+          if (check && check.checked) {
+            const qty = parseInt(input.value, 10) || 0;
+            sizeInventory[size] = qty;
+            sizes.push(size);
+            totalStock += qty;
+          }
+        });
+      }
+
+      // Collect all images from colors and gallery
+      const colorImages = (state.productColors || []).flatMap(c => c.images || []);
+      const combinedImages = Array.from(new Set([...(state.productImages || []), ...colorImages]));
+      const primaryImage = combinedImages[0] || imageUrlInput || '/assets/velen-logo.jpg';
+      const allImages = combinedImages.length > 0 ? combinedImages : [primaryImage];
 
       const costPriceVal = document.getElementById('prodCostPrice')?.value;
       const costPrice = costPriceVal !== '' && costPriceVal !== undefined ? parseFloat(costPriceVal) : 5.000;
-      const primaryImage = (state.productImages && state.productImages.length > 0) ? state.productImages[0] : (imageUrlInput || '/assets/velen-logo.jpg');
-      const allImages = (state.productImages && state.productImages.length > 0) ? [...state.productImages] : [primaryImage];
 
       const payload = {
         name,
@@ -757,7 +1154,7 @@ document.addEventListener('DOMContentLoaded', () => {
         fabric,
         description,
         sizes: sizes.length > 0 ? sizes : ['S', 'M', 'L', 'XL'],
-        colors: state.productColors && state.productColors.length > 0 ? state.productColors : [{ name: 'Default', hex: '#000000' }],
+        colors: state.productColors && state.productColors.length > 0 ? state.productColors : [{ name: 'Default', hex: '#000000', images: allImages }],
         image: primaryImage,
         images: allImages
       };
@@ -1063,9 +1460,30 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ================= PROMO CODES MANAGEMENT =================
+  // ================= PROMO CODES MANAGEMENT =================
   function openPromoModal() {
     if (promoForm) promoForm.reset();
+    document.getElementById('editPromoCodeOriginal').value = '';
+    document.getElementById('promoModalTitle').textContent = 'إنشاء كود خصم جديد (Promo Code)';
+    document.getElementById('promoCodeInput').readOnly = false;
     document.getElementById('promoActiveCheck').checked = true;
+    if (promoModal) promoModal.classList.add('active');
+  }
+
+  function editPromo(code) {
+    const promo = (state.promos || []).find(p => p.code === code);
+    if (!promo) return;
+
+    document.getElementById('editPromoCodeOriginal').value = promo.code;
+    document.getElementById('promoModalTitle').textContent = `تعديل كود الخصم: ${promo.code}`;
+    document.getElementById('promoCodeInput').value = promo.code;
+    document.getElementById('promoCodeInput').readOnly = true;
+    document.getElementById('promoTypeSelect').value = promo.discountType || promo.type || 'percentage';
+    document.getElementById('promoValueInput').value = promo.discountValue !== undefined ? promo.discountValue : promo.value;
+    document.getElementById('promoMinOrderInput').value = promo.minOrder || 0;
+    document.getElementById('promoUsageLimitInput').value = promo.usageLimit || '';
+    document.getElementById('promoActiveCheck').checked = promo.active !== false;
+
     if (promoModal) promoModal.classList.add('active');
   }
 
@@ -1076,6 +1494,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function setupPromoCodes() {
     promoForm?.addEventListener('submit', async (e) => {
       e.preventDefault();
+      const originalCode = document.getElementById('editPromoCodeOriginal')?.value.trim();
       const code = document.getElementById('promoCodeInput')?.value.trim().toUpperCase();
       const discountType = document.getElementById('promoTypeSelect')?.value;
       const discountValue = parseFloat(document.getElementById('promoValueInput')?.value) || 0;
@@ -1089,6 +1508,10 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
       }
 
+      // If editing existing, preserve current timesUsed
+      const existingPromo = (state.promos || []).find(p => p.code === (originalCode || code));
+      const timesUsed = existingPromo ? (existingPromo.timesUsed || existingPromo.uses || 0) : 0;
+
       try {
         const res = await fetch('/api/promo-codes', {
           method: 'POST',
@@ -1099,14 +1522,15 @@ document.addEventListener('DOMContentLoaded', () => {
             discountValue,
             minOrder,
             usageLimit,
-            active
+            active,
+            timesUsed
           })
         });
         const data = await res.json();
         if (data.success) {
           closePromoModal();
           await fetchPromoCodes();
-          showAdminToast(`تم تفعيل كود الخصم (${code}) بنجاح!`, 'success');
+          showAdminToast(originalCode ? `تم تعديل كود الخصم (${code}) وتحديث الليميت!` : `تم إنشاء وتفعيل كود الخصم (${code}) بنجاح!`, 'success');
         } else {
           showAdminToast(data.error || 'فشل حفظ كود الخصم', 'error');
         }
@@ -1136,21 +1560,36 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    tbody.innerHTML = state.promos.map(p => `
-      <tr>
-        <td><strong style="color:var(--gold-accent, #e5b95f); letter-spacing:1px; font-size:14px;">${p.code}</strong></td>
-        <td>${p.discountType === 'percentage' ? 'نسبة مئوية (%)' : 'مبلغ ثابت (JOD)'}</td>
-        <td><strong>${p.discountType === 'percentage' ? `${p.discountValue}%` : `${Number(p.discountValue).toFixed(3)} JOD`}</strong></td>
-        <td>${p.minOrder > 0 ? `${Number(p.minOrder).toFixed(3)} JOD` : 'بدون حد أدنى'}</td>
-        <td><span style="font-weight:700;">${p.timesUsed || 0}</span> / <span style="color:#aaa;">${p.usageLimit ? `${p.usageLimit} مرة` : 'غير محدود'}</span></td>
-        <td><span class="${p.active !== false ? 'status-active-promo' : 'status-inactive-promo'}">${p.active !== false ? 'فعال' : 'معطل'}</span></td>
-        <td>
-          <button class="link-btn" style="color:#ff6b6b;" onclick="window.velenAdmin.deletePromo('${p.code}')" title="حذف الكود">
-            <i class="fa-solid fa-trash"></i>
-          </button>
-        </td>
-      </tr>
-    `).join('');
+    tbody.innerHTML = state.promos.map(p => {
+      const used = parseInt(p.timesUsed || p.uses || 0, 10);
+      const limit = p.usageLimit ? parseInt(p.usageLimit, 10) : null;
+      const isExceeded = limit !== null && used >= limit;
+
+      return `
+        <tr>
+          <td><strong style="color:var(--gold-accent, #e5b95f); letter-spacing:1px; font-size:14px;">${p.code}</strong></td>
+          <td>${p.discountType === 'percentage' ? 'نسبة مئوية (%)' : 'مبلغ ثابت (JOD)'}</td>
+          <td><strong>${p.discountType === 'percentage' ? `${p.discountValue}%` : `${Number(p.discountValue).toFixed(3)} JOD`}</strong></td>
+          <td>${p.minOrder > 0 ? `${Number(p.minOrder).toFixed(3)} JOD` : 'بدون حد أدنى'}</td>
+          <td>
+            <span style="font-weight:700; color:${isExceeded ? '#ff6b6b' : '#fff'};">${used}</span> / 
+            <span style="color:${isExceeded ? '#ff6b6b' : '#aaa'}; font-weight:${isExceeded ? '700' : 'normal'};">${limit ? `${limit} مرة` : 'غير محدود'}</span>
+            ${isExceeded ? '<br><span style="color:#ff6b6b; font-size:10px; font-weight:700;">(استُنفد الحد الأقصى)</span>' : ''}
+          </td>
+          <td><span class="${p.active !== false && !isExceeded ? 'status-active-promo' : 'status-inactive-promo'}">${p.active !== false ? (isExceeded ? 'مكتمل' : 'فعال') : 'معطل'}</span></td>
+          <td>
+            <div style="display:flex; gap:6px;">
+              <button class="link-btn" style="color:var(--gold-accent);" onclick="window.velenAdmin.editPromo('${p.code}')" title="تعديل الكود والليميت">
+                <i class="fa-solid fa-pen"></i>
+              </button>
+              <button class="link-btn" style="color:#ff6b6b;" onclick="window.velenAdmin.deletePromo('${p.code}')" title="حذف الكود">
+                <i class="fa-solid fa-trash"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+      `;
+    }).join('');
   }
 
   // ================= AI COPILOT / CHATGPT INTEGRATION =================
@@ -2072,8 +2511,22 @@ document.addEventListener('DOMContentLoaded', () => {
       if (state.productColors) {
         state.productColors.splice(idx, 1);
         if (window._renderProductColorsManager) window._renderProductColorsManager();
+        if (typeof recalculateOverallProductStock === 'function') recalculateOverallProductStock();
         showAdminToast('تمت إزالة اللون بنجاح', 'info');
       }
+    },
+    editColorVariant: (idx) => {
+      if (typeof editColorVariant === 'function') editColorVariant(idx);
+    },
+    removeColorEditingImage: (idx) => {
+      if (state.currentColorEditingImages) {
+        state.currentColorEditingImages.splice(idx, 1);
+        if (typeof renderColorVarImagesGrid === 'function') renderColorVarImagesGrid();
+        showAdminToast('تمت إزالة صورة اللون', 'info');
+      }
+    },
+    editPromo: (code) => {
+      if (typeof editPromo === 'function') editPromo(code);
     },
     deletePromo: async (code) => {
       if (!confirm(`هل أنت متأكد من حذف كود الخصم (${code})؟`)) return;
@@ -2090,6 +2543,31 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       } catch (e) {
         showAdminToast('حدث خطأ في الاتصال بالخادم', 'error');
+      }
+    },
+    editCategory: (id) => {
+      const cat = (state.categories || []).find(c => c.id === id);
+      if (!cat) return;
+      document.getElementById('editCategoryId').value = cat.id;
+      document.getElementById('catNameEn').value = cat.nameEn || '';
+      document.getElementById('catNameAr').value = cat.nameAr || '';
+      document.getElementById('categoryFormTitle').textContent = `تعديل كوليكشن: ${cat.nameEn}`;
+    },
+    deleteCategory: async (id) => {
+      if (!confirm('هل أنت متأكد من حذف هذا الكوليكشن؟')) return;
+      try {
+        const res = await fetch(`/api/categories/${encodeURIComponent(id)}`, { method: 'DELETE' });
+        const data = await res.json();
+        if (data.success) {
+          state.categories = data.categories;
+          renderCategoriesTable();
+          populateCategoryDropdowns();
+          showAdminToast('تم حذف الكوليكشن بنجاح', 'success');
+        } else {
+          showAdminToast(data.message || 'فشل حذف الكوليكشن', 'error');
+        }
+      } catch (e) {
+        showAdminToast('حدث خطأ أثناء الحذف', 'error');
       }
     },
     deleteExpense: async (id) => {

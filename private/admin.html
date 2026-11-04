@@ -270,9 +270,14 @@
             </select>
           </div>
 
-          <button id="openNewProductModalBtn" class="btn-primary-action">
-            <i class="fa-solid fa-plus"></i> إضافة قطعة جديدة إلى المتجر
-          </button>
+          <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+            <button id="openCollectionsModalBtn" type="button" class="btn-cancel" style="background:#1e1e1e; color:#fff; border:1px solid #444; padding:9px 16px; border-radius:6px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:8px;">
+              <i class="fa-solid fa-layer-group" style="color:var(--gold-accent);"></i> إدارة الكوليكشنز والتصنيفات
+            </button>
+            <button id="openNewProductModalBtn" class="btn-primary-action">
+              <i class="fa-solid fa-plus"></i> إضافة قطعة جديدة إلى المتجر
+            </button>
+          </div>
         </div>
 
         <div class="products-admin-grid" id="adminProductsGrid">
@@ -1292,57 +1297,28 @@
           <!-- Live Gallery Thumbnails List -->
           <div id="prodGalleryGrid" class="prod-gallery-manager-grid" style="display:flex; flex-wrap:wrap; gap:10px; margin-top:12px;"></div>
 
-          <div class="url-fallback-wrap" style="margin-top:10px; display:flex; gap:8px;">
-            <input type="url" id="prodImageUrl" placeholder="أو أضف رابط صورة مباشر: https://... أو /assets/..." style="flex:1;">
-            <button type="button" id="btnAddImageUrl" class="btn-cancel" style="white-space:nowrap; padding:8px 14px; background:#222; color:#fff; border:1px solid #444;">
-              <i class="fa-solid fa-plus"></i> إضافة رابط
-            </button>
-          </div>
           <p style="font-size:11px; color:#888; margin-top:6px;">
-            <i class="fa-solid fa-circle-info"></i> الصورة الأولى في المعرض هي الصورة الرئيسية (Cover). يمكنك الضغط على أي صورة لجعلها الرئيسية أو حذف أي صورة بسهولة.
+            <i class="fa-solid fa-circle-info"></i> الصور المرفوعة هنا هي المعرض العام. كل لون تضيفه بالأسفل يمكنك أيضاً رفع صور خاصة ومحددة له مباشرة من جهازك.
           </p>
         </div>
 
-        <!-- Product Color Variants Manager -->
+        <!-- Product Color Variants Manager (Each color has its own photos and size inventory) -->
         <div class="form-group" style="background:#141414; padding:16px; border-radius:8px; border:1px solid #333; margin-bottom:18px;">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-            <label style="margin:0; font-weight:700; color:#fff; display:flex; align-items:center; gap:8px;">
-              <i class="fa-solid fa-palette" style="color:var(--gold-accent);"></i> خيارات وألوان القطعة (Color Swatches & Gallery):
-            </label>
-            <span style="font-size:11px; color:#aaa;">يمكنك إضافة 3 ألوان أو أكثر مع كود اللون وصوره الخاصة</span>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
+            <div>
+              <label style="margin:0; font-weight:700; color:#fff; display:flex; align-items:center; gap:8px; font-size:14px;">
+                <i class="fa-solid fa-palette" style="color:var(--gold-accent);"></i> ألوان القطعة وصورها ومقاساتها (Color Variants & Sizes):
+              </label>
+              <span style="font-size:11px; color:#aaa;">كل لون تضيفه يمتلك صوره الخاصة المرفوعة من جهازك ومقاساته وكمياته المستقلة.</span>
+            </div>
+            <button type="button" id="btnOpenAddColorModal" class="btn-primary-action" style="padding:8px 14px; font-size:12px; background:var(--gold-accent); color:#000; font-weight:800; border-radius:6px; cursor:pointer;">
+              <i class="fa-solid fa-plus"></i> إضافة لون جديد مع صوره ومقاساته
+            </button>
           </div>
 
           <!-- Color Variants List -->
-          <div id="adminProductColorsList" style="display:flex; flex-direction:column; gap:8px; margin-bottom:14px;">
-            <!-- Dynamically populated rows -->
-          </div>
-
-          <!-- Quick Add Color Row -->
-          <div style="background:#1c1c1c; padding:12px; border-radius:6px; border:1px dashed #444;">
-            <span style="font-size:12px; font-weight:700; color:#eee; display:block; margin-bottom:8px;">+ إضافة لون جديد للقطعة:</span>
-            <div class="form-row" style="align-items:flex-end;">
-              <div class="form-group" style="flex:2;">
-                <label style="font-size:11px;">اسم اللون (عربي / English)</label>
-                <input type="text" id="newColorName" placeholder="مثال: أسود، أبيض، أحمر عنابي، كحلي">
-              </div>
-              <div class="form-group" style="width:70px;">
-                <label style="font-size:11px;">اللون</label>
-                <input type="color" id="newColorPicker" value="#000000" style="padding:2px; height:38px; cursor:pointer;">
-              </div>
-              <div class="form-group" style="width:100px;">
-                <label style="font-size:11px;">كود HEX</label>
-                <input type="text" id="newColorHex" value="#000000" placeholder="#000000">
-              </div>
-              <div class="form-group" style="flex:2;">
-                <label style="font-size:11px;">رابط صورة اللون (اختياري)</label>
-                <input type="text" id="newColorImg" placeholder="/assets/velen-boxy-white.jpg">
-              </div>
-              <div class="form-group" style="width:110px;">
-                <button type="button" id="btnAdminAddColor" class="btn-primary-action" style="padding:10px 14px; font-size:12px; width:100%; background:var(--gold-accent); color:#000; font-weight:800;">
-                  <i class="fa-solid fa-plus"></i> إضافة اللون
-                </button>
-              </div>
-            </div>
+          <div id="adminProductColorsList" style="display:flex; flex-direction:column; gap:10px; margin-bottom:6px;">
+            <!-- Dynamically populated rich color cards -->
           </div>
         </div>
 
@@ -1371,11 +1347,12 @@
     <div class="admin-modal-dialog">
       <button id="closePromoModal" class="modal-close-icon"><i class="fa-solid fa-xmark"></i></button>
       <div class="modal-head">
-        <h3>إنشاء كود خصم جديد (Promo Code)</h3>
+        <h3 id="promoModalTitle">إنشاء كود خصم جديد (Promo Code)</h3>
         <p>بمجرد الحفظ، سيتم تفعيل الكود فوراً ليستخدمه الزبائن عند الشراء.</p>
       </div>
 
       <form id="promoForm">
+        <input type="hidden" id="editPromoCodeOriginal" value="">
         <div class="form-group">
           <label>رمز الكود (Code Name) *</label>
           <input type="text" id="promoCodeInput" placeholder="مثال: VELEN20 أو AMMAN" required style="text-transform:uppercase; font-weight:700; letter-spacing:1px;">
@@ -1420,6 +1397,182 @@
           </button>
         </div>
       </form>
+    </div>
+  </div>
+
+  <!-- Color Variant Modal (Dedicated Color, Images & Sizing) -->
+  <div id="colorVariantModal" class="admin-modal" aria-hidden="true">
+    <div class="admin-modal-dialog" style="max-width:620px;">
+      <button type="button" id="closeColorVariantModal" class="modal-close-icon"><i class="fa-solid fa-xmark"></i></button>
+      <div class="modal-head">
+        <h3 id="colorVariantModalTitle"><i class="fa-solid fa-palette" style="color:var(--gold-accent);"></i> خيارات اللون والصور والمقاسات</h3>
+        <p>حدد اسم اللون، كود HEX، ارفع صوره الخاصة مباشرة من جهازك، وحدد مقاساته وكمياته.</p>
+      </div>
+
+      <form id="colorVariantForm">
+        <input type="hidden" id="editColorVariantIndex" value="-1">
+
+        <div class="form-row">
+          <div class="form-group" style="flex:2;">
+            <label>اسم اللون (Color Name) *</label>
+            <input type="text" id="colorVarName" placeholder="مثال: سماوي هادئ / Sky Blue" required>
+          </div>
+          <div class="form-group" style="width:75px;">
+            <label>اللون</label>
+            <input type="color" id="colorVarPicker" value="#000000" style="padding:2px; height:38px; cursor:pointer; width:100%;">
+          </div>
+          <div class="form-group" style="width:110px;">
+            <label>HEX Code</label>
+            <input type="text" id="colorVarHex" value="#000000" placeholder="#000000">
+          </div>
+        </div>
+
+        <!-- Color Dedicated Photos (Direct upload from device only!) -->
+        <div class="form-group" style="margin-top:14px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+            <label style="font-weight:700; color:#fff;"><i class="fa-solid fa-images" style="color:var(--gold-accent);"></i> صور خاصة بهذا اللون (Direct Upload) *</label>
+            <span id="colorVarImagesCount" style="font-size:12px; color:var(--gold-accent);">0 صور مضافة</span>
+          </div>
+          <div class="upload-dropzone" id="colorVarDropzone" style="cursor:pointer; padding:18px 12px; border:2px dashed #444; border-radius:8px; text-align:center; background:#161616;">
+            <i class="fa-solid fa-cloud-arrow-up upload-icon" style="font-size:24px; color:var(--gold-accent); margin-bottom:6px;"></i>
+            <p style="margin:0; font-size:13px; font-weight:600;">اضغط هنا لاختيار صور هذا اللون من جهازك</p>
+            <span style="font-size:11px; color:#888;">يمكنك اختيار صورة أو عدة صور معاً دفعة واحدة</span>
+            <input type="file" id="colorVarFileInput" accept="image/*" multiple style="display:none;">
+          </div>
+          <div id="colorVarImagesGrid" style="display:flex; flex-wrap:wrap; gap:8px; margin-top:10px;"></div>
+        </div>
+
+        <!-- Color Sizes & Stock Inventory -->
+        <div class="form-group" style="margin-top:14px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <label style="margin:0; font-weight:700;"><i class="fa-solid fa-ruler-combined" style="color:var(--gold-accent);"></i> المقاسات والكميات المتوفرة لهذا اللون:</label>
+            <span style="font-size:12px; color:var(--gold-accent); font-weight:700;">المجموع لهذا اللون: <span id="colorVarTotalStockBadge">0</span> قطعة</span>
+          </div>
+          <div class="size-inventory-grid" id="colorVarSizeGrid">
+            <div class="size-stock-card" data-size="XS">
+              <label class="size-stock-label">
+                <input type="checkbox" class="color-size-enable-check" data-size="XS">
+                <span class="size-tag">XS</span>
+              </label>
+              <div class="size-stock-input-wrap">
+                <input type="number" class="color-size-qty-input" data-size="XS" min="0" value="0" placeholder="0">
+                <span class="qty-unit">قطعة</span>
+              </div>
+            </div>
+
+            <div class="size-stock-card active" data-size="S">
+              <label class="size-stock-label">
+                <input type="checkbox" class="color-size-enable-check" data-size="S" checked>
+                <span class="size-tag">S</span>
+              </label>
+              <div class="size-stock-input-wrap">
+                <input type="number" class="color-size-qty-input" data-size="S" min="0" value="5" placeholder="0">
+                <span class="qty-unit">قطعة</span>
+              </div>
+            </div>
+
+            <div class="size-stock-card active" data-size="M">
+              <label class="size-stock-label">
+                <input type="checkbox" class="color-size-enable-check" data-size="M" checked>
+                <span class="size-tag">M</span>
+              </label>
+              <div class="size-stock-input-wrap">
+                <input type="number" class="color-size-qty-input" data-size="M" min="0" value="5" placeholder="0">
+                <span class="qty-unit">قطعة</span>
+              </div>
+            </div>
+
+            <div class="size-stock-card active" data-size="L">
+              <label class="size-stock-label">
+                <input type="checkbox" class="color-size-enable-check" data-size="L" checked>
+                <span class="size-tag">L</span>
+              </label>
+              <div class="size-stock-input-wrap">
+                <input type="number" class="color-size-qty-input" data-size="L" min="0" value="5" placeholder="0">
+                <span class="qty-unit">قطعة</span>
+              </div>
+            </div>
+
+            <div class="size-stock-card active" data-size="XL">
+              <label class="size-stock-label">
+                <input type="checkbox" class="color-size-enable-check" data-size="XL" checked>
+                <span class="size-tag">XL</span>
+              </label>
+              <div class="size-stock-input-wrap">
+                <input type="number" class="color-size-qty-input" data-size="XL" min="0" value="5" placeholder="0">
+                <span class="qty-unit">قطعة</span>
+              </div>
+            </div>
+
+            <div class="size-stock-card" data-size="XXL">
+              <label class="size-stock-label">
+                <input type="checkbox" class="color-size-enable-check" data-size="XXL">
+                <span class="size-tag">XXL</span>
+              </label>
+              <div class="size-stock-input-wrap">
+                <input type="number" class="color-size-qty-input" data-size="XXL" min="0" value="0" placeholder="0">
+                <span class="qty-unit">قطعة</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-actions-bar" style="margin-top:20px;">
+          <button type="button" class="btn-cancel" id="cancelColorVariantBtn">إلغاء</button>
+          <button type="submit" class="btn-primary-action" id="saveColorVariantBtn">
+            <i class="fa-solid fa-check"></i> حفظ اللون والمقاسات
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Collections Management Modal -->
+  <div id="collectionsModal" class="admin-modal" aria-hidden="true">
+    <div class="admin-modal-dialog" style="max-width:650px;">
+      <button type="button" id="closeCollectionsModal" class="modal-close-icon"><i class="fa-solid fa-xmark"></i></button>
+      <div class="modal-head">
+        <h3><i class="fa-solid fa-layer-group" style="color:var(--gold-accent);"></i> إدارة الكوليكشنز والتصنيفات (Collections & Categories)</h3>
+        <p>يمكنك تغيير أسماء الكوليكشنز الحالية، إضافة مجموعات جديدة، أو حذف أي تصنيف ليظهر فوراً في المتجر.</p>
+      </div>
+
+      <!-- Add/Edit Collection Inline Form -->
+      <form id="categoryForm" style="background:#181818; padding:14px; border-radius:8px; border:1px solid #333; margin-bottom:18px;">
+        <input type="hidden" id="editCategoryId" value="">
+        <span style="font-size:12px; font-weight:700; color:#eee; display:block; margin-bottom:8px;" id="categoryFormTitle">+ إضافة كوليكشن جديد:</span>
+        <div class="form-row" style="align-items:flex-end;">
+          <div class="form-group" style="flex:1;">
+            <label style="font-size:11px;">الاسم بالإنجليزي (English Name) *</label>
+            <input type="text" id="catNameEn" placeholder="e.g. Summer Drop / Oversized" required>
+          </div>
+          <div class="form-group" style="flex:1;">
+            <label style="font-size:11px;">الاسم بالعربي (Arabic Name) *</label>
+            <input type="text" id="catNameAr" placeholder="مثال: تشكيلة الصيف / أوفرسايز" required>
+          </div>
+          <div class="form-group" style="width:110px;">
+            <button type="submit" class="btn-primary-action" id="btnSaveCategory" style="padding:10px 14px; font-size:12px; width:100%; background:var(--gold-accent); color:#000; font-weight:800;">
+              <i class="fa-solid fa-check"></i> حفظ
+            </button>
+          </div>
+        </div>
+      </form>
+
+      <!-- Collections Table -->
+      <div class="table-responsive">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>الاسم بالإنجليزي</th>
+              <th>الاسم بالعربي</th>
+              <th>المعرّف (Slug)</th>
+              <th>إجراءات</th>
+            </tr>
+          </thead>
+          <tbody id="categoriesTableBody">
+            <!-- Rendered dynamically -->
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 
@@ -1723,6 +1876,6 @@
 
   <div id="adminToastContainer" class="admin-toast-container"></div>
 
-  <script src="/js/admin.js"></script>
+  <script src="/js/admin.js?v=2.2"></script>
 </body>
 </html>

@@ -500,6 +500,13 @@ app.post('/api/orders', async (req, res) => {
     for (const item of newOrder.items) {
       const prod = (db.products || []).find(p => p.id === item.id || p.name === item.name);
       if (prod) {
+        // If color variant specified, decrement color's size inventory
+        if (Array.isArray(prod.colors) && item.color) {
+          const colorVariant = prod.colors.find(c => c.name === item.color || (c.hex && c.hex === item.colorHex));
+          if (colorVariant && colorVariant.sizeInventory && item.size && typeof colorVariant.sizeInventory[item.size] !== 'undefined') {
+            colorVariant.sizeInventory[item.size] = Math.max(0, colorVariant.sizeInventory[item.size] - (item.quantity || 1));
+          }
+        }
         if (prod.sizeInventory && item.size && typeof prod.sizeInventory[item.size] !== 'undefined') {
           prod.sizeInventory[item.size] = Math.max(0, prod.sizeInventory[item.size] - (item.quantity || 1));
           prod.stock = Object.values(prod.sizeInventory).reduce((a, b) => a + b, 0);
@@ -512,13 +519,21 @@ app.post('/api/orders', async (req, res) => {
     }
   }
 
-  // Increment promo code usage count if used in order
+  // Validate and Increment promo code usage count if used in order
   const appliedCode = req.body.promoCode || (req.body.appliedPromo && req.body.appliedPromo.code);
   if (appliedCode) {
     const pCodeUpper = appliedCode.trim().toUpperCase();
     const pObj = (db.promoCodes || []).find(p => p.code === pCodeUpper);
     if (pObj) {
-      pObj.timesUsed = (pObj.timesUsed || 0) + 1;
+      const used = parseInt(pObj.timesUsed || pObj.uses || 0, 10);
+      const limit = (pObj.usageLimit !== null && pObj.usageLimit !== undefined && pObj.usageLimit !== '') ? parseInt(pObj.usageLimit, 10) : null;
+      if (limit !== null && limit > 0 && used >= limit) {
+        return res.status(400).json({
+          success: false,
+          message: `عذراً، كود الخصم (${pCodeUpper}) وصل إلى الحد الأقصى للاستخدام (${limit} مرات)!`
+        });
+      }
+      pObj.timesUsed = used + 1;
       pObj.uses = pObj.timesUsed;
       await firebaseService.savePromoCode(pObj);
       broadcast('PROMO_CODES_UPDATED', db.promoCodes);
@@ -860,11 +875,57 @@ app.get('/api/admin/live-visitors', (req, res) => {
   });
 });
 
+// ================= API: Categories & Collections =================
+app.get('/api/categories', async (req, res) => {
+  const db = readDB();
+  const categories = await firebaseService.getCategories(db);
+  res.json(categories || db.categories || []);
+});
+
+app.post('/api/categories', async (req, res) => {
+  const db = readDB();
+  const { id, nameEn, nameAr, slug } = req.body;
+  if (!nameEn && !nameAr) {
+    return res.status(400).json({ success: false, message: 'اسم التصنيف مطلوب' });
+  }
+
+  const catId = (id || slug || nameEn || `cat-${Date.now()}`).toLowerCase().replace(/[^a-z0-9]/g, '-');
+  const catObj = {
+    id: catId,
+    nameEn: (nameEn || nameAr).trim(),
+    nameAr: (nameAr || nameEn).trim(),
+    slug: catId
+  };
+
+  db.categories = db.categories || [];
+  const existingIdx = db.categories.findIndex(c => c.id === catObj.id);
+  if (existingIdx !== -1) {
+    db.categories[existingIdx] = { ...db.categories[existingIdx], ...catObj };
+  } else {
+    db.categories.push(catObj);
+  }
+
+  writeDB(db);
+  await firebaseService.saveCategory(catObj);
+  broadcast('CATEGORIES_UPDATED', db.categories);
+  res.json({ success: true, category: catObj, categories: db.categories });
+});
+
+app.delete('/api/categories/:id', async (req, res) => {
+  const db = readDB();
+  const id = req.params.id;
+  db.categories = (db.categories || []).filter(c => c.id !== id);
+  writeDB(db);
+  await firebaseService.deleteCategory(id);
+  broadcast('CATEGORIES_UPDATED', db.categories);
+  res.json({ success: true, categories: db.categories });
+});
+
 // ================= API: Promo & Discount Codes =================
 app.get('/api/promo-codes', async (req, res) => {
   const db = readDB();
   const codes = await firebaseService.getPromoCodes(db);
-  res.json(codes || []);
+  res.json(codes || db.promoCodes || []);
 });
 
 app.post('/api/promo-codes', async (req, res) => {
@@ -874,22 +935,31 @@ app.post('/api/promo-codes', async (req, res) => {
 
   const finalType = discountType || type || 'percentage';
   const finalVal = parseFloat(discountValue !== undefined ? discountValue : value) || 10;
+  const codeUpper = code.trim().toUpperCase();
+
+  db.promoCodes = db.promoCodes || [];
+  const existingIndex = db.promoCodes.findIndex(p => p.code === codeUpper);
+  let finalTimesUsed = 0;
+  if (existingIndex !== -1) {
+    finalTimesUsed = parseInt(req.body.timesUsed !== undefined ? req.body.timesUsed : (db.promoCodes[existingIndex].timesUsed || db.promoCodes[existingIndex].uses || 0), 10);
+  } else {
+    finalTimesUsed = parseInt(req.body.timesUsed || req.body.uses || 0, 10);
+  }
 
   const promo = {
-    code: code.trim().toUpperCase(),
+    code: codeUpper,
     type: finalType,
     discountType: finalType,
     value: finalVal,
     discountValue: finalVal,
     minOrder: parseFloat(minOrder) || 0,
     active: active !== false,
-    usageLimit: usageLimit ? parseInt(usageLimit, 10) : null,
-    timesUsed: parseInt(req.body.timesUsed || req.body.uses, 10) || 0,
-    createdAt: new Date().toISOString()
+    usageLimit: (usageLimit !== undefined && usageLimit !== null && usageLimit !== '') ? parseInt(usageLimit, 10) : null,
+    timesUsed: finalTimesUsed,
+    uses: finalTimesUsed,
+    createdAt: (existingIndex !== -1 && db.promoCodes[existingIndex].createdAt) ? db.promoCodes[existingIndex].createdAt : new Date().toISOString()
   };
 
-  db.promoCodes = db.promoCodes || [];
-  const existingIndex = db.promoCodes.findIndex(p => p.code === promo.code);
   if (existingIndex !== -1) {
     db.promoCodes[existingIndex] = { ...db.promoCodes[existingIndex], ...promo };
   } else {
@@ -922,13 +992,14 @@ app.post('/api/promo-codes/validate', async (req, res) => {
     return res.status(400).json({ valid: false, success: false, message: 'كود الخصم غير صحيح أو غير مفعل' });
   }
 
-  // Check usage limit
+  // Check usage limit strictly
   const used = parseInt(promo.timesUsed || promo.uses || 0, 10);
-  if (promo.usageLimit && used >= promo.usageLimit) {
+  const limit = (promo.usageLimit !== null && promo.usageLimit !== undefined && promo.usageLimit !== '') ? parseInt(promo.usageLimit, 10) : null;
+  if (limit !== null && limit > 0 && used >= limit) {
     return res.status(400).json({
       valid: false,
       success: false,
-      message: `عذراً، وصل هذا الكود إلى الحد الأقصى لمرات الاستخدام المسموحة (${promo.usageLimit} مرات).`
+      message: `عذراً، استنفد هذا الكود الحد الأقصى لمرات الاستخدام المسموحة (${limit} مرات).`
     });
   }
 

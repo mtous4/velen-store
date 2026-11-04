@@ -8,7 +8,7 @@
     "freeShippingThreshold": 20,
     "contactPhone": "+962 7 7018 8144",
     "orderEmail": "Velenoffical@gmail.com",
-    "nextOrderNumber": 1002,
+    "nextOrderNumber": 1003,
     "social": {
       "instagram": "https://instagram.com/velenofficial",
       "tiktok": "https://tiktok.com/@velenofficial",
@@ -39,6 +39,38 @@
       }
     }
   },
+  "categories": [
+    {
+      "id": "tees",
+      "nameEn": "Tees",
+      "nameAr": "تيشيرتات",
+      "slug": "tees"
+    },
+    {
+      "id": "ringer",
+      "nameEn": "Ringer Edition",
+      "nameAr": "ياقة ملونة",
+      "slug": "ringer"
+    },
+    {
+      "id": "boxy",
+      "nameEn": "Boxy & Cropped",
+      "nameAr": "قصّة بوكسي",
+      "slug": "boxy"
+    },
+    {
+      "id": "hoodies",
+      "nameEn": "Hoodies & Sweats",
+      "nameAr": "هوديز وسويت شيرت",
+      "slug": "hoodies"
+    },
+    {
+      "id": "pants",
+      "nameEn": "Pants & Bottoms",
+      "nameAr": "بناطيل وسراويل",
+      "slug": "pants"
+    }
+  ],
   "products": [
     {
       "id": "prod-1793258212025",

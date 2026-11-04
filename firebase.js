@@ -329,5 +329,34 @@ module.exports = {
     } catch (e) {
       console.error('Firestore deletePromoCode error:', e);
     }
+  },
+
+  async getCategories(localFallback) {
+    if (!isFirebaseReady) return localFallback?.categories || [];
+    try {
+      const snap = await db.collection('categories').get();
+      if (snap.empty) return localFallback?.categories || [];
+      return snap.docs.map(doc => doc.data());
+    } catch (e) {
+      return localFallback?.categories || [];
+    }
+  },
+
+  async saveCategory(cat) {
+    if (!isFirebaseReady) return;
+    try {
+      await db.collection('categories').doc(cat.id).set(cat);
+    } catch (e) {
+      console.error('Firestore saveCategory error:', e);
+    }
+  },
+
+  async deleteCategory(id) {
+    if (!isFirebaseReady) return;
+    try {
+      await db.collection('categories').doc(id).delete();
+    } catch (e) {
+      console.error('Firestore deleteCategory error:', e);
+    }
   }
 };
