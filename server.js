@@ -211,7 +211,7 @@ const upload = multer({
   limits: { fileSize: 50 * 1024 * 1024 } // 50MB for photos & videos
 });
 
-// Upload media endpoint
+// Upload media endpoint (single)
 app.post('/api/upload', upload.single('media'), (req, res) => {
   if (!req.file) {
     return res.status(400).json({ success: false, message: 'No file uploaded' });
@@ -223,6 +223,23 @@ app.post('/api/upload', upload.single('media'), (req, res) => {
     url: fileUrl,
     filename: req.file.filename,
     mediaType: isVideo ? 'video' : 'photo'
+  });
+});
+
+// Upload multiple media endpoint (for unlimited product images in Admin)
+app.post('/api/upload-multiple', upload.array('images', 50), (req, res) => {
+  if (!req.files || req.files.length === 0) {
+    return res.status(400).json({ success: false, message: 'No files uploaded' });
+  }
+  const files = req.files.map(f => ({
+    url: '/uploads/' + f.filename,
+    filename: f.filename,
+    mediaType: f.mimetype.startsWith('video') ? 'video' : 'photo'
+  }));
+  res.json({
+    success: true,
+    files: files,
+    urls: files.map(f => f.url)
   });
 });
 
@@ -400,7 +417,44 @@ app.delete('/api/community/:id', async (req, res) => {
   res.json({ success: true, message: 'Community post removed' });
 });
 
-// ================= API: Orders =================
+// ================= API: Product Reviews (Separate from Community) =================
+app.get('/api/reviews', async (req, res) => {
+  const db = readDB();
+  res.json(db.reviews || []);
+});
+
+// Customer submits a pure star rating review (no photos required)
+app.post('/api/reviews', async (req, res) => {
+  const db = readDB();
+  const review = {
+    id: 'rev-' + Date.now(),
+    author: req.body.author || 'Velen Customer',
+    rating: Math.min(5, Math.max(1, parseInt(req.body.rating, 10) || 5)),
+    comment: req.body.comment || '',
+    itemWorn: req.body.itemWorn || 'Velen Essential',
+    verified: false,
+    approved: true,
+    createdAt: new Date().toISOString()
+  };
+
+  db.reviews = db.reviews || [];
+  db.reviews.unshift(review);
+  writeDB(db);
+
+  broadcast('REVIEW_ADDED', review);
+  res.status(201).json({ success: true, review });
+});
+
+// Admin deletes a review
+app.delete('/api/reviews/:id', async (req, res) => {
+  const db = readDB();
+  db.reviews = (db.reviews || []).filter(r => r.id !== req.params.id);
+  writeDB(db);
+  broadcast('REVIEW_DELETED', { id: req.params.id });
+  res.json({ success: true, message: 'Review removed' });
+});
+
+
 app.get('/api/orders', async (req, res) => {
   const orders = await firebaseService.getOrders(readDB());
   res.json(orders || []);

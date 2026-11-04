@@ -361,7 +361,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     tbody.innerHTML = list.map(o => {
       const itemsHtml = (o.items || []).map(item => `
-        <div>• ${item.name} (${item.size}) × ${item.quantity} [${Number(item.price).toFixed(3)} JOD]</div>
+        <div>• ${item.name} (${item.size}${item.color ? ` - ${item.color}` : ''}) × ${item.quantity} [${Number(item.price).toFixed(3)} JOD]</div>
       `).join('');
 
       return `
@@ -472,39 +472,173 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // ================= PRODUCT FORM ACTIONS =================
+  // ================= PRODUCT FORM ACTIONS (UNLIMITED PRODUCT GALLERY & COLOR VARIANTS) =================
+  state.productImages = [];
+  state.productColors = [];
+
+  function renderProductGalleryManager() {
+    const grid = document.getElementById('prodGalleryGrid');
+    const countBadge = document.getElementById('prodGalleryCount');
+    if (!grid) return;
+
+    if (countBadge) {
+      countBadge.textContent = `${state.productImages.length} صور مضافة`;
+    }
+
+    if (state.productImages.length === 0) {
+      grid.innerHTML = `<p style="font-size:12px; color:#888; margin:0; width:100%; text-align:center; padding:8px;">لم يتم إضافة أي صور بعد. ارفع عدة صور من جهازك أو أضف روابط مباشرة.</p>`;
+      return;
+    }
+
+    grid.innerHTML = state.productImages.map((url, idx) => `
+      <div style="position:relative; width:80px; height:80px; border-radius:6px; overflow:hidden; border:${idx === 0 ? '2px solid var(--gold-accent)' : '1px solid #333'}; background:#111; display:inline-block;">
+        <img src="${url}" style="width:100%; height:100%; object-fit:cover;" onerror="this.src='/assets/velen-logo.jpg'">
+        ${idx === 0 ? '<span style="position:absolute; top:2px; right:2px; background:var(--gold-accent); color:#000; font-size:9px; font-weight:800; padding:1px 4px; border-radius:3px;">★ رئيسية</span>' : `<button type="button" onclick="window.velenAdmin.setCoverImage(${idx})" title="تعيين كصورة رئيسية" style="position:absolute; top:2px; right:2px; background:rgba(0,0,0,0.7); color:#fff; font-size:9px; border:none; padding:1px 4px; border-radius:3px; cursor:pointer;">غلاف</button>`}
+        <button type="button" onclick="window.velenAdmin.removeProductImage(${idx})" title="حذف الصورة" style="position:absolute; bottom:2px; left:2px; background:rgba(255,71,87,0.9); color:#fff; font-size:11px; border:none; width:20px; height:20px; border-radius:50%; cursor:pointer; display:flex; align-items:center; justify-content:center; line-height:1;">✕</button>
+      </div>
+    `).join('');
+  }
+  window._renderProductGalleryManager = renderProductGalleryManager;
+
+  function renderProductColorsManager() {
+    const list = document.getElementById('adminProductColorsList');
+    if (!list) return;
+
+    if (!Array.isArray(state.productColors) || state.productColors.length === 0) {
+      list.innerHTML = `<p style="font-size:12px; color:#777; margin:0; padding:6px 0;">لم يتم تحديد ألوان منفصلة. اضغط بالأسفل لإضافة 3 ألوان أو أكثر للقطعة مع كود اللون والصور.</p>`;
+      return;
+    }
+
+    list.innerHTML = state.productColors.map((col, idx) => {
+      const isLight = col.hex && ['#fff', '#ffffff', '#f5f5f5', '#eee', '#fafafa'].includes(col.hex.toLowerCase());
+      const imgCount = Array.isArray(col.images) ? col.images.length : (col.image ? 1 : 0);
+      return `
+        <div style="display:flex; align-items:center; justify-content:space-between; background:#1e1e1e; padding:8px 12px; border-radius:6px; border:1px solid #333;">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <span style="display:inline-block; width:26px; height:26px; border-radius:50%; background-color:${col.hex || '#000'}; border:2px solid ${isLight ? '#555' : 'rgba(255,255,255,0.3)'}; box-shadow:0 2px 5px rgba(0,0,0,0.5);"></span>
+            <div>
+              <strong style="color:#fff; font-size:13px;">${col.name}</strong>
+              <span style="color:#aaa; font-size:11px; margin-right:6px; font-family:monospace;">${col.hex}</span>
+              ${imgCount > 0 ? `<span style="background:rgba(229,185,95,0.15); color:var(--gold-accent, #e5b95f); font-size:10px; padding:2px 6px; border-radius:3px; margin-right:6px;"><i class="fa-solid fa-camera"></i> ${imgCount} صور</span>` : ''}
+            </div>
+          </div>
+          <button type="button" onclick="window.velenAdmin.removeProductColor(${idx})" style="background:rgba(255,71,87,0.15); color:#ff4757; border:1px solid rgba(255,71,87,0.3); padding:4px 8px; border-radius:4px; font-size:11px; cursor:pointer;">
+            <i class="fa-solid fa-trash"></i> حذف اللون
+          </button>
+        </div>
+      `;
+    }).join('');
+  }
+  window._renderProductColorsManager = renderProductColorsManager;
+
   function setupProductForm() {
     const dropzone = document.getElementById('prodDropzone');
     const fileInput = document.getElementById('prodFileInput');
-    const previewArea = document.getElementById('prodPreviewArea');
 
     if (dropzone && fileInput) {
       dropzone.addEventListener('click', () => fileInput.click());
 
       fileInput.addEventListener('change', async (e) => {
-        const file = e.target.files[0];
-        if (!file) return;
+        const files = Array.from(e.target.files);
+        if (!files || files.length === 0) return;
+
+        dropzone.innerHTML = `<i class="fa-solid fa-spinner fa-spin upload-icon"></i><p>جاري رفع ${files.length} صورة إلى المعرض...</p>`;
 
         const formData = new FormData();
-        formData.append('media', file);
-
-        dropzone.innerHTML = `<i class="fa-solid fa-spinner fa-spin upload-icon"></i><p>جاري رفع الصورة...</p>`;
+        files.forEach(f => formData.append('images', f));
 
         try {
-          const res = await fetch('/api/upload', { method: 'POST', body: formData });
+          const res = await fetch('/api/upload-multiple', { method: 'POST', body: formData });
           const data = await res.json();
-          if (data.success) {
-            state.uploadedProductImageUrl = data.url;
-            dropzone.style.display = 'none';
-            previewArea.style.display = 'block';
-            previewArea.innerHTML = `<img src="${data.url}">`;
-            showAdminToast('تم رفع الصورة بنجاح!', 'success');
+          if (data.success && data.urls && data.urls.length > 0) {
+            data.urls.forEach(u => state.productImages.push(u));
+            showAdminToast(`تم رفع ${data.urls.length} صور بنجاح إلى المعرض!`, 'success');
+          } else {
+            // fallback: single upload
+            for (const file of files) {
+              const singleData = new FormData();
+              singleData.append('media', file);
+              const singleRes = await fetch('/api/upload', { method: 'POST', body: singleData });
+              const sData = await singleRes.json();
+              if (sData.success && sData.url) state.productImages.push(sData.url);
+            }
+            showAdminToast(`تم رفع ${files.length} صور إلى المعرض!`, 'success');
           }
         } catch (err) {
-          dropzone.innerHTML = `<p style="color:#ff4757;">فشل الرفع، يرجى المحاولة ثانية</p>`;
+          showAdminToast('فشل في رفع بعض الصور، يرجى المحاولة ثانية', 'error');
+        } finally {
+          dropzone.innerHTML = `
+            <i class="fa-solid fa-cloud-arrow-up upload-icon"></i>
+            <p>اسحب صور الموديل هنا أو اضغط للاختيار (يمكنك اختيار عدة صور معاً دفعة واحدة)</p>
+            <span class="upload-hint">يدعم JPG, PNG, WEBP — ارفع قد ما بدك من الصور</span>
+            <input type="file" id="prodFileInput" accept="image/*" multiple style="display:none;">
+          `;
+          const newFileInput = document.getElementById('prodFileInput');
+          if (newFileInput) {
+            newFileInput.addEventListener('change', (ev) => {
+              fileInput.dispatchEvent(new Event('change'));
+            });
+          }
+          renderProductGalleryManager();
         }
       });
     }
+
+    // Add Image URL button
+    document.getElementById('btnAddImageUrl')?.addEventListener('click', () => {
+      const inp = document.getElementById('prodImageUrl');
+      const val = inp ? inp.value.trim() : '';
+      if (val) {
+        state.productImages.push(val);
+        inp.value = '';
+        renderProductGalleryManager();
+        showAdminToast('تمت إضافة رابط الصورة إلى المعرض', 'success');
+      }
+    });
+
+    // Color picker and HEX synchronization
+    const newColorPicker = document.getElementById('newColorPicker');
+    const newColorHex = document.getElementById('newColorHex');
+    if (newColorPicker && newColorHex) {
+      newColorPicker.addEventListener('input', () => {
+        newColorHex.value = newColorPicker.value.toUpperCase();
+      });
+      newColorHex.addEventListener('input', () => {
+        let v = newColorHex.value.trim();
+        if (!v.startsWith('#')) v = '#' + v;
+        if (/^#[0-9A-Fa-f]{6}$/.test(v)) {
+          newColorPicker.value = v;
+        }
+      });
+    }
+
+    // Add Color Button listener
+    document.getElementById('btnAdminAddColor')?.addEventListener('click', () => {
+      const nameInp = document.getElementById('newColorName');
+      const hexInp = document.getElementById('newColorHex');
+      const imgInp = document.getElementById('newColorImg');
+
+      const name = nameInp ? nameInp.value.trim() : '';
+      const hex = hexInp ? hexInp.value.trim() : '#000000';
+      const img = imgInp ? imgInp.value.trim() : '';
+
+      if (!name) {
+        showAdminToast('يرجى إدخال اسم اللون (مثلاً: أسود، أبيض، أحمر عنابي)', 'error');
+        return;
+      }
+
+      state.productColors = state.productColors || [];
+      state.productColors.push({
+        name,
+        hex,
+        images: img ? [img] : (state.productImages.length > 0 ? [...state.productImages] : [])
+      });
+
+      if (nameInp) nameInp.value = '';
+      if (imgInp) imgInp.value = '';
+      renderProductColorsManager();
+      showAdminToast(`تمت إضافة اللون (${name}) بنجاح!`, 'success');
+    });
 
     // Setup size inventory listeners
     const sizeGrid = document.getElementById('sizeInventoryGrid');
@@ -590,8 +724,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
       const costPriceVal = document.getElementById('prodCostPrice')?.value;
       const costPrice = costPriceVal !== '' && costPriceVal !== undefined ? parseFloat(costPriceVal) : 5.000;
-      const totalStock = Object.values(sizeInventory).reduce((acc, q) => acc + q, 0);
-      const finalImage = state.uploadedProductImageUrl || imageUrlInput || '/assets/velen-logo.jpg';
+      const primaryImage = (state.productImages && state.productImages.length > 0) ? state.productImages[0] : (imageUrlInput || '/assets/velen-logo.jpg');
+      const allImages = (state.productImages && state.productImages.length > 0) ? [...state.productImages] : [primaryImage];
 
       const payload = {
         name,
@@ -606,8 +740,9 @@ document.addEventListener('DOMContentLoaded', () => {
         fabric,
         description,
         sizes: sizes.length > 0 ? sizes : ['S', 'M', 'L', 'XL'],
-        image: finalImage,
-        images: [finalImage]
+        colors: state.productColors && state.productColors.length > 0 ? state.productColors : [{ name: 'Default', hex: '#000000' }],
+        image: primaryImage,
+        images: allImages
       };
 
       try {
@@ -680,17 +815,19 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('editProductId').value = '';
     document.getElementById('productModalTitle').textContent = 'إضافة قطعة جديدة إلى Velen Collection';
     state.uploadedProductImageUrl = null;
+    state.productImages = [];
+    state.productColors = [];
+    if (window._renderProductGalleryManager) window._renderProductGalleryManager();
+    if (window._renderProductColorsManager) window._renderProductColorsManager();
+
     if (document.getElementById('prodCostPrice')) {
       document.getElementById('prodCostPrice').value = '5.000';
     }
     
     const dropzone = document.getElementById('prodDropzone');
-    const preview = document.getElementById('prodPreviewArea');
     if (dropzone) {
       dropzone.style.display = 'block';
-      dropzone.innerHTML = `<i class="fa-solid fa-cloud-arrow-up upload-icon"></i><p>اسحب صورة الموديل هنا أو اضغط للاختيار</p><span class="upload-hint">PNG, JPG حتى 20MB</span>`;
     }
-    if (preview) preview.style.display = 'none';
 
     // Reset size inventory grid to standard defaults
     const sizeCards = document.querySelectorAll('#sizeInventoryGrid .size-stock-card');
@@ -1629,6 +1766,11 @@ document.addEventListener('DOMContentLoaded', () => {
       document.getElementById('prodFabric').value = p.fabric || '';
       document.getElementById('prodDescription').value = p.description || '';
       document.getElementById('prodImageUrl').value = p.image || '';
+      state.productImages = Array.isArray(p.images) && p.images.length > 0 ? [...p.images] : (p.image ? [p.image] : []);
+      if (window._renderProductGalleryManager) window._renderProductGalleryManager();
+
+      state.productColors = Array.isArray(p.colors) ? JSON.parse(JSON.stringify(p.colors)) : [];
+      if (window._renderProductColorsManager) window._renderProductColorsManager();
 
       // Set size breakdown
       const cards = document.querySelectorAll('#sizeInventoryGrid .size-stock-card');
@@ -1722,73 +1864,80 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!area) return;
 
       const itemsHtml = (o.items || []).map((item, idx) => `
-        <tr style="border-bottom: 1px solid #ddd;">
-          <td style="padding: 10px; font-weight: 600;">${idx + 1}</td>
-          <td style="padding: 10px; font-weight: 700; font-size: 14px;">${item.name}</td>
-          <td style="padding: 10px; text-align: center;">
-            <span style="display:inline-block; padding: 4px 12px; background: #000; color: #fff; border-radius: 4px; font-size: 14px; font-weight: 900; letter-spacing: 1px;">
-              ${item.size || 'M'}
-            </span>
+        <tr style="border-bottom: 1px solid #eee;">
+          <td style="padding: 8px 6px; font-weight: 700; width: 22px;">${idx + 1}</td>
+          <td style="padding: 8px 6px;">
+            <div style="font-weight: 800; font-size: 13px; color: #000;">${item.name}</div>
+            <div style="display:inline-flex; gap:4px; margin-top:2px;">
+              <span style="padding: 2px 8px; background: #000; color: #fff; border-radius: 3px; font-size: 11px; font-weight: 900;">المقاس: ${item.size || 'M'}</span>
+              ${item.color ? `<span style="padding: 2px 8px; background: #f0f0f0; color: #000; border: 1px solid #ccc; border-radius: 3px; font-size: 11px; font-weight: 800;">اللون: ${item.color}</span>` : ''}
+            </div>
           </td>
-          <td style="padding: 10px; text-align: center; font-weight: 700; font-size: 14px;">${item.quantity || 1}</td>
-          <td style="padding: 10px; text-align: left; font-weight: 700;">${Number(item.price || 0).toFixed(3)} JOD</td>
-          <td style="padding: 10px; text-align: left; font-weight: 800;">${(Number(item.price || 0) * (item.quantity || 1)).toFixed(3)} JOD</td>
+          <td style="padding: 8px 6px; text-align: center; font-weight: 800; font-size: 13px; width: 45px;">×${item.quantity || 1}</td>
+          <td style="padding: 8px 6px; text-align: left; font-weight: 900; font-size: 13px; width: 75px; white-space:nowrap;">${(Number(item.price || 0) * (item.quantity || 1)).toFixed(3)} JOD</td>
         </tr>
       `).join('');
 
       area.innerHTML = `
-        <div style="border: 2px solid #000; padding: 22px; border-radius: 6px; background: #fff; color: #000;">
-          <!-- Header -->
-          <div style="display:flex; justify-content:space-between; align-items:center; border-bottom: 2px solid #000; padding-bottom: 15px; margin-bottom: 15px;">
-            <div style="display:flex; align-items:center; gap: 14px;">
-              <img src="/assets/velen-logo.jpg" alt="Velen" style="width: 55px; height: 55px; object-fit: cover; border-radius: 4px; border: 1px solid #000;">
+        <div style="width: 100%; max-width: 460px; margin: 0 auto; box-sizing: border-box; border: 2px solid #000; border-radius: 8px; background: #fff; color: #000; padding: 14px; font-family: 'Tajawal', 'Segoe UI', Tahoma, Arial, sans-serif; direction: rtl;">
+          <!-- Top Header -->
+          <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 12px;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <img src="/assets/velen-logo.jpg" alt="Velen" style="width: 44px; height: 44px; object-fit: cover; border-radius: 4px; border: 1px solid #000;" onerror="this.src='/assets/velen-logo.jpg'">
               <div>
-                <h2 style="margin:0; font-size: 24px; font-weight: 900; letter-spacing: 1px;">VELEN OFFICIAL</h2>
-                <p style="margin:2px 0 0 0; font-size: 12px; color: #555;">Amman, Jordan • بوليصة شحن وتوصيل رسمي</p>
+                <h2 style="margin: 0; font-size: 18px; font-weight: 900; letter-spacing: 1px; color: #000;">VELEN OFFICIAL</h2>
+                <p style="margin: 2px 0 0; font-size: 10px; color: #555;">Amman, Jordan • بوليصة توصيل رسمي</p>
               </div>
             </div>
             <div style="text-align: left;">
-              <div style="font-size: 18px; font-weight: 900; background: #000; color: #fff; padding: 6px 14px; border-radius: 4px; display: inline-block;">
+              <span style="font-size: 15px; font-weight: 900; background: #000; color: #fff; padding: 4px 10px; border-radius: 4px; display: inline-block;">
                 ${o.id}
-              </div>
-              <div style="font-size: 11px; color: #555; margin-top: 4px;">${formatDate(o.createdAt)}</div>
+              </span>
+              <div style="font-size: 10px; color: #666; margin-top: 3px;">${formatDate(o.createdAt)}</div>
             </div>
           </div>
 
-          <!-- Recipient & Delivery Details -->
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; background: #f8f8f8; padding: 14px; border-radius: 6px; border: 1px solid #e0e0e0; margin-bottom: 18px;">
-            <div>
-              <div style="font-size: 11px; color: #666; font-weight: 600;">اسم العميل (المستلم):</div>
-              <div style="font-size: 16px; font-weight: 800; margin-top: 2px;">${o.customerName}</div>
-              
-              <div style="font-size: 11px; color: #666; font-weight: 600; margin-top: 10px;">رقم هاتف العميل للتوصيل:</div>
-              <div style="font-size: 19px; font-weight: 900; color: #000; direction: ltr; text-align: right; display: flex; align-items: center; gap: 6px; margin-top: 2px;">
-                <i class="fa-brands fa-whatsapp" style="color: #25d366;"></i> ${formatCleanPhone(o.phone)}
+          <!-- Recipient Box (Responsive Flex) -->
+          <div style="background: #f8f8f8; padding: 10px 12px; border-radius: 6px; border: 1px solid #e0e0e0; margin-bottom: 12px;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px;">
+              <div>
+                <span style="font-size: 10px; color: #666; font-weight: 600;">اسم العميل (المستلم):</span>
+                <div style="font-size: 15px; font-weight: 900; color: #000;">${o.customerName}</div>
+              </div>
+              <div style="text-align: left;">
+                <span style="font-size: 10px; color: #666; font-weight: 600;">المدينة:</span>
+                <div style="font-size: 14px; font-weight: 900; color: #000;">${o.city}</div>
               </div>
             </div>
 
-            <div>
-              <div style="font-size: 11px; color: #666; font-weight: 600;">المدينة والمحافظة:</div>
-              <div style="font-size: 15px; font-weight: 800; margin-top: 2px;">${o.city}</div>
-
-              <div style="font-size: 11px; color: #666; font-weight: 600; margin-top: 10px;">العنوان التفصيلي:</div>
-              <div style="font-size: 13px; font-weight: 600; color: #222; margin-top: 2px; line-height: 1.4;">
-                ${o.address}
+            <div style="margin-bottom: 6px;">
+              <span style="font-size: 10px; color: #666; font-weight: 600;">رقم الهاتف للتوصيل:</span>
+              <div style="font-size: 16px; font-weight: 900; color: #000; direction: ltr; text-align: right; display: flex; align-items: center; justify-content: flex-end; gap: 6px;">
+                <span>${formatCleanPhone(o.phone)}</span>
+                <i class="fa-brands fa-whatsapp" style="color: #25d366; font-size: 18px;"></i>
               </div>
-              ${o.notes ? `<div style="font-size: 12px; color: #c0392b; font-weight: 700; margin-top: 6px;">ملاحظة: ${o.notes}</div>` : ''}
             </div>
+
+            <div style="font-size: 10px; color: #666; font-weight: 600;">العنوان بالتفصيل:</div>
+            <div style="font-size: 12px; font-weight: 700; color: #111; line-height: 1.4; margin-top: 2px;">
+              ${o.address}
+            </div>
+
+            ${o.notes ? `
+              <div style="margin-top: 6px; padding: 4px 8px; background: #fff2f2; border-radius: 4px; font-size: 11px; color: #c0392b; font-weight: 700;">
+                <i class="fa-solid fa-circle-exclamation"></i> ملاحظة: ${o.notes}
+              </div>
+            ` : ''}
           </div>
 
-          <!-- Items Table with SIZES -->
-          <table style="width: 100%; border-collapse: collapse; margin-bottom: 18px; font-size: 13px;">
+          <!-- Items Table (Guaranteed Mobile Fit) -->
+          <table style="width: 100%; border-collapse: collapse; margin-bottom: 10px; font-size: 12px;">
             <thead>
               <tr style="background: #000; color: #fff; text-align: right;">
-                <th style="padding: 8px 10px;">#</th>
-                <th style="padding: 8px 10px;">اسم القطعة</th>
-                <th style="padding: 8px 10px; text-align: center;">المقاس (SIZE)</th>
-                <th style="padding: 8px 10px; text-align: center;">الكمية</th>
-                <th style="padding: 8px 10px; text-align: left;">السعر</th>
-                <th style="padding: 8px 10px; text-align: left;">المجموع</th>
+                <th style="padding: 6px; width: 22px;">#</th>
+                <th style="padding: 6px;">القطعة والمقاس</th>
+                <th style="padding: 6px; text-align: center; width: 45px;">الكمية</th>
+                <th style="padding: 6px; text-align: left; width: 75px;">المجموع</th>
               </tr>
             </thead>
             <tbody>
@@ -1796,37 +1945,38 @@ document.addEventListener('DOMContentLoaded', () => {
             </tbody>
           </table>
 
-          <!-- Financials & COD Box -->
-          <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 20px;">
-            <div style="font-size: 11px; color: #666; line-height: 1.6; max-width: 340px;">
-              <strong>سياسة التوصيل والتبديل والترجيع:</strong><br>
-              • الترجيع متاح فقط في حال وجود خلل أو عيب مصنعي في القطعة.<br>
-              • التبديل متاح خلال 24 ساعة من تاريخ الاستلام في حال كانت القطعة بحالتها الأصلية.<br>
-              • خدمة العملاء والواتساب: <strong>+962 7 7018 8144</strong>
+          <!-- Financial Breakdown -->
+          <div style="border-top: 1px solid #ddd; padding-top: 6px; margin-bottom: 10px; font-size: 12px;">
+            <div style="display: flex; justify-content: space-between; padding: 2px 0; color: #555;">
+              <span>المجموع الفرعي:</span>
+              <strong style="color: #000;">${Number(o.subtotal || o.total).toFixed(3)} JOD</strong>
             </div>
-
-            <div style="min-width: 270px;">
-              <div style="display: flex; justify-content: space-between; padding: 4px 0; font-size: 13px;">
-                <span>المجموع الفرعي:</span>
-                <strong>${Number(o.subtotal || o.total).toFixed(3)} JOD</strong>
-              </div>
-              <div style="display: flex; justify-content: space-between; padding: 4px 0; font-size: 13px;">
-                <span>أجرة التوصيل والشحن:</span>
-                <strong>${Number(o.shipping || 0) === 0 ? 'مجاناً (عمّان)' : Number(o.shipping).toFixed(3) + ' JOD'}</strong>
-              </div>
-              <div style="display: flex; justify-content: space-between; align-items: center; border: 2px solid #000; background: #fff8e7; padding: 12px; border-radius: 6px; margin-top: 8px;">
-                <div style="font-size: 13px; font-weight: 800;">المبلغ المطلوب تحصيله نقداً:</div>
-                <div style="font-size: 20px; font-weight: 900; color: #000;">
-                  ${Number(o.total).toFixed(3)} JOD
-                </div>
-              </div>
+            <div style="display: flex; justify-content: space-between; padding: 2px 0; color: #555;">
+              <span>أجرة التوصيل:</span>
+              <strong style="color: #000;">${Number(o.shipping || 0) === 0 ? 'مجاناً (عمّان)' : Number(o.shipping).toFixed(3) + ' JOD'}</strong>
             </div>
           </div>
 
-          <!-- Signatures -->
-          <div style="display: flex; justify-content: space-between; border-top: 1px dashed #aaa; padding-top: 15px; font-size: 12px; color: #444;">
-            <div>توقيع المستلم: ___________________</div>
-            <div>توقيع مندوب التوصيل: ___________________</div>
+          <!-- Total COD Box (Very prominent for the driver) -->
+          <div style="border: 2px solid #000; background: #fff8e7; padding: 10px 12px; border-radius: 6px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
+            <div style="font-size: 12px; font-weight: 800; color: #000;">
+              المبلغ المطلوب تحصيله نقداً:
+            </div>
+            <div style="font-size: 18px; font-weight: 900; color: #000; letter-spacing: 0.5px;">
+              ${Number(o.total).toFixed(3)} JOD
+            </div>
+          </div>
+
+          <!-- Policy & Return note -->
+          <div style="font-size: 9.5px; color: #777; line-height: 1.4; border-top: 1px dashed #ccc; padding-top: 8px; margin-bottom: 8px;">
+            • الترجيع متاح فقط في حال وجود خلل مصنعي. التبديل متاح خلال 24 ساعة بنفس الحالة الأصلية.<br>
+            • خدمة العملاء والواتساب: <strong>+962 7 7018 8144</strong>
+          </div>
+
+          <!-- Signature lines -->
+          <div style="display: flex; justify-content: space-between; font-size: 10px; color: #444; border-top: 1px solid #eee; padding-top: 6px;">
+            <div>توقيع المستلم: __________</div>
+            <div>توقيع المندوب: __________</div>
           </div>
         </div>
       `;
@@ -1839,52 +1989,58 @@ document.addEventListener('DOMContentLoaded', () => {
         showAdminToast('يرجى فتح بوليصة طلب أولاً للطباعة', 'error');
         return;
       }
-      const printWindow = window.open('', '_blank', 'width=850,height=900');
-      if (!printWindow) {
-        alert('يرجى السماح بالنوافذ المنبثقة (Popups) في المتصفح لطباعة البوليصة مباشرة');
+      window.print();
+    },
+    downloadWaybill: async () => {
+      const area = document.getElementById('waybillPrintArea');
+      if (!area || !area.innerHTML.trim()) {
+        showAdminToast('يرجى فتح بوليصة طلب أولاً', 'error');
         return;
       }
-      printWindow.document.write(`
-        <!DOCTYPE html>
-        <html dir="rtl" lang="ar">
-        <head>
-          <meta charset="UTF-8">
-          <title>بوليصة شحن وتوصيل — VELEN OFFICIAL</title>
-          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-          <style>
-            * { box-sizing: border-box; }
-            body {
-              font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
-              margin: 15px;
-              padding: 0;
-              background: #fff !important;
-              color: #000 !important;
-            }
-            @media print {
-              @page {
-                margin: 10mm;
-                size: auto;
-              }
-              body {
-                margin: 0;
-                background: #fff !important;
-                color: #000 !important;
-              }
-            }
-          </style>
-        </head>
-        <body>
-          ${area.innerHTML}
-          <script>
-            window.onload = function() {
-              window.focus();
-              window.print();
-            };
-          </script>
-        </body>
-        </html>
-      `);
-      printWindow.document.close();
+      showAdminToast('جاري تجهيز صورة البوليصة بجودة عالية...', 'info');
+      try {
+        if (typeof html2canvas === 'function') {
+          const canvas = await html2canvas(area, {
+            scale: 2,
+            backgroundColor: '#ffffff',
+            useCORS: true
+          });
+          const a = document.createElement('a');
+          a.download = `Velen-Waybill-${Date.now()}.png`;
+          a.href = canvas.toDataURL('image/png');
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          showAdminToast('تم تنزيل البوليصة بنجاح! جاهزة للإرسال على واتساب 📦', 'success');
+        } else {
+          window.print();
+        }
+      } catch (e) {
+        console.error(e);
+        window.print();
+      }
+    },
+    setCoverImage: (idx) => {
+      if (state.productImages && state.productImages[idx]) {
+        const [img] = state.productImages.splice(idx, 1);
+        state.productImages.unshift(img);
+        if (window._renderProductGalleryManager) window._renderProductGalleryManager();
+        showAdminToast('تم تعيين الصورة كغلاف رئيسي للقطعة', 'info');
+      }
+    },
+    removeProductImage: (idx) => {
+      if (state.productImages) {
+        state.productImages.splice(idx, 1);
+        if (window._renderProductGalleryManager) window._renderProductGalleryManager();
+        showAdminToast('تمت إزالة الصورة من المعرض', 'info');
+      }
+    },
+    removeProductColor: (idx) => {
+      if (state.productColors) {
+        state.productColors.splice(idx, 1);
+        if (window._renderProductColorsManager) window._renderProductColorsManager();
+        showAdminToast('تمت إزالة اللون بنجاح', 'info');
+      }
     },
     deletePromo: async (code) => {
       if (!confirm(`هل أنت متأكد من حذف كود الخصم (${code})؟`)) return;

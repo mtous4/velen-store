@@ -263,9 +263,12 @@ document.addEventListener('DOMContentLoaded', () => {
     await fetchDesign();
     await fetchProducts();
     await fetchCommunity();
+    await fetchReviews();
     updateCartUI();
     initWebSocket();
     initComingSoonTimer();
+    setupReviewForm();
+    setupWaybillModal();
 
     // Visitor Live Funnel Tracking initial pulse & heartbeat
     sendVisitorPulse('home', 'الصفحة الرئيسية');
@@ -454,6 +457,16 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  async function fetchReviews() {
+    try {
+      const res = await fetch('/api/reviews');
+      state.reviews = await res.json();
+      renderReviewsSection();
+    } catch (err) {
+      console.error('Error fetching reviews:', err);
+    }
+  }
+
   // ================= REAL-TIME WEBSOCKET SYNC =================
   function initWebSocket() {
     const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
@@ -534,6 +547,10 @@ document.addEventListener('DOMContentLoaded', () => {
       state.community.unshift(payload);
       renderCommunity();
       showToast(`مشاركة جديدة من ${payload.author} في المجتمع!`, 'success');
+    } else if (event === 'REVIEW_ADDED') {
+      if (!state.reviews) state.reviews = [];
+      state.reviews.unshift(payload);
+      renderReviewsSection();
     } else if (event === 'COMMUNITY_LIKED') {
       const item = state.community.find(c => c.id === payload.id);
       if (item) {
@@ -623,83 +640,53 @@ document.addEventListener('DOMContentLoaded', () => {
     `).join('') + '<option value="Velen Signature">Velen Signature Drop</option>';
   }
 
-  // ================= RENDER COMMUNITY (Matching Screenshot 3) =================
+  // Render the Community Grid — Pure social sharing, no rating shown
   function renderCommunity() {
     if (!communityGrid) return;
 
     let filtered = state.community;
     if (state.activeCommFilter === 'video') {
       filtered = state.community.filter(c => c.mediaType === 'video' || c.videoUrl);
-    } else if (state.activeCommFilter === '5star') {
-      filtered = state.community.filter(c => Number(c.rating) === 5);
+    }
+
+    if (filtered.length === 0) {
+      communityGrid.innerHTML = `
+        <div style="text-align:center; padding:40px; color:#666;">
+          <i class="fa-brands fa-instagram" style="font-size:32px; margin-bottom:12px; display:block; color:#e1306c;"></i>
+          <p style="font-size:14px;">كن أول من يشارك إطلالته مع مجتمع Velen!</p>
+        </div>
+      `;
+      return;
     }
 
     communityGrid.innerHTML = filtered.map(item => {
-      const starsHtml = Array.from({ length: 5 }, (_, i) => 
-        `<i class="fa-solid fa-star" style="color: ${i < item.rating ? '#ffca28' : '#333'}"></i>`
-      ).join('');
-
-      // Check if item has media (photo or video), or if it is a text-only review
       const hasMedia = Boolean(item.mediaUrl) && item.mediaType !== 'text';
       const isVideo = hasMedia && (item.mediaType === 'video' || item.videoUrl);
 
-      if (!hasMedia) {
-        // Luxury minimal text-only review card
-        return `
-          <div class="comm-card comm-card-text" data-comm-id="${item.id}">
-            <div class="comm-text-header">
-              <i class="fa-solid fa-quote-right quote-icon"></i>
-              <span class="comm-verified-pill"><i class="fa-solid fa-circle-check"></i> تقييم معتمد</span>
-            </div>
-            <div class="comm-text-body">
-              <div class="comm-stars">${starsHtml}</div>
-              <p class="comm-text-comment">"${item.comment}"</p>
-              <div class="comm-text-brand-watermark">VELEN ESSENTIALS • MADE IN JORDAN</div>
-            </div>
-            <div class="comm-content" style="padding-top:0;">
-              <div class="comm-user-row">
-                <div class="comm-author-info">
-                  <img src="${item.avatar || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&q=80'}" class="comm-avatar" alt="${item.author}">
-                  <div>
-                    <span class="comm-author-name">${item.author}</span>
-                    <span style="font-size:10px; color:#888; display:block;">${item.authorTag || ''}</span>
-                  </div>
-                </div>
-                <button class="comm-like-btn" data-like-id="${item.id}" onclick="window.velenApp.likeCommunityPost('${item.id}')">
-                  <i class="fa-regular fa-heart"></i>
-                  <span class="count">${item.likes || 0}</span>
-                </button>
-              </div>
-              <div class="comm-footer">
-                <span>يرتدي: <strong>${item.itemWorn || 'Velen Essential'}</strong></span>
-                <span><i class="fa-solid fa-location-dot"></i> الأردن</span>
-              </div>
-            </div>
-          </div>
-        `;
-      }
-
       return `
         <div class="comm-card" data-comm-id="${item.id}">
+          ${hasMedia ? `
           <div class="comm-media-wrap">
             ${isVideo ? `
-              <video src="${item.videoUrl || item.mediaUrl}" poster="${item.mediaUrl || '/assets/velen-boxy-white.jpg'}" loop muted playsinline autoplay onerror="this.style.display='none';"></video>
+              <video src="${item.videoUrl || item.mediaUrl}" poster="${item.mediaUrl || '/assets/velen-logo.jpg'}" loop muted playsinline autoplay onerror="this.style.display='none';"></video>
               <button class="comm-sound-btn" onclick="window.velenApp.toggleVideoSound(this)" title="كتم/تشغيل الصوت">
                 <i class="fa-solid fa-volume-xmark"></i>
               </button>
             ` : `
-              <img src="${item.mediaUrl}" alt="${item.subtitle || 'Velen Fit'}" loading="lazy" onerror="this.onerror=null; this.src='/assets/velen-boxy-white.jpg';">
+              <img src="${item.mediaUrl}" alt="${item.author} Velen Fit" loading="lazy" onerror="this.onerror=null; this.src='/assets/velen-logo.jpg';">
             `}
-            <span class="comm-tag-badge">${item.subtitle || 'ستايل Velen'}</span>
           </div>
+          ` : ''}
 
           <div class="comm-content">
             <div class="comm-user-row">
               <div class="comm-author-info">
-                <img src="${item.avatar || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&q=80'}" class="comm-avatar" alt="${item.author}">
+                <div class="comm-avatar" style="background:#1a1a1a; display:flex; align-items:center; justify-content:center; color:#e1306c;">
+                  <i class="fa-brands fa-instagram"></i>
+                </div>
                 <div>
                   <span class="comm-author-name">${item.author}</span>
-                  <div class="comm-stars">${starsHtml}</div>
+                  ${item.authorTag ? `<span style="font-size:10px; color:#888; display:block;">${item.authorTag}</span>` : ''}
                 </div>
               </div>
               <button class="comm-like-btn" data-like-id="${item.id}" onclick="window.velenApp.likeCommunityPost('${item.id}')">
@@ -708,11 +695,10 @@ document.addEventListener('DOMContentLoaded', () => {
               </button>
             </div>
 
-            <p class="comm-comment">"${item.comment}"</p>
+            ${item.comment ? `<p class="comm-comment">"${item.comment}"</p>` : ''}
 
             <div class="comm-footer">
-              <span>يرتدي: <strong>${item.itemWorn || 'Velen Essential'}</strong></span>
-              <span><i class="fa-solid fa-location-dot"></i> الأردن</span>
+              <span style="color:#888; font-size:11px;"><i class="fa-solid fa-location-dot"></i> الأردن 🇯🇴</span>
             </div>
           </div>
         </div>
@@ -720,10 +706,69 @@ document.addEventListener('DOMContentLoaded', () => {
     }).join('');
   }
 
+  // Render the dedicated Reviews Section
+  function renderReviewsSection() {
+    const grid = document.getElementById('reviewsGrid');
+    const scoreEl = document.getElementById('reviewsScore');
+    const countEl = document.getElementById('reviewsCount');
+    const starsEl = document.getElementById('reviewsStarsDisplay');
+    if (!grid) return;
+
+    const reviews = state.reviews || [];
+
+    if (reviews.length > 0) {
+      const avgRating = reviews.reduce((acc, r) => acc + (r.rating || 5), 0) / reviews.length;
+      if (scoreEl) scoreEl.textContent = avgRating.toFixed(1);
+      if (countEl) countEl.textContent = `(${reviews.length} ${state.activeLang === 'ar' ? 'تقييم' : 'reviews'})`;
+      if (starsEl) {
+        const fullStars = Math.round(avgRating);
+        starsEl.textContent = '★'.repeat(fullStars) + '☆'.repeat(5 - fullStars);
+      }
+    }
+
+    if (reviews.length === 0) {
+      grid.innerHTML = `
+        <div style="grid-column:1/-1; text-align:center; padding:48px; color:#555;">
+          <i class="fa-solid fa-star" style="font-size:32px; margin-bottom:12px; display:block; color:#e5b95f44;"></i>
+          <p>كن أول من يقيّم منتجات Velen ويشارك تجربته!</p>
+        </div>
+      `;
+      return;
+    }
+
+    grid.innerHTML = reviews.map(rev => {
+      const initials = (rev.author || 'V')[0].toUpperCase();
+      const stars = '★'.repeat(Math.min(5, Math.max(1, rev.rating || 5)));
+      const dateStr = rev.createdAt ? new Date(rev.createdAt).toLocaleDateString('ar-JO', { month: 'short', day: 'numeric' }) : '';
+      return `
+        <div class="review-card">
+          <div class="review-card-header">
+            <div class="review-author-info">
+              <div class="review-avatar">${initials}</div>
+              <div>
+                <div class="review-author-name">${rev.author}</div>
+                <div class="review-item-tag">${rev.itemWorn || 'Velen Essential'}</div>
+              </div>
+            </div>
+            <span class="review-date">${dateStr}</span>
+          </div>
+          <div class="review-stars">${stars}</div>
+          <p class="review-comment">"${rev.comment}"</p>
+          <div class="review-verified-badge"><i class="fa-solid fa-circle-check"></i> ${rev.verified ? 'مشترٍ موثق' : 'تقييم معتمد'}</div>
+        </div>
+      `;
+    }).join('');
+  }
+
   // ================= CART MANAGEMENT =================
-  function addToCart(product, size = 'M', quantity = 1) {
+  function addToCart(product, size = 'M', quantity = 1, color = null) {
+    const colorObj = color || (product.colors && product.colors[0]) || null;
+    const colorName = colorObj ? (typeof colorObj === 'object' ? colorObj.name : colorObj) : '';
+    const colorHex = colorObj && typeof colorObj === 'object' ? colorObj.hex : '';
+    const itemImage = (colorObj && colorObj.images && colorObj.images[0]) || product.image || '/assets/velen-logo.jpg';
+
     const existingIndex = state.cart.findIndex(
-      item => item.id === product.id && item.size === size
+      item => item.id === product.id && item.size === size && (item.color || '') === colorName
     );
 
     if (existingIndex > -1) {
@@ -733,8 +778,10 @@ document.addEventListener('DOMContentLoaded', () => {
         id: product.id,
         name: product.name,
         price: Number(product.price),
-        image: product.image,
+        image: itemImage,
         size: size,
+        color: colorName,
+        colorHex: colorHex,
         quantity: quantity
       });
     }
@@ -742,7 +789,8 @@ document.addEventListener('DOMContentLoaded', () => {
     saveCart();
     updateCartUI();
     openCart();
-    showToast(`تمت إضافة "${product.name}" إلى حقيبة التسوق!`, 'success');
+    const itemDesc = `${product.name} (${size}${colorName ? ` - ${colorName}` : ''})`;
+    showToast(state.activeLang === 'ar' ? `تمت إضافة "${itemDesc}" إلى حقيبة التسوق!` : `Added "${itemDesc}" to your bag!`, 'success');
   }
 
   function openCart() {
@@ -824,7 +872,10 @@ document.addEventListener('DOMContentLoaded', () => {
         <div class="cart-item-details">
           <div>
             <h4 class="cart-item-title">${item.name}</h4>
-            <span class="cart-item-meta">المقاس: ${item.size}</span>
+            <div class="cart-item-meta">
+              <span>المقاس: <strong>${item.size}</strong></span>
+              ${item.color ? ` • <span>اللون: <strong style="color:var(--accent-gold);">${item.color}</strong></span>` : ''}
+            </div>
           </div>
           <div class="cart-item-bottom">
             <div class="cart-item-qty">
@@ -869,12 +920,19 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     state.selectedSize = initialSize;
 
+    // Initialize product color
+    const colors = Array.isArray(product.colors) && product.colors.length > 0 ? product.colors : null;
+    state.selectedColor = (colors && colors[0]) || null;
+
     renderProductPageContent(product);
 
     const homeView = document.getElementById('homeView');
     const prodPage = document.getElementById('productPage');
     if (homeView) homeView.style.display = 'none';
     if (prodPage) prodPage.style.display = 'block';
+
+    const crumb = document.getElementById('prodPageCrumbTitle');
+    if (crumb) crumb.textContent = product.name;
 
     if (cartDrawer) cartDrawer.classList.remove('open');
     if (cartOverlay) cartOverlay.classList.remove('active');
@@ -919,10 +977,40 @@ document.addEventListener('DOMContentLoaded', () => {
       allOutOfStock = sizes.every(s => typeof sizeInv[s] !== 'undefined' && sizeInv[s] <= 0);
     }
 
+    // Colors processing
+    const colors = Array.isArray(product.colors) && product.colors.length > 0 
+      ? product.colors 
+      : [{ 
+          name: isAr ? 'اللون الأساسي' : 'Standard', 
+          hex: '#111111', 
+          images: Array.isArray(product.images) && product.images.length > 0 ? product.images : [product.image || '/assets/velen-logo.jpg'] 
+        }];
+
+    let activeColorIdx = 0;
+    if (state.selectedColor) {
+      const foundIdx = colors.findIndex(c => c.name === state.selectedColor.name);
+      if (foundIdx !== -1) activeColorIdx = foundIdx;
+    }
+    state.selectedColor = colors[activeColorIdx];
+
+    // Current gallery images for the selected color
+    const currentImages = (state.selectedColor.images && state.selectedColor.images.length > 0)
+      ? state.selectedColor.images
+      : (Array.isArray(product.images) && product.images.length > 0 ? product.images : [product.image || '/assets/velen-logo.jpg']);
+
     container.innerHTML = `
       <div class="prod-page-grid">
         <div class="prod-page-gallery">
-          <img src="${product.image || '/assets/velen-logo.jpg'}" alt="${product.name}" class="prod-page-main-img" onerror="this.src='/assets/velen-logo.jpg'">
+          <div class="gallery-main-frame">
+            <img id="pageProductMainImg" src="${currentImages[0]}" alt="${product.name}" class="prod-page-main-img" onerror="this.src='/assets/velen-logo.jpg'">
+          </div>
+          <div class="prod-page-thumbs-strip" id="pageProductThumbsContainer" style="${currentImages.length > 1 ? 'display:flex;' : 'display:none;'} gap:8px; margin-top:12px; overflow-x:auto; padding-bottom:4px;">
+            ${currentImages.map((imgUrl, i) => `
+              <button type="button" class="prod-thumb-btn ${i === 0 ? 'active' : ''}" onclick="window.velenApp.switchProductPageImage('${imgUrl}', this)" style="width:62px; height:62px; border-radius:8px; overflow:hidden; border:${i === 0 ? '2px solid #e5b95f' : '1.5px solid #333'}; background:#111; padding:0; cursor:pointer; flex-shrink:0;">
+                <img src="${imgUrl}" alt="${product.name} ${i + 1}" style="width:100%; height:100%; object-fit:cover;" onerror="this.src='/assets/velen-logo.jpg'">
+              </button>
+            `).join('')}
+          </div>
         </div>
         <div class="prod-page-info">
           <span class="prod-page-cat">${product.category || 'ESSENTIALS'} • MADE IN JORDAN</span>
@@ -932,6 +1020,33 @@ document.addEventListener('DOMContentLoaded', () => {
             ${comparePriceFormatted ? `<span class="prod-page-price-strike">${comparePriceFormatted}</span>` : ''}
           </div>
 
+          <!-- Color Swatches (Shown when 2 or more colors exist) -->
+          ${colors.length > 1 ? `
+            <div class="prod-colors-section">
+              <div class="prod-colors-header">
+                <span class="prod-colors-label">${isAr ? 'اللون المختار:' : 'Selected Color:'} <strong id="prodSelectedColorName">${state.selectedColor.name}</strong></span>
+                <span class="prod-color-hint">${isAr ? `${colors.length} ألوان متوفرة` : `${colors.length} colors available`}</span>
+              </div>
+              <div class="prod-color-swatches" id="pageProductColorSwatches">
+                ${colors.map((c, i) => {
+                  const isLight = c.hex && ['#fff', '#ffffff', '#f5f5f5', '#eee', '#e8e8e8', '#fafafa'].includes(c.hex.toLowerCase());
+                  const isSelected = i === activeColorIdx;
+                  return `
+                    <button type="button" 
+                      class="color-swatch-btn ${isLight ? 'light-swatch' : ''} ${isSelected ? 'active' : ''}" 
+                      style="background-color: ${c.hex || '#111'};"
+                      title="${c.name}"
+                      aria-label="${c.name}"
+                      onclick="window.velenApp.selectProductColor(${i})">
+                      <i class="fa-solid fa-check swatch-check" style="color: ${isLight ? '#000' : '#fff'};"></i>
+                    </button>
+                  `;
+                }).join('')}
+              </div>
+            </div>
+          ` : ''}
+
+          <!-- Prominent Size Selection Buttons -->
           <div class="prod-size-section">
             <div class="prod-size-header">
               <span class="prod-size-label">${dict.selectSize || 'Select Size:'} <strong id="prodSelectedSizeLabel">${state.selectedSize}</strong></span>
@@ -961,10 +1076,17 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
           </div>
 
-          <button type="button" class="btn-add-to-bag-page" id="btnPageAddToBag" onclick="window.velenApp.addCurrentModalToCart()" ${allOutOfStock ? 'disabled' : ''}>
-            <i class="fa-solid fa-bag-shopping"></i>
-            <span>${allOutOfStock ? dict.soldOut : `${dict.addToBag} (${priceFormatted})`}</span>
-          </button>
+          <!-- Dual CTAs: Add to Bag AND Buy Now Direct -->
+          <div class="prod-page-cta-row">
+            <button type="button" class="btn-add-to-bag-page" id="btnPageAddToBag" onclick="window.velenApp.addCurrentModalToCart()" ${allOutOfStock ? 'disabled' : ''}>
+              <i class="fa-solid fa-bag-shopping"></i>
+              <span>${allOutOfStock ? dict.soldOut : `${dict.addToBag}`}</span>
+            </button>
+            <button type="button" class="btn-buy-now-direct" id="btnPageBuyNow" onclick="window.velenApp.buyNowDirect()" ${allOutOfStock ? 'disabled' : ''}>
+              <i class="fa-solid fa-bolt"></i>
+              <span>${isAr ? 'اشتريها الآن ⚡' : 'Buy Now ⚡'}</span>
+            </button>
+          </div>
 
           <div class="prod-page-specs">
             <div class="spec-item">
@@ -1272,9 +1394,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (checkoutItemsList) {
       checkoutItemsList.innerHTML = state.cart.map(item => `
-        <div style="display:flex; justify-content:space-between; font-size:12px; color:#bbb;">
-          <span>${item.name} (${item.size}) × ${item.quantity}</span>
-          <span>${(item.price * item.quantity).toFixed(3)} JOD</span>
+        <div style="display:flex; justify-content:space-between; font-size:12px; color:#bbb; padding:3px 0; border-bottom:1px solid rgba(255,255,255,0.05);">
+          <span>${item.name} (${item.size}${item.color ? ` - ${item.color}` : ''}) × ${item.quantity}</span>
+          <span style="color:#fff; font-weight:700;">${(item.price * item.quantity).toFixed(3)} JOD</span>
         </div>
       `).join('');
     }
@@ -1425,10 +1547,11 @@ document.addEventListener('DOMContentLoaded', () => {
       commForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         const author = document.getElementById('commAuthor').value.trim();
-        const itemWorn = document.getElementById('commItemWorn').value;
-        const comment = document.getElementById('commComment').value.trim();
+        const comment = document.getElementById('commComment') ? document.getElementById('commComment').value.trim() : '';
         const externalUrl = document.getElementById('commUrlInput').value.trim();
-        const rating = parseInt(document.getElementById('commRatingVal').value, 10) || 5;
+        // Community posts don't require rating — it's pure social sharing
+        const rating = 0; // No rating for community
+        const itemWorn = 'Velen Community Post';
 
         // Photos/videos are completely optional!
         const finalMediaUrl = uploadedMediaUrl || (externalUrl !== '' ? externalUrl : null);
@@ -1476,7 +1599,188 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // Phone normalization for Jordan - strictly 07XXXXXXXX format
+  // ================= REVIEW MODAL SETUP =================
+  function setupReviewForm() {
+    // Setup Review Star Picker
+    const reviewStarPicker = document.getElementById('reviewStarPicker');
+    const reviewStarLabel = document.getElementById('reviewStarLabel');
+    const reviewRatingVal = document.getElementById('reviewRatingVal');
+
+    if (reviewStarPicker) {
+      const stars = reviewStarPicker.querySelectorAll('.star-btn');
+      let selectedReviewRating = 5;
+      stars.forEach(star => {
+        star.addEventListener('click', () => {
+          const val = parseInt(star.getAttribute('data-value'), 10);
+          selectedReviewRating = val;
+          if (reviewRatingVal) reviewRatingVal.value = val;
+          stars.forEach((s, idx) => {
+            if (idx < val) s.classList.add('active');
+            else s.classList.remove('active');
+          });
+          const labels = { 1: '1 من 5 (سيء)', 2: '2 من 5 (مقبول)', 3: '3 من 5 (جيد)', 4: '4 من 5 (رائع جداً)', 5: '5 من 5 (ممتاز وفوق الخيال 🔥)' };
+          if (reviewStarLabel) reviewStarLabel.textContent = labels[val] || `${val} من 5`;
+        });
+      });
+    }
+
+    // Populate review product select
+    const reviewItemSelect = document.getElementById('reviewItemWorn');
+    if (reviewItemSelect && state.products && state.products.length > 0) {
+      reviewItemSelect.innerHTML = state.products.map(p => `<option value="${p.name}">${p.name}</option>`).join('');
+    }
+
+    // Open/Close review modal
+    const addReviewBtn = document.getElementById('addReviewBtn');
+    const reviewModal = document.getElementById('reviewModal');
+    const reviewModalClose = document.getElementById('reviewModalClose');
+
+    if (addReviewBtn && reviewModal) {
+      addReviewBtn.addEventListener('click', () => {
+        const reviewItemSelect = document.getElementById('reviewItemWorn');
+        if (reviewItemSelect && state.products && state.products.length > 0) {
+          reviewItemSelect.innerHTML = state.products.map(p => `<option value="${p.name}">${p.name}</option>`).join('');
+        }
+        reviewModal.classList.add('active');
+      });
+    }
+    if (reviewModalClose && reviewModal) {
+      reviewModalClose.addEventListener('click', () => reviewModal.classList.remove('active'));
+      reviewModal.addEventListener('click', (e) => { if (e.target === reviewModal) reviewModal.classList.remove('active'); });
+    }
+
+    // Review form submit
+    const reviewForm = document.getElementById('reviewForm');
+    if (reviewForm) {
+      reviewForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const author = document.getElementById('reviewAuthor').value.trim();
+        const itemWorn = document.getElementById('reviewItemWorn').value;
+        const comment = document.getElementById('reviewComment').value.trim();
+        const rating = parseInt(document.getElementById('reviewRatingVal').value, 10) || 5;
+
+        const payload = { author, itemWorn, comment, rating };
+        try {
+          const res = await fetch('/api/reviews', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+          const result = await res.json();
+          if (result.success) {
+            if (!state.reviews) state.reviews = [];
+            state.reviews.unshift(result.review);
+            renderReviewsSection();
+            if (reviewModal) reviewModal.classList.remove('active');
+            reviewForm.reset();
+            showToast('شكراً لك! تم نشر تقييمك بنجاح 🌟', 'success');
+          }
+        } catch (err) {
+          console.error('Review submit error:', err);
+          showToast('حدث خطأ، يرجى المحاولة ثانية', 'error');
+        }
+      });
+    }
+  }
+
+  // ================= WAYBILL PRINT MODAL =================
+  function setupWaybillModal() {
+    const printBtn = document.getElementById('waybillPrintBtn');
+    const closeBtn = document.getElementById('waybillCloseBtn');
+    const downloadBtn = document.getElementById('waybillDownloadBtn');
+
+    if (printBtn) {
+      printBtn.addEventListener('click', () => window.print());
+    }
+    if (closeBtn) {
+      closeBtn.addEventListener('click', () => {
+        const modal = document.getElementById('waybillModal');
+        if (modal) modal.style.display = 'none';
+      });
+    }
+    if (downloadBtn) {
+      downloadBtn.addEventListener('click', () => {
+        // Fallback: open print dialog which allows Save as PDF
+        window.print();
+      });
+    }
+  }
+
+  function openWaybillModal(order) {
+    const modal = document.getElementById('waybillModal');
+    const content = document.getElementById('waybillContent');
+    if (!modal || !content || !order) return;
+
+    const itemsRows = (order.items || []).map(item => `
+      <tr>
+        <td>${item.name}<br><small style="color:#888;">${item.size || 'M'}</small></td>
+        <td style="text-align:center;">${item.quantity || 1}</td>
+        <td style="text-align:left;">${(Number(item.price) * (item.quantity || 1)).toFixed(3)} JOD</td>
+      </tr>
+    `).join('');
+
+    const dateStr = order.createdAt ? new Date(order.createdAt).toLocaleDateString('ar-JO', { year: 'numeric', month: 'long', day: 'numeric' }) : new Date().toLocaleDateString('ar-JO');
+    const isCOD = !order.paymentMethod || order.paymentMethod.toLowerCase().includes('cash') || order.paymentMethod.toLowerCase().includes('cod') || order.paymentMethod.toLowerCase().includes('دفع عند');
+
+    content.innerHTML = `
+      <div class="waybill-label">
+        <div class="waybill-header">
+          <div>
+            <div class="waybill-brand-name">VELEN</div>
+            <div class="waybill-brand-sub">OFFICIAL • MADE IN JORDAN</div>
+          </div>
+          <div class="waybill-order-num">
+            <div class="order-id-big">${order.id}</div>
+            <div class="order-date">${dateStr}</div>
+          </div>
+        </div>
+        <div class="waybill-divider"></div>
+        <div class="waybill-body">
+          <div class="waybill-section">
+            <div class="waybill-section-title">معلومات العميل</div>
+            <div class="waybill-customer-name">${order.customerName}</div>
+            <div class="waybill-info-row"><span class="label">الهاتف:</span> <strong>${order.phone}</strong></div>
+            <div class="waybill-info-row"><span class="label">المحافظة:</span> ${order.city || 'عمّان'}</div>
+            <div class="waybill-info-row"><span class="label">العنوان:</span> ${order.address || '—'}</div>
+            ${order.notes ? `<div class="waybill-info-row"><span class="label">ملاحظات:</span> ${order.notes}</div>` : ''}
+          </div>
+
+          <div class="waybill-section">
+            <div class="waybill-section-title">القطع المطلوبة</div>
+            <table class="waybill-items-table">
+              <thead><tr><th>المنتج</th><th style="text-align:center;">الكمية</th><th style="text-align:left;">المجموع</th></tr></thead>
+              <tbody>${itemsRows}</tbody>
+            </table>
+          </div>
+
+          <div class="waybill-totals">
+            ${Number(order.shipping || 0) === 0
+              ? `<div class="waybill-total-row"><span>التوصيل (عمّان):</span><span style="color:#2ecc71;">مجاناً</span></div>`
+              : `<div class="waybill-total-row"><span>التوصيل:</span><span>${Number(order.shipping).toFixed(3)} JOD</span></div>`
+            }
+            <div class="waybill-total-row final"><span>الإجمالي للدفع:</span><span>${Number(order.total || 0).toFixed(3)} JOD</span></div>
+          </div>
+
+          ${isCOD ? `
+          <div class="waybill-cod-box">
+            <div class="waybill-cod-label">طريقة الدفع</div>
+            نقداً عند الاستلام (COD) • ${Number(order.total || 0).toFixed(3)} JOD
+          </div>` : `
+          <div class="waybill-cod-box" style="background:#1a73e8;">
+            <div class="waybill-cod-label">طريقة الدفع</div>
+            CliQ Transfer • ${Number(order.total || 0).toFixed(3)} JOD
+          </div>`}
+        </div>
+        <div class="waybill-footer">
+          VELEN OFFICIAL • AMMAN, JORDAN 🇯🇴 • wa.me/962770188144
+        </div>
+      </div>
+    `;
+
+    modal.style.display = 'flex';
+  }
+
+  // ================= PHONE NORMALIZATION =================
   function normalizeJordanPhone(phone) {
     let cleaned = (phone || '').replace(/[\s\-\(\)\+]/g, '');
     if (cleaned.startsWith('00962')) cleaned = cleaned.substring(5);
@@ -1757,14 +2061,14 @@ document.addEventListener('DOMContentLoaded', () => {
   // ================= LANGUAGE CONTROLLER (AR / EN) =================
   function initLanguage() {
     const savedLang = localStorage.getItem('velen_lang');
-    // Base language requested by user is English ('en')
-    let lang = savedLang || 'en';
+    // Default store language is Arabic ('ar')
+    let lang = savedLang || 'ar';
     setLanguage(lang);
 
     document.getElementById('langToggleBtn')?.addEventListener('click', () => {
       const nextLang = state.activeLang === 'ar' ? 'en' : 'ar';
       setLanguage(nextLang);
-      showToast(nextLang === 'ar' ? 'تم تغيير لغة الموقع إلى العربية' : 'Switched store language to English', 'info');
+      showToast(nextLang === 'ar' ? 'تم تغيير لغة المتجر إلى العربية' : 'Switched store language to English', 'info');
     });
   }
 
@@ -1779,7 +2083,7 @@ document.addEventListener('DOMContentLoaded', () => {
       langLabel.textContent = lang === 'ar' ? 'EN' : 'عربي';
     }
 
-    const dict = translations[lang] || translations.en;
+    const dict = translations[lang] || translations.ar;
     document.querySelectorAll('[data-i18n]').forEach(el => {
       const key = el.getAttribute('data-i18n');
       if (dict[key]) {
@@ -1796,6 +2100,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (state.products && state.products.length > 0) renderProducts();
     if (state.community && state.community.length > 0) renderCommunity();
+    if (typeof renderReviews === 'function') renderReviews();
     updateCartUI();
 
     // Re-render product page if open to reflect new language
@@ -1861,12 +2166,64 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('a[id*="Fb"], a[href*="facebook"]').forEach(a => a.href = fb);
   }
 
-  // ================= MENU DRAWER & FOOTER NAVIGATION =================
+  // ================= MENU DRAWER & SITE-WIDE NAVIGATION =================
+  function scrollToSection(href) {
+    if (!href || href === '#') return;
+    closeProductPage(false);
+
+    if (href === '#hero' || href === '#top') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+
+    const sectionMap = {
+      '#collection': ['sec-collection', 'collection'],
+      '#community': ['sec-community', 'community'],
+      '#reviews': ['sec-reviews', 'reviews'],
+      '#about': ['sec-about', 'about']
+    };
+
+    let targetEl = null;
+    if (sectionMap[href]) {
+      for (const id of sectionMap[href]) {
+        const el = document.getElementById(id);
+        if (el) { targetEl = el; break; }
+      }
+    }
+    if (!targetEl) targetEl = document.querySelector(href);
+
+    if (targetEl) {
+      const navEl = document.getElementById('mainNav');
+      const headerOffset = (navEl ? navEl.offsetHeight : 70) + 15;
+      const elementPosition = targetEl.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+      window.scrollTo({
+        top: Math.max(0, offsetPosition),
+        behavior: 'smooth'
+      });
+    }
+  }
+  window._scrollToSection = scrollToSection;
+
   function setupMenuDrawerLinks() {
+    // Brand link (logo) scrolls to top
+    document.querySelectorAll('.brand-link').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        scrollToSection('#hero');
+      });
+    });
+
+    // Hero Shop Button
+    document.getElementById('heroShopBtn')?.addEventListener('click', (e) => {
+      e.preventDefault();
+      scrollToSection('#collection');
+    });
+
     const drawerLinks = document.querySelectorAll('#navDrawer .drawer-link, #navDrawer a[href^="#"]');
     drawerLinks.forEach(link => {
       link.addEventListener('click', (e) => {
-        if (link.id === 'drawerTermsBtn' || link.getAttribute('href') === '#terms' || link.getAttribute('href') === '#policy') {
+        if (link.id === 'drawerTermsBtn' || link.classList.contains('open-terms-link') || link.getAttribute('href') === '#terms' || link.getAttribute('href') === '#policy') {
           e.preventDefault();
           navDrawer.classList.remove('open');
           drawerOverlay.classList.remove('active');
@@ -1882,9 +2239,6 @@ document.addEventListener('DOMContentLoaded', () => {
         navDrawer.classList.remove('open');
         drawerOverlay.classList.remove('active');
 
-        // Close standalone product page if user was in it
-        closeProductPage(false);
-
         const filter = link.getAttribute('data-filter');
         if (filter) {
           state.activeCategory = filter;
@@ -1896,22 +2250,7 @@ document.addEventListener('DOMContentLoaded', () => {
           renderProducts();
         }
 
-        setTimeout(() => {
-          let targetEl = document.querySelector(href);
-          if (!targetEl && href === '#community') targetEl = document.getElementById('sec-community');
-          if (!targetEl && href === '#about') targetEl = document.getElementById('sec-about');
-          if (!targetEl && href === '#collection') targetEl = document.getElementById('sec-collection');
-
-          if (targetEl) {
-            const headerOffset = 70;
-            const elementPosition = targetEl.getBoundingClientRect().top;
-            const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-            window.scrollTo({
-              top: Math.max(0, offsetPosition),
-              behavior: 'smooth'
-            });
-          }
-        }, 120);
+        setTimeout(() => scrollToSection(href), 100);
       });
     });
 
@@ -1921,7 +2260,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const href = link.getAttribute('href');
         if (!href || href === '#') return;
         e.preventDefault();
-        closeProductPage(false);
 
         const fFilter = link.getAttribute('data-footer-filter');
         if (fFilter) {
@@ -1934,22 +2272,7 @@ document.addEventListener('DOMContentLoaded', () => {
           renderProducts();
         }
 
-        setTimeout(() => {
-          let targetEl = document.querySelector(href);
-          if (!targetEl && href === '#community') targetEl = document.getElementById('sec-community');
-          if (!targetEl && href === '#about') targetEl = document.getElementById('sec-about');
-          if (!targetEl && href === '#collection') targetEl = document.getElementById('sec-collection');
-
-          if (targetEl) {
-            const headerOffset = 70;
-            const elementPosition = targetEl.getBoundingClientRect().top;
-            const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-            window.scrollTo({
-              top: Math.max(0, offsetPosition),
-              behavior: 'smooth'
-            });
-          }
-        }, 100);
+        setTimeout(() => scrollToSection(href), 80);
       });
     });
 
@@ -1965,7 +2288,17 @@ document.addEventListener('DOMContentLoaded', () => {
           navDrawer.classList.remove('open');
           drawerOverlay.classList.remove('active');
           const policyModal = document.getElementById('policyModal');
-          if (policyModal) policyModal.style.display = 'flex';
+          if (policyModal) {
+            policyModal.style.display = 'flex';
+            const tab = btn.getAttribute('data-tab');
+            if (tab === 'care') {
+              const body = document.getElementById('policyModalBody');
+              if (body) {
+                const careHeading = body.querySelector('h4:nth-of-type(3)');
+                if (careHeading) careHeading.scrollIntoView({ behavior: 'smooth' });
+              }
+            }
+          }
         });
       }
     });
@@ -2005,23 +2338,22 @@ document.addEventListener('DOMContentLoaded', () => {
     cartOverlay?.addEventListener('click', closeCart);
     document.getElementById('openCheckoutBtn')?.addEventListener('click', openCheckout);
 
-    // Close Modals
+    // Close Modals & Product Page
+    document.getElementById('btnBackToStore')?.addEventListener('click', () => closeProductPage(true));
     document.getElementById('productModalClose')?.addEventListener('click', closeProductModal);
     document.getElementById('checkoutModalClose')?.addEventListener('click', closeCheckout);
     document.getElementById('closeSuccessBtn')?.addEventListener('click', () => successModal.classList.remove('active'));
 
     // Community Share Modal
     document.getElementById('addLookBtn')?.addEventListener('click', () => {
-      const commItemSelect = document.getElementById('commItemWorn');
-      if (commItemSelect && state.products.length > 0) {
-        commItemSelect.innerHTML = state.products.map(p => `
-          <option value="${p.name}">${p.name} (${p.category})</option>
-        `).join('') + '<option value="Velen Signature Piece">Velen Signature Piece</option>';
-      }
       communityModal.classList.add('active');
     });
     document.getElementById('communityModalClose')?.addEventListener('click', () => {
       communityModal.classList.remove('active');
+    });
+    // Community modal background click to close
+    communityModal?.addEventListener('click', (e) => {
+      if (e.target === communityModal) communityModal.classList.remove('active');
     });
 
     // Category Filter Pills
@@ -2126,6 +2458,50 @@ document.addEventListener('DOMContentLoaded', () => {
         else b.classList.remove('selected');
       });
     },
+    closeProductPage: () => closeProductPage(true),
+    selectProductColor: (colorIndex) => {
+      const p = state.currentProductForModal;
+      if (!p) return;
+      const colors = Array.isArray(p.colors) && p.colors.length > 0 ? p.colors : null;
+      if (!colors || !colors[colorIndex]) return;
+
+      const c = colors[colorIndex];
+      state.selectedColor = c;
+
+      const nameLabel = document.getElementById('prodSelectedColorName');
+      if (nameLabel) nameLabel.textContent = c.name;
+
+      const swatches = document.querySelectorAll('.color-swatch-btn');
+      swatches.forEach((btn, idx) => {
+        btn.classList.toggle('active', idx === colorIndex);
+      });
+
+      const colorImages = (c.images && c.images.length > 0)
+        ? c.images
+        : (Array.isArray(p.images) && p.images.length > 0 ? p.images : [p.image || '/assets/velen-logo.jpg']);
+
+      const mainImg = document.getElementById('pageProductMainImg');
+      if (mainImg && colorImages[0]) {
+        mainImg.style.opacity = '0.35';
+        mainImg.src = colorImages[0];
+        setTimeout(() => { mainImg.style.opacity = '1'; }, 150);
+      }
+
+      const thumbsContainer = document.getElementById('pageProductThumbsContainer');
+      if (thumbsContainer) {
+        if (colorImages.length > 1) {
+          thumbsContainer.style.display = 'flex';
+          thumbsContainer.innerHTML = colorImages.map((imgUrl, i) => `
+            <button type="button" class="prod-thumb-btn ${i === 0 ? 'active' : ''}" onclick="window.velenApp.switchProductPageImage('${imgUrl}', this)" style="width:62px; height:62px; border-radius:8px; overflow:hidden; border:${i === 0 ? '2px solid #e5b95f' : '1.5px solid #333'}; background:#111; padding:0; cursor:pointer; flex-shrink:0;">
+              <img src="${imgUrl}" alt="${c.name} ${i + 1}" style="width:100%; height:100%; object-fit:cover;" onerror="this.src='/assets/velen-logo.jpg'">
+            </button>
+          `).join('');
+        } else {
+          thumbsContainer.style.display = 'none';
+          thumbsContainer.innerHTML = '';
+        }
+      }
+    },
     addCurrentModalToCart: () => {
       if (state.currentProductForModal) {
         const p = state.currentProductForModal;
@@ -2137,8 +2513,26 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
           }
         }
-        addToCart(p, size, 1);
+        const color = state.selectedColor || (p.colors && p.colors[0]) || null;
+        addToCart(p, size, 1, color);
         openCart();
+      }
+    },
+    buyNowDirect: () => {
+      if (state.currentProductForModal) {
+        const p = state.currentProductForModal;
+        const size = state.selectedSize || 'M';
+        if (p.sizeInventory) {
+          const qty = p.sizeInventory[size];
+          if (typeof qty !== 'undefined' && qty <= 0) {
+            showToast(state.activeLang === 'ar' ? 'عذراً، هذا المقاس نفذت كميته' : 'Sorry, this size is sold out', 'info');
+            return;
+          }
+        }
+        const color = state.selectedColor || (p.colors && p.colors[0]) || null;
+        addToCart(p, size, 1, color);
+        closeCart();
+        openCheckout();
       }
     },
     quickAddToCart: (productId) => {
@@ -2186,6 +2580,15 @@ document.addEventListener('DOMContentLoaded', () => {
       if (wrap.style.display === 'block') {
         wrap.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       }
+    },
+    openWaybillModal,
+    switchProductPageImage: (url, btn) => {
+      const mainImg = document.getElementById('pageProductMainImg');
+      if (mainImg) mainImg.src = url;
+      document.querySelectorAll('.prod-thumb-btn').forEach(b => {
+        b.style.border = '1px solid #333';
+      });
+      if (btn) btn.style.border = '2px solid #e5b95f';
     },
     submitProductReview: async (e, productId) => {
       e.preventDefault();

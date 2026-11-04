@@ -17,7 +17,11 @@
     },
     "instagram": "velenofficial",
     "gmailUser": "Velenoffical@gmail.com",
-    "gmailAppPassword": ""
+    "gmailAppPassword": "",
+    "instagramUrl": "https://www.instagram.com/velen.offical?dlrf=c3I5MGh6eTZneGYy",
+    "socialLinks": {
+      "instagram": "https://www.instagram.com/velen.offical?dlrf=c3I5MGh6eTZneGYy"
+    }
   },
   "products": [
     {
@@ -40,8 +44,25 @@
       ],
       "colors": [
         {
-          "name": "Default",
-          "hex": "#000000"
+          "name": "شاركويل رمادي / Charcoal",
+          "hex": "#34495e",
+          "images": [
+            "/assets/velen-hero-clean.jpg"
+          ]
+        },
+        {
+          "name": "أسود فاحم / Midnight Black",
+          "hex": "#111111",
+          "images": [
+            "/assets/velen-boxy-black.jpg"
+          ]
+        },
+        {
+          "name": "أبيض عاجي / Off White",
+          "hex": "#f5f6fa",
+          "images": [
+            "/assets/velen-boxy-white.jpg"
+          ]
         }
       ],
       "stock": 20,
@@ -58,7 +79,7 @@
     },
     {
       "id": "prod-1",
-      "name": "VELEN Ringer Tee — Sky Blue",
+      "name": "VELEN Ringer Tee",
       "category": "Tees",
       "price": 13,
       "comparePrice": 16,
@@ -77,8 +98,26 @@
       ],
       "colors": [
         {
-          "name": "Sky Blue",
-          "hex": "#88bde6"
+          "name": "سماوي هادئ / Sky Blue",
+          "hex": "#7bb5d9",
+          "images": [
+            "/assets/velen-ringer-sky-blue.jpg",
+            "/assets/velen-hero-banner.jpg"
+          ]
+        },
+        {
+          "name": "أبيض برباط أسود / Classic White",
+          "hex": "#ffffff",
+          "images": [
+            "/assets/velen-ringer-white.jpg"
+          ]
+        },
+        {
+          "name": "أحمر عنابي / Ruby Red",
+          "hex": "#c0392b",
+          "images": [
+            "/assets/velen-hero-clean.jpg"
+          ]
         }
       ],
       "stock": 24,
@@ -95,7 +134,7 @@
     },
     {
       "id": "prod-2",
-      "name": "VELEN Boxy Cropped Tee — White",
+      "name": "VELEN Boxy Cropped Tee",
       "category": "Tees",
       "price": 11,
       "comparePrice": 14,
@@ -114,8 +153,26 @@
       ],
       "colors": [
         {
-          "name": "Chalk White",
-          "hex": "#f5f5f5"
+          "name": "أبيض ناصع / Chalk White",
+          "hex": "#ffffff",
+          "images": [
+            "/assets/velen-boxy-white.jpg",
+            "/assets/velen-hero-banner.jpg"
+          ]
+        },
+        {
+          "name": "أسود غامق / Pitch Black",
+          "hex": "#111111",
+          "images": [
+            "/assets/velen-boxy-black.jpg"
+          ]
+        },
+        {
+          "name": "أزرق سماوي / Sky Blue",
+          "hex": "#7bb5d9",
+          "images": [
+            "/assets/velen-ringer-sky-blue.jpg"
+          ]
         }
       ],
       "stock": 19,
@@ -150,8 +207,25 @@
       ],
       "colors": [
         {
-          "name": "White / Black Trim",
-          "hex": "#e8e8e8"
+          "name": "أبيض كلاسيك / Classic White",
+          "hex": "#ffffff",
+          "images": [
+            "/assets/velen-ringer-white.jpg"
+          ]
+        },
+        {
+          "name": "سماوي باستيل / Sky Blue",
+          "hex": "#7bb5d9",
+          "images": [
+            "/assets/velen-ringer-sky-blue.jpg"
+          ]
+        },
+        {
+          "name": "أسود فخم / Pitch Black",
+          "hex": "#111111",
+          "images": [
+            "/assets/velen-boxy-black.jpg"
+          ]
         }
       ],
       "stock": 32,
@@ -168,7 +242,7 @@
     },
     {
       "id": "prod-4",
-      "name": "VELEN Boxy Cropped Tee — Black",
+      "name": "VELEN Heavy Boxy Tee",
       "category": "Tees",
       "price": 11,
       "comparePrice": 14,
@@ -186,8 +260,25 @@
       ],
       "colors": [
         {
-          "name": "Pitch Black",
-          "hex": "#111111"
+          "name": "أسود داكن / Pitch Black",
+          "hex": "#111111",
+          "images": [
+            "/assets/velen-boxy-black.jpg"
+          ]
+        },
+        {
+          "name": "أبيض ناصع / Chalk White",
+          "hex": "#ffffff",
+          "images": [
+            "/assets/velen-boxy-white.jpg"
+          ]
+        },
+        {
+          "name": "رمادي فحمي / Charcoal Grey",
+          "hex": "#34495e",
+          "images": [
+            "/assets/velen-hero-clean.jpg"
+          ]
         }
       ],
       "stock": 28,
@@ -442,6 +533,9 @@
       "subtitle": "أضف تيشيرت رينجر إضافي إلى طلبك الآن بخصم خاص (9.500 JOD بدل 13.000)!",
       "productId": "prod-1",
       "specialPrice": 9.5
+    },
+    "socialLinks": {
+      "instagram": "https://www.instagram.com/velen.offical?dlrf=c3I5MGh6eTZneGYy"
     }
   },
   "promoCodes": [
