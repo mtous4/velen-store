@@ -211,18 +211,30 @@ const upload = multer({
   limits: { fileSize: 50 * 1024 * 1024 } // 50MB for photos & videos
 });
 
-// Upload media endpoint (single)
-app.post('/api/upload', upload.single('media'), (req, res) => {
-  if (!req.file) {
-    return res.status(400).json({ success: false, message: 'No file uploaded' });
-  }
-  const fileUrl = '/uploads/' + req.file.filename;
-  const isVideo = req.file.mimetype.startsWith('video');
-  res.json({
-    success: true,
-    url: fileUrl,
-    filename: req.file.filename,
-    mediaType: isVideo ? 'video' : 'photo'
+// Upload media endpoint (single with robust error handling for videos and photos)
+app.post('/api/upload', (req, res) => {
+  upload.single('media')(req, res, (err) => {
+    if (err) {
+      console.error('Multer single upload error:', err);
+      return res.status(400).json({ 
+        success: false, 
+        message: err.code === 'LIMIT_FILE_SIZE' 
+          ? 'حجم الفيديو كبير جداً (الحد الأقصى 50MB)' 
+          : 'فشل الرفع: ' + (err.message || 'خطأ غير معروف')
+      });
+    }
+    if (!req.file) {
+      return res.status(400).json({ success: false, message: 'لم يتم اختيار أي ملف للرفع' });
+    }
+    const ext = path.extname(req.file.originalname).toLowerCase();
+    const isVideo = (req.file.mimetype && req.file.mimetype.startsWith('video')) || ['.mp4', '.mov', '.webm', '.m4v', '.quicktime', '.avi'].includes(ext);
+    const fileUrl = '/uploads/' + req.file.filename;
+    res.json({
+      success: true,
+      url: fileUrl,
+      filename: req.file.filename,
+      mediaType: isVideo ? 'video' : 'photo'
+    });
   });
 });
 
@@ -278,7 +290,8 @@ app.put('/api/design', async (req, res) => {
     communitySection: { ...(db.design?.communitySection || {}), ...(incoming.communitySection || {}) },
     aboutSection: { ...(db.design?.aboutSection || {}), ...(incoming.aboutSection || {}) },
     comingSoon: { ...(db.design?.comingSoon || {}), ...(incoming.comingSoon || {}) },
-    checkoutUpsell: { ...(db.design?.checkoutUpsell || {}), ...(incoming.checkoutUpsell || {}) }
+    checkoutUpsell: { ...(db.design?.checkoutUpsell || {}), ...(incoming.checkoutUpsell || {}) },
+    portalCards: { ...(db.design?.portalCards || {}), ...(incoming.portalCards || {}) }
   };
   writeDB(db);
   await firebaseService.updateDesign(db.design);
@@ -507,6 +520,37 @@ app.post('/api/orders', async (req, res) => {
     status: req.body.status || 'Pending',
     createdAt: req.body.createdAt || new Date().toISOString()
   };
+
+  // Stock limit validation before order creation
+  if (Array.isArray(req.body.items)) {
+    for (const item of req.body.items) {
+      const prod = (db.products || []).find(p => p.id === item.id || p.name === item.name);
+      if (prod) {
+        let maxAvailable = prod.stock !== undefined ? prod.stock : 99;
+        if (Array.isArray(prod.colors) && item.color) {
+          const cVar = prod.colors.find(c => c.name === item.color || (c.hex && c.hex === item.colorHex));
+          if (cVar && cVar.sizeInventory && item.size && typeof cVar.sizeInventory[item.size] !== 'undefined') {
+            maxAvailable = cVar.sizeInventory[item.size];
+          }
+        } else if (prod.sizeInventory && item.size && typeof prod.sizeInventory[item.size] !== 'undefined') {
+          maxAvailable = prod.sizeInventory[item.size];
+        }
+
+        if (maxAvailable <= 0) {
+          return res.status(400).json({
+            success: false,
+            message: `عذراً، القطعة (${item.name}) مقاس ${item.size || 'M'} نفذت كميتها بالكامل من المخزون (Sold Out)`
+          });
+        }
+        if ((item.quantity || 1) > maxAvailable) {
+          return res.status(400).json({
+            success: false,
+            message: `عذراً، أقصى كمية متوفرة في المخزون لقطعة (${item.name}) مقاس ${item.size || 'M'} هي ${maxAvailable} قطع فقط`
+          });
+        }
+      }
+    }
+  }
 
   db.orders = db.orders || [];
   db.orders.unshift(newOrder);

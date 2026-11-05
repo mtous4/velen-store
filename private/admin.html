@@ -307,11 +307,30 @@
           </button>
         </div>
 
+        <!-- Batch Actions Bar for Orders -->
+        <div id="ordersBulkBar" style="display:none; margin-bottom:14px; background:rgba(229,185,95,0.08); border:1px solid rgba(229,185,95,0.3); padding:10px 16px; border-radius:8px; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <i class="fa-solid fa-check-double" style="color:var(--gold-accent, #e5b95f);"></i>
+            <span style="font-size:13px; font-weight:700; color:#fff;">تم تحديد <strong id="selectedOrdersCount" style="color:var(--gold-accent, #e5b95f); font-size:15px;">0</strong> طلبات</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <button type="button" class="btn-primary-action" onclick="window.velenAdmin.printBatchWaybills()" style="background:var(--gold-accent, #e5b95f); color:#000; font-weight:800; padding:8px 16px; border-radius:6px; font-size:12px; cursor:pointer; display:inline-flex; align-items:center; gap:6px; border:none; box-shadow:0 3px 10px rgba(229,185,95,0.25);">
+              <i class="fa-solid fa-print"></i> طباعة بوليصات الشحن للطلبات المحددة دفعة واحدة
+            </button>
+            <button type="button" class="btn-secondary-action" onclick="window.velenAdmin.clearOrderSelections()" style="background:#222; color:#ccc; border:1px solid #444; padding:8px 12px; border-radius:6px; font-size:12px; cursor:pointer;">
+              إلغاء التحديد
+            </button>
+          </div>
+        </div>
+
         <div class="table-card">
           <div class="table-responsive">
             <table class="admin-table">
               <thead>
                 <tr>
+                  <th style="width:36px; text-align:center;">
+                    <input type="checkbox" id="selectAllOrdersCheck" onchange="window.velenAdmin.toggleSelectAllOrders(this.checked)" title="تحديد جميع الطلبات">
+                  </th>
                   <th>رقم الطلب</th>
                   <th>تاريخ الطلب</th>
                   <th>بيانات العميل</th>
@@ -607,6 +626,108 @@
             <div class="form-group">
               <label>نص دعوة وتقييمات المجتمع والمسابقة</label>
               <textarea id="desCommunityDesc" rows="2">شاركنا لوكك اليومي وفيديوهاتك مع قطع Velen، وقيم تجربتك من 5 نجوم لتدخل السحب الأسبوعي على بوكس إسنشيلز كامل!</textarea>
+            </div>
+          </div>
+
+          <!-- 5.5 EXPLORE HUB PORTAL CARDS (الصور في شاشة البداية) -->
+          <div class="design-card">
+            <div class="design-card-head">
+              <div class="head-title">
+                <i class="fa-solid fa-grip" style="color:var(--gold-accent, #e5b95f);"></i>
+                <h3>صور بطاقات الاستكشاف الرئيسية (Explore Hub Cards)</h3>
+              </div>
+            </div>
+            <p class="section-desc" style="font-size:12px; color:#aaa; margin-bottom:14px;">
+              تخصيص الصور المعروضة على البطاقات الكبيرة في الصفحة الرئيسية (All Products, Our Story, Community):
+            </p>
+            <div class="form-row">
+              <!-- Portal 1: Shop Catalog -->
+              <div class="form-group flex-1">
+                <label>صورة بطاقة المنتجات (All Products & Drops)</label>
+                <div class="upload-dropzone design-dropzone" id="portalShopDropzone" style="min-height:90px; padding:12px;">
+                  <i class="fa-solid fa-cloud-arrow-up upload-icon" style="font-size:18px;"></i>
+                  <p style="font-size:12px;">رفع صورة بطاقة الكتالوج</p>
+                  <input type="file" id="portalShopFileInput" accept="image/*" style="display:none;">
+                </div>
+                <div class="url-fallback-wrap" style="margin-top:6px;">
+                  <input type="text" id="desPortalShopImage" placeholder="/assets/velen-boxy-black.jpg">
+                </div>
+              </div>
+              <!-- Portal 2: Our Story -->
+              <div class="form-group flex-1">
+                <label>صورة بطاقة القصة (Our Story & Craftsmanship)</label>
+                <div class="upload-dropzone design-dropzone" id="portalStoryDropzone" style="min-height:90px; padding:12px;">
+                  <i class="fa-solid fa-cloud-arrow-up upload-icon" style="font-size:18px;"></i>
+                  <p style="font-size:12px;">رفع صورة بطاقة القصة</p>
+                  <input type="file" id="portalStoryFileInput" accept="image/*" style="display:none;">
+                </div>
+                <div class="url-fallback-wrap" style="margin-top:6px;">
+                  <input type="text" id="desPortalStoryImage" placeholder="/assets/velen-boxy-white.jpg">
+                </div>
+              </div>
+              <!-- Portal 3: Community -->
+              <div class="form-group flex-1">
+                <label>صورة بطاقة المجتمع (Community & Fits)</label>
+                <div class="upload-dropzone design-dropzone" id="portalCommunityDropzone" style="min-height:90px; padding:12px;">
+                  <i class="fa-solid fa-cloud-arrow-up upload-icon" style="font-size:18px;"></i>
+                  <p style="font-size:12px;">رفع صورة بطاقة المجتمع</p>
+                  <input type="file" id="portalCommunityFileInput" accept="image/*" style="display:none;">
+                </div>
+                <div class="url-fallback-wrap" style="margin-top:6px;">
+                  <input type="text" id="desPortalCommunityImage" placeholder="/assets/velen-community-1.jpg">
+                </div>
+              </div>
+            </div>
+            <div class="card-action-bar" style="margin-top:16px; padding-top:14px; border-top:1px solid #262626; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+              <span style="font-size:12px; color:#888;"><i class="fa-solid fa-circle-info" style="color:var(--gold-accent, #e5b95f);"></i> يتم تحديث خلفيات بطاقات الاستكشاف فوراً على المتجر الحي</span>
+              <button type="button" class="btn-primary-action" onclick="window.velenAdmin.saveDesign()" style="padding:9px 18px; font-size:12px; font-weight:800; background:var(--gold-accent, #e5b95f); color:#000; border-radius:6px; display:inline-flex; align-items:center; gap:8px; cursor:pointer; border:none;">
+                <i class="fa-solid fa-floppy-disk"></i> حفظ ونشر صور بطاقات الاستكشاف
+              </button>
+            </div>
+          </div>
+
+          <!-- 5.6 CHECKOUT UPSELL SPECIAL OFFER -->
+          <div class="design-card">
+            <div class="design-card-head">
+              <div class="head-title">
+                <i class="fa-solid fa-fire" style="color:var(--gold-accent, #e5b95f);"></i>
+                <h3>العرض الخاص في صفحة الدفع (Checkout Upsell Offer)</h3>
+              </div>
+              <label class="toggle-switch-inline">
+                <input type="checkbox" id="desUpsellEnabled" checked>
+                <span>تفعيل عرض صفحة الدفع</span>
+              </label>
+            </div>
+            <p class="section-desc" style="font-size:12px; color:#aaa; margin-bottom:14px;">
+              اختر المنتج الذي ترغب بتقديمه كعرض خاص مخفّض للزبون في صفحة إتمام الطلب (Checkout):
+            </p>
+            <div class="form-row">
+              <div class="form-group flex-1">
+                <label>المنتج المعروض في صفحة الدفع *</label>
+                <select id="desUpsellProductId" style="background:#161616; color:#fff; border:1px solid #333; padding:10px; border-radius:6px; width:100%; font-size:13px;">
+                  <!-- Populated dynamically from state.products -->
+                </select>
+              </div>
+              <div class="form-group" style="max-width:200px;">
+                <label>سعر العرض الخاص (Special Price) JOD *</label>
+                <input type="number" step="0.25" id="desUpsellPrice" placeholder="9.500" value="9.500">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>عنوان شارة العرض</label>
+                <input type="text" id="desUpsellTitle" value="عرض خاص مع طلبك (Exclusive Offer)">
+              </div>
+              <div class="form-group flex-1">
+                <label>نص العرض الترويجي</label>
+                <input type="text" id="desUpsellSubtitle" value="أضف قطعة إضافية إلى طلبك الآن بسعر خاص!">
+              </div>
+            </div>
+            <div class="card-action-bar" style="margin-top:16px; padding-top:14px; border-top:1px solid #262626; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+              <span style="font-size:12px; color:#888;"><i class="fa-solid fa-circle-info" style="color:var(--gold-accent, #e5b95f);"></i> يظهر هذا العرض للزبون في ملخص السلة بصفحة الدفع مع خيارات المقاس</span>
+              <button type="button" class="btn-primary-action" onclick="window.velenAdmin.saveDesign()" style="padding:9px 18px; font-size:12px; font-weight:800; background:var(--gold-accent, #e5b95f); color:#000; border-radius:6px; display:inline-flex; align-items:center; gap:8px; cursor:pointer; border:none;">
+                <i class="fa-solid fa-floppy-disk"></i> حفظ ونشر إعدادات عرض الدفع
+              </button>
             </div>
           </div>
 

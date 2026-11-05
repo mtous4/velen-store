@@ -674,16 +674,19 @@ document.addEventListener('DOMContentLoaded', () => {
     grid.innerHTML = featured.map(product => {
       const priceFormatted = Number(product.price).toFixed(3) + ' JOD';
       const comparePriceFormatted = product.comparePrice ? Number(product.comparePrice).toFixed(3) + ' JOD' : null;
-      const mainImg = product.image || (product.images && product.images[0]) || '/assets/velen-hero-clean.jpg';
+      const isSoldOut = typeof product.stock !== 'undefined' && product.stock !== null && Number(product.stock) <= 0;
+      const mainImg = product.image || (product.images && product.images[0]) || '/assets/velen-boxy-black.jpg';
 
       return `
         <div class="product-card" data-product-id="${product.id}">
           <div class="product-img-wrapper" onclick="window.velenApp.openProductModal('${product.id}')">
-            ${product.onSale ? '<span class="badge-sale">SALE</span>' : ''}
-            <img src="${mainImg}" alt="${product.name}" class="product-img" loading="lazy" onerror="this.src='/assets/velen-hero-clean.jpg'">
-            <button class="btn-floating-bag" onclick="event.stopPropagation(); window.velenApp.quickAddToCart('${product.id}')" title="${dict.addToBag}" aria-label="Add to bag">
-              <i class="fa-solid fa-cart-plus"></i>
-            </button>
+            ${isSoldOut ? `<span class="badge-soldout" style="position:absolute; top:12px; right:12px; background:rgba(231,76,60,0.92); color:#fff; font-size:11px; font-weight:700; padding:4px 8px; border-radius:4px; z-index:2; letter-spacing:0.5px;">${isAr ? 'نَفِذَت الكمية' : 'SOLD OUT'}</span>` : (product.onSale ? '<span class="badge-sale">SALE</span>' : '')}
+            <img src="${mainImg}" alt="${product.name}" class="product-img" loading="lazy" onerror="this.onerror=null; this.src='/assets/velen-boxy-black.jpg';">
+            ${!isSoldOut ? `
+              <button class="btn-floating-bag" onclick="event.stopPropagation(); window.velenApp.quickAddToCart('${product.id}')" title="${isAr ? 'اختيار المقاس واللون' : 'Select Size & Color'}" aria-label="Select Size & Color">
+                <i class="fa-solid fa-cart-plus"></i>
+              </button>
+            ` : ''}
           </div>
           <div class="product-info" onclick="window.velenApp.openProductModal('${product.id}')">
             <h3 class="product-title">${product.name}</h3>
@@ -691,6 +694,7 @@ document.addEventListener('DOMContentLoaded', () => {
               <span class="current-price">${priceFormatted}</span>
               ${comparePriceFormatted ? `<span class="strike-price">${comparePriceFormatted}</span>` : ''}
             </div>
+            ${isSoldOut ? `<span style="font-size:11px; color:#e74c3c; font-weight:600; display:block; margin-top:3px;">${isAr ? 'غير متوفر حالياً بالمخزون' : 'Currently Out of Stock'}</span>` : ''}
           </div>
         </div>
       `;
@@ -961,6 +965,19 @@ document.addEventListener('DOMContentLoaded', () => {
       if (aQ && design.aboutSection.quote) aQ.textContent = `"${design.aboutSection.quote}"`;
     }
 
+    // 9. Explore Hub Portal Cards (Screenshot 4)
+    if (design.portalCards) {
+      const pShop = document.getElementById('portalBgShop');
+      if (pShop && design.portalCards.shopImage) pShop.src = design.portalCards.shopImage;
+      const pStory = document.getElementById('portalBgStory');
+      if (pStory && design.portalCards.storyImage) pStory.src = design.portalCards.storyImage;
+      const pComm = document.getElementById('portalBgCommunity');
+      if (pComm && design.portalCards.communityImage) pComm.src = design.portalCards.communityImage;
+    }
+
+    // 10. Checkout Upsell Special Offer (Screenshot 1)
+    renderCheckoutUpsell();
+
     // Check Coming Soon Overlay
     initComingSoonTimer();
   }
@@ -1209,15 +1226,20 @@ document.addEventListener('DOMContentLoaded', () => {
     productsGrid.innerHTML = filtered.map(product => {
       const priceFormatted = Number(product.price).toFixed(3) + ' JOD';
       const comparePriceFormatted = product.comparePrice ? Number(product.comparePrice).toFixed(3) + ' JOD' : null;
+      const isAr = state.activeLang === 'ar';
+      const isSoldOut = typeof product.stock !== 'undefined' && product.stock !== null && Number(product.stock) <= 0;
+      const mainImg = product.image || (product.images && product.images[0]) || '/assets/velen-boxy-black.jpg';
 
       return `
         <div class="product-card" data-product-id="${product.id}">
           <div class="product-img-wrapper" onclick="window.velenApp.openProductModal('${product.id}')">
-            ${product.onSale ? '<span class="badge-sale">SALE</span>' : ''}
-            <img src="${product.image || '/assets/velen-logo.jpg'}" alt="${product.name}" class="product-img" loading="lazy">
-            <button class="btn-floating-bag" onclick="event.stopPropagation(); window.velenApp.quickAddToCart('${product.id}')" title="إضافة للحقيبة" aria-label="Add to bag">
-              <i class="fa-solid fa-cart-plus"></i>
-            </button>
+            ${isSoldOut ? `<span class="badge-soldout" style="position:absolute; top:12px; right:12px; background:rgba(231,76,60,0.92); color:#fff; font-size:11px; font-weight:700; padding:4px 8px; border-radius:4px; z-index:2; letter-spacing:0.5px;">${isAr ? 'نَفِذَت الكمية' : 'SOLD OUT'}</span>` : (product.onSale ? '<span class="badge-sale">SALE</span>' : '')}
+            <img src="${mainImg}" alt="${product.name}" class="product-img" loading="lazy" onerror="this.onerror=null; this.src='/assets/velen-boxy-black.jpg';">
+            ${!isSoldOut ? `
+              <button class="btn-floating-bag" onclick="event.stopPropagation(); window.velenApp.quickAddToCart('${product.id}')" title="${isAr ? 'اختيار المقاس واللون' : 'Select Size & Color'}" aria-label="Select Size & Color">
+                <i class="fa-solid fa-cart-plus"></i>
+              </button>
+            ` : ''}
           </div>
           <div class="product-info" onclick="window.velenApp.openProductModal('${product.id}')">
             <h3 class="product-title">${product.name}</h3>
@@ -1225,6 +1247,7 @@ document.addEventListener('DOMContentLoaded', () => {
               <span class="current-price">${priceFormatted}</span>
               ${comparePriceFormatted ? `<span class="strike-price">${comparePriceFormatted}</span>` : ''}
             </div>
+            ${isSoldOut ? `<span style="font-size:11px; color:#e74c3c; font-weight:600; display:block; margin-top:3px;">${isAr ? 'غير متوفر حالياً بالمخزون' : 'Currently Out of Stock'}</span>` : ''}
           </div>
         </div>
       `;
@@ -1359,20 +1382,70 @@ document.addEventListener('DOMContentLoaded', () => {
     }).join('');
   }
 
-  // ================= CART MANAGEMENT =================
+  // ================= CART MANAGEMENT & STOCK ENFORCEMENT =================
+  // Helper to determine accurate maximum stock for a cart item based on color/size inventory
+  function getCartItemMaxStock(item) {
+    if (!item || !item.id) return 99;
+    if (String(item.id).startsWith('upsell_')) return 10;
+
+    const product = state.products.find(p => p.id === item.id);
+    if (!product) return 99;
+
+    // 1. If item has a specific color, check if that color variant has sizeInventory
+    if (item.color && Array.isArray(product.colors)) {
+      const col = product.colors.find(c => (typeof c === 'object' ? c.name : c) === item.color);
+      if (col && col.sizeInventory && typeof col.sizeInventory[item.size] !== 'undefined') {
+        const val = Number(col.sizeInventory[item.size]);
+        return isNaN(val) ? 99 : Math.max(0, val);
+      }
+    }
+
+    // 2. Check product-level sizeInventory
+    if (product.sizeInventory && typeof product.sizeInventory[item.size] !== 'undefined') {
+      const val = Number(product.sizeInventory[item.size]);
+      return isNaN(val) ? 99 : Math.max(0, val);
+    }
+
+    // 3. Check overall product stock
+    if (typeof product.stock !== 'undefined' && product.stock !== null) {
+      const val = Number(product.stock);
+      return isNaN(val) ? 99 : Math.max(0, val);
+    }
+
+    return 99;
+  }
+
   function addToCart(product, size = 'M', quantity = 1, color = null) {
+    const isAr = state.activeLang === 'ar';
     const colorObj = color || (product.colors && product.colors[0]) || null;
     const colorName = colorObj ? (typeof colorObj === 'object' ? colorObj.name : colorObj) : '';
     const colorHex = colorObj && typeof colorObj === 'object' ? colorObj.hex : '';
     const itemImage = (colorObj && colorObj.images && colorObj.images[0]) || product.image || '/assets/velen-logo.jpg';
+
+    const maxStock = getCartItemMaxStock({ id: product.id, size, color: colorName });
+    if (maxStock <= 0) {
+      showToast(isAr ? `عذراً، المقاس (${size}) نَفِذَ من المخزون حالياً!` : `Sorry, size (${size}) is currently out of stock!`, 'warning');
+      return;
+    }
 
     const existingIndex = state.cart.findIndex(
       item => item.id === product.id && item.size === size && (item.color || '') === colorName
     );
 
     if (existingIndex > -1) {
-      state.cart[existingIndex].quantity += quantity;
+      const currentQty = state.cart[existingIndex].quantity;
+      if (currentQty >= maxStock) {
+        showToast(isAr ? `حقيبتك تحتوي بالفعل على أقصى كمية متوفرة في المخزون (${maxStock} قطع).` : `Your bag already has the maximum available stock (${maxStock} pieces).`, 'warning');
+        openCart();
+        return;
+      }
+      const newQty = Math.min(currentQty + quantity, maxStock);
+      state.cart[existingIndex].quantity = newQty;
+      if (currentQty + quantity > maxStock) {
+        showToast(isAr ? `تم تحديد الكمية بالحد الأقصى المتوفر (${maxStock} قطع).` : `Quantity capped at available stock (${maxStock}).`, 'info');
+      }
     } else {
+      const addQty = Math.min(quantity, maxStock);
       state.cart.push({
         id: product.id,
         name: product.name,
@@ -1381,7 +1454,7 @@ document.addEventListener('DOMContentLoaded', () => {
         size: size,
         color: colorName,
         colorHex: colorHex,
-        quantity: quantity
+        quantity: addQty
       });
     }
 
@@ -1389,7 +1462,7 @@ document.addEventListener('DOMContentLoaded', () => {
     updateCartUI();
     openCart();
     const itemDesc = `${product.name} (${size}${colorName ? ` - ${colorName}` : ''})`;
-    showToast(state.activeLang === 'ar' ? `تمت إضافة "${itemDesc}" إلى حقيبة التسوق!` : `Added "${itemDesc}" to your bag!`, 'success');
+    showToast(isAr ? `تمت إضافة "${itemDesc}" إلى حقيبة التسوق!` : `Added "${itemDesc}" to your bag!`, 'success');
   }
 
   function openCart() {
@@ -1411,8 +1484,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function updateCartQuantity(index, delta) {
     if (!state.cart[index]) return;
-    state.cart[index].quantity += delta;
-    if (state.cart[index].quantity <= 0) {
+    const item = state.cart[index];
+    const isAr = state.activeLang === 'ar';
+    const maxStock = getCartItemMaxStock(item);
+
+    if (delta > 0) {
+      if (item.quantity >= maxStock) {
+        showToast(
+          isAr
+            ? `عذراً، أقصى كمية متوفرة في المخزون لهذا المقاس هي ${maxStock} قطع فقط.`
+            : `Sorry, maximum available stock for this size is ${maxStock} pieces.`,
+          'warning'
+        );
+        return;
+      }
+    }
+
+    item.quantity += delta;
+    if (item.quantity <= 0) {
       state.cart.splice(index, 1);
     }
     saveCart();
@@ -1467,28 +1556,35 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    cartItemsList.innerHTML = state.cart.map((item, idx) => `
-      <div class="cart-item">
-        <img src="${item.image || '/assets/velen-logo.jpg'}" class="cart-item-img" alt="${item.name}">
-        <div class="cart-item-details">
-          <div>
-            <h4 class="cart-item-title">${item.name}</h4>
-            <div class="cart-item-meta">
-              <span>المقاس: <strong>${item.size}</strong></span>
-              ${item.color ? ` • <span>اللون: <strong style="color:var(--accent-gold);">${item.color}</strong></span>` : ''}
+    cartItemsList.innerHTML = state.cart.map((item, idx) => {
+      const maxStock = getCartItemMaxStock(item);
+      const isAtMax = item.quantity >= maxStock;
+      const isAr = state.activeLang === 'ar';
+
+      return `
+        <div class="cart-item">
+          <img src="${item.image || '/assets/velen-logo.jpg'}" class="cart-item-img" alt="${item.name}" onerror="this.onerror=null; this.src='/assets/velen-boxy-black.jpg';">
+          <div class="cart-item-details">
+            <div>
+              <h4 class="cart-item-title">${item.name}</h4>
+              <div class="cart-item-meta">
+                <span>المقاس: <strong>${item.size}</strong></span>
+                ${item.color ? ` • <span>اللون: <strong style="color:var(--accent-gold);">${item.color}</strong></span>` : ''}
+              </div>
+              ${maxStock < 50 ? `<span style="font-size:11px; color:${isAtMax ? '#e74c3c' : '#888'}; display:block; margin-top:2px;">${isAr ? `(المتوفر بالستوك: ${maxStock})` : `(In stock: ${maxStock})`}</span>` : ''}
             </div>
-          </div>
-          <div class="cart-item-bottom">
-            <div class="cart-item-qty">
-              <button onclick="window.velenApp.updateCartQty(${idx}, -1)">-</button>
-              <span>${item.quantity}</span>
-              <button onclick="window.velenApp.updateCartQty(${idx}, 1)">+</button>
+            <div class="cart-item-bottom">
+              <div class="cart-item-qty">
+                <button onclick="window.velenApp.updateCartQty(${idx}, -1)">-</button>
+                <span>${item.quantity}</span>
+                <button onclick="window.velenApp.updateCartQty(${idx}, 1)" ${isAtMax ? 'disabled style="opacity:0.25; cursor:not-allowed;" title="أقصى كمية متوفرة بالستوك"' : ''}>+</button>
+              </div>
+              <span class="cart-item-price">${(item.price * item.quantity).toFixed(3)} JOD</span>
             </div>
-            <span class="cart-item-price">${(item.price * item.quantity).toFixed(3)} JOD</span>
           </div>
         </div>
-      </div>
-    `).join('');
+      `;
+    }).join('');
   }
 
 
@@ -2048,6 +2144,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     if (checkoutShipping) checkoutShipping.textContent = shipping === 0 ? 'مجاناً (عمّان)' : '1.000 JOD';
     if (checkoutFinalTotal) checkoutFinalTotal.textContent = finalTotal.toFixed(3) + ' JOD';
+    renderCheckoutUpsell();
   }
 
   // ================= COMMUNITY SUBMISSION =================
@@ -2083,11 +2180,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function handleFileUpload(file) {
       if (!file) return;
+      const isAr = state.activeLang === 'ar';
+
+      // 1. Client-side file size check (50MB)
+      const MAX_SIZE = 50 * 1024 * 1024;
+      if (file.size > MAX_SIZE) {
+        showToast(
+          isAr 
+            ? 'حجم الملف يتجاوز 50 ميغابايت! يرجى اختيار فيديو أو صورة أصغر حجماً.' 
+            : 'File size exceeds 50MB! Please choose a smaller file.',
+          'warning'
+        );
+        return;
+      }
+
       const formData = new FormData();
       formData.append('media', file);
 
       if (dropzoneText) {
-        dropzoneText.textContent = state.activeLang === 'ar' ? 'جاري رفع الملف إلى السيرفر...' : 'Uploading file to server...';
+        dropzoneText.textContent = isAr ? 'جاري معالجة ورفع الفيديو / الصورة إلى السيرفر...' : 'Uploading media to server...';
       }
 
       try {
@@ -2095,7 +2206,15 @@ document.addEventListener('DOMContentLoaded', () => {
           method: 'POST',
           body: formData
         });
-        const data = await res.json();
+        
+        const rawText = await res.text();
+        let data;
+        try {
+          data = JSON.parse(rawText);
+        } catch (jsonErr) {
+          throw new Error(rawText || 'Server responded with non-JSON format');
+        }
+
         if (data.success) {
           uploadedMediaUrl = data.url;
           uploadedMediaType = data.mediaType;
@@ -2104,24 +2223,24 @@ document.addEventListener('DOMContentLoaded', () => {
           if (preview) {
             preview.style.display = 'block';
             if (uploadedMediaType === 'video') {
-              preview.innerHTML = `<video src="${uploadedMediaUrl}" controls autoplay muted style="width:100%; height:200px; object-fit:cover; border-radius:8px;"></video>`;
+              preview.innerHTML = `<video src="${uploadedMediaUrl}" controls autoplay muted playsinline style="width:100%; height:200px; object-fit:cover; border-radius:8px;"></video>`;
             } else {
-              preview.innerHTML = `<img src="${uploadedMediaUrl}" alt="Preview" style="width:100%; height:200px; object-fit:cover; border-radius:8px;">`;
+              preview.innerHTML = `<img src="${uploadedMediaUrl}" alt="Preview" style="width:100%; height:200px; object-fit:cover; border-radius:8px;" onerror="this.src='/assets/velen-boxy-black.jpg';">`;
             }
           }
           if (clearMediaBtn) clearMediaBtn.style.display = 'inline-block';
-          showToast(state.activeLang === 'ar' ? 'تم رفع الصورة / الفيديو بنجاح! 🎉' : 'Photo/video uploaded successfully! 🎉', 'success');
+          showToast(isAr ? 'تم رفع الفيديو / الصورة بنجاح! 🎉' : 'Media uploaded successfully! 🎉', 'success');
         } else {
-          showToast(data.message || 'Upload failed', 'error');
+          showToast(data.message || (isAr ? 'فشل رفع الملف، يرجى التأكد من الصيغة' : 'Upload failed'), 'error');
           if (dropzoneText) {
-            dropzoneText.textContent = state.activeLang === 'ar' ? 'اسحب وأفلت الصورة أو الفيديو هنا أو اضغط للاختيار' : 'Drag & drop photo or video here, or click to choose';
+            dropzoneText.textContent = isAr ? 'اسحب وأفلت الصورة أو الفيديو هنا أو اضغط للاختيار' : 'Drag & drop photo or video here, or click to choose';
           }
         }
       } catch (err) {
         console.error('Upload error:', err);
-        showToast(state.activeLang === 'ar' ? 'فشل الرفع، يرجى المحاولة ثانية' : 'Upload failed, please try again', 'error');
+        showToast(isAr ? 'حدث خطأ أثناء الرفع، تأكد من الاتصال وجرب ثانية' : 'Upload failed, please try again', 'error');
         if (dropzoneText) {
-          dropzoneText.textContent = state.activeLang === 'ar' ? 'اسحب وأفلت الصورة أو الفيديو هنا أو اضغط للاختيار' : 'Drag & drop photo or video here, or click to choose';
+          dropzoneText.textContent = isAr ? 'اسحب وأفلت الصورة أو الفيديو هنا أو اضغط للاختيار' : 'Drag & drop photo or video here, or click to choose';
         }
       }
     }
@@ -2592,25 +2711,108 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // ================= CHECKOUT UPSELL SETUP =================
+  // ================= CHECKOUT UPSELL SETUP (Admin Configurable) =================
+  function renderCheckoutUpsell() {
+    const box = document.getElementById('checkoutUpsellBox');
+    if (!box) return;
+
+    const upsellConfig = state.design?.checkoutUpsell;
+    if (!upsellConfig || upsellConfig.enabled === false) {
+      box.style.display = 'none';
+      return;
+    }
+
+    // Find the product selected by Admin or default to first product
+    const targetProduct = (state.products && state.products.length > 0)
+      ? (state.products.find(p => p.id === upsellConfig.productId) || state.products[0])
+      : null;
+
+    if (!targetProduct) {
+      box.style.display = 'none';
+      return;
+    }
+
+    box.style.display = 'block';
+
+    const isAr = state.activeLang === 'ar';
+    const titleEl = document.getElementById('upsellTitle');
+    const descEl = box.querySelector('.upsell-desc');
+    const imgEl = document.getElementById('upsellImg');
+    const priceEl = document.getElementById('upsellPrice');
+    const origPriceEl = document.getElementById('upsellOrigPrice');
+    const sizeSelect = document.getElementById('upsellSizeSelect');
+    const btn = document.getElementById('btnApplyUpsell');
+
+    const discountPrice = Number(upsellConfig.discountPrice || (targetProduct.price * 0.8));
+    const originalPrice = Number(targetProduct.price || 13);
+    const displayTitle = upsellConfig.title || targetProduct.name;
+    const displaySubtitle = upsellConfig.subtitle || (isAr ? 'أضف قطعة إضافية إلى طلبك الآن بسعر خاص!' : 'Add an extra piece to your order now at a special price!');
+    const mainImg = targetProduct.image || (targetProduct.images && targetProduct.images[0]) || '/assets/velen-ringer-white.jpg';
+
+    if (titleEl) titleEl.textContent = displayTitle;
+    if (descEl) descEl.textContent = displaySubtitle;
+    if (imgEl) {
+      imgEl.src = mainImg;
+      imgEl.onerror = function() { this.src = '/assets/velen-boxy-black.jpg'; };
+    }
+    if (priceEl) priceEl.textContent = discountPrice.toFixed(3) + ' JOD';
+    if (origPriceEl) origPriceEl.textContent = originalPrice.toFixed(3) + ' JOD';
+
+    // Populate sizes
+    if (sizeSelect) {
+      const availSizes = (targetProduct.sizes && targetProduct.sizes.length > 0) ? targetProduct.sizes : ['S', 'M', 'L', 'XL'];
+      const currentVal = sizeSelect.value;
+      sizeSelect.innerHTML = availSizes.map(s => `
+        <option value="${s}" ${s === currentVal ? 'selected' : (s === 'M' ? 'selected' : '')}>${isAr ? `مقاس ${s}` : `Size ${s}`}</option>
+      `).join('');
+    }
+
+    // Check if already in cart
+    const alreadyInCart = state.cart.some(item => item.id === `upsell_${targetProduct.id}` || (item.id === targetProduct.id && item.isUpsell));
+    if (btn) {
+      if (alreadyInCart) {
+        btn.disabled = true;
+        btn.innerHTML = `<i class="fa-solid fa-check"></i> ${isAr ? 'تمت الإضافة للطلب' : 'Added to order'}`;
+        btn.style.background = '#27ae60';
+      } else {
+        btn.disabled = false;
+        btn.innerHTML = `<i class="fa-solid fa-plus"></i> ${isAr ? `أضف للطلب (+${discountPrice.toFixed(3)} JOD)` : `Add to Order (+${discountPrice.toFixed(3)} JOD)`}`;
+        btn.style.background = '';
+      }
+    }
+  }
+
   function setupCheckoutUpsell() {
     const btn = document.getElementById('btnApplyUpsell');
     if (!btn) return;
+
     btn.addEventListener('click', () => {
-      const size = document.getElementById('upsellSizeSelect')?.value || 'M';
+      const upsellConfig = state.design?.checkoutUpsell;
+      const targetProduct = (state.products && state.products.length > 0)
+        ? (state.products.find(p => p.id === upsellConfig?.productId) || state.products[0])
+        : null;
+
+      if (!targetProduct) return;
+
+      const sizeSelect = document.getElementById('upsellSizeSelect');
+      const size = sizeSelect ? sizeSelect.value : 'M';
+      const discountPrice = Number(upsellConfig?.discountPrice || (targetProduct.price * 0.8));
+      const displayTitle = upsellConfig?.title || targetProduct.name;
+      const isAr = state.activeLang === 'ar';
+
       const upsellItem = {
-        id: 'upsell_ringer_tee',
-        name: 'VELEN Ringer Tee — Special Addon',
-        price: 9.500,
-        image: '/assets/velen-logo.jpg',
-        category: 'Ringer Edition',
-        fabric: '100% قطن أردني معالج نخب أول'
+        id: `upsell_${targetProduct.id}`,
+        name: `${displayTitle} (Exclusive Offer)`,
+        price: discountPrice,
+        image: targetProduct.image || (targetProduct.images && targetProduct.images[0]) || '/assets/velen-logo.jpg',
+        category: targetProduct.category || 'Special Offer',
+        fabric: targetProduct.fabric || '100% قطن أردني معالج نخب أول',
+        isUpsell: true
       };
+
       addToCart(upsellItem, size, 1);
-      btn.disabled = true;
-      btn.innerHTML = '<i class="fa-solid fa-check"></i> تمت الإضافة للطلب!';
-      btn.style.background = '#27ae60';
-      showToast('تمت إضافة القطعة بالعرض الخاص إلى طلبك!', 'success');
+      renderCheckoutSummary();
+      showToast(isAr ? 'تمت إضافة القطعة بالعرض الخاص إلى طلبك!' : 'Special offer piece added to your order!', 'success');
     });
   }
 
@@ -3215,16 +3417,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     },
     quickAddToCart: (productId) => {
-      const product = state.products.find(p => p.id === productId);
-      if (product) {
-        const sizes = product.sizes || ['S', 'M', 'L', 'XL'];
-        const sizeInv = product.sizeInventory || null;
-        let pickSize = 'M';
-        if (sizeInv) {
-          pickSize = sizes.find(s => typeof sizeInv[s] === 'undefined' || sizeInv[s] > 0) || 'M';
-        }
-        addToCart(product, pickSize, 1);
-      }
+      openProductPage(productId);
     },
     updateCartQty: updateCartQuantity,
     likeCommunityPost: async (id) => {

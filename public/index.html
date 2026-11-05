@@ -277,7 +277,7 @@
           <div class="portal-cards-grid">
             <!-- Portal 1: Shop All Products -->
             <div class="portal-card portal-card-lg" onclick="window.velenApp?.navigateTo('shop')">
-              <img src="/assets/velen-boxy-black.jpg" alt="Shop Collection" class="portal-bg-img" onerror="this.src='/assets/velen-hero-clean.jpg'">
+              <img src="/assets/velen-boxy-black.jpg" alt="Shop Collection" class="portal-bg-img" id="portalBgShop" onerror="this.onerror=null;this.src='/assets/velen-hero-clean.jpg';">
               <div class="portal-overlay"></div>
               <div class="portal-content">
                 <span class="portal-badge"><i class="fa-solid fa-bag-shopping"></i> <span data-i18n="portalBadgeShop">CATALOG 2026</span></span>
@@ -291,7 +291,7 @@
 
             <!-- Portal 2: Our Story / Craftsmanship -->
             <div class="portal-card portal-card-lg" onclick="window.velenApp?.navigateTo('about')">
-              <img src="/assets/velen-boxy-white.jpg" alt="Our Story" class="portal-bg-img" onerror="this.src='/assets/velen-hero-clean.jpg'">
+              <img src="/assets/velen-boxy-white.jpg" alt="Our Story" class="portal-bg-img" id="portalBgStory" onerror="this.onerror=null;this.src='/assets/velen-hero-clean.jpg';">
               <div class="portal-overlay"></div>
               <div class="portal-content">
                 <span class="portal-badge"><i class="fa-solid fa-gem"></i> <span data-i18n="portalBadgeAbout">THE PHILOSOPHY</span></span>
@@ -305,7 +305,7 @@
 
             <!-- Portal 3: Community Looks -->
             <div class="portal-card" onclick="window.velenApp?.navigateTo('community')">
-              <img src="/assets/velen-community-1.jpg" alt="Community" class="portal-bg-img" onerror="this.src='/assets/velen-hero-clean.jpg'">
+              <img src="/assets/velen-community-1.jpg" alt="Community" class="portal-bg-img" id="portalBgCommunity" onerror="this.onerror=null;this.src='/assets/velen-hero-clean.jpg';">
               <div class="portal-overlay"></div>
               <div class="portal-content">
                 <span class="portal-badge"><i class="fa-brands fa-instagram"></i> <span data-i18n="portalBadgeCommunity">COMMUNITY WEARS VELEN</span></span>

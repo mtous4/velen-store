@@ -379,6 +379,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
       return `
         <tr>
+          <td style="text-align:center;">
+            <input type="checkbox" class="order-select-check" value="${o.id}" onchange="window.velenAdmin.updateSelectedOrdersUI()">
+          </td>
           <td><strong>${o.id}</strong></td>
           <td>${formatDate(o.createdAt)}</td>
           <td>
@@ -1887,6 +1890,35 @@ document.addEventListener('DOMContentLoaded', () => {
       if (commDesc) commDesc.value = d.communitySection.desc || '';
     }
 
+    // 5.5 Explore Hub Portal Cards
+    if (d.portalCards) {
+      const pShop = document.getElementById('desPortalShopImage');
+      if (pShop) pShop.value = d.portalCards.shopImage || '';
+      const pStory = document.getElementById('desPortalStoryImage');
+      if (pStory) pStory.value = d.portalCards.storyImage || '';
+      const pComm = document.getElementById('desPortalCommunityImage');
+      if (pComm) pComm.value = d.portalCards.communityImage || '';
+    }
+
+    // 5.6 Checkout Upsell Product & Settings
+    const upsellSelect = document.getElementById('desUpsellProductId');
+    if (upsellSelect && state.products) {
+      upsellSelect.innerHTML = state.products.map(p => `
+        <option value="${p.id}">${p.name} — ${Number(p.price).toFixed(3)} JOD</option>
+      `).join('');
+      if (d.checkoutUpsell?.productId) {
+        upsellSelect.value = d.checkoutUpsell.productId;
+      }
+    }
+    const upEn = document.getElementById('desUpsellEnabled');
+    if (upEn) upEn.checked = d.checkoutUpsell?.enabled !== false;
+    const upPrice = document.getElementById('desUpsellPrice');
+    if (upPrice) upPrice.value = d.checkoutUpsell?.specialPrice !== undefined ? d.checkoutUpsell.specialPrice : 9.5;
+    const upTitle = document.getElementById('desUpsellTitle');
+    if (upTitle) upTitle.value = d.checkoutUpsell?.title || 'عرض خاص مع طلبك (Exclusive Offer)';
+    const upSub = document.getElementById('desUpsellSubtitle');
+    if (upSub) upSub.value = d.checkoutUpsell?.subtitle || 'أضف قطعة إضافية إلى طلبك الآن بسعر خاص!';
+
     // 6. About
     if (d.aboutSection) {
       const abEnabled = document.getElementById('desAboutEnabled');
@@ -1979,6 +2011,23 @@ document.addEventListener('DOMContentLoaded', () => {
     setupGenericDropzone('aboutDropzone', 'aboutFileInput', async (url) => {
       state.uploadedAboutImageUrl = url;
       const input = document.getElementById('desAboutImage');
+      if (input) input.value = url;
+      await saveDesignCustomizer();
+    });
+
+    // Portal Cards Dropzones
+    setupGenericDropzone('portalShopDropzone', 'portalShopFileInput', async (url) => {
+      const input = document.getElementById('desPortalShopImage');
+      if (input) input.value = url;
+      await saveDesignCustomizer();
+    });
+    setupGenericDropzone('portalStoryDropzone', 'portalStoryFileInput', async (url) => {
+      const input = document.getElementById('desPortalStoryImage');
+      if (input) input.value = url;
+      await saveDesignCustomizer();
+    });
+    setupGenericDropzone('portalCommunityDropzone', 'portalCommunityFileInput', async (url) => {
+      const input = document.getElementById('desPortalCommunityImage');
       if (input) input.value = url;
       await saveDesignCustomizer();
     });
@@ -2191,6 +2240,20 @@ document.addEventListener('DOMContentLoaded', () => {
         feature3Desc: document.getElementById('desAboutF3Desc')?.value.trim() || '',
         image: aboutImgInput || state.uploadedAboutImageUrl || state.design?.aboutSection?.image || '/assets/velen-logo.jpg',
         quote: document.getElementById('desAboutQuote')?.value.trim() || ''
+      },
+      portalCards: {
+        ...(state.design?.portalCards || {}),
+        shopImage: document.getElementById('desPortalShopImage')?.value.trim() || '/assets/velen-boxy-black.jpg',
+        storyImage: document.getElementById('desPortalStoryImage')?.value.trim() || '/assets/velen-boxy-white.jpg',
+        communityImage: document.getElementById('desPortalCommunityImage')?.value.trim() || '/assets/velen-community-1.jpg'
+      },
+      checkoutUpsell: {
+        ...(state.design?.checkoutUpsell || {}),
+        enabled: Boolean(document.getElementById('desUpsellEnabled')?.checked),
+        productId: document.getElementById('desUpsellProductId')?.value || 'prod-1',
+        specialPrice: parseFloat(document.getElementById('desUpsellPrice')?.value) || 9.5,
+        title: document.getElementById('desUpsellTitle')?.value.trim() || 'عرض خاص مع طلبك (Exclusive Offer)',
+        subtitle: document.getElementById('desUpsellSubtitle')?.value.trim() || 'أضف قطعة إضافية إلى طلبك الآن بسعر خاص!'
       }
     };
 
@@ -2212,6 +2275,127 @@ document.addEventListener('DOMContentLoaded', () => {
       console.error(err);
       showAdminToast('حدث خطأ في الاتصال بالخادم', 'error');
     }
+  }
+
+  function generateSingleWaybillHtml(o) {
+    if (!o) return '';
+    const itemsHtml = (o.items || []).map((item, idx) => `
+      <tr style="border-bottom: 1px solid #eee;">
+        <td style="padding: 8px 6px; font-weight: 700; width: 22px;">${idx + 1}</td>
+        <td style="padding: 8px 6px;">
+          <div style="font-weight: 800; font-size: 13px; color: #000;">${item.name}</div>
+          <div style="display:inline-flex; gap:4px; margin-top:2px;">
+            <span style="padding: 2px 8px; background: #000; color: #fff; border-radius: 3px; font-size: 11px; font-weight: 900;">المقاس: ${item.size || 'M'}</span>
+            ${item.color ? `<span style="padding: 2px 8px; background: #f0f0f0; color: #000; border: 1px solid #ccc; border-radius: 3px; font-size: 11px; font-weight: 800;">اللون: ${item.color}</span>` : ''}
+          </div>
+        </td>
+        <td style="padding: 8px 6px; text-align: center; font-weight: 800; font-size: 13px; width: 45px;">×${item.quantity || 1}</td>
+        <td style="padding: 8px 6px; text-align: left; font-weight: 900; font-size: 13px; width: 75px; white-space:nowrap;">${(Number(item.price || 0) * (item.quantity || 1)).toFixed(3)} JOD</td>
+      </tr>
+    `).join('');
+
+    return `
+      <div style="width: 100%; max-width: 460px; margin: 0 auto; box-sizing: border-box; border: 2px solid #000; border-radius: 8px; background: #fff; color: #000; padding: 14px; font-family: 'Tajawal', 'Segoe UI', Tahoma, Arial, sans-serif; direction: rtl;">
+        <!-- Top Header -->
+        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 12px;">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <img src="/assets/velen-logo.jpg" alt="Velen" style="width: 44px; height: 44px; object-fit: cover; border-radius: 4px; border: 1px solid #000;" onerror="this.src='/assets/velen-logo.jpg'">
+            <div>
+              <h2 style="margin: 0; font-size: 18px; font-weight: 900; letter-spacing: 1px; color: #000;">VELEN OFFICIAL</h2>
+              <p style="margin: 2px 0 0; font-size: 10px; color: #555;">Amman, Jordan • بوليصة توصيل رسمي</p>
+            </div>
+          </div>
+          <div style="text-align: left;">
+            <span style="font-size: 15px; font-weight: 900; background: #000; color: #fff; padding: 4px 10px; border-radius: 4px; display: inline-block;">
+              ${o.id}
+            </span>
+            <div style="font-size: 10px; color: #666; margin-top: 3px;">${formatDate(o.createdAt)}</div>
+          </div>
+        </div>
+
+        <!-- Recipient Box -->
+        <div style="background: #f8f8f8; padding: 10px 12px; border-radius: 6px; border: 1px solid #e0e0e0; margin-bottom: 12px;">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px;">
+            <div>
+              <span style="font-size: 10px; color: #666; font-weight: 600;">اسم العميل (المستلم):</span>
+              <div style="font-size: 15px; font-weight: 900; color: #000;">${o.customerName}</div>
+            </div>
+            <div style="text-align: left;">
+              <span style="font-size: 10px; color: #666; font-weight: 600;">المدينة:</span>
+              <div style="font-size: 14px; font-weight: 900; color: #000;">${o.city}</div>
+            </div>
+          </div>
+
+          <div style="margin-bottom: 6px;">
+            <span style="font-size: 10px; color: #666; font-weight: 600;">رقم الهاتف للتوصيل:</span>
+            <div style="font-size: 16px; font-weight: 900; color: #000; direction: ltr; text-align: right; display: flex; align-items: center; justify-content: flex-end; gap: 6px;">
+              <span>${formatCleanPhone(o.phone)}</span>
+              <i class="fa-brands fa-whatsapp" style="color: #25d366; font-size: 18px;"></i>
+            </div>
+          </div>
+
+          <div style="font-size: 10px; color: #666; font-weight: 600;">العنوان بالتفصيل:</div>
+          <div style="font-size: 12px; font-weight: 700; color: #111; line-height: 1.4; margin-top: 2px;">
+            ${o.address}
+          </div>
+
+          ${o.notes ? `
+            <div style="margin-top: 6px; padding: 4px 8px; background: #fff2f2; border-radius: 4px; font-size: 11px; color: #c0392b; font-weight: 700;">
+              <i class="fa-solid fa-circle-exclamation"></i> ملاحظة: ${o.notes}
+            </div>
+          ` : ''}
+        </div>
+
+        <!-- Items Table -->
+        <table style="width: 100%; border-collapse: collapse; margin-bottom: 10px; font-size: 12px;">
+          <thead>
+            <tr style="background: #000; color: #fff; text-align: right;">
+              <th style="padding: 6px; width: 22px;">#</th>
+              <th style="padding: 6px;">القطعة والمقاس</th>
+              <th style="padding: 6px; text-align: center; width: 45px;">الكمية</th>
+              <th style="padding: 6px; text-align: left; width: 75px;">المجموع</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${itemsHtml}
+          </tbody>
+        </table>
+
+        <!-- Financial Breakdown -->
+        <div style="border-top: 1px solid #ddd; padding-top: 6px; margin-bottom: 10px; font-size: 12px;">
+          <div style="display: flex; justify-content: space-between; padding: 2px 0; color: #555;">
+            <span>المجموع الفرعي:</span>
+            <strong style="color: #000;">${Number(o.subtotal || o.total).toFixed(3)} JOD</strong>
+          </div>
+          <div style="display: flex; justify-content: space-between; padding: 2px 0; color: #555;">
+            <span>أجرة التوصيل:</span>
+            <strong style="color: #000;">${Number(o.shipping || 0) === 0 ? 'مجاناً (عمّان)' : Number(o.shipping).toFixed(3) + ' JOD'}</strong>
+          </div>
+        </div>
+
+        <!-- Total COD Box -->
+        <div style="border: 2px solid #000; background: #fff8e7; padding: 10px 12px; border-radius: 6px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
+          <div style="font-size: 12px; font-weight: 800; color: #000;">
+            المبلغ المطلوب تحصيله نقداً:
+          </div>
+          <div style="font-size: 18px; font-weight: 900; color: #000; letter-spacing: 0.5px;">
+            ${Number(o.total).toFixed(3)} JOD
+          </div>
+        </div>
+
+        <!-- Policy & Return note -->
+        <div style="font-size: 9.5px; color: #777; line-height: 1.4; border-top: 1px dashed #ccc; padding-top: 8px; margin-bottom: 8px;">
+          • الترجيع متاح فقط في حال وجود خلل مصنعي. التبديل متاح خلال 24 ساعة بنفس الحالة الأصلية.<br>
+          • خدمة العملاء والواتساب: <strong>+962 7 7018 8144</strong>
+        </div>
+
+        <!-- Signature lines -->
+        <div style="display: flex; justify-content: space-between; font-size: 10px; color: #444; border-top: 1px solid #eee; padding-top: 6px;">
+          <div>توقيع المستلم: __________</div>
+          <div>توقيع المندوب: __________</div>
+        </div>
+      </div>
+    `;
   }
 
   // Global methods for window
@@ -2365,125 +2549,69 @@ document.addEventListener('DOMContentLoaded', () => {
       const area = document.getElementById('waybillPrintArea');
       if (!area) return;
 
-      const itemsHtml = (o.items || []).map((item, idx) => `
-        <tr style="border-bottom: 1px solid #eee;">
-          <td style="padding: 8px 6px; font-weight: 700; width: 22px;">${idx + 1}</td>
-          <td style="padding: 8px 6px;">
-            <div style="font-weight: 800; font-size: 13px; color: #000;">${item.name}</div>
-            <div style="display:inline-flex; gap:4px; margin-top:2px;">
-              <span style="padding: 2px 8px; background: #000; color: #fff; border-radius: 3px; font-size: 11px; font-weight: 900;">المقاس: ${item.size || 'M'}</span>
-              ${item.color ? `<span style="padding: 2px 8px; background: #f0f0f0; color: #000; border: 1px solid #ccc; border-radius: 3px; font-size: 11px; font-weight: 800;">اللون: ${item.color}</span>` : ''}
-            </div>
-          </td>
-          <td style="padding: 8px 6px; text-align: center; font-weight: 800; font-size: 13px; width: 45px;">×${item.quantity || 1}</td>
-          <td style="padding: 8px 6px; text-align: left; font-weight: 900; font-size: 13px; width: 75px; white-space:nowrap;">${(Number(item.price || 0) * (item.quantity || 1)).toFixed(3)} JOD</td>
-        </tr>
-      `).join('');
+      area.innerHTML = generateSingleWaybillHtml(o);
+      document.getElementById('waybillModal').classList.add('active');
+    },
+    toggleSelectAllOrders: (checked) => {
+      document.querySelectorAll('.order-select-check').forEach(cb => {
+        cb.checked = checked;
+      });
+      window.velenAdmin.updateSelectedOrdersUI();
+    },
+    updateSelectedOrdersUI: () => {
+      const selected = Array.from(document.querySelectorAll('.order-select-check:checked')).map(cb => cb.value);
+      const bar = document.getElementById('ordersBulkBar');
+      const countEl = document.getElementById('selectedOrdersCount');
+      if (countEl) countEl.textContent = selected.length;
+      if (bar) bar.style.display = selected.length > 0 ? 'flex' : 'none';
+      const allCheck = document.getElementById('selectAllOrdersCheck');
+      const allCbs = document.querySelectorAll('.order-select-check');
+      if (allCheck && allCbs.length > 0) {
+        allCheck.checked = selected.length === allCbs.length;
+      }
+    },
+    clearOrderSelections: () => {
+      document.querySelectorAll('.order-select-check').forEach(cb => cb.checked = false);
+      const allCheck = document.getElementById('selectAllOrdersCheck');
+      if (allCheck) allCheck.checked = false;
+      const bar = document.getElementById('ordersBulkBar');
+      if (bar) bar.style.display = 'none';
+    },
+    printBatchWaybills: () => {
+      const selected = Array.from(document.querySelectorAll('.order-select-check:checked')).map(cb => cb.value);
+      if (selected.length === 0) {
+        showAdminToast('يرجى تحديد طلب واحد على الأقل للطباعة', 'info');
+        return;
+      }
+
+      const area = document.getElementById('waybillPrintArea');
+      if (!area) return;
+
+      const waybillsHtml = selected.map(orderId => {
+        const o = state.orders.find(ord => ord.id === orderId);
+        if (!o) return '';
+        return `
+          <div class="waybill-sheet-item" style="page-break-after: always; break-after: page; margin-bottom: 25px;">
+            ${generateSingleWaybillHtml(o)}
+          </div>
+        `;
+      }).filter(Boolean).join('');
 
       area.innerHTML = `
-        <div style="width: 100%; max-width: 460px; margin: 0 auto; box-sizing: border-box; border: 2px solid #000; border-radius: 8px; background: #fff; color: #000; padding: 14px; font-family: 'Tajawal', 'Segoe UI', Tahoma, Arial, sans-serif; direction: rtl;">
-          <!-- Top Header -->
-          <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 12px;">
-            <div style="display: flex; align-items: center; gap: 10px;">
-              <img src="/assets/velen-logo.jpg" alt="Velen" style="width: 44px; height: 44px; object-fit: cover; border-radius: 4px; border: 1px solid #000;" onerror="this.src='/assets/velen-logo.jpg'">
-              <div>
-                <h2 style="margin: 0; font-size: 18px; font-weight: 900; letter-spacing: 1px; color: #000;">VELEN OFFICIAL</h2>
-                <p style="margin: 2px 0 0; font-size: 10px; color: #555;">Amman, Jordan • بوليصة توصيل رسمي</p>
-              </div>
-            </div>
-            <div style="text-align: left;">
-              <span style="font-size: 15px; font-weight: 900; background: #000; color: #fff; padding: 4px 10px; border-radius: 4px; display: inline-block;">
-                ${o.id}
-              </span>
-              <div style="font-size: 10px; color: #666; margin-top: 3px;">${formatDate(o.createdAt)}</div>
-            </div>
+        <div class="batch-waybills-wrapper" style="direction: rtl;">
+          <div style="background:#000; color:#fff; padding:10px 14px; border-radius:6px; margin-bottom:16px; display:flex; justify-content:space-between; align-items:center;">
+            <strong>طباعة بوليصات شحن Velen (عدد ${selected.length} طلبات)</strong>
+            <span style="font-size:12px; color:#aaa;">جاهزة للطباعة والتسليم للمندوب</span>
           </div>
-
-          <!-- Recipient Box (Responsive Flex) -->
-          <div style="background: #f8f8f8; padding: 10px 12px; border-radius: 6px; border: 1px solid #e0e0e0; margin-bottom: 12px;">
-            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px;">
-              <div>
-                <span style="font-size: 10px; color: #666; font-weight: 600;">اسم العميل (المستلم):</span>
-                <div style="font-size: 15px; font-weight: 900; color: #000;">${o.customerName}</div>
-              </div>
-              <div style="text-align: left;">
-                <span style="font-size: 10px; color: #666; font-weight: 600;">المدينة:</span>
-                <div style="font-size: 14px; font-weight: 900; color: #000;">${o.city}</div>
-              </div>
-            </div>
-
-            <div style="margin-bottom: 6px;">
-              <span style="font-size: 10px; color: #666; font-weight: 600;">رقم الهاتف للتوصيل:</span>
-              <div style="font-size: 16px; font-weight: 900; color: #000; direction: ltr; text-align: right; display: flex; align-items: center; justify-content: flex-end; gap: 6px;">
-                <span>${formatCleanPhone(o.phone)}</span>
-                <i class="fa-brands fa-whatsapp" style="color: #25d366; font-size: 18px;"></i>
-              </div>
-            </div>
-
-            <div style="font-size: 10px; color: #666; font-weight: 600;">العنوان بالتفصيل:</div>
-            <div style="font-size: 12px; font-weight: 700; color: #111; line-height: 1.4; margin-top: 2px;">
-              ${o.address}
-            </div>
-
-            ${o.notes ? `
-              <div style="margin-top: 6px; padding: 4px 8px; background: #fff2f2; border-radius: 4px; font-size: 11px; color: #c0392b; font-weight: 700;">
-                <i class="fa-solid fa-circle-exclamation"></i> ملاحظة: ${o.notes}
-              </div>
-            ` : ''}
-          </div>
-
-          <!-- Items Table (Guaranteed Mobile Fit) -->
-          <table style="width: 100%; border-collapse: collapse; margin-bottom: 10px; font-size: 12px;">
-            <thead>
-              <tr style="background: #000; color: #fff; text-align: right;">
-                <th style="padding: 6px; width: 22px;">#</th>
-                <th style="padding: 6px;">القطعة والمقاس</th>
-                <th style="padding: 6px; text-align: center; width: 45px;">الكمية</th>
-                <th style="padding: 6px; text-align: left; width: 75px;">المجموع</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${itemsHtml}
-            </tbody>
-          </table>
-
-          <!-- Financial Breakdown -->
-          <div style="border-top: 1px solid #ddd; padding-top: 6px; margin-bottom: 10px; font-size: 12px;">
-            <div style="display: flex; justify-content: space-between; padding: 2px 0; color: #555;">
-              <span>المجموع الفرعي:</span>
-              <strong style="color: #000;">${Number(o.subtotal || o.total).toFixed(3)} JOD</strong>
-            </div>
-            <div style="display: flex; justify-content: space-between; padding: 2px 0; color: #555;">
-              <span>أجرة التوصيل:</span>
-              <strong style="color: #000;">${Number(o.shipping || 0) === 0 ? 'مجاناً (عمّان)' : Number(o.shipping).toFixed(3) + ' JOD'}</strong>
-            </div>
-          </div>
-
-          <!-- Total COD Box (Very prominent for the driver) -->
-          <div style="border: 2px solid #000; background: #fff8e7; padding: 10px 12px; border-radius: 6px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
-            <div style="font-size: 12px; font-weight: 800; color: #000;">
-              المبلغ المطلوب تحصيله نقداً:
-            </div>
-            <div style="font-size: 18px; font-weight: 900; color: #000; letter-spacing: 0.5px;">
-              ${Number(o.total).toFixed(3)} JOD
-            </div>
-          </div>
-
-          <!-- Policy & Return note -->
-          <div style="font-size: 9.5px; color: #777; line-height: 1.4; border-top: 1px dashed #ccc; padding-top: 8px; margin-bottom: 8px;">
-            • الترجيع متاح فقط في حال وجود خلل مصنعي. التبديل متاح خلال 24 ساعة بنفس الحالة الأصلية.<br>
-            • خدمة العملاء والواتساب: <strong>+962 7 7018 8144</strong>
-          </div>
-
-          <!-- Signature lines -->
-          <div style="display: flex; justify-content: space-between; font-size: 10px; color: #444; border-top: 1px solid #eee; padding-top: 6px;">
-            <div>توقيع المستلم: __________</div>
-            <div>توقيع المندوب: __________</div>
-          </div>
+          ${waybillsHtml}
         </div>
       `;
 
       document.getElementById('waybillModal').classList.add('active');
+      setTimeout(() => {
+        window.print();
+      }, 400);
+      showAdminToast(`تم تجهيز ${selected.length} بوليصة شحن للطباعة 🖨️`, 'success');
     },
     printWaybill: () => {
       const area = document.getElementById('waybillPrintArea');

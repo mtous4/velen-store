@@ -190,6 +190,10 @@ module.exports = {
           checkoutUpsell: {
             ...(localFallback?.design?.checkoutUpsell || {}),
             ...(firestoreData?.checkoutUpsell || {})
+          },
+          portalCards: {
+            ...(localFallback?.design?.portalCards || {}),
+            ...(firestoreData?.portalCards || {})
           }
         };
       }

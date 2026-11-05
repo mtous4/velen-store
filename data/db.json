@@ -8,7 +8,7 @@
     "freeShippingThreshold": 20,
     "contactPhone": "+962 7 7018 8144",
     "orderEmail": "Velenoffical@gmail.com",
-    "nextOrderNumber": 1003,
+    "nextOrderNumber": 1004,
     "social": {
       "instagram": "https://instagram.com/velenofficial",
       "tiktok": "https://tiktok.com/@velenofficial",
@@ -168,13 +168,13 @@
           ]
         }
       ],
-      "stock": 24,
+      "stock": 23,
       "description": "Designed for effortless everyday wear. Crafted from 100% premium Jordanian heavyweight cotton with contrast white ribbed collar and cuffs. Tailored streetwear relaxed fit.",
       "fabric": "100% Heavyweight Cotton (260 GSM)",
       "createdAt": "2026-10-28T10:00:00.000Z",
       "sizeInventory": {
         "S": 6,
-        "M": 10,
+        "M": 9,
         "L": 6,
         "XL": 2
       },
@@ -407,6 +407,30 @@
     }
   ],
   "orders": [
+    {
+      "id": "ORD-1003",
+      "customerName": "Test Valid Order",
+      "phone": "0791234567",
+      "city": "Amman",
+      "address": "Sweifieh Paris St",
+      "notes": "",
+      "source": "Storefront (المتجر الإلكتروني)",
+      "items": [
+        {
+          "price": 11,
+          "quantity": 1,
+          "name": "VELEN Heavy Boxy Tee",
+          "id": "prod-1",
+          "size": "M"
+        }
+      ],
+      "subtotal": 0,
+      "shipping": 0,
+      "total": 0,
+      "paymentMethod": "Cash on Delivery",
+      "status": "Pending",
+      "createdAt": "2026-11-05T00:49:44.949Z"
+    },
     {
       "id": "ORD-1001",
       "customerName": "سارة خالد (انستغرام)",
