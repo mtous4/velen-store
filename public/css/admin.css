@@ -39,7 +39,8 @@
 body.admin-body {
   background-color: var(--admin-bg);
   color: var(--text-white);
-  font-family: 'Plus Jakarta Sans', 'Tajawal', sans-serif;
+  font-family: 'Bodoni Moda', 'Tajawal', sans-serif;
+  font-optical-sizing: auto;
   direction: rtl;
   text-align: right;
   min-height: 100vh;
