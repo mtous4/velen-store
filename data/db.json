@@ -24,26 +24,38 @@
     },
     "policies": {
       "shipping": {
-        "titleEn": "Shipping & Seamless Exchange Policy",
-        "titleAr": "سياسة الشحن والتبديل",
-        "deliveryEn": "Free delivery inside Amman within 24 to 48 hours. Flat 1 JOD delivery fee across all other Jordanian governorates (Irbid, Zarqa, Aqaba, Salt, etc.). Cash on Delivery (COD) and instant CliQ payment available upon package arrival.",
-        "deliveryAr": "التوصيل داخل عمّان مجاناً لكافة المناطق خلال 24 - 48 ساعة. التوصيل لكافة محافظات المملكة (إربد، الزرقاء، العقبة، السلط...) 1 دينار فقط. الدفع نقداً عند الاستلام (COD) أو تحويل فوري عبر CliQ.",
-        "exchangeEn": "You are fully entitled to inspect the garment and try your size upon delivery before the courier leaves. If you need a size exchange, we provide a smooth, doorstep exchange within 3 business days from your delivery date with zero complications.",
-        "exchangeAr": "يحق لك تماماً معاينة القطعة وتجربة المقاس فوراً عند الاستلام. في حال الرغبة بتبديل المقاس، يتم التبديل فوري وبكل سلاسة عند باب بيتك خلال 3 أيام من تاريخ الاستلام دون أي تعقيد."
+        "titleEn": "Shipping & Delivery Policy",
+        "titleAr": "سياسة الشحن والتوصيل",
+        "deliveryEn": "Free delivery within Amman (takes up to 24 hours). Delivery outside Amman costs 1 JOD (takes up to 48 hours). Delivery fee is automatically calculated based on your delivery location.",
+        "deliveryAr": "توصيل مجاني داخل عمّان (خلال مدة أقصاها 24 ساعة). التوصيل خارج عمّان بتكلفة 1 دينار لكافة محافظات المملكة (خلال مدة أقصاها 48 ساعة). تُحسب رسوم التوصيل تلقائياً حسب الموقع.",
+        "exchangeEn": "Exchanges and returns are only accepted if there is an issue with the product received, such as a manufacturing defect, damaged item or receiving an incorrect product. We do not accept exchanges or returns for change of mind, size preference or color preference. Customers should contact VELEN and provide details or photos of the issue so our team can review the case and assist accordingly.",
+        "exchangeAr": "يُقبل التبديل والإرجاع فقط في حال وجود مشكلة في المنتج المستلم، مثل وجود عيب مصنعي، أو قطعة تالفة، أو استلام منتج غير صحيح. لا نقبل التبديل أو الإرجاع بسبب تغيير الرأي أو تفضيل المقاس أو تفضيل اللون. يرجى التواصل مع فريق VELEN وتزويدنا بتفاصيل أو صور للمشكلة لمراجعة الحالة والمساعدة فوراً."
       },
       "care": {
         "titleEn": "Fabric & Garment Care Guide",
-        "titleAr": "???? ??????? ???????? ????????",
-        "subEn": "PREMIUM HEAVYWEIGHT FABRICS LONGEVITY PROTOCOL",
-        "subAr": "???????? ?????? ??? ??????? ???????",
-        "badgeEn": "THE LUXURY FABRIC ADVANTAGE",
-        "badgeAr": "???? ??????? ???????",
-        "introEn": "VELEN essentials are crafted from custom luxury heavyweight fabrics. To preserve its dense weave and signature boxy drape, follow our tested garment longevity protocol below.",
-        "introAr": "??? ????? ?????? ?? ????? ????? ????? ?????? ????? ?????? ??? ????? ?????? ????? ???????."
+        "titleAr": "دليل العناية بالملابس والأقمشة",
+        "subEn": "PREMIUM COTTON LONGEVITY PROTOCOL",
+        "subAr": "بروتوكول الحفاظ على الأقمشة الفاخرة",
+        "badgeEn": "PREMIUM COTTON ADVANTAGE",
+        "badgeAr": "ميزة الأقمشة الفاخرة",
+        "introEn": "VELEN essentials are crafted from premium cotton fabrics. To preserve fabric density and clean drape, follow our care guidelines.",
+        "introAr": "صُنعت قطع فيلين من أقمشة قطنية فاخرة مختارة بعناية. للحفاظ على مظهرها وجودتها، يرجى اتباع إرشادات الغسيل والعناية."
       }
     }
   },
   "categories": [
+    {
+      "id": "sweatshirts",
+      "nameEn": "Sweatshirts",
+      "nameAr": "سويت شيرت",
+      "slug": "sweatshirts"
+    },
+    {
+      "id": "sweatpants",
+      "nameEn": "Sweatpants",
+      "nameAr": "بناطيل سويت بانتس",
+      "slug": "sweatpants"
+    },
     {
       "id": "tees",
       "nameEn": "Tees",
@@ -76,6 +88,167 @@
     }
   ],
   "products": [
+    {
+      "id": "prod-double-zip",
+      "name": "VELEN Double-Zip Cropped Sweatshirt",
+      "category": "Sweatshirts",
+      "price": 39,
+      "comparePrice": 49,
+      "onSale": false,
+      "featured": true,
+      "image": "/assets/velen-product-showcase.png",
+      "images": [
+        "/assets/velen-product-showcase.png",
+        "/assets/velen-hero-winter2026.png",
+        "/assets/velen-boxy-black.jpg"
+      ],
+      "sizes": [
+        "XS",
+        "S",
+        "M",
+        "L",
+        "XL"
+      ],
+      "colors": [
+        {
+          "name": "Crimson Red",
+          "hex": "#8b1e2c",
+          "images": [
+            "/assets/velen-product-showcase.png"
+          ]
+        },
+        {
+          "name": "Black",
+          "hex": "#111111",
+          "images": [
+            "/assets/velen-hero-winter2026.png",
+            "/assets/velen-boxy-black.jpg"
+          ]
+        },
+        {
+          "name": "Heather Grey",
+          "hex": "#a8a8a8",
+          "images": [
+            "/assets/velen-hero-winter2026.png"
+          ]
+        }
+      ],
+      "stock": 60,
+      "sizeInventory": {
+        "XS": 10,
+        "S": 15,
+        "M": 15,
+        "L": 12,
+        "XL": 8
+      },
+      "description": "A relaxed-fit, slightly cropped sweatshirt designed for an effortless streetwear look. Featuring a unique two-way zipper that opens from both ends, a clean hood design and front pockets.\n\nFabric: 70% Premium Cotton",
+      "fabric": "Fabric: 70% Premium Cotton",
+      "createdAt": "2026-11-05T22:47:52.717Z"
+    },
+    {
+      "id": "prod-heavy-sweatpants",
+      "name": "Heavyweight Straight Sweatpants",
+      "category": "Sweatpants",
+      "price": 20,
+      "comparePrice": 28,
+      "onSale": false,
+      "featured": true,
+      "image": "/assets/velen-mobile-product.png",
+      "images": [
+        "/assets/velen-mobile-product.png",
+        "/assets/velen-hero-winter2026.png"
+      ],
+      "sizes": [
+        "XS",
+        "S",
+        "M",
+        "L",
+        "XL"
+      ],
+      "colors": [
+        {
+          "name": "Heather Grey",
+          "hex": "#a8a8a8",
+          "images": [
+            "/assets/velen-mobile-product.png"
+          ]
+        },
+        {
+          "name": "Black",
+          "hex": "#111111",
+          "images": [
+            "/assets/velen-hero-winter2026.png",
+            "/assets/velen-boxy-black.jpg"
+          ]
+        },
+        {
+          "name": "Crimson Red",
+          "hex": "#8b1e2c",
+          "images": [
+            "/assets/velen-product-showcase.png"
+          ]
+        }
+      ],
+      "stock": 50,
+      "sizeInventory": {
+        "XS": 8,
+        "S": 12,
+        "M": 14,
+        "L": 10,
+        "XL": 6
+      },
+      "description": "Stay warm and comfortable with our heavyweight cotton sweatpants. Designed with a relaxed streetwear fit, adjustable waistband and practical pockets. Perfect for everyday outfits and effortless styling.\n\nFabric: 70% Premium Cotton",
+      "fabric": "Fabric: 70% Premium Cotton",
+      "createdAt": "2026-11-05T22:47:52.719Z"
+    },
+    {
+      "id": "prod-raw-sweatpants",
+      "name": "Raw-Cut Wide Leg Sweatpants",
+      "category": "Sweatpants",
+      "price": 32,
+      "comparePrice": 40,
+      "onSale": false,
+      "featured": true,
+      "image": "/assets/velen-hero-winter2026.png",
+      "images": [
+        "/assets/velen-hero-winter2026.png",
+        "/assets/velen-mobile-product.png"
+      ],
+      "sizes": [
+        "XS",
+        "S",
+        "M",
+        "L",
+        "XL"
+      ],
+      "colors": [
+        {
+          "name": "Heather Grey",
+          "hex": "#a8a8a8",
+          "images": [
+            "/assets/velen-hero-winter2026.png"
+          ]
+        },
+        {
+          "name": "Black",
+          "hex": "#111111",
+          "images": [
+            "/assets/velen-boxy-black.jpg"
+          ]
+        }
+      ],
+      "stock": 40,
+      "sizeInventory": {
+        "XS": 6,
+        "S": 10,
+        "M": 12,
+        "L": 8,
+        "XL": 4
+      },
+      "description": "Wide-leg cut with clean raw hems. Relaxed streetwear fit with adjustable waistband.\n\nFabric: 70% Premium Cotton",
+      "fabric": "Fabric: 70% Premium Cotton",
+      "createdAt": "2026-11-05T22:47:52.719Z"
+    },
     {
       "id": "prod-1793258212025",
       "name": "VELEN Signature Heavyweight Hoodie - Charcoal",
@@ -118,8 +291,8 @@
         }
       ],
       "stock": 19,
-      "description": "Oversized luxury drape, double-layered hood without drawstrings, kangaroo pocket, ribbed cuffs. Made in Amman.",
-      "fabric": "450 GSM Heavy French Terry Cotton",
+      "description": "Oversized luxury drape, double-layered hood without drawstrings, kangaroo pocket, ribbed cuffs. Made in Amman.\n\nFabric: 70% Premium Cotton",
+      "fabric": "Fabric: 70% Premium Cotton",
       "createdAt": "2026-10-29T07:16:52.025Z",
       "sizeInventory": {
         "S": 4,
@@ -173,8 +346,8 @@
         }
       ],
       "stock": 23,
-      "description": "Designed for effortless everyday wear. Crafted from 100% premium Jordanian heavyweight cotton with contrast white ribbed collar and cuffs. Tailored streetwear relaxed fit.",
-      "fabric": "100% Heavyweight Cotton (260 GSM)",
+      "description": "Designed for effortless everyday wear. Crafted from 100% premium Jordanian heavyweight cotton with contrast white ribbed collar and cuffs. Tailored streetwear relaxed fit.\n\nFabric: 70% Premium Cotton",
+      "fabric": "Fabric: 70% Premium Cotton",
       "createdAt": "2026-10-28T10:00:00.000Z",
       "sizeInventory": {
         "S": 6,
@@ -228,8 +401,8 @@
         }
       ],
       "stock": 19,
-      "description": "Signature boxy cropped silhouette with dropped shoulders. Ultra-soft breathable cotton finish. High-density Velen branding tag at hem.",
-      "fabric": "100% Combed Heavy Cotton (250 GSM)",
+      "description": "Signature boxy cropped silhouette with dropped shoulders. Ultra-soft breathable cotton finish. High-density Velen branding tag at hem.\n\nFabric: 70% Premium Cotton",
+      "fabric": "Fabric: 70% Premium Cotton",
       "createdAt": "2026-10-28T10:05:00.000Z",
       "sizeInventory": {
         "S": 4,
@@ -281,8 +454,8 @@
         }
       ],
       "stock": 32,
-      "description": "Clean white base with contrast obsidian black ringer trims. Essential streetwear staple designed and manufactured locally in Amman, Jordan.",
-      "fabric": "100% Jordanian Cotton (260 GSM)",
+      "description": "Clean white base with contrast obsidian black ringer trims. Essential streetwear staple designed and manufactured locally in Amman, Jordan.\n\nFabric: 70% Premium Cotton",
+      "fabric": "Fabric: 70% Premium Cotton",
       "createdAt": "2026-10-28T10:10:00.000Z",
       "sizeInventory": {
         "S": 8,
@@ -334,8 +507,8 @@
         }
       ],
       "stock": 28,
-      "description": "Deep midnight black boxy cut tee. Heavyweight drape, reinforced double stitching, minimal understated luxury aesthetic.",
-      "fabric": "100% Combed Heavy Cotton (250 GSM)",
+      "description": "Deep midnight black boxy cut tee. Heavyweight drape, reinforced double stitching, minimal understated luxury aesthetic.\n\nFabric: 70% Premium Cotton",
+      "fabric": "Fabric: 70% Premium Cotton",
       "createdAt": "2026-10-28T10:15:00.000Z",
       "sizeInventory": {
         "S": 7,
@@ -546,18 +719,20 @@
     },
     "hero": {
       "enabled": true,
-      "bgImage": "/uploads/velen-1793836148989-805155872.jpg",
-      "brandTitle": "VELEN",
-      "mainHeading": "Premium Everyday Essentials. Made in Jordan.",
-      "subHeading": "CLEAN FITS. PREMIUM FEEL. BUILT FOR EVERYDAY WEAR.",
+      "bgImage": "/assets/velen-hero-winter2026.png",
+      "badge": "NEW DROP",
+      "brandTitle": "WINTER COLLECTION 2026",
+      "mainHeading": "WINTER COLLECTION 2026",
+      "subHeading": "Premium streetwear essentials for everyday wear.",
       "ctaText": "SHOP THE COLLECTION",
       "ctaLink": "#collection"
     },
     "valueProps": {
       "enabled": true,
-      "prop1": "توصيل مجاني في عمّان وبدينار لكافة المحافظات",
-      "prop2": "قطن أردني فاخر 260 GSM معالج ومثبت",
-      "prop3": "تبديل فوري للمقاس عند باب البيت"
+      "prop1": "Fast Delivery in Jordan",
+      "prop2": "Premium Quality",
+      "prop3": "Easy Returns",
+      "prop4": "Secure Payment"
     },
     "sectionsOrder": [
       "hero",
@@ -574,8 +749,8 @@
       "about": true
     },
     "collectionSection": {
-      "subtitle": "AUTUMN / ESSENTIALS 2026",
-      "title": "THE COLLECTION"
+      "title": "THE COLLECTION",
+      "subtitle": "WINTER 2026"
     },
     "communitySection": {
       "title": "COMMUNITY WEARS VELEN",

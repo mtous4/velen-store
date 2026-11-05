@@ -196,17 +196,17 @@ document.addEventListener('DOMContentLoaded', () => {
       commCaptionPh: 'شاركنا رأيك في المقاس أو القطعة أو ستايلك!',
       commSubmitBtn: 'نشر في المجتمع الآن',
       // Policy View
-      breadcrumbShipping: 'الشحن والتبديل',
-      policyShippingTitle: 'سياسة الشحن والتبديل',
-      policyShippingSub: 'معاينة المقاس عند الاستلام • توصيل مجاني في عمّان • 1 دينار للمحافظات',
-      shippingBadgeRates: 'توصيل سريع وموثوق',
-      policyDeliveryHeading: 'مواعيد وأسعار التوصيل',
-      shippingBadgeExchange: 'بدون أي مخاطرة',
-      policyExchangeHeading: 'التبديل الفوري عند باب البيت',
-      shippingBadgePayment: 'مرونة الدفع',
-      policyPaymentHeading: 'خيارات الدفع المتاحة',
+      breadcrumbShipping: 'الشحن وسياسة الإرجاع',
+      policyShippingTitle: 'سياسة الشحن والتبديل المعتمدة',
+      policyShippingSub: 'توصيل مجاني في عمّان (خلال 24 ساعة) • 1 دينار للمحافظات (خلال 48 ساعة) • إرجاع وتبديل في حال وجود خلل مصنعي أو تلف فقط',
+      shippingBadgeRates: 'توصيل سريع ودقيق',
+      policyDeliveryHeading: 'مواعيد ورسوم التوصيل (عمّان حتى 24 ساعة • المحافظات حتى 48 ساعة)',
+      shippingBadgeExchange: 'ضمان الجودة والتصنيع',
+      policyExchangeHeading: 'سياسة الإرجاع والتبديل (للعيوب المصنعية والتلف فقط)',
+      shippingBadgePayment: 'طرق الدفع المعتمدة',
+      policyPaymentHeading: 'خيارات الدفع المعتمدة (الدفع عند الاستلام COD و CliQ فقط)',
       policyContactHeading: 'هل تحتاج مساعدة في طلبك؟',
-      policyContactText: 'فريق فيلين متواجد يومياً عبر واتساب لمساعدتك في اختيار المقاس أو تعديل العنوان فوراً.',
+      policyContactText: 'فريق VELEN متواجد يومياً عبر واتساب لمراجعة أي استفسار أو بلاغ عن خلل مصنعي وتقديم المساعدة فوراً.',
       // Care View
       breadcrumbCare: 'دليل العناية بالملابس',
       carePageTitle: 'دليل العناية بالملابس والأقمشة',
@@ -397,17 +397,17 @@ document.addEventListener('DOMContentLoaded', () => {
       commCaptionPh: 'Tell us how you styled it, fit details, or thoughts!',
       commSubmitBtn: 'Post to Community Now',
       // Policy View
-      breadcrumbShipping: 'Shipping & Policy',
-      policyShippingTitle: 'SHIPPING & EXCHANGE POLICY',
-      policyShippingSub: 'DOORSTEP SIZE INSPECTION • FREE AMMAN DELIVERY • 1 JD GOVERNORATES',
-      shippingBadgeRates: 'FAST & RELIABLE',
-      policyDeliveryHeading: 'Delivery Timeline & Rates',
-      shippingBadgeExchange: 'ZERO RISK',
-      policyExchangeHeading: 'Instant Doorstep Size Exchange',
-      shippingBadgePayment: 'PAYMENT FLEXIBILITY',
-      policyPaymentHeading: 'Flexible Payment Options',
+      breadcrumbShipping: 'Shipping & Exchange Policy',
+      policyShippingTitle: 'STANDARDIZED SHIPPING & POLICY',
+      policyShippingSub: 'FREE AMMAN DELIVERY (UP TO 24H) • 1 JD NATIONWIDE (UP TO 48H) • DEFECT & DAMAGE ONLY RETURNS',
+      shippingBadgeRates: 'ACCURATE DELIVERY',
+      policyDeliveryHeading: 'Delivery Timeline & Rates (Amman: Up to 24h • Nationwide: Up to 48h)',
+      shippingBadgeExchange: 'QUALITY GUARANTEE',
+      policyExchangeHeading: 'Exchange & Return Policy (Manufacturing Defects & Damaged Items Only)',
+      shippingBadgePayment: 'APPROVED PAYMENT METHODS',
+      policyPaymentHeading: 'Approved Payment Options (Cash on Delivery & CliQ Only)',
       policyContactHeading: 'Need Help with Your Order?',
-      policyContactText: 'Our team in Amman is available on WhatsApp daily for instant size recommendations, address adjustments, or order questions.',
+      policyContactText: 'Our team in Amman is available on WhatsApp daily for order assistance, photo review of defects, or address updates.',
       // Care View
       breadcrumbCare: 'Fabric Care Guide',
       carePageTitle: 'FABRIC & GARMENT CARE GUIDE',
@@ -689,47 +689,82 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // Render Featured Drops on the Home Page
-  function renderFeaturedProducts() {
+  // Render Featured Drops on the Home Page (Matching Image 2)
+  let activeFeaturedCategory = 'all';
+  function renderFeaturedProducts(filterCat) {
+    if (typeof filterCat === 'string') {
+      activeFeaturedCategory = filterCat;
+    }
     const grid = document.getElementById('homeFeaturedGrid');
     if (!grid) return;
     if (!state.products || state.products.length === 0) {
-      grid.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; color: #888; padding: 30px;">Loading featured pieces...</div>';
+      grid.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; color: #888; padding: 40px;">Loading featured collection...</div>';
       return;
     }
 
-    const featured = state.products.slice(0, 4);
-    const isAr = state.activeLang === 'ar';
-    const dict = translations[state.activeLang] || translations.en;
+    let filtered = state.products;
+    if (activeFeaturedCategory !== 'all') {
+      filtered = state.products.filter(p => {
+        const cat = (p.category || '').toLowerCase();
+        const target = activeFeaturedCategory.toLowerCase();
+        return cat.includes(target) || (p.name && p.name.toLowerCase().includes(target));
+      });
+    }
 
-    grid.innerHTML = featured.map(product => {
+    // Limit to 4 pieces for clean grid display + editorial card
+    const displayList = filtered.slice(0, 4);
+    const isAr = state.activeLang === 'ar';
+
+    const cardsHtml = displayList.map(product => {
       const priceFormatted = Number(product.price).toFixed(3) + ' JOD';
       const comparePriceFormatted = product.comparePrice ? Number(product.comparePrice).toFixed(3) + ' JOD' : null;
       const isSoldOut = typeof product.stock !== 'undefined' && product.stock !== null && Number(product.stock) <= 0;
       const mainImg = product.image || (product.images && product.images[0]) || '/assets/velen-boxy-black.jpg';
+      const defaultColor = (product.colors && product.colors[0]?.name) || '';
 
       return `
-        <div class="product-card" data-product-id="${product.id}">
-          <div class="product-img-wrapper" onclick="window.velenApp.openProductModal('${product.id}')">
-            ${isSoldOut ? `<span class="badge-soldout" style="position:absolute; top:12px; right:12px; background:rgba(231,76,60,0.92); color:#fff; font-size:11px; font-weight:700; padding:4px 8px; border-radius:4px; z-index:2; letter-spacing:0.5px;">${isAr ? 'نَفِذَت الكمية' : 'SOLD OUT'}</span>` : (product.onSale ? '<span class="badge-sale">SALE</span>' : '')}
+        <div class="product-card" data-product-id="${product.id}" onclick="window.velenApp.openProductPage('${product.id}')">
+          <div class="product-img-wrapper">
+            <span class="product-card-badge-new">NEW</span>
+            <button type="button" class="product-card-fav-btn" aria-label="Add ${product.name} to wishlist" onclick="event.stopPropagation(); this.classList.toggle('active');">
+              <i class="fa-regular fa-heart"></i>
+            </button>
             <img src="${mainImg}" alt="${product.name}" class="product-img" loading="lazy" onerror="this.onerror=null; this.src='/assets/velen-boxy-black.jpg';">
             ${!isSoldOut ? `
-              <button class="btn-floating-bag" onclick="event.stopPropagation(); window.velenApp.quickAddToCart('${product.id}')" title="${isAr ? 'اختيار المقاس واللون' : 'Select Size & Color'}" aria-label="Select Size & Color">
-                <i class="fa-solid fa-cart-plus"></i>
+              <button type="button" class="btn-floating-bag" onclick="event.stopPropagation(); window.velenApp.openProductPage('${product.id}')" aria-label="Select size and add ${product.name} to bag" title="${isAr ? 'اختيار المقاس واللون' : 'Select Size & Color'}">
+                <i class="fa-solid fa-bag-shopping"></i>
               </button>
-            ` : ''}
+            ` : `<span class="badge-soldout">${isAr ? 'نَفِذَت الكمية' : 'SOLD OUT'}</span>`}
           </div>
-          <div class="product-info" onclick="window.velenApp.openProductModal('${product.id}')">
+          <div class="product-info">
             <h3 class="product-title">${product.name}</h3>
+            ${defaultColor ? `<span class="product-card-color-sub">${defaultColor}</span>` : ''}
             <div class="price-row">
               <span class="current-price">${priceFormatted}</span>
               ${comparePriceFormatted ? `<span class="strike-price">${comparePriceFormatted}</span>` : ''}
             </div>
-            ${isSoldOut ? `<span style="font-size:11px; color:#e74c3c; font-weight:600; display:block; margin-top:3px;">${isAr ? 'غير متوفر حالياً بالمخزون' : 'Currently Out of Stock'}</span>` : ''}
+            ${isSoldOut ? `<span class="stock-note-out">${isAr ? 'غير متوفر بالمخزون' : 'Out of Stock'}</span>` : ''}
           </div>
         </div>
       `;
     }).join('');
+
+    // Editorial Card matching Image 2 "THE DETAILS MATTER"
+    const editorialHtml = `
+      <div class="product-editorial-card" onclick="window.velenApp.showView('shop')">
+        <div class="editorial-media">
+          <img src="/assets/velen-product-showcase.png" alt="VELEN - The Details Matter" class="editorial-cover-img" onerror="this.src='/assets/velen-hero-winter2026.png'">
+          <div class="editorial-content-box">
+            <h3 class="editorial-title">THE DETAILS<br>MATTER</h3>
+            <button type="button" class="editorial-arrow-btn" aria-label="Explore the collection" title="View Collection">
+              <i class="fa-solid fa-arrow-right"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+
+    grid.innerHTML = cardsHtml + editorialHtml;
   }
 
   // Live Order Tracking Lookup by Phone Number
@@ -1746,6 +1781,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  let currentProductImageIdx = 0;
+
   function renderProductPageContent(product) {
     const container = document.getElementById('productPageDetails');
     if (!container || !product) return;
@@ -1777,156 +1814,243 @@ document.addEventListener('DOMContentLoaded', () => {
       ? state.selectedColor.images
       : (Array.isArray(product.images) && product.images.length > 0 ? product.images : [product.image || '/assets/velen-logo.jpg']);
 
+    currentProductImageIdx = 0;
+
     container.innerHTML = `
-      <div class="prod-page-grid">
-        <div class="prod-page-gallery">
-          <div class="gallery-main-frame">
-            <img id="pageProductMainImg" src="${currentImages[0]}" alt="${product.name}" class="prod-page-main-img" onerror="this.src='/assets/velen-logo.jpg'">
+      <!-- Breadcrumb Bar matching Image 1 & 3 -->
+      <div class="product-page-breadcrumb" aria-label="Breadcrumb">
+        <span class="crumb-link" onclick="window.velenApp.closeProductPage()">${isAr ? 'المتجر' : 'SHOP'}</span>
+        <span class="crumb-sep">»</span>
+        <span class="crumb-link" onclick="window.velenApp.closeProductPage()">${(product.category || 'SWEATSHIRTS').toUpperCase()}</span>
+        <span class="crumb-sep">»</span>
+        <span class="crumb-active">${product.name.toUpperCase()}</span>
+      </div>
+
+      <!-- Main Desktop & Mobile Product Layout -->
+      <div class="product-page-main-layout">
+        <!-- Left: Gallery Section -->
+        <div class="product-gallery-section">
+          <!-- Desktop Vertical Thumbnail Strip (Image 1) -->
+          <div class="product-vertical-thumbs" id="productVerticalThumbs">
+            ${currentImages.slice(0, 6).map((imgUrl, i) => `
+              <button type="button" class="vert-thumb-btn ${i === 0 ? 'active' : ''}" onclick="window.velenApp.switchProductPageImage('${imgUrl}', this)" aria-label="Thumbnail ${i + 1}">
+                <img src="${imgUrl}" alt="${product.name} view ${i + 1}" loading="lazy" onerror="this.src='/assets/velen-logo.jpg'">
+              </button>
+            `).join('')}
           </div>
-          <div class="prod-page-thumbs-strip" id="pageProductThumbsContainer" style="${currentImages.length > 1 ? 'display:flex;' : 'display:none;'} gap:8px; margin-top:12px; overflow-x:auto; padding-bottom:4px;">
+
+          <!-- Main Image Showcase Frame -->
+          <div class="product-main-showcase">
+            <!-- Brand Watermark top-left (Image 1) -->
+            <div class="product-brand-watermark">
+              <span class="watermark-v">V</span>
+              <span class="watermark-velen">VELEN</span>
+            </div>
+
+            <!-- Mobile Carousel Counter (Image 3: "1 / 7") -->
+            <div class="mobile-carousel-counter" id="mobileCarouselCounter">
+              <span id="pageCarouselIndex">1</span> / <span id="pageCarouselTotal">${currentImages.length}</span>
+            </div>
+
+            <!-- Mobile Zoom Icon top-right (Image 3) -->
+            <button type="button" class="mobile-zoom-btn" onclick="window.velenApp.zoomProductImage()" aria-label="Zoom image">
+              <i class="fa-solid fa-magnifying-glass-plus"></i>
+            </button>
+
+            <!-- Main Display Image -->
+            <img id="pageProductMainImg" src="${currentImages[0]}" alt="${product.name}" class="product-hero-image" onerror="this.src='/assets/velen-logo.jpg'">
+
+            <!-- Desktop Expand button bottom-right (Image 1) -->
+            <button type="button" class="desktop-expand-btn" onclick="window.velenApp.zoomProductImage()" aria-label="Expand image view" title="Expand view">
+              <i class="fa-solid fa-up-right-and-down-left-from-center"></i>
+            </button>
+
+            <!-- Mobile Navigation Arrows (Image 3) -->
+            <button type="button" class="carousel-arrow-btn prev" onclick="window.velenApp.prevProductPageImage()" aria-label="Previous image">
+              <i class="fa-solid fa-chevron-left"></i>
+            </button>
+            <button type="button" class="carousel-arrow-btn next" onclick="window.velenApp.nextProductPageImage()" aria-label="Next image">
+              <i class="fa-solid fa-chevron-right"></i>
+            </button>
+
+            <!-- Mobile Model Info Pill (Image 3: "Model: 186 cm, 77 kg | Wearing Size: L") -->
+            <div class="product-model-stats-pill">
+              <i class="fa-regular fa-user"></i>
+              <span>Model: 186 cm, 77 kg | Wearing Size: L</span>
+            </div>
+          </div>
+
+          <!-- Mobile Horizontal Thumbnail Strip (Image 3) -->
+          <div class="product-mobile-thumbs-strip" id="productMobileThumbs">
             ${currentImages.map((imgUrl, i) => `
-              <button type="button" class="prod-thumb-btn ${i === 0 ? 'active' : ''}" onclick="window.velenApp.switchProductPageImage('${imgUrl}', this)" style="width:62px; height:62px; border-radius:8px; overflow:hidden; border:${i === 0 ? '2px solid #e5b95f' : '1.5px solid #333'}; background:#111; padding:0; cursor:pointer; flex-shrink:0;">
-                <img src="${imgUrl}" alt="${product.name} ${i + 1}" style="width:100%; height:100%; object-fit:cover;" onerror="this.src='/assets/velen-logo.jpg'">
+              <button type="button" class="mobile-thumb-item ${i === 0 ? 'active' : ''}" onclick="window.velenApp.switchProductPageImage('${imgUrl}', this)" aria-label="Image ${i + 1}">
+                <img src="${imgUrl}" alt="${product.name} ${i + 1}" loading="lazy" onerror="this.src='/assets/velen-logo.jpg'">
               </button>
             `).join('')}
           </div>
         </div>
-        <div class="prod-page-info">
-          <span class="prod-page-cat">${product.category || 'ESSENTIALS'} • MADE IN JORDAN</span>
-          <h1 class="prod-page-title">${product.name}</h1>
-          <div class="prod-page-price-row">
-            <span class="prod-page-price-current">${priceFormatted}</span>
-            ${comparePriceFormatted ? `<span class="prod-page-price-strike">${comparePriceFormatted}</span>` : ''}
+
+        <!-- Right: Details Section -->
+        <div class="product-details-section">
+          <div class="product-subtitle-tag">${(product.category || 'SWEATSHIRTS').toUpperCase()} » WINTER 2026</div>
+          <h1 class="product-main-title">${product.name}</h1>
+          <div class="product-price-box">
+            <span class="price-val">${priceFormatted}</span>
+            ${comparePriceFormatted ? `<span class="strike-val">${comparePriceFormatted}</span>` : ''}
           </div>
 
-          <!-- Color Swatches (Shown when 2 or more colors exist) -->
-          ${colors.length > 1 ? `
-            <div class="prod-colors-section">
-              <div class="prod-colors-header">
-                <span class="prod-colors-label">${isAr ? 'اللون المختار:' : 'Selected Color:'} <strong id="prodSelectedColorName">${state.selectedColor.name}</strong></span>
-                <span class="prod-color-hint">${isAr ? `${colors.length} ألوان متوفرة` : `${colors.length} colors available`}</span>
-              </div>
-              <div class="prod-color-swatches" id="pageProductColorSwatches">
-                ${colors.map((c, i) => {
-                  const isLight = c.hex && ['#fff', '#ffffff', '#f5f5f5', '#eee', '#e8e8e8', '#fafafa'].includes(c.hex.toLowerCase());
-                  const isSelected = i === activeColorIdx;
-                  return `
-                    <button type="button" 
-                      class="color-swatch-btn ${isLight ? 'light-swatch' : ''} ${isSelected ? 'active' : ''}" 
-                      style="background-color: ${c.hex || '#111'};"
-                      title="${c.name}"
-                      aria-label="${c.name}"
-                      onclick="window.velenApp.selectProductColor(${i})">
-                      <i class="fa-solid fa-check swatch-check" style="color: ${isLight ? '#000' : '#fff'};"></i>
-                    </button>
-                  `;
-                }).join('')}
-              </div>
+          <!-- Color Selector matching Image 1 & 3 (Circles with labels below) -->
+          <div class="product-color-group">
+            <div class="color-head-label">
+              <span>Color: <strong id="prodSelectedColorName">${state.selectedColor.name}</strong></span>
             </div>
-          ` : ''}
-
-          <!-- Prominent Size Selection Buttons -->
-          <div class="prod-size-section">
-            <div class="prod-size-header">
-              <span class="prod-size-label">${dict.selectSize || 'Select Size:'} <strong id="prodSelectedSizeLabel">${state.selectedSize}</strong></span>
-              <span class="prod-fit-tag">${dict.boxyRelaxedFit || '(Boxy Relaxed Fit)'}</span>
-            </div>
-            <div class="prod-size-boxes" id="pageProductSizeBoxes">
-              <!-- Rendered dynamically for active color -->
+            <div class="color-swatches-row" id="pageProductColorSwatches">
+              ${colors.map((c, i) => {
+                const isSelected = i === activeColorIdx;
+                return `
+                  <button type="button" class="color-swatch-circle-wrap ${isSelected ? 'active' : ''}" onclick="window.velenApp.selectProductColor(${i})" aria-label="Select color ${c.name}">
+                    <span class="swatch-circle-dot" style="background-color: ${c.hex || '#111'};"></span>
+                    <span class="swatch-circle-text">${c.name}</span>
+                  </button>
+                `;
+              }).join('')}
             </div>
           </div>
 
-          <!-- Dual CTAs: Add to Bag AND Buy Now Direct -->
-          <div class="prod-page-cta-row">
-            <button type="button" class="btn-add-to-bag-page" id="btnPageAddToBag" onclick="window.velenApp.addCurrentModalToCart()">
+          <!-- Size Selector with [Find My Size] pill button (Image 1 & 3) -->
+          <div class="product-size-group">
+            <div class="size-head-row">
+              <span class="size-head-text">Size: <strong id="prodSelectedSizeLabel">${state.selectedSize}</strong></span>
+              <button type="button" class="btn-find-my-size-pill" onclick="window.velenApp.openSizeAssistant()" aria-label="Open VELEN Size Assistant">
+                <i class="fa-solid fa-ruler-horizontal"></i>
+                <span>Find My Size</span>
+              </button>
+            </div>
+            <div class="size-boxes-row" id="pageProductSizeBoxes">
+              <!-- Rendered dynamically -->
+            </div>
+          </div>
+
+          <!-- Dual CTAs: ADD TO BAG & BUY NOW (Image 1 & 3) -->
+          <div class="product-cta-dual-row">
+            <button type="button" class="btn-add-to-bag-primary" id="btnPageAddToBag" onclick="window.velenApp.addCurrentModalToCart()" aria-label="Add ${product.name} to shopping bag">
               <i class="fa-solid fa-bag-shopping"></i>
-              <span>${dict.addToBag}</span>
+              <span>ADD TO BAG</span>
             </button>
-            <button type="button" class="btn-buy-now-direct" id="btnPageBuyNow" onclick="window.velenApp.buyNowDirect()">
+            <button type="button" class="btn-buy-now-primary" id="btnPageBuyNow" onclick="window.velenApp.buyNowDirect()" aria-label="Buy ${product.name} now">
               <i class="fa-solid fa-bolt"></i>
-              <span>${isAr ? 'اشتريها الآن ⚡' : 'Buy Now ⚡'}</span>
+              <span>BUY NOW</span>
             </button>
           </div>
 
-          <div class="prod-page-specs">
-            <div class="spec-item">
-              <strong>${dict.fabricDetails || 'Fabric Details:'}</strong>
-              <p>${product.fabric || (isAr ? '100% قطن أردني معالج نخب أول (260 GSM)' : '100% Luxury Combed Heavyweight Cotton (260 GSM)')}</p>
+          <!-- Feature Icons Row (Image 3: Heavyweight Cotton, Breathable & Warm, Practical Pockets, Relaxed Straight Fit) -->
+          <div class="product-features-pills-row">
+            <div class="feat-pill-item">
+              <i class="fa-solid fa-leaf"></i>
+              <span>Heavyweight Cotton</span>
             </div>
-            <div class="spec-item">
-              <strong>${dict.description || 'Description:'}</strong>
-              <p>${product.description || (isAr ? 'تصميم ستريت وير يومي يجمع بين الراحة والأناقة المينيمالية مع خياطة متينة.' : 'Everyday luxury streetwear crafted with precision fits and lasting durability.')}</p>
+            <div class="feat-pill-item">
+              <i class="fa-solid fa-wind"></i>
+              <span>Breathable & Warm</span>
             </div>
-            <div class="spec-delivery-perk">
-              <i class="fa-solid fa-truck-fast"></i>
-              <span>${dict.freeDeliveryAmman || 'Fast & Free Delivery in Amman • 1 JD Jordan-wide'}</span>
+            <div class="feat-pill-item">
+              <i class="fa-solid fa-box-archive"></i>
+              <span>Practical Pockets</span>
+            </div>
+            <div class="feat-pill-item">
+              <i class="fa-solid fa-arrows-up-down-left-right"></i>
+              <span>Relaxed Straight Fit</span>
+            </div>
+          </div>
+
+          <!-- Description paragraph with standardized 70% Premium Cotton (No polyester) -->
+          <div class="product-description-block">
+            <p>${product.description || 'A relaxed streetwear essential crafted from luxury heavyweight cotton. Fabric: 70% Premium Cotton'}</p>
+          </div>
+
+          <!-- Collapsible Accordions (Image 1 & 3) -->
+          <div class="product-accordions-wrap">
+            <!-- Accordion 1: Product Details -->
+            <div class="product-accordion-item">
+              <button type="button" class="accordion-trigger" onclick="window.velenApp.toggleAccordion(this)" aria-expanded="false">
+                <span>PRODUCT DETAILS</span>
+                <i class="fa-solid fa-chevron-down accordion-arrow"></i>
+              </button>
+              <div class="accordion-body">
+                <p>• <strong>Fabric:</strong> 70% Premium Cotton (Heavyweight combed weave for warmth & longevity).</p>
+                <p>• <strong>Hardware:</strong> Custom two-way metal zipper engineered for seamless styling from both ends.</p>
+                <p>• <strong>Design:</strong> Clean hood construction, dropped shoulders, and deep front hand pockets.</p>
+                <p>• <strong>Craftsmanship:</strong> Designed and finished with pride in Amman, Jordan.</p>
+              </div>
+            </div>
+
+            <!-- Accordion 2: Size & Fit -->
+            <div class="product-accordion-item">
+              <button type="button" class="accordion-trigger" onclick="window.velenApp.toggleAccordion(this)" aria-expanded="false">
+                <span>SIZE & FIT</span>
+                <i class="fa-solid fa-chevron-down accordion-arrow"></i>
+              </button>
+              <div class="accordion-body">
+                <p>• <strong>Model Info:</strong> Height 186 cm, Weight 77 kg — Wearing Size L.</p>
+                <p>• <strong>Silhouette:</strong> Relaxed boxy streetwear fit designed for everyday comfort.</p>
+                <p>• <strong>Recommendation:</strong> True to size for a relaxed drape. Click <em>Find My Size</em> above for precision sizing.</p>
+              </div>
+            </div>
+
+            <!-- Accordion 3: Delivery & Returns (Standardized Policy) -->
+            <div class="product-accordion-item">
+              <button type="button" class="accordion-trigger" onclick="window.velenApp.toggleAccordion(this)" aria-expanded="false">
+                <span>DELIVERY & RETURNS</span>
+                <i class="fa-solid fa-chevron-down accordion-arrow"></i>
+              </button>
+              <div class="accordion-body">
+                <p>• <strong>Delivery in Amman:</strong> Free delivery (takes up to 24 hours).</p>
+                <p>• <strong>Delivery outside Amman:</strong> 1 JOD delivery fee (takes up to 48 hours).</p>
+                <p>• <strong>Payment Methods:</strong> Cash on Delivery (COD) and instant CliQ only.</p>
+                <p>• <strong>Exchange & Return Policy:</strong> Accepted only for manufacturing defects, damaged items, or incorrect product received. Contact VELEN with photos for instant assistance.</p>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Temu-Style Product Customer Reviews Section (Separate from Velen Community) -->
-      <section class="prod-reviews-section" id="productReviewsSection">
-        <div class="prod-reviews-header">
-          <div class="reviews-header-top">
-            <div>
-              <h2 class="reviews-main-title">
-                ${isAr ? 'تقييمات وآراء المشترين الموثقة' : 'Customer Reviews & Ratings'}
-                <span class="temu-verified-badge"><i class="fa-solid fa-circle-check"></i> ${isAr ? 'مشترون موثقون' : 'Verified Purchases'}</span>
-              </h2>
-              <p class="reviews-sub-title">${isAr ? 'تقييمات حقيقية من زبائن اشتروا هذه القطعة وجربوها' : 'Real reviews from customers who purchased and wore this piece'}</p>
+      <!-- Bottom Visual Gallery Shelves Grouped by Color (Image 1) -->
+      <div class="product-color-shelves-container">
+        ${colors.map((col, cIdx) => {
+          const colImgs = (col.images && col.images.length > 0) ? col.images : [currentImages[0]];
+          return `
+            <div class="color-shelf-row">
+              <div class="color-shelf-header">
+                <span class="color-shelf-pill-tag">${col.name}</span>
+              </div>
+              <div class="color-shelf-tiles">
+                ${colImgs.slice(0, 6).map((imgUrl, i) => `
+                  <div class="shelf-tile-item" onclick="window.velenApp.selectProductColor(${cIdx}); window.velenApp.switchProductPageImage('${imgUrl}')" role="button" tabindex="0" aria-label="View ${col.name} angle ${i + 1}">
+                    <img src="${imgUrl}" alt="${product.name} - ${col.name} ${i + 1}" loading="lazy" onerror="this.src='/assets/velen-logo.jpg'">
+                  </div>
+                `).join('')}
+              </div>
             </div>
-            <button type="button" class="btn-write-review" onclick="window.velenApp.toggleReviewForm('${product.id}')">
-              <i class="fa-solid fa-pen"></i> ${isAr ? 'كتابة تقييم للقطعة' : 'Write a Review'}
-            </button>
+          `;
+        }).join('')}
+      </div>
+
+      <!-- Customer Reviews Section (Clean & Verified - No Fake Bars/Percentages) -->
+      <section class="prod-reviews-clean-section" id="productReviewsSection">
+        <div class="reviews-clean-head">
+          <div>
+            <h2 class="reviews-clean-title">
+              ${isAr ? 'تقييمات وآراء العملاء' : 'Customer Reviews & Feedback'}
+              <span class="verified-tag"><i class="fa-solid fa-circle-check"></i> ${isAr ? 'تقييمات موثقة' : 'Verified Reviews'}</span>
+            </h2>
+            <p class="reviews-clean-desc">${isAr ? 'آراء المشترين الحقيقية حول جودة القماش والمقاس' : 'Authentic feedback on Premium Cotton fabric and streetwear fit'}</p>
           </div>
-
-          <!-- Overall Score & Rating Stats (Temu Style) -->
-          <div class="reviews-score-card">
-            <div class="score-big-box">
-              <div class="score-num">4.9</div>
-              <div class="score-stars">★★★★★</div>
-              <div class="score-count" id="prodReviewsCountLabel">${isAr ? '48 تقييم موثق' : '48 verified ratings'}</div>
-            </div>
-
-            <div class="score-bars-box">
-              <div class="score-bar-row">
-                <span>5 ★</span>
-                <div class="bar-track"><div class="bar-fill" style="width: 94%;"></div></div>
-                <span class="bar-pct">94%</span>
-              </div>
-              <div class="score-bar-row">
-                <span>4 ★</span>
-                <div class="bar-track"><div class="bar-fill" style="width: 6%;"></div></div>
-                <span class="bar-pct">6%</span>
-              </div>
-              <div class="score-bar-row">
-                <span>3 ★</span>
-                <div class="bar-track"><div class="bar-fill" style="width: 0%;"></div></div>
-                <span class="bar-pct">0%</span>
-              </div>
-            </div>
-
-            <div class="score-consensus-box">
-              <div class="consensus-item">
-                <i class="fa-solid fa-thumbs-up"></i>
-                <div>
-                  <strong>${isAr ? '98% قالوا: المقاس مطابق تماماً' : '98% say: True to size'}</strong>
-                  <small>${isAr ? 'قصّة بوكسي مريحة مناسبة للارتداء اليومي' : 'Comfortable boxy everyday fit'}</small>
-                </div>
-              </div>
-              <div class="consensus-item">
-                <i class="fa-solid fa-shield-halved"></i>
-                <div>
-                  <strong>${isAr ? '99% راضون عن ثقل وجودة القماش 260 GSM' : '99% satisfied with 260 GSM cotton quality'}</strong>
-                  <small>${isAr ? 'قطن أردني محبوك لا ينكمش' : 'Combed durable heavyweight cotton'}</small>
-                </div>
-              </div>
-            </div>
-          </div>
+          <button type="button" class="btn-write-review-clean" onclick="window.velenApp.toggleReviewForm('${product.id}')" aria-label="Write a review">
+            <i class="fa-solid fa-pen"></i> ${isAr ? 'كتابة تقييم' : 'Write a Review'}
+          </button>
         </div>
 
-        <!-- Write Review Form (Collapsible) -->
+        <!-- Collapsible Review Form -->
         <div class="write-review-drawer" id="writeReviewFormWrap" style="display:none;">
           <form id="productReviewForm" onsubmit="window.velenApp.submitProductReview(event, '${product.id}')">
             <h4>${isAr ? 'إضافة تقييم جديد لهذه القطعة' : 'Add your review for this piece'}</h4>
@@ -1950,21 +2074,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 </select>
               </div>
               <div class="form-group">
-                <label>${isAr ? 'رأيك بملاءمة المقاس (Fit Feedback)' : 'Fit Consensus'}</label>
+                <label>${isAr ? 'رأيك بملاءمة المقاس' : 'Fit Feedback'}</label>
                 <select id="revFit">
-                  <option value="True to size (مطابق للمقاس تماماً)">${isAr ? 'مطابق للمقاس تماماً (True to size)' : 'True to size'}</option>
-                  <option value="Runs slightly large (أكبر قليلاً)">${isAr ? 'أكبر قليلاً (Runs slightly large)' : 'Runs slightly large'}</option>
-                  <option value="Runs slightly small (أصغر قليلاً)">${isAr ? 'أصغر قليلاً (Runs slightly small)' : 'Runs slightly small'}</option>
+                  <option value="True to size">${isAr ? 'مطابق للمقاس تماماً' : 'True to size'}</option>
+                  <option value="Runs slightly large">${isAr ? 'أكبر قليلاً' : 'Runs slightly large'}</option>
+                  <option value="Runs slightly small">${isAr ? 'أصغر قليلاً' : 'Runs slightly small'}</option>
                 </select>
               </div>
             </div>
             <div class="form-group" style="margin-top:12px;">
-              <label>${isAr ? 'تجربتك مع القطعة والقماش *' : 'Your Review & Quality Experience *'}</label>
-              <textarea id="revComment" rows="3" required placeholder="${isAr ? 'صف ملمس القماش، المقاس، وسرعة التوصيل...' : 'Describe fabric quality, fit, and delivery experience...'}"></textarea>
+              <label>${isAr ? 'تجربتك مع خامة القطن والمقاس *' : 'Your Experience with Fabric & Fit *'}</label>
+              <textarea id="revComment" rows="3" required placeholder="${isAr ? 'صف ملمس القماش، ثقل القطن، وسرعة التوصيل...' : 'Describe fabric quality, fit, and delivery experience...'}"></textarea>
             </div>
             <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:12px;">
               <button type="button" class="btn-cancel-review" onclick="window.velenApp.toggleReviewForm('${product.id}')">${isAr ? 'إلغاء' : 'Cancel'}</button>
-              <button type="submit" class="btn-submit-review" id="btnSubmitReview">${isAr ? 'نشر التقييم فوراً' : 'Submit Review'}</button>
+              <button type="submit" class="btn-submit-review" id="btnSubmitReview">${isAr ? 'نشر التقييم' : 'Submit Review'}</button>
             </div>
           </form>
         </div>
@@ -3223,11 +3347,66 @@ document.addEventListener('DOMContentLoaded', () => {
       unlockBodyScroll();
     });
 
-    // Cart Drawer
+    // Cart Drawer with Critical Close Controls
     document.getElementById('cartToggleBtn')?.addEventListener('click', openCart);
     document.getElementById('cartCloseBtn')?.addEventListener('click', closeCart);
+    document.getElementById('cartContinueShoppingBtn')?.addEventListener('click', closeCart);
     cartOverlay?.addEventListener('click', closeCart);
     document.getElementById('openCheckoutBtn')?.addEventListener('click', openCheckout);
+
+    // Global Escape Key Listener for Modals & Drawers
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        if (cartDrawer && cartDrawer.classList.contains('open')) closeCart();
+        closeSizeAssistant();
+        closeProductModal();
+        closeCheckout();
+        if (searchModal && searchModal.classList.contains('active')) {
+          searchModal.classList.remove('active');
+          unlockBodyScroll();
+        }
+        if (communityModal && communityModal.classList.contains('active')) {
+          communityModal.classList.remove('active');
+          unlockBodyScroll();
+        }
+        const policyModal = document.getElementById('policyModal');
+        if (policyModal) policyModal.style.display = 'none';
+        const zoomOverlay = document.querySelector('.lightbox-zoom-overlay');
+        if (zoomOverlay) zoomOverlay.remove();
+      }
+    });
+
+    // Homepage Category Tabs Filter
+    const homeTabs = document.querySelectorAll('.home-tab-btn');
+    homeTabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        homeTabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        const cat = tab.getAttribute('data-category') || 'all';
+        renderFeaturedProducts(cat);
+      });
+    });
+
+    // Size Assistant Listeners
+    document.getElementById('sizeAssistantClose')?.addEventListener('click', closeSizeAssistant);
+    document.getElementById('sizeAssistantOverlay')?.addEventListener('click', closeSizeAssistant);
+    document.getElementById('btnFitOversized')?.addEventListener('click', () => {
+      sizeAssistantFit = 'oversized';
+      document.getElementById('btnFitOversized')?.classList.add('active');
+      document.getElementById('btnFitRegular')?.classList.remove('active');
+      const regularBadge = document.querySelector('#btnFitRegular .selected-badge');
+      if (regularBadge) regularBadge.remove();
+      calculateRecommendedSize();
+    });
+    document.getElementById('btnFitRegular')?.addEventListener('click', () => {
+      sizeAssistantFit = 'regular';
+      document.getElementById('btnFitRegular')?.classList.add('active');
+      document.getElementById('btnFitOversized')?.classList.remove('active');
+      calculateRecommendedSize();
+    });
+    document.getElementById('sizeInputHeight')?.addEventListener('input', calculateRecommendedSize);
+    document.getElementById('sizeInputWeight')?.addEventListener('input', calculateRecommendedSize);
+    document.getElementById('btnConfirmRecommendedSize')?.addEventListener('click', confirmRecommendedSize);
 
     // Close Modals & Product Page
     document.getElementById('btnBackToStore')?.addEventListener('click', () => closeProductPage(true));
@@ -3378,7 +3557,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const nameLabel = document.getElementById('prodSelectedColorName');
       if (nameLabel) nameLabel.textContent = c.name;
 
-      const swatches = document.querySelectorAll('.color-swatch-btn');
+      const swatches = document.querySelectorAll('.color-swatch-circle-wrap');
       swatches.forEach((btn, idx) => {
         btn.classList.toggle('active', idx === colorIndex);
       });
@@ -3394,23 +3573,67 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => { mainImg.style.opacity = '1'; }, 150);
       }
 
-      const thumbsContainer = document.getElementById('pageProductThumbsContainer');
-      if (thumbsContainer) {
-        if (colorImages.length > 1) {
-          thumbsContainer.style.display = 'flex';
-          thumbsContainer.innerHTML = colorImages.map((imgUrl, i) => `
-            <button type="button" class="prod-thumb-btn ${i === 0 ? 'active' : ''}" onclick="window.velenApp.switchProductPageImage('${imgUrl}', this)" style="width:62px; height:62px; border-radius:8px; overflow:hidden; border:${i === 0 ? '2px solid #e5b95f' : '1.5px solid #333'}; background:#111; padding:0; cursor:pointer; flex-shrink:0;">
-              <img src="${imgUrl}" alt="${c.name} ${i + 1}" style="width:100%; height:100%; object-fit:cover;" onerror="this.src='/assets/velen-logo.jpg'">
-            </button>
-          `).join('');
-        } else {
-          thumbsContainer.style.display = 'none';
-          thumbsContainer.innerHTML = '';
-        }
+      currentProductImageIdx = 0;
+      const carouselIndex = document.getElementById('pageCarouselIndex');
+      const carouselTotal = document.getElementById('pageCarouselTotal');
+      if (carouselIndex) carouselIndex.textContent = '1';
+      if (carouselTotal) carouselTotal.textContent = colorImages.length;
+
+      // Update Desktop Vertical Thumbnails
+      const vertThumbs = document.getElementById('productVerticalThumbs');
+      if (vertThumbs) {
+        vertThumbs.innerHTML = colorImages.slice(0, 6).map((imgUrl, i) => `
+          <button type="button" class="vert-thumb-btn ${i === 0 ? 'active' : ''}" onclick="window.velenApp.switchProductPageImage('${imgUrl}', this)" aria-label="Thumbnail ${i + 1}">
+            <img src="${imgUrl}" alt="${p.name} view ${i + 1}" loading="lazy" onerror="this.src='/assets/velen-logo.jpg'">
+          </button>
+        `).join('');
+      }
+
+      // Update Mobile Horizontal Thumbnails
+      const mobileThumbs = document.getElementById('productMobileThumbs');
+      if (mobileThumbs) {
+        mobileThumbs.innerHTML = colorImages.map((imgUrl, i) => `
+          <button type="button" class="mobile-thumb-item ${i === 0 ? 'active' : ''}" onclick="window.velenApp.switchProductPageImage('${imgUrl}', this)" aria-label="Image ${i + 1}">
+            <img src="${imgUrl}" alt="${p.name} ${i + 1}" loading="lazy" onerror="this.src='/assets/velen-logo.jpg'">
+          </button>
+        `).join('');
       }
 
       // Switch sizes to this color's specific sizing/inventory
       renderSizeBoxesForColor(p, c);
+    },
+    openSizeAssistant: () => {
+      openSizeAssistant();
+    },
+    closeSizeAssistant: () => {
+      closeSizeAssistant();
+    },
+    calculateRecommendedSize: () => {
+      return calculateRecommendedSize();
+    },
+    confirmRecommendedSize: () => {
+      confirmRecommendedSize();
+    },
+    toggleAccordion: (btn) => {
+      toggleAccordion(btn);
+    },
+    switchProductPageImage: (url, btn) => {
+      switchProductPageImage(url, btn);
+    },
+    nextProductPageImage: () => {
+      nextProductPageImage();
+    },
+    prevProductPageImage: () => {
+      prevProductPageImage();
+    },
+    zoomProductImage: () => {
+      zoomProductImage();
+    },
+    handlePaymentMethodChange: (val) => {
+      handlePaymentMethodChange(val);
+    },
+    renderFeaturedProducts: (cat) => {
+      renderFeaturedProducts(cat);
     },
     addCurrentModalToCart: () => {
       if (state.currentProductForModal) {
@@ -3485,14 +3708,6 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     },
     openWaybillModal,
-    switchProductPageImage: (url, btn) => {
-      const mainImg = document.getElementById('pageProductMainImg');
-      if (mainImg) mainImg.src = url;
-      document.querySelectorAll('.prod-thumb-btn').forEach(b => {
-        b.style.border = '1px solid #333';
-      });
-      if (btn) btn.style.border = '2px solid #e5b95f';
-    },
     submitProductReview: async (e, productId) => {
       e.preventDefault();
       const isAr = state.activeLang === 'ar';

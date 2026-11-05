@@ -73,7 +73,7 @@
   <!-- Announcement Bar (Free Delivery in Amman) -->
   <header class="announcement-bar" id="announcementBar">
     <div class="announcement-content">
-      <span id="announcementText" data-i18n="announcement">توصيل مجاني في عمّان • 1 دينار لباقي المحافظات</span>
+      <span id="announcementText" data-i18n="announcement">FREE DELIVERY IN AMMAN • 1 JD ACROSS JORDAN</span>
     </div>
   </header>
 
@@ -82,24 +82,24 @@
     <div class="nav-container">
       <!-- Left: Mobile Menu & Logo -->
       <div class="nav-left">
-        <button id="menuToggleBtn" class="icon-btn mobile-menu-btn" aria-label="Open menu">
+        <button id="menuToggleBtn" class="icon-btn mobile-menu-btn" aria-label="Open menu" title="Menu / القائمة">
           <i class="fa-solid fa-bars"></i>
         </button>
-        <a href="#home" class="brand-link" onclick="window.velenApp?.navigateTo('home')">
+        <a href="#home" class="brand-link" onclick="window.velenApp?.navigateTo('home')" aria-label="Velen Official Home">
           <img src="/assets/velen-logo.jpg" alt="Velen" class="nav-brand-logo" id="navBrandLogo" onerror="this.src='/assets/velen-logo.jpg'">
-          <span class="brand-title">Velen Official</span>
+          <span class="brand-title">VELEN</span>
         </a>
       </div>
 
       <!-- Center: Desktop Navigation Links -->
       <div class="nav-center">
         <ul class="desktop-nav-menu" id="desktopNavMenu">
-          <li><a href="#home" class="nav-link-item active" data-nav="home" onclick="window.velenApp?.navigateTo('home')"><span data-i18n="navHome">Home</span></a></li>
-          <li><a href="#shop" class="nav-link-item" data-nav="shop" onclick="window.velenApp?.navigateTo('shop')"><span data-i18n="navShop">Shop</span></a></li>
-          <li><a href="#about" class="nav-link-item" data-nav="about" onclick="window.velenApp?.navigateTo('about')"><span data-i18n="navStory">Our Story</span></a></li>
-          <li><a href="#community" class="nav-link-item" data-nav="community" onclick="window.velenApp?.navigateTo('community')"><span data-i18n="navCommunity">Community</span></a></li>
-          <li><a href="#reviews" class="nav-link-item" data-nav="reviews" onclick="window.velenApp?.navigateTo('reviews')"><span data-i18n="navReviews">Reviews</span></a></li>
-          <li><a href="#track" class="nav-link-item" data-nav="track" onclick="window.velenApp?.navigateTo('track')"><span data-i18n="navTrack">Track Order</span></a></li>
+          <li><a href="#home" class="nav-link-item active" data-nav="home" onclick="window.velenApp?.navigateTo('home')"><span data-i18n="navHome">HOME</span></a></li>
+          <li><a href="#shop" class="nav-link-item" data-nav="shop" onclick="window.velenApp?.navigateTo('shop')"><span data-i18n="navShop">SHOP</span></a></li>
+          <li><a href="#about" class="nav-link-item" data-nav="about" onclick="window.velenApp?.navigateTo('about')"><span data-i18n="navStory">OUR STORY</span></a></li>
+          <li><a href="#community" class="nav-link-item" data-nav="community" onclick="window.velenApp?.navigateTo('community')"><span data-i18n="navCommunity">COMMUNITY</span></a></li>
+          <li><a href="#reviews" class="nav-link-item" data-nav="reviews" onclick="window.velenApp?.navigateTo('reviews')"><span data-i18n="navReviews">REVIEWS</span></a></li>
+          <li><a href="#track" class="nav-link-item" data-nav="track" onclick="window.velenApp?.navigateTo('track')"><span data-i18n="navTrack">TRACK ORDER</span></a></li>
         </ul>
       </div>
 
@@ -111,7 +111,7 @@
         <button id="langToggleBtn" class="icon-btn lang-btn" title="Switch Language / تغيير اللغة" aria-label="Switch Language">
           <span id="langLabel" class="lang-label-pill">عربي</span>
         </button>
-        <button id="cartToggleBtn" class="icon-btn cart-btn" aria-label="Shopping Cart">
+        <button id="cartToggleBtn" class="icon-btn cart-btn" aria-label="Shopping Cart" title="Cart / السلة">
           <i class="fa-solid fa-bag-shopping"></i>
           <span id="cartCountBadge" class="cart-badge">0</span>
         </button>
@@ -120,13 +120,13 @@
   </nav>
 
   <!-- Fullscreen Slide Navigation Drawer (Matching Screenshot 5) -->
-  <div id="navDrawer" class="nav-drawer" aria-hidden="true">
+  <div id="navDrawer" class="nav-drawer" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Mobile Navigation Menu">
     <div class="drawer-header">
       <div class="drawer-logo-wrap" onclick="window.velenApp?.navigateTo('home'); document.getElementById('navDrawerClose')?.click();" style="cursor:pointer;">
         <img src="/assets/velen-logo.jpg" alt="Velen" class="drawer-logo-img">
         <span>Velen Official</span>
       </div>
-      <button id="navDrawerClose" class="icon-btn close-btn" aria-label="Close menu">
+      <button id="navDrawerClose" class="icon-btn close-btn" aria-label="Close menu" title="Close / إغلاق">
         <i class="fa-solid fa-xmark"></i>
       </button>
     </div>
@@ -139,7 +139,7 @@
           <li><a href="#shop" class="drawer-link" data-nav="shop" onclick="window.velenApp?.navigateTo('shop'); document.getElementById('navDrawerClose')?.click();"><i class="fa-solid fa-shirt"></i> <span data-i18n="navShop">Shop Collection</span> <i class="fa-solid fa-angle-right rtl-flip"></i></a></li>
           <li><a href="#about" class="drawer-link" data-nav="about" onclick="window.velenApp?.navigateTo('about'); document.getElementById('navDrawerClose')?.click();"><i class="fa-solid fa-gem"></i> <span data-i18n="navStory">Our Story & Craftsmanship</span> <i class="fa-solid fa-angle-right rtl-flip"></i></a></li>
           <li><a href="#community" class="drawer-link highlight-link" data-nav="community" onclick="window.velenApp?.navigateTo('community'); document.getElementById('navDrawerClose')?.click();"><i class="fa-solid fa-users"></i> <span data-i18n="navCommunity">Community & Fits</span> <span class="new-pill">NEW</span> <i class="fa-solid fa-angle-right rtl-flip"></i></a></li>
-          <li><a href="#reviews" class="drawer-link" data-nav="reviews" onclick="window.velenApp?.navigateTo('reviews'); document.getElementById('navDrawerClose')?.click();"><i class="fa-solid fa-star"></i> <span data-i18n="navReviews">Customer Reviews</span> <span class="new-pill" style="background:#e5b95f; color:#000;">5.0 ★</span> <i class="fa-solid fa-angle-right rtl-flip"></i></a></li>
+          <li><a href="#reviews" class="drawer-link" data-nav="reviews" onclick="window.velenApp?.navigateTo('reviews'); document.getElementById('navDrawerClose')?.click();"><i class="fa-solid fa-star"></i> <span data-i18n="navReviews">Customer Reviews</span> <i class="fa-solid fa-angle-right rtl-flip"></i></a></li>
           <li><a href="#track" class="drawer-link" data-nav="track" onclick="window.velenApp?.navigateTo('track'); document.getElementById('navDrawerClose')?.click();"><i class="fa-solid fa-truck-fast"></i> <span data-i18n="navTrack">Track Order & Support</span> <i class="fa-solid fa-angle-right rtl-flip"></i></a></li>
         </ul>
       </div>
@@ -155,27 +155,27 @@
       <div class="drawer-section">
         <h3 class="drawer-heading" data-i18n="stayConnected">CONNECT • تواصل معنا</h3>
         <div class="social-pills">
-          <a href="https://www.instagram.com/velen.offical?dlrf=c3I5MGh6eTZneGYy" target="_blank" class="social-pill" id="drawerInstaLink"><i class="fa-brands fa-instagram"></i> Instagram</a>
-          <a href="https://tiktok.com/@velenofficial" target="_blank" class="social-pill" id="drawerTiktokLink"><i class="fa-brands fa-tiktok"></i> TikTok</a>
-          <a href="https://wa.me/962770188144" target="_blank" class="social-pill" id="drawerWaLink"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a>
+          <a href="https://www.instagram.com/velen.offical?dlrf=c3I5MGh6eTZneGYy" target="_blank" class="social-pill" id="drawerInstaLink" aria-label="Instagram"><i class="fa-brands fa-instagram"></i> Instagram</a>
+          <a href="https://tiktok.com/@velenofficial" target="_blank" class="social-pill" id="drawerTiktokLink" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i> TikTok</a>
+          <a href="https://wa.me/962770188144" target="_blank" class="social-pill" id="drawerWaLink" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a>
         </div>
       </div>
 
       <div class="drawer-bottom-brand">
-        <h2>Velen Official</h2>
+        <h2>VELEN</h2>
         <p class="origin-tag">Handcrafted with pride in Amman, Jordan 🇯🇴</p>
       </div>
     </div>
   </div>
-  <div id="drawerOverlay" class="drawer-overlay"></div>
+  <div id="drawerOverlay" class="drawer-overlay" onclick="document.getElementById('navDrawerClose')?.click()"></div>
 
   <!-- Search Modal -->
-  <div id="searchModal" class="search-modal" aria-hidden="true">
+  <div id="searchModal" class="search-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Search Collection">
     <div class="search-modal-container">
       <div class="search-input-wrap">
         <i class="fa-solid fa-magnifying-glass search-icon"></i>
-        <input type="text" id="searchInput" placeholder="ابحث عن التيشيرتات، المقاسات، الألوان..." data-i18n-ph="searchPlaceholder" autofocus>
-        <button id="searchCloseBtn" class="icon-btn"><i class="fa-solid fa-xmark"></i></button>
+        <input type="text" id="searchInput" placeholder="Search collection, sizes, colors..." aria-label="Search products" autofocus>
+        <button id="searchCloseBtn" class="icon-btn" aria-label="Close search" title="Close / إغلاق"><i class="fa-solid fa-xmark"></i></button>
       </div>
       <div id="searchResults" class="search-results-grid"></div>
     </div>
@@ -188,79 +188,88 @@
 
     <!-- ================= VIEW 1: HOME ================= -->
     <div id="view-home" class="site-view active">
-      <!-- Hero Section -->
+      <!-- Hero Section (Exact Match to Image 2: Winter Collection 2026) -->
       <div id="hero"></div>
-      <section class="hero-section" id="sec-hero">
+      <section class="hero-section hero-section-v2" id="sec-hero">
         <div class="hero-media-wrapper">
-          <img src="/assets/velen-hero-clean.jpg" alt="Velen Essentials" class="hero-banner-img" id="heroBannerImg" onerror="this.onerror=null;this.src='/assets/velen-hero-clean.jpg';">
+          <img src="/assets/velen-hero-winter2026.png" alt="Velen Winter Collection 2026" class="hero-banner-img" id="heroBannerImg" onerror="this.onerror=null;this.src='/assets/velen-hero-clean.jpg';">
           <div class="hero-vignette-overlay"></div>
         </div>
 
-        <div class="hero-content">
-          <div class="hero-logo-emblem">
-            <img src="/assets/velen-logo.jpg" alt="Velen Logo" class="hero-logo-img" id="heroLogoImg" onerror="this.onerror=null;this.src='/assets/velen-logo.jpg';">
-          </div>
-          <h1 class="hero-brand-name" id="heroBrandName">VELEN</h1>
-          <h2 class="hero-main-heading" id="heroMainHeading" data-i18n="heroMainHeading">THE NEW STANDARD OF STREETWEAR</h2>
-          <p class="hero-tagline" id="heroTagline" data-i18n="heroTagline">Luxury Everyday Essentials • 260 GSM Combed Cotton • Crafted in Jordan</p>
+        <div class="hero-content hero-content-v2">
+          <span class="hero-badge-tag" id="heroBadgeTag">NEW DROP</span>
+          <h1 class="hero-brand-name hero-title-v2" id="heroBrandName">WINTER COLLECTION 2026</h1>
+          <p class="hero-tagline hero-tagline-v2" id="heroTagline">Premium streetwear essentials for everyday wear.</p>
           <div class="hero-cta-wrap">
-            <button type="button" class="btn-velen-primary" id="heroShopBtn" onclick="window.velenApp?.navigateTo('shop')" data-i18n="heroShopBtn">
-              SHOP THE COLLECTION
+            <button type="button" class="btn-velen-primary" id="heroShopBtn" onclick="window.velenApp?.navigateTo('shop')" aria-label="Shop the collection">
+              SHOP THE COLLECTION <i class="fa-solid fa-arrow-right rtl-flip" style="margin-left: 6px;"></i>
             </button>
-            <button type="button" class="btn-velen-secondary" id="heroStoryBtn" onclick="window.velenApp?.navigateTo('about')" data-i18n="heroStoryBtn">
+            <button type="button" class="btn-velen-secondary" id="heroStoryBtn" onclick="window.velenApp?.navigateTo('about')" aria-label="Our Story">
               OUR STORY
             </button>
           </div>
         </div>
+
+        <!-- Hero Bottom Carousel Controls (Matching Image 2) -->
+        <div class="hero-bottom-controls">
+          <div class="hero-dots-indicator" aria-hidden="true">
+            <span class="dot active"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+          </div>
+          <div class="hero-slide-counter">
+            <span class="counter-text">01 / 03</span>
+            <button type="button" class="btn-hero-arrow" aria-label="Previous banner slide" title="Previous"><i class="fa-solid fa-angle-left rtl-flip"></i></button>
+            <button type="button" class="btn-hero-arrow" aria-label="Next banner slide" title="Next"><i class="fa-solid fa-angle-right rtl-flip"></i></button>
+          </div>
+        </div>
       </section>
 
-      <!-- Quick Value Props Strip -->
-      <div class="value-props-bar" id="sec-valueProps">
+      <!-- Quick Value Props Strip (Matching Image 2: 4 Props) -->
+      <div class="value-props-bar value-props-bar-v2" id="sec-valueProps">
         <div class="prop-item">
           <i class="fa-solid fa-truck-fast"></i>
-          <span id="propText1" data-i18n="prop1">Free Delivery in Amman • 1 JD Jordan-wide</span>
+          <span id="propText1">Fast Delivery in Jordan</span>
         </div>
         <div class="prop-item">
           <i class="fa-solid fa-crown"></i>
-          <span id="propText2" data-i18n="prop2">Jordanian Luxury Heavyweight Cotton 260 GSM</span>
+          <span id="propText2">Premium Quality</span>
         </div>
         <div class="prop-item">
           <i class="fa-solid fa-rotate-left"></i>
-          <span id="propText3" data-i18n="prop3">Hassle-free doorstep size exchange</span>
+          <span id="propText3">Easy Returns</span>
+        </div>
+        <div class="prop-item">
+          <i class="fa-solid fa-shield-halved"></i>
+          <span id="propText4">Secure Payment</span>
         </div>
       </div>
 
-      <!-- ===== BRAND INTRODUCTION / MANIFESTO (تعريف عن Velen) ===== -->
-      <section class="home-brand-manifesto" id="homeBrandIntro">
+      <!-- ===== THE COLLECTION / FEATURED RELEASES (Prominently Placed at Top of Homepage, Replacing About per User Request) ===== -->
+      <section class="home-featured-section home-collection-v2" id="homeFeaturedSection">
         <div class="section-container">
-          <div class="manifesto-card">
-            <div class="manifesto-badge-wrap">
-              <span class="manifesto-badge"><i class="fa-solid fa-gem"></i> <span data-i18n="manifestoBadge">ABOUT VELEN • هوية فيلين</span></span>
-            </div>
-            <h2 class="manifesto-title" data-i18n="brandIntroTitle">DEFINING MODERN STREETWEAR IN AMMAN</h2>
-            <p class="manifesto-sub" data-i18n="brandIntroSub">A NEW CHAPTER IN JORDANIAN APPAREL CRAFTSMANSHIP</p>
-            <div class="manifesto-divider"></div>
-            <p class="manifesto-text" data-i18n="brandIntroText">
-              Velen was born in Amman from a distinct vision: creating luxury streetwear essentials that balance heavyweight 260 GSM combed cotton, relaxed contemporary boxy cuts, and unmatched durability. Every seam is cut, sewn, and inspected locally to deliver a garment that feels substantial from the first wear and endures for years.
-            </p>
+          <div class="section-header-center section-header-with-lines">
+            <div class="header-flank-line"></div>
+            <h2 class="section-title text-collection-title" id="featuredSectionTitle">THE COLLECTION</h2>
+            <div class="header-flank-line"></div>
+          </div>
 
-            <div class="manifesto-pillars-grid">
-              <div class="pillar-box">
-                <div class="pillar-icon"><i class="fa-solid fa-feather-pointed"></i></div>
-                <h4 data-i18n="featTitle1">Heavyweight 260 GSM Cotton</h4>
-                <p data-i18n="featDesc1">Custom-spun combed cotton weave engineered for high density, rich hand-feel, and lifetime shape retention.</p>
-              </div>
-              <div class="pillar-box">
-                <div class="pillar-icon"><i class="fa-solid fa-ruler-combined"></i></div>
-                <h4 data-i18n="featTitle2">Signature Boxy Fit</h4>
-                <p data-i18n="featDesc2">Clean drop shoulders, balanced drape, and relaxed torso proportions tailored for effortless everyday styling.</p>
-              </div>
-              <div class="pillar-box">
-                <div class="pillar-icon"><i class="fa-solid fa-scissors"></i></div>
-                <h4 data-i18n="featTitle3">100% Ethically Made in Jordan</h4>
-                <p data-i18n="featDesc3">Ethically crafted and finished by master Jordanian garment artisans under uncompromising quality inspection.</p>
-              </div>
-            </div>
+          <!-- Category Filter Pills (Matching Image 2: All Pieces | Sweatshirts | Sweatpants) -->
+          <div class="category-tabs collection-filter-tabs" id="homeCategoryTabs">
+            <button type="button" class="cat-pill active" data-cat="all" aria-label="View all pieces">All Pieces</button>
+            <button type="button" class="cat-pill" data-cat="Sweatshirts" aria-label="Filter by sweatshirts">Sweatshirts</button>
+            <button type="button" class="cat-pill" data-cat="Sweatpants" aria-label="Filter by sweatpants">Sweatpants</button>
+          </div>
+
+          <!-- Products Grid + Editorial Card (Matching Image 2) -->
+          <div class="products-grid products-grid-v2" id="homeFeaturedGrid">
+            <!-- Populated dynamically with top pieces + Editorial Card -->
+          </div>
+
+          <div class="featured-view-all-wrap">
+            <button type="button" class="btn-view-all-shop" onclick="window.velenApp?.navigateTo('shop')" aria-label="View full collection in shop">
+              <span data-i18n="viewAllInShop">VIEW FULL COLLECTION IN SHOP →</span>
+            </button>
           </div>
         </div>
       </section>
@@ -283,7 +292,7 @@
                 <span class="portal-badge"><i class="fa-solid fa-bag-shopping"></i> <span data-i18n="portalBadgeShop">CATALOG 2026</span></span>
                 <h3 class="portal-title" data-i18n="portalShopTitle">ALL PRODUCTS & DROPS</h3>
                 <p class="portal-desc" data-i18n="portalShopSub">Explore heavyweight boxy tees, ringers, hoodies and daily essentials with multi-color options.</p>
-                <button type="button" class="btn-portal-action">
+                <button type="button" class="btn-portal-action" aria-label="Enter Shopping Catalog">
                   <span data-i18n="portalShopBtn">ENTER SHOPPING CATALOG →</span>
                 </button>
               </div>
@@ -297,7 +306,7 @@
                 <span class="portal-badge"><i class="fa-solid fa-gem"></i> <span data-i18n="portalBadgeAbout">THE PHILOSOPHY</span></span>
                 <h3 class="portal-title" data-i18n="portalAboutTitle">OUR STORY & CRAFTSMANSHIP</h3>
                 <p class="portal-desc" data-i18n="portalAboutSub">Discover the journey of creating Jordan's finest everyday streetwear with custom 260 GSM fabrics.</p>
-                <button type="button" class="btn-portal-action">
+                <button type="button" class="btn-portal-action" aria-label="Discover Our Story">
                   <span data-i18n="portalAboutBtn">DISCOVER THE STORY →</span>
                 </button>
               </div>
@@ -311,7 +320,7 @@
                 <span class="portal-badge"><i class="fa-brands fa-instagram"></i> <span data-i18n="portalBadgeCommunity">COMMUNITY WEARS VELEN</span></span>
                 <h3 class="portal-title" data-i18n="portalCommunityTitle">COMMUNITY & FITS</h3>
                 <p class="portal-desc" data-i18n="portalCommunitySub">Real people, real fits. Browse our community lookbook, customer stylings, and video reels.</p>
-                <button type="button" class="btn-portal-action">
+                <button type="button" class="btn-portal-action" aria-label="View Community">
                   <span data-i18n="portalCommunityBtn">VIEW COMMUNITY →</span>
                 </button>
               </div>
@@ -322,10 +331,10 @@
               <div class="portal-bg-abstract reviews-accent-bg"></div>
               <div class="portal-overlay"></div>
               <div class="portal-content">
-                <span class="portal-badge" style="background:rgba(229,185,95,0.2); color:#e5b95f; border-color:rgba(229,185,95,0.4);"><i class="fa-solid fa-star"></i> <span data-i18n="portalBadgeReviews">5.0 ★ VERIFIED RATINGS</span></span>
+                <span class="portal-badge" style="background:rgba(229,185,95,0.2); color:#e5b95f; border-color:rgba(229,185,95,0.4);"><i class="fa-solid fa-star"></i> <span data-i18n="portalBadgeReviews">VERIFIED RATINGS</span></span>
                 <h3 class="portal-title" data-i18n="portalReviewsTitle">CUSTOMER REVIEWS</h3>
                 <p class="portal-desc" data-i18n="portalReviewsSub">Read verified customer feedback on sizing, heavyweight cotton texture, and fast delivery.</p>
-                <button type="button" class="btn-portal-action">
+                <button type="button" class="btn-portal-action" aria-label="Read Customer Reviews">
                   <span data-i18n="portalReviewsBtn">READ REVIEWS →</span>
                 </button>
               </div>
@@ -339,7 +348,7 @@
                 <span class="portal-badge"><i class="fa-solid fa-truck-fast"></i> <span data-i18n="portalBadgeTrack">LIVE COURIER STATUS</span></span>
                 <h3 class="portal-title" data-i18n="portalTrackTitle">TRACK ORDER & SUPPORT</h3>
                 <p class="portal-desc" data-i18n="portalTrackSub">Check your live order delivery status with your phone number, or get instant WhatsApp assistance.</p>
-                <button type="button" class="btn-portal-action">
+                <button type="button" class="btn-portal-action" aria-label="Track Order Now">
                   <span data-i18n="portalTrackBtn">TRACK ORDER NOW →</span>
                 </button>
               </div>
@@ -348,21 +357,37 @@
         </div>
       </section>
 
-      <!-- ===== CURATED FEATURED DROPS PREVIEW ===== -->
-      <section class="home-featured-section" id="homeFeaturedSection">
+      <!-- ===== BRAND INTRODUCTION / MANIFESTO (ABOUT VELEN) ===== -->
+      <section class="home-brand-manifesto" id="homeBrandIntro">
         <div class="section-container">
-          <div class="section-header-center">
-            <span class="section-sub" data-i18n="featuredSub">CURATED ESSENTIALS • مختارات مميزة</span>
-            <h2 class="section-title" data-i18n="featuredTitle">FEATURED RELEASES</h2>
-            <div class="collection-line"></div>
-          </div>
-          <div class="products-grid" id="homeFeaturedGrid">
-            <!-- Populated dynamically with top 4 items -->
-          </div>
-          <div class="featured-view-all-wrap">
-            <button type="button" class="btn-view-all-shop" onclick="window.velenApp?.navigateTo('shop')">
-              <span data-i18n="viewAllInShop">VIEW FULL COLLECTION IN SHOP →</span>
-            </button>
+          <div class="manifesto-card">
+            <div class="manifesto-badge-wrap">
+              <span class="manifesto-badge"><i class="fa-solid fa-gem"></i> <span data-i18n="manifestoBadge">ABOUT VELEN • هوية فيلين</span></span>
+            </div>
+            <h2 class="manifesto-title" data-i18n="brandIntroTitle">DEFINING MODERN STREETWEAR IN AMMAN</h2>
+            <p class="manifesto-sub" data-i18n="brandIntroSub">A NEW CHAPTER IN JORDANIAN APPAREL CRAFTSMANSHIP</p>
+            <div class="manifesto-divider"></div>
+            <p class="manifesto-text" data-i18n="brandIntroText">
+              VELEN was born in Amman from a distinct vision: creating luxury streetwear essentials that balance heavyweight premium cotton, relaxed contemporary boxy cuts, and unmatched durability. Every seam is cut, sewn, and inspected locally to deliver a garment that feels substantial from the first wear and endures for years.
+            </p>
+
+            <div class="manifesto-pillars-grid">
+              <div class="pillar-box">
+                <div class="pillar-icon"><i class="fa-solid fa-feather-pointed"></i></div>
+                <h4 data-i18n="featTitle1">Heavyweight Premium Cotton</h4>
+                <p data-i18n="featDesc1">Custom-spun combed cotton weave engineered for high density, rich hand-feel, and lifetime shape retention.</p>
+              </div>
+              <div class="pillar-box">
+                <div class="pillar-icon"><i class="fa-solid fa-ruler-combined"></i></div>
+                <h4 data-i18n="featTitle2">Signature Boxy Fit</h4>
+                <p data-i18n="featDesc2">Clean drop shoulders, balanced drape, and relaxed torso proportions tailored for effortless everyday styling.</p>
+              </div>
+              <div class="pillar-box">
+                <div class="pillar-icon"><i class="fa-solid fa-scissors"></i></div>
+                <h4 data-i18n="featTitle3">100% Ethically Made in Jordan</h4>
+                <p data-i18n="featDesc3">Ethically crafted and finished by master Jordanian garment artisans under uncompromising quality inspection.</p>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -603,13 +628,13 @@
             <div class="track-support-card">
               <i class="fa-solid fa-truck-fast support-icon gold-color"></i>
               <h4>Delivery Timeline</h4>
-              <p><strong>Amman:</strong> Same-day or next-day delivery (Free of charge).<br><strong>Other Governorates:</strong> 24 to 48 hours for only 1 JOD.</p>
+              <p><strong>Amman:</strong> Free delivery within 24 hours.<br><strong>Outside Amman:</strong> Flat 1 JOD delivery within 48 hours across Jordan.</p>
             </div>
 
             <div class="track-support-card">
               <i class="fa-solid fa-rotate-left support-icon"></i>
-              <h4>Doorstep Exchange Guarantee</h4>
-              <p>If the fit isn't 100% ideal, our courier will bring your preferred size right to your door with zero hassle.</p>
+              <h4>Exchange & Return Policy</h4>
+              <p>Exchanges and returns are accepted for manufacturing defects, damaged items, or incorrect products. Contact VELEN with photos for prompt assistance.</p>
             </div>
           </div>
         </div>
@@ -625,7 +650,7 @@
           <span data-i18n="breadcrumbShipping">Shipping & Policy</span>
         </div>
         <h1 class="page-main-title" id="pageShippingMainTitle" data-i18n="policyShippingTitle">SHIPPING & EXCHANGE POLICY</h1>
-        <p class="page-sub-title" id="pageShippingSubTitle" data-i18n="policyShippingSub">DOORSTEP SIZE INSPECTION • FREE AMMAN DELIVERY • 1 JD GOVERNORATES</p>
+        <p class="page-sub-title" id="pageShippingSubTitle" data-i18n="policyShippingSub">FREE AMMAN DELIVERY (UP TO 24H) • 1 JD GOVERNORATES (UP TO 48H)</p>
       </div>
 
       <section class="policy-page-section">
@@ -640,24 +665,25 @@
                 <span class="policy-badge" data-i18n="shippingBadgeRates">FAST & RELIABLE</span>
                 <h3 id="policyDeliveryHeading" data-i18n="policyDeliveryHeading">Delivery Timeline & Rates</h3>
                 <div class="policy-card-text" id="policyDeliveryContent">
-                  <p><strong>Amman:</strong> Free delivery to all areas within 24 to 48 hours.</p>
-                  <p><strong>Other Governorates:</strong> Flat 1 JOD delivery fee across Jordan (Irbid, Zarqa, Aqaba, Salt, Madaba, Mafraq, etc.).</p>
-                  <p>Orders are dispatched daily from our Amman fulfillment center.</p>
+                  <p><strong>Free delivery within Amman</strong> — delivered within up to 24 hours.</p>
+                  <p><strong>Delivery outside Amman costs 1 JOD</strong> across all other Jordanian governorates (Irbid, Zarqa, Aqaba, Salt, Madaba, Mafraq, etc.) — delivered within up to 48 hours.</p>
+                  <p>Delivery fee is automatically calculated based on your delivery location and clearly displayed before order confirmation.</p>
                 </div>
               </div>
             </div>
 
-            <!-- 2. Instant Doorstep Size Exchange -->
+            <!-- 2. Exchange & Return Policy -->
             <div class="policy-card">
               <div class="policy-card-icon">
                 <i class="fa-solid fa-rotate-left"></i>
               </div>
               <div class="policy-card-content">
-                <span class="policy-badge" data-i18n="shippingBadgeExchange">ZERO RISK</span>
-                <h3 id="policyExchangeHeading" data-i18n="policyExchangeHeading">Instant Doorstep Size Exchange</h3>
+                <span class="policy-badge" data-i18n="shippingBadgeExchange">ACCURATE & TRANSPARENT</span>
+                <h3 id="policyExchangeHeading" data-i18n="policyExchangeHeading">Exchange & Return Policy</h3>
                 <div class="policy-card-text" id="policyExchangeContent">
-                  <p>You are fully entitled to inspect the garment and try your size upon delivery before paying the courier.</p>
-                  <p>If you prefer another size or color, we provide a smooth, hassle-free doorstep exchange within 3 business days from your delivery date.</p>
+                  <p>Exchanges and returns are only accepted if there is an issue with the product received, such as a manufacturing defect, damaged item or receiving an incorrect product.</p>
+                  <p>We do not accept exchanges or returns for change of mind, size preference or color preference.</p>
+                  <p>Customers should contact VELEN and provide details or photos of the issue so our team can review the case and assist accordingly.</p>
                 </div>
               </div>
             </div>
@@ -668,11 +694,12 @@
                 <i class="fa-solid fa-money-bill-wave"></i>
               </div>
               <div class="policy-card-content">
-                <span class="policy-badge" data-i18n="shippingBadgePayment">PAYMENT FLEXIBILITY</span>
-                <h3 id="policyPaymentHeading" data-i18n="policyPaymentHeading">Flexible Payment Options</h3>
+                <span class="policy-badge" data-i18n="shippingBadgePayment">APPROVED PAYMENT METHODS</span>
+                <h3 id="policyPaymentHeading" data-i18n="policyPaymentHeading">Approved Payment Methods</h3>
                 <div class="policy-card-text" id="policyPaymentContent">
-                  <p><strong>Cash on Delivery (COD):</strong> Pay in cash when the courier hands you your package.</p>
-                  <p><strong>Instant CliQ:</strong> Transfer instantly via CliQ upon parcel delivery.</p>
+                  <p>The only approved payment methods are:</p>
+                  <p>• <strong>Cash on Delivery (COD)</strong>: Pay in cash when the courier hands you your package.</p>
+                  <p>• <strong>CliQ</strong>: Official instant electronic payment across Jordan.</p>
                 </div>
               </div>
             </div>
@@ -685,8 +712,8 @@
               <div class="policy-card-content">
                 <span class="policy-badge wa-badge">DIRECT ASSISTANCE</span>
                 <h3 data-i18n="policyContactHeading">Need Help with Your Order?</h3>
-                <p data-i18n="policyContactText">Our team in Amman is available on WhatsApp daily for instant size recommendations, address adjustments, or order questions.</p>
-                <a href="https://wa.me/962770188144" target="_blank" class="btn-velen-primary" style="margin-top:12px; display:inline-flex; align-items:center; gap:8px;">
+                <p data-i18n="policyContactText">Our team in Amman is available on WhatsApp daily for order support, address updates, or inquiries.</p>
+                <a href="https://wa.me/962770188144" target="_blank" class="btn-velen-primary" style="margin-top:12px; display:inline-flex; align-items:center; gap:8px;" aria-label="Chat with VELEN on WhatsApp">
                   <i class="fa-brands fa-whatsapp"></i> <span data-i18n="chatWithUs">Chat on WhatsApp</span>
                 </a>
               </div>
@@ -844,17 +871,19 @@
 
   <!-- ================= MODALS & DRAWERS ================= -->
 
-  <!-- Cart Drawer -->
-  <div id="cartDrawer" class="cart-drawer" aria-hidden="true">
+  <!-- Cart Drawer (With Critical Close Control & Accessibility) -->
+  <div id="cartDrawer" class="cart-drawer" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="cartHeading">
     <div class="cart-drawer-header">
-      <h3>حقيبة التسوق (<span id="cartTotalItems">0</span>)</h3>
-      <button id="cartCloseBtn" class="icon-btn close-btn"><i class="fa-solid fa-xmark"></i></button>
+      <h3 id="cartHeading">حقيبة التسوق (<span id="cartTotalItems">0</span>)</h3>
+      <button id="cartCloseBtn" class="icon-btn close-btn" aria-label="Close shopping bag" title="Close / إغلاق">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
     </div>
 
-    <!-- Free Delivery Meter -->
+    <!-- Free Delivery Meter (Standardized Rule: Free in Amman, 1 JD outside Amman) -->
     <div class="delivery-progress-wrap">
       <div class="delivery-meter-text">
-        <span id="deliveryMeterMsg">توصيل مجاني لجميع الطلبات في عمّان!</span>
+        <span id="deliveryMeterMsg"><i class="fa-solid fa-truck-fast"></i> توصيل مجاني لكافة مناطق عمّان • وبدينار فقط لكافة المحافظات</span>
       </div>
       <div class="delivery-bar">
         <div id="deliveryProgressFill" class="delivery-bar-fill" style="width: 100%;"></div>
@@ -866,11 +895,11 @@
     </div>
 
     <div class="cart-drawer-footer">
-      <!-- Promo Code Box in Cart Drawer (Item 11) -->
+      <!-- Promo Code Box in Cart Drawer -->
       <div class="cart-promo-box">
         <div class="promo-input-row">
-          <input type="text" id="cartPromoInput" placeholder="Promo Code (كود الخصم)" data-i18n-ph="promoPlaceholder">
-          <button type="button" id="applyCartPromoBtn" class="btn-apply-promo" data-i18n="applyPromoBtn">Apply</button>
+          <input type="text" id="cartPromoInput" placeholder="Promo Code (كود الخصم)" aria-label="Promo code">
+          <button type="button" id="applyCartPromoBtn" class="btn-apply-promo" aria-label="Apply promo code">Apply</button>
         </div>
         <div id="cartPromoMsg" class="promo-msg" style="display:none;"></div>
       </div>
@@ -892,27 +921,93 @@
         <span id="cartTotal" class="total-amount">0.000 JOD</span>
       </div>
 
-      <button id="openCheckoutBtn" class="btn-checkout-now">
-        <span data-i18n="cartCheckoutBtn">Proceed to Checkout (COD)</span> <i class="fa-solid fa-arrow-right rtl-flip"></i>
+      <button id="openCheckoutBtn" class="btn-checkout-now" aria-label="Proceed to checkout">
+        <span data-i18n="cartCheckoutBtn">Proceed to Checkout (COD & CliQ)</span> <i class="fa-solid fa-arrow-right rtl-flip"></i>
+      </button>
+
+      <button type="button" class="btn-continue-shopping" id="cartContinueShoppingBtn" onclick="window.velenApp?.closeCart()" aria-label="Continue Shopping">
+        <i class="fa-solid fa-arrow-left rtl-flip"></i> <span>Continue Shopping • متابعة التسوق</span>
       </button>
     </div>
   </div>
-  <div id="cartOverlay" class="drawer-overlay"></div>
+  <div id="cartOverlay" class="drawer-overlay" onclick="window.velenApp?.closeCart()" aria-label="Close cart backdrop"></div>
 
   <!-- Product Detail & Quick View Modal -->
-  <div id="productModal" class="product-modal" aria-hidden="true">
+  <div id="productModal" class="product-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Product Details">
     <div class="product-modal-dialog">
-      <button id="productModalClose" class="modal-close-icon"><i class="fa-solid fa-xmark"></i></button>
+      <button id="productModalClose" class="modal-close-icon" aria-label="Close product view" title="Close / إغلاق"><i class="fa-solid fa-xmark"></i></button>
       <div class="product-modal-content" id="productModalDetails">
         <!-- Rendered dynamically -->
       </div>
     </div>
   </div>
 
-  <!-- Community Submission Modal (Share look — no rating needed) -->
-  <div id="communityModal" class="community-modal" aria-hidden="true">
+  <!-- ================= VELEN SIZE ASSISTANT MODAL (Matching Images 4 & 5) ================= -->
+  <div id="sizeAssistantModal" class="size-assistant-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-label="VELEN Size Assistant">
+    <div class="size-assistant-dialog">
+      <div class="size-assistant-header">
+        <span class="size-assistant-tag">VELEN SIZE ASSISTANT</span>
+        <button type="button" id="sizeAssistantClose" class="modal-close-icon" aria-label="Close Size Assistant" title="Close / إغلاق">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="size-assistant-content">
+        <h3 class="size-assistant-title">Find Your Perfect Fit</h3>
+        <p class="size-assistant-subtitle">Enter your details and we'll recommend the best size for you.</p>
+
+        <div class="size-inputs-grid">
+          <div class="size-input-field">
+            <label for="sizeInputHeight">Your Height</label>
+            <div class="size-unit-box">
+              <span class="unit-label">CM</span>
+              <input type="number" id="sizeInputHeight" value="175" min="140" max="220" aria-label="Your Height in Centimeters">
+            </div>
+          </div>
+
+          <div class="size-input-field">
+            <label for="sizeInputWeight">Your Weight</label>
+            <div class="size-unit-box">
+              <span class="unit-label">KG</span>
+              <input type="number" id="sizeInputWeight" value="70" min="40" max="160" aria-label="Your Weight in Kilograms">
+            </div>
+          </div>
+        </div>
+
+        <div class="size-fit-preference">
+          <label>Preferred Fit</label>
+          <div class="fit-toggle-row">
+            <button type="button" class="btn-fit-toggle" data-fit="oversized" id="btnFitOversized" aria-label="Oversized fit">
+              <span>Oversized Fit</span>
+            </button>
+            <button type="button" class="btn-fit-toggle active" data-fit="regular" id="btnFitRegular" aria-label="Regular fit (Selected)">
+              <span>Regular Fit</span>
+              <small class="selected-badge">Selected</small>
+            </button>
+          </div>
+        </div>
+
+        <!-- Live Calculation Recommendation Card -->
+        <div class="size-recommendation-card">
+          <span class="rec-label">YOUR RECOMMENDED SIZE</span>
+          <div class="rec-size-letter" id="recSizeLetter">M</div>
+          <p class="rec-note">Based on your height and weight</p>
+        </div>
+
+        <button type="button" class="btn-confirm-size" id="btnConfirmRecommendedSize" aria-label="Confirm Recommended Size">
+          CONFIRM SIZE <span id="confirmSizeText">M</span>
+        </button>
+
+        <p class="size-assistant-disclaimer">.Size recommendation is a guide. Actual fit may vary</p>
+      </div>
+    </div>
+  </div>
+  <div id="sizeAssistantOverlay" class="drawer-overlay" onclick="window.velenApp?.closeSizeAssistant()" aria-label="Close size assistant backdrop"></div>
+
+  <!-- Community Submission Modal (Share look) -->
+  <div id="communityModal" class="community-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Share community look">
     <div class="community-modal-dialog">
-      <button id="communityModalClose" class="modal-close-icon"><i class="fa-solid fa-xmark"></i></button>
+      <button id="communityModalClose" class="modal-close-icon" aria-label="Close community modal" title="Close / إغلاق"><i class="fa-solid fa-xmark"></i></button>
       <div class="community-modal-content">
         <div class="modal-head">
           <img src="/assets/velen-logo.jpg" alt="Velen" class="modal-logo">
@@ -968,7 +1063,7 @@
   <!-- Review Submission Modal (Product Star Rating — Pure Review) -->
   <div id="reviewModal" class="community-modal" aria-hidden="true">
     <div class="community-modal-dialog">
-      <button id="reviewModalClose" class="modal-close-icon"><i class="fa-solid fa-xmark"></i></button>
+      <button id="reviewModalClose" class="modal-close-icon" aria-label="Close review modal" title="Close / إغلاق"><i class="fa-solid fa-xmark"></i></button>
       <div class="community-modal-content">
         <div class="modal-head">
           <img src="/assets/velen-logo.jpg" alt="Velen" class="modal-logo">
@@ -1019,65 +1114,71 @@
   </div>
 
   <!-- Checkout Modal (Order Placement) -->
-  <div id="checkoutModal" class="checkout-modal" aria-hidden="true">
+  <div id="checkoutModal" class="checkout-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Express Checkout">
     <div class="checkout-modal-dialog">
-      <button id="checkoutModalClose" class="modal-close-icon"><i class="fa-solid fa-xmark"></i></button>
+      <button id="checkoutModalClose" class="modal-close-icon" aria-label="Close checkout modal" title="Close / إغلاق"><i class="fa-solid fa-xmark"></i></button>
       <div class="checkout-head">
         <img src="/assets/velen-logo.jpg" alt="Velen" class="checkout-logo">
-        <h3 data-i18n="checkoutTitle">Express Checkout — Velen Jordan</h3>
-        <p data-i18n="checkoutSub">Free Delivery in Amman • 1 JD Nationwide • Cash on Delivery</p>
+        <h3 data-i18n="checkoutTitle">Express Checkout — VELEN Jordan</h3>
+        <p data-i18n="checkoutSub">Free Delivery in Amman (Up to 24h) • 1 JD Nationwide (Up to 48h) • COD & CliQ</p>
       </div>
 
       <form id="checkoutForm" class="checkout-form">
         <div class="checkout-body-grid">
           <div class="checkout-inputs">
             <div class="form-group">
-              <label data-i18n="fullNameLabel">Full Name *</label>
-              <input type="text" id="custName" placeholder="e.g. Zaid Kurdi" data-i18n-ph="fullNamePlaceholder" required>
+              <label for="custName" data-i18n="fullNameLabel">Full Name *</label>
+              <input type="text" id="custName" placeholder="e.g. Zaid Kurdi" data-i18n-ph="fullNamePlaceholder" aria-label="Full Name" required>
             </div>
 
             <div class="form-group">
-              <label data-i18n="checkoutPhoneLabel">Phone Number (07XXXXXXXX) *</label>
-              <input type="tel" id="custPhone" placeholder="07XXXXXXXX" pattern="07[0-9]{8}" maxlength="10" required>
+              <label for="custPhone" data-i18n="checkoutPhoneLabel">Phone Number (07XXXXXXXX) *</label>
+              <input type="tel" id="custPhone" placeholder="07XXXXXXXX" pattern="07[0-9]{8}" maxlength="10" aria-label="Jordanian mobile number" required>
               <small data-i18n="phoneHelper" style="color:#888; font-size:10px;">Jordan mobile number (10 digits starting with 07, e.g. 0791234567)</small>
             </div>
 
             <div class="form-row">
               <div class="form-group">
-                <label data-i18n="cityLabel">City / Governorate *</label>
-                <select id="custCity" required>
-                  <option value="Amman" data-shipping="0">Amman (Free Delivery)</option>
-                  <option value="Zarqa" data-shipping="1">Zarqa (1 JD)</option>
-                  <option value="Irbid" data-shipping="1">Irbid (1 JD)</option>
-                  <option value="Balqa" data-shipping="1">Balqa / Salt (1 JD)</option>
-                  <option value="Madaba" data-shipping="1">Madaba (1 JD)</option>
-                  <option value="Aqaba" data-shipping="1">Aqaba (1 JD)</option>
-                  <option value="Mafraq" data-shipping="1">Mafraq (1 JD)</option>
-                  <option value="Jerash" data-shipping="1">Jerash (1 JD)</option>
-                  <option value="Ajloun" data-shipping="1">Ajloun (1 JD)</option>
-                  <option value="Karak" data-shipping="1">Karak (1 JD)</option>
-                  <option value="Tafilah" data-shipping="1">Tafilah (1 JD)</option>
-                  <option value="Maan" data-shipping="1">Ma'an (1 JD)</option>
+                <label for="custCity" data-i18n="cityLabel">City / Governorate *</label>
+                <select id="custCity" aria-label="City or Governorate" required>
+                  <option value="Amman" data-shipping="0">Amman (Free Delivery • Up to 24h)</option>
+                  <option value="Zarqa" data-shipping="1">Zarqa (1 JD • Up to 48h)</option>
+                  <option value="Irbid" data-shipping="1">Irbid (1 JD • Up to 48h)</option>
+                  <option value="Balqa" data-shipping="1">Balqa / Salt (1 JD • Up to 48h)</option>
+                  <option value="Madaba" data-shipping="1">Madaba (1 JD • Up to 48h)</option>
+                  <option value="Aqaba" data-shipping="1">Aqaba (1 JD • Up to 48h)</option>
+                  <option value="Mafraq" data-shipping="1">Mafraq (1 JD • Up to 48h)</option>
+                  <option value="Jerash" data-shipping="1">Jerash (1 JD • Up to 48h)</option>
+                  <option value="Ajloun" data-shipping="1">Ajloun (1 JD • Up to 48h)</option>
+                  <option value="Karak" data-shipping="1">Karak (1 JD • Up to 48h)</option>
+                  <option value="Tafilah" data-shipping="1">Tafilah (1 JD • Up to 48h)</option>
+                  <option value="Maan" data-shipping="1">Ma'an (1 JD • Up to 48h)</option>
                 </select>
               </div>
 
               <div class="form-group">
-                <label data-i18n="paymentLabel">Payment Method *</label>
-                <select id="custPayment" required>
+                <label for="custPayment" data-i18n="paymentLabel">Approved Payment Method *</label>
+                <select id="custPayment" aria-label="Payment Method" required onchange="window.velenApp?.handlePaymentMethodChange(this.value)">
                   <option value="Cash on Delivery (دفع عند الاستلام)">Cash on Delivery (COD)</option>
-                  <option value="CliQ (كليك)">Instant CliQ Transfer</option>
+                  <option value="CliQ (كليك)">CliQ (Official Electronic Payment)</option>
                 </select>
               </div>
             </div>
 
-            <div class="form-group">
-              <label data-i18n="addressLabel">Delivery Address *</label>
-              <input type="text" id="custAddress" placeholder="Area, street name, building number..." data-i18n-ph="addressPlaceholder" required>
+            <!-- Official CliQ Details Note (Shown when CliQ is selected) -->
+            <div id="cliqPaymentInfoNote" class="cliq-payment-box" style="display:none; margin-bottom:14px; padding:12px; background:rgba(229,185,95,0.08); border:1px solid rgba(229,185,95,0.25); border-radius:8px; font-size:12px;">
+              <div style="font-weight:700; color:#e5b95f; margin-bottom:4px;"><i class="fa-solid fa-bolt"></i> الدفع عبر كليك (CliQ)</div>
+              <p style="margin:0; color:#ccc; line-height:1.45;">يتم التحويل عبر CliQ عند استلام الطرد إلى تفاصيل VELEN الرسمية (رقم الهاتف: 0770188144 / Alias: VELEN) مع تأكيد فوري عبر واتساب.</p>
             </div>
 
             <div class="form-group">
-              <label data-i18n="notesLabel">Delivery Notes (Optional)</label>
-              <input type="text" id="custNotes" placeholder="e.g. Please call 15 minutes before arrival" data-i18n-ph="notesPlaceholder">
+              <label for="custAddress" data-i18n="addressLabel">Delivery Address *</label>
+              <input type="text" id="custAddress" placeholder="Area, street name, building number..." data-i18n-ph="addressPlaceholder" aria-label="Delivery Address" required>
+            </div>
+
+            <div class="form-group">
+              <label for="custNotes" data-i18n="notesLabel">Delivery Notes (Optional)</label>
+              <input type="text" id="custNotes" placeholder="e.g. Please call 15 minutes before arrival" data-i18n-ph="notesPlaceholder" aria-label="Delivery Notes">
             </div>
           </div>
 
@@ -1169,26 +1270,30 @@
   <!-- Terms, Shipping & Policy Modal (Item 7) -->
   <div id="policyModal" class="policy-modal" style="display:none;" aria-hidden="true">
     <div class="policy-modal-dialog">
-      <button id="policyModalClose" class="modal-close-icon"><i class="fa-solid fa-xmark"></i></button>
+      <button id="policyModalClose" class="modal-close-icon" aria-label="Close policy modal" title="Close / إغلاق"><i class="fa-solid fa-xmark"></i></button>
       <div class="policy-modal-content">
         <div class="modal-head">
           <img src="/assets/velen-logo.jpg" alt="Velen" class="modal-logo">
-          <h3 id="policyModalTitle">سياسة الشحن والتبديل — Velen Jordan</h3>
+          <h3 id="policyModalTitle">سياسة الشحن والتبديل — VELEN Jordan</h3>
           <p>Clean fits. Premium feel. Built for everyday wear.</p>
         </div>
         <div class="policy-body" id="policyModalBody">
-          <h4><i class="fa-solid fa-truck"></i> سياسة التوصيل والشحن:</h4>
-          <p>• التوصيل داخل عمّان: <strong>مجاناً</strong> لكافة المناطق خلال 24 - 48 ساعة.</p>
-          <p>• التوصيل لكافة محافظات المملكة (إربد، الزرقاء، العقبة، السلط...): <strong>1 دينار فقط</strong>.</p>
-          <p>• الدفع: نقداً عند الاستلام (COD) أو تحويل فوري عبر CliQ.</p>
+          <h4><i class="fa-solid fa-truck"></i> سياسة التوصيل والشحن (Shipping & Delivery):</h4>
+          <p>• التوصيل داخل عمّان: <strong>مجاناً</strong> خلال مدة تصل إلى 24 ساعة (Up to 24 hours).</p>
+          <p>• التوصيل خارج عمّان ولكافة المحافظات: <strong>1 دينار أردني فقط</strong> خلال مدة تصل إلى 48 ساعة (Up to 48 hours).</p>
+          <p>• يتم احتساب رسوم التوصيل تلقائياً وفق موقع العميل قبل تأكيد الطلب.</p>
 
-          <h4 style="margin-top:16px;"><i class="fa-solid fa-rotate-left"></i> سياسة التبديل الفوري:</h4>
-          <p>• يحق لك معاينة وتجربة المقاس عند الاستلام.</p>
-          <p>• في حال الرغبة بتبديل المقاس، يتم التبديل فوري وبكل سلاسة عند باب بيتك خلال 3 أيام من تاريخ الاستلام.</p>
+          <h4 style="margin-top:16px;"><i class="fa-solid fa-rotate-left"></i> سياسة التبديل والإرجاع (Exchange & Return Policy):</h4>
+          <p>• يُقبل التبديل أو الإرجاع <strong>فقط في حال وجود خلل مصنعي في المنتج، أو وصول منتج متضرر، أو استلام منتج غير مطابق للطلب</strong>.</p>
+          <p>• <strong>لا يُقبل التبديل أو الإرجاع</strong> بسبب تغيير الرأي أو تفضيل المقاس أو اللون.</p>
+          <p>• يُرجى من العملاء التواصل مع فريق VELEN وتزويدنا بتفاصيل وصور الخلل لمراجعة الحالة وتقديم المساعدة فوراً.</p>
 
-          <h4 style="margin-top:16px;"><i class="fa-solid fa-shirt"></i> تعليمات العناية بالقطن الثقيل 260 GSM:</h4>
-          <p>• غسيل بدرجة حرارة 30° مئوية كحد أقصى للحفاظ على نعومة ونقاء الألياف القطنية.</p>
-          <p>• غسل القطعة من الداخل للخارج وتجنب المبيضات القوية.</p>
+          <h4 style="margin-top:16px;"><i class="fa-solid fa-credit-card"></i> طرق الدفع المعتمدة (Payment Methods):</h4>
+          <p>• الدفع عند الاستلام — Cash on Delivery (COD).</p>
+          <p>• التحويل الإلكتروني الفوري المعتمد — CliQ (رقم الهاتف: 0770188144 / Alias: VELEN).</p>
+
+          <h4 style="margin-top:16px;"><i class="fa-solid fa-shirt"></i> خامات الأقمشة الفاخرة (Product Fabric):</h4>
+          <p>• نستخدم في VELEN أجود أنواع القطن الفاخر (Premium Cotton) بوزن ثقيل ومريح للملابس اليومية العصرية.</p>
         </div>
       </div>
     </div>
