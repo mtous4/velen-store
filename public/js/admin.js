@@ -1959,24 +1959,28 @@ document.addEventListener('DOMContentLoaded', () => {
     syncColorInputs('desTextColorPicker', 'desTextColorHex');
 
     // 2. Setup Image Dropzones with /api/upload
-    setupGenericDropzone('heroBgDropzone', 'heroBgFileInput', (url) => {
+    setupGenericDropzone('heroBgDropzone', 'heroBgFileInput', async (url) => {
       state.uploadedHeroBgUrl = url;
       const input = document.getElementById('desHeroBgImage');
       if (input) input.value = url;
       updateHeroPreview(url);
+      // Auto-save hero banner immediately upon upload so it reflects on live store
+      await saveDesignCustomizer();
     });
 
-    setupGenericDropzone('logoDropzone', 'logoFileInput', (url) => {
+    setupGenericDropzone('logoDropzone', 'logoFileInput', async (url) => {
       state.uploadedLogoUrl = url;
       const input = document.getElementById('desHeaderLogoUrl');
       if (input) input.value = url;
       updateLogoPreview(url);
+      await saveDesignCustomizer();
     });
 
-    setupGenericDropzone('aboutDropzone', 'aboutFileInput', (url) => {
+    setupGenericDropzone('aboutDropzone', 'aboutFileInput', async (url) => {
       state.uploadedAboutImageUrl = url;
       const input = document.getElementById('desAboutImage');
       if (input) input.value = url;
+      await saveDesignCustomizer();
     });
 
     // 3. Live URL inputs preview
@@ -2116,8 +2120,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const logoUrlInput = document.getElementById('desHeaderLogoUrl')?.value.trim();
     const aboutImgInput = document.getElementById('desAboutImage')?.value.trim();
 
+    const currentHero = state.design?.hero || {};
+    const finalHeroBg = heroBgInput || state.uploadedHeroBgUrl || currentHero.bgImage || '/assets/velen-hero-clean.jpg';
+
     const updatedDesign = {
+      ...(state.design || {}),
       comingSoon: {
+        ...(state.design?.comingSoon || {}),
         enabled: Boolean(document.getElementById('desComingSoonEnabled')?.checked),
         launchDate: document.getElementById('desCsLaunchDate')?.value ? new Date(document.getElementById('desCsLaunchDate').value).toISOString() : (state.design?.comingSoon?.launchDate || '2026-12-01T00:00:00.000Z'),
         title: document.getElementById('desCsTitle')?.value.trim() || 'THE NEW STANDARD IS COMING',
@@ -2125,20 +2134,23 @@ document.addEventListener('DOMContentLoaded', () => {
         discountOffer: document.getElementById('desCsOffer')?.value.trim() || 'سجل للحصول على إشعار مسبق وخصم 15% على طلبك الأول'
       },
       theme: {
+        ...(state.design?.theme || {}),
         primaryColor: document.getElementById('desTextColorHex')?.value.trim() || '#ffffff',
         accentColor: document.getElementById('desAccentColorHex')?.value.trim() || '#e5b95f',
         bgColor: document.getElementById('desBgColorHex')?.value.trim() || '#000000',
         saleBadgeText: document.getElementById('desSaleBadgeText')?.value.trim() || 'SALE'
       },
       header: {
+        ...(state.design?.header || {}),
         showAnnouncement: Boolean(document.getElementById('desHeaderShowAnnouncement')?.checked),
         announcementText: document.getElementById('desHeaderAnnouncementText')?.value.trim() || '',
-        logoUrl: state.uploadedLogoUrl || logoUrlInput || '/assets/velen-logo.jpg',
+        logoUrl: logoUrlInput || state.uploadedLogoUrl || state.design?.header?.logoUrl || '/assets/velen-logo.jpg',
         brandName: document.getElementById('desHeaderBrandName')?.value.trim() || 'Velen Official'
       },
       hero: {
+        ...(state.design?.hero || {}),
         enabled: Boolean(document.getElementById('desHeroEnabled')?.checked),
-        bgImage: state.uploadedHeroBgUrl || heroBgInput || '/assets/velen-hero-clean.jpg',
+        bgImage: finalHeroBg,
         brandTitle: document.getElementById('desHeroBrandTitle')?.value.trim() || 'VELEN',
         mainHeading: document.getElementById('desHeroMainHeading')?.value.trim() || '',
         subHeading: document.getElementById('desHeroSubHeading')?.value.trim() || '',
@@ -2146,6 +2158,7 @@ document.addEventListener('DOMContentLoaded', () => {
         ctaLink: '#collection'
       },
       valueProps: {
+        ...(state.design?.valueProps || {}),
         enabled: Boolean(document.getElementById('desValuePropsEnabled')?.checked),
         prop1: document.getElementById('desProp1')?.value.trim() || '',
         prop2: document.getElementById('desProp2')?.value.trim() || '',
@@ -2154,15 +2167,18 @@ document.addEventListener('DOMContentLoaded', () => {
       sectionsOrder: state.design?.sectionsOrder || ['hero', 'valueProps', 'collection', 'community', 'about'],
       sectionsVisibility: state.design?.sectionsVisibility || { hero: true, valueProps: true, collection: true, community: true, about: true },
       collectionSection: {
+        ...(state.design?.collectionSection || {}),
         subtitle: document.getElementById('desCollectionSubtitle')?.value.trim() || 'AUTUMN / ESSENTIALS 2026',
         title: document.getElementById('desCollectionTitle')?.value.trim() || 'THE COLLECTION'
       },
       communitySection: {
+        ...(state.design?.communitySection || {}),
         title: document.getElementById('desCommunityTitle')?.value.trim() || 'COMMUNITY WEARS VELEN',
         subtitle: document.getElementById('desCommunitySubtitle')?.value.trim() || 'Real people. Real style.',
         desc: document.getElementById('desCommunityDesc')?.value.trim() || ''
       },
       aboutSection: {
+        ...(state.design?.aboutSection || {}),
         enabled: Boolean(document.getElementById('desAboutEnabled')?.checked),
         sub: document.getElementById('desAboutSub')?.value.trim() || 'THE STORY',
         title: document.getElementById('desAboutTitle')?.value.trim() || 'WHY VELEN?',
@@ -2173,7 +2189,7 @@ document.addEventListener('DOMContentLoaded', () => {
         feature2Desc: document.getElementById('desAboutF2Desc')?.value.trim() || '',
         feature3Title: document.getElementById('desAboutF3Title')?.value.trim() || '',
         feature3Desc: document.getElementById('desAboutF3Desc')?.value.trim() || '',
-        image: state.uploadedAboutImageUrl || aboutImgInput || '/assets/velen-logo.jpg',
+        image: aboutImgInput || state.uploadedAboutImageUrl || state.design?.aboutSection?.image || '/assets/velen-logo.jpg',
         quote: document.getElementById('desAboutQuote')?.value.trim() || ''
       }
     };
@@ -2231,13 +2247,27 @@ document.addEventListener('DOMContentLoaded', () => {
       if (document.getElementById('prodCostPrice')) {
         document.getElementById('prodCostPrice').value = p.costPrice !== undefined ? p.costPrice : 5.000;
       }
-      document.getElementById('prodCategory').value = p.category;
+      const catSelect = document.getElementById('prodCategory');
+      if (catSelect) {
+        catSelect.value = p.category;
+        if (!catSelect.value && p.category) {
+          const matchOpt = Array.from(catSelect.options).find(o => 
+            o.value.toLowerCase() === p.category.toLowerCase() ||
+            o.text.toLowerCase().includes(p.category.toLowerCase())
+          );
+          if (matchOpt) catSelect.value = matchOpt.value;
+        }
+      }
+
       document.getElementById('prodStock').value = p.stock || 20;
       document.getElementById('prodOnSale').checked = Boolean(p.onSale);
       document.getElementById('prodFeatured').checked = Boolean(p.featured);
       document.getElementById('prodFabric').value = p.fabric || '';
       document.getElementById('prodDescription').value = p.description || '';
-      document.getElementById('prodImageUrl').value = p.image || '';
+      
+      const prodImgInput = document.getElementById('prodImageUrl');
+      if (prodImgInput) prodImgInput.value = p.image || '';
+
       state.productImages = Array.isArray(p.images) && p.images.length > 0 ? [...p.images] : (p.image ? [p.image] : []);
       if (window._renderProductGalleryManager) window._renderProductGalleryManager();
 

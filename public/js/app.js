@@ -88,6 +88,8 @@ document.addEventListener('DOMContentLoaded', () => {
       stayConnectedNote: 'تابعنا على منصاتنا لتكون أول من يعرف عن الدروبات الجديدة والخصومات:',
       searchPlaceholder: 'ابحث عن التيشيرتات، المقاسات، الألوان...',
       heroShopBtn: 'تسوق الكولكشن الآن',
+      heroTagline: 'قطع ملابس يومية فاخرة • قطن معالج 260 GSM • صُنع في الأردن',
+      writeReview: 'كتابة تقييم',
       heroSubHeading: 'قصات بوكسي ستريت وير عصرية مصممة يومياً لتلائم تفاصيل يومك بجودة أردنية تدوم.',
       heroMainHeading: 'THE NEW STANDARD OF STREETWEAR',
       prop1: 'توصيل مجاني في عمّان وبدينار لكافة المحافظات',
@@ -287,6 +289,8 @@ document.addEventListener('DOMContentLoaded', () => {
       stayConnectedNote: 'Follow our channels to be first to know about new drops and exclusive offers:',
       searchPlaceholder: 'Search tees, hoodies, sizes, colors...',
       heroShopBtn: 'SHOP THE COLLECTION',
+      heroTagline: 'Luxury Everyday Essentials • 260 GSM Combed Cotton • Crafted in Jordan',
+      writeReview: 'Write a Review',
       heroSubHeading: 'Relaxed boxy fits designed for everyday streetwear with durable Jordanian premium craftsmanship.',
       heroMainHeading: 'THE NEW STANDARD OF STREETWEAR',
       prop1: 'Free Delivery in Amman • 1 JD Jordan-wide',
@@ -863,16 +867,27 @@ document.addEventListener('DOMContentLoaded', () => {
     if (secHero && design.hero) {
       secHero.style.display = design.hero.enabled !== false ? 'flex' : 'none';
       const heroBg = document.getElementById('heroBannerImg');
-      if (heroBg && design.hero.bgImage) heroBg.src = design.hero.bgImage;
+      if (heroBg && design.hero.bgImage) {
+        heroBg.src = design.hero.bgImage;
+      }
       const brandName = document.getElementById('heroBrandName');
       if (brandName && design.hero.brandTitle) brandName.textContent = design.hero.brandTitle;
       const mainH = document.getElementById('heroMainHeading');
-      if (mainH && design.hero.mainHeading) mainH.textContent = design.hero.mainHeading;
+      if (mainH && design.hero.mainHeading) {
+        mainH.textContent = design.hero.mainHeading;
+        mainH.removeAttribute('data-i18n');
+      }
       const tagline = document.getElementById('heroTagline');
-      if (tagline && design.hero.subHeading) tagline.textContent = design.hero.subHeading;
+      if (tagline && design.hero.subHeading) {
+        tagline.textContent = design.hero.subHeading;
+        tagline.removeAttribute('data-i18n');
+      }
       const ctaBtn = document.getElementById('heroShopBtn');
       if (ctaBtn) {
-        if (design.hero.ctaText) ctaBtn.textContent = design.hero.ctaText;
+        if (design.hero.ctaText) {
+          ctaBtn.textContent = design.hero.ctaText;
+          ctaBtn.removeAttribute('data-i18n');
+        }
         if (design.hero.ctaLink) ctaBtn.setAttribute('href', design.hero.ctaLink);
       }
     }
@@ -2717,6 +2732,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const prodPage = document.getElementById('productPage');
     if (prodPage && prodPage.style.display === 'block' && state.currentProductForModal) {
       renderProductPageContent(state.currentProductForModal);
+    }
+
+    // Re-apply admin design customizations so live design overrides static dictionary
+    if (state.design) {
+      applyDesign(state.design);
     }
   }
 

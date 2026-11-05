@@ -74,7 +74,7 @@
   "products": [
     {
       "id": "prod-1793258212025",
-      "name": "VELEN Signature Heavyweight Hoodie — Charcoal",
+      "name": "VELEN Signature Heavyweight Hoodie - Charcoal",
       "category": "Hoodies",
       "price": 24,
       "comparePrice": 28,
@@ -113,12 +113,12 @@
           ]
         }
       ],
-      "stock": 20,
+      "stock": 19,
       "description": "Oversized luxury drape, double-layered hood without drawstrings, kangaroo pocket, ribbed cuffs. Made in Amman.",
       "fabric": "450 GSM Heavy French Terry Cotton",
       "createdAt": "2026-10-29T07:16:52.025Z",
       "sizeInventory": {
-        "S": 5,
+        "S": 4,
         "M": 8,
         "L": 5,
         "XL": 2
@@ -518,7 +518,7 @@
     },
     "hero": {
       "enabled": true,
-      "bgImage": "/assets/velen-hero-clean.jpg",
+      "bgImage": "/uploads/velen-1793836148989-805155872.jpg",
       "brandTitle": "VELEN",
       "mainHeading": "Premium Everyday Essentials. Made in Jordan.",
       "subHeading": "CLEAN FITS. PREMIUM FEEL. BUILT FOR EVERYDAY WEAR.",

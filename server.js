@@ -266,7 +266,20 @@ app.get('/api/design', async (req, res) => {
 
 app.put('/api/design', async (req, res) => {
   const db = readDB();
-  db.design = { ...db.design, ...req.body };
+  const incoming = req.body || {};
+  db.design = {
+    ...(db.design || {}),
+    ...incoming,
+    hero: { ...(db.design?.hero || {}), ...(incoming.hero || {}) },
+    theme: { ...(db.design?.theme || {}), ...(incoming.theme || {}) },
+    header: { ...(db.design?.header || {}), ...(incoming.header || {}) },
+    valueProps: { ...(db.design?.valueProps || {}), ...(incoming.valueProps || {}) },
+    collectionSection: { ...(db.design?.collectionSection || {}), ...(incoming.collectionSection || {}) },
+    communitySection: { ...(db.design?.communitySection || {}), ...(incoming.communitySection || {}) },
+    aboutSection: { ...(db.design?.aboutSection || {}), ...(incoming.aboutSection || {}) },
+    comingSoon: { ...(db.design?.comingSoon || {}), ...(incoming.comingSoon || {}) },
+    checkoutUpsell: { ...(db.design?.checkoutUpsell || {}), ...(incoming.checkoutUpsell || {}) }
+  };
   writeDB(db);
   await firebaseService.updateDesign(db.design);
   broadcast('DESIGN_UPDATED', db.design);
@@ -333,11 +346,14 @@ app.put('/api/products/:id', async (req, res) => {
     stock: parseInt(req.body.stock !== undefined ? req.body.stock : existing.stock, 10)
   };
 
-  const localIdx = (db.products || []).findIndex(p => p.id === req.params.id);
+  db.products = db.products || [];
+  const localIdx = db.products.findIndex(p => p.id === req.params.id);
   if (localIdx !== -1) {
     db.products[localIdx] = updatedProduct;
-    writeDB(db);
+  } else {
+    db.products.push(updatedProduct);
   }
+  writeDB(db);
   await firebaseService.saveProduct(updatedProduct);
 
   broadcast('PRODUCT_UPDATED', updatedProduct);

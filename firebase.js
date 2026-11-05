@@ -171,6 +171,18 @@ module.exports = {
         return {
           ...(localFallback?.design || {}),
           ...firestoreData,
+          hero: {
+            ...(localFallback?.design?.hero || {}),
+            ...(firestoreData?.hero || {})
+          },
+          theme: {
+            ...(localFallback?.design?.theme || {}),
+            ...(firestoreData?.theme || {})
+          },
+          header: {
+            ...(localFallback?.design?.header || {}),
+            ...(firestoreData?.header || {})
+          },
           comingSoon: {
             ...(localFallback?.design?.comingSoon || {}),
             ...(firestoreData?.comingSoon || {})
