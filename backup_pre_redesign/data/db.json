@@ -1,0 +1,711 @@
+{
+  "settings": {
+    "announcement": "FREE DELIVERY IN AMMAN • 1 JD ACROSS JORDAN",
+    "brandName": "Velen Official",
+    "slogan": "Premium Everyday Essentials. Made in Jordan.",
+    "subSlogan": "CLEAN FITS. PREMIUM FEEL. BUILT FOR EVERYDAY WEAR.",
+    "currency": "JOD",
+    "freeShippingThreshold": 20,
+    "contactPhone": "+962 7 7018 8144",
+    "orderEmail": "Velenoffical@gmail.com",
+    "nextOrderNumber": 1004,
+    "social": {
+      "instagram": "https://instagram.com/velenofficial",
+      "tiktok": "https://tiktok.com/@velenofficial",
+      "whatsapp": "962770188144",
+      "facebook": "https://facebook.com/velenofficial"
+    },
+    "instagram": "velenofficial",
+    "gmailUser": "Velenoffical@gmail.com",
+    "gmailAppPassword": "",
+    "instagramUrl": "https://www.instagram.com/velen.offical?dlrf=c3I5MGh6eTZneGYy",
+    "socialLinks": {
+      "instagram": "https://www.instagram.com/velen.offical?dlrf=c3I5MGh6eTZneGYy"
+    },
+    "policies": {
+      "shipping": {
+        "titleEn": "Shipping & Seamless Exchange Policy",
+        "titleAr": "سياسة الشحن والتبديل",
+        "deliveryEn": "Free delivery inside Amman within 24 to 48 hours. Flat 1 JOD delivery fee across all other Jordanian governorates (Irbid, Zarqa, Aqaba, Salt, etc.). Cash on Delivery (COD) and instant CliQ payment available upon package arrival.",
+        "deliveryAr": "التوصيل داخل عمّان مجاناً لكافة المناطق خلال 24 - 48 ساعة. التوصيل لكافة محافظات المملكة (إربد، الزرقاء، العقبة، السلط...) 1 دينار فقط. الدفع نقداً عند الاستلام (COD) أو تحويل فوري عبر CliQ.",
+        "exchangeEn": "You are fully entitled to inspect the garment and try your size upon delivery before the courier leaves. If you need a size exchange, we provide a smooth, doorstep exchange within 3 business days from your delivery date with zero complications.",
+        "exchangeAr": "يحق لك تماماً معاينة القطعة وتجربة المقاس فوراً عند الاستلام. في حال الرغبة بتبديل المقاس، يتم التبديل فوري وبكل سلاسة عند باب بيتك خلال 3 أيام من تاريخ الاستلام دون أي تعقيد."
+      },
+      "care": {
+        "titleEn": "Fabric & Garment Care Guide",
+        "titleAr": "???? ??????? ???????? ????????",
+        "subEn": "PREMIUM HEAVYWEIGHT FABRICS LONGEVITY PROTOCOL",
+        "subAr": "???????? ?????? ??? ??????? ???????",
+        "badgeEn": "THE LUXURY FABRIC ADVANTAGE",
+        "badgeAr": "???? ??????? ???????",
+        "introEn": "VELEN essentials are crafted from custom luxury heavyweight fabrics. To preserve its dense weave and signature boxy drape, follow our tested garment longevity protocol below.",
+        "introAr": "??? ????? ?????? ?? ????? ????? ????? ?????? ????? ?????? ??? ????? ?????? ????? ???????."
+      }
+    }
+  },
+  "categories": [
+    {
+      "id": "tees",
+      "nameEn": "Tees",
+      "nameAr": "تيشيرتات",
+      "slug": "tees"
+    },
+    {
+      "id": "ringer",
+      "nameEn": "Ringer Edition",
+      "nameAr": "ياقة ملونة",
+      "slug": "ringer"
+    },
+    {
+      "id": "boxy",
+      "nameEn": "Boxy & Cropped",
+      "nameAr": "قصّة بوكسي",
+      "slug": "boxy"
+    },
+    {
+      "id": "hoodies",
+      "nameEn": "Hoodies & Sweats",
+      "nameAr": "هوديز وسويت شيرت",
+      "slug": "hoodies"
+    },
+    {
+      "id": "pants",
+      "nameEn": "Pants & Bottoms",
+      "nameAr": "بناطيل وسراويل",
+      "slug": "pants"
+    }
+  ],
+  "products": [
+    {
+      "id": "prod-1793258212025",
+      "name": "VELEN Signature Heavyweight Hoodie - Charcoal",
+      "category": "Hoodies",
+      "price": 24,
+      "comparePrice": 28,
+      "onSale": true,
+      "featured": true,
+      "image": "/assets/velen-hero-clean.jpg",
+      "images": [
+        "/assets/velen-hero-clean.jpg"
+      ],
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL"
+      ],
+      "colors": [
+        {
+          "name": "شاركويل رمادي / Charcoal",
+          "hex": "#34495e",
+          "images": [
+            "/assets/velen-hero-clean.jpg"
+          ]
+        },
+        {
+          "name": "أسود فاحم / Midnight Black",
+          "hex": "#111111",
+          "images": [
+            "/assets/velen-boxy-black.jpg"
+          ]
+        },
+        {
+          "name": "أبيض عاجي / Off White",
+          "hex": "#f5f6fa",
+          "images": [
+            "/assets/velen-boxy-white.jpg"
+          ]
+        }
+      ],
+      "stock": 19,
+      "description": "Oversized luxury drape, double-layered hood without drawstrings, kangaroo pocket, ribbed cuffs. Made in Amman.",
+      "fabric": "450 GSM Heavy French Terry Cotton",
+      "createdAt": "2026-10-29T07:16:52.025Z",
+      "sizeInventory": {
+        "S": 4,
+        "M": 8,
+        "L": 5,
+        "XL": 2
+      },
+      "costPrice": 9.5
+    },
+    {
+      "id": "prod-1",
+      "name": "VELEN Ringer Tee",
+      "category": "Tees",
+      "price": 13,
+      "comparePrice": 16,
+      "onSale": true,
+      "featured": true,
+      "image": "/assets/velen-ringer-sky-blue.jpg",
+      "images": [
+        "/assets/velen-ringer-sky-blue.jpg",
+        "/assets/velen-hero-banner.jpg"
+      ],
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL"
+      ],
+      "colors": [
+        {
+          "name": "سماوي هادئ / Sky Blue",
+          "hex": "#7bb5d9",
+          "images": [
+            "/assets/velen-ringer-sky-blue.jpg",
+            "/assets/velen-hero-banner.jpg"
+          ]
+        },
+        {
+          "name": "أبيض برباط أسود / Classic White",
+          "hex": "#ffffff",
+          "images": [
+            "/assets/velen-ringer-white.jpg"
+          ]
+        },
+        {
+          "name": "أحمر عنابي / Ruby Red",
+          "hex": "#c0392b",
+          "images": [
+            "/assets/velen-hero-clean.jpg"
+          ]
+        }
+      ],
+      "stock": 23,
+      "description": "Designed for effortless everyday wear. Crafted from 100% premium Jordanian heavyweight cotton with contrast white ribbed collar and cuffs. Tailored streetwear relaxed fit.",
+      "fabric": "100% Heavyweight Cotton (260 GSM)",
+      "createdAt": "2026-10-28T10:00:00.000Z",
+      "sizeInventory": {
+        "S": 6,
+        "M": 9,
+        "L": 6,
+        "XL": 2
+      },
+      "costPrice": 4.8
+    },
+    {
+      "id": "prod-2",
+      "name": "VELEN Boxy Cropped Tee",
+      "category": "Tees",
+      "price": 11,
+      "comparePrice": 14,
+      "onSale": true,
+      "featured": true,
+      "image": "/assets/velen-boxy-white.jpg",
+      "images": [
+        "/assets/velen-boxy-white.jpg",
+        "/assets/velen-hero-banner.jpg"
+      ],
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL"
+      ],
+      "colors": [
+        {
+          "name": "أبيض ناصع / Chalk White",
+          "hex": "#ffffff",
+          "images": [
+            "/assets/velen-boxy-white.jpg",
+            "/assets/velen-hero-banner.jpg"
+          ]
+        },
+        {
+          "name": "أسود غامق / Pitch Black",
+          "hex": "#111111",
+          "images": [
+            "/assets/velen-boxy-black.jpg"
+          ]
+        },
+        {
+          "name": "أزرق سماوي / Sky Blue",
+          "hex": "#7bb5d9",
+          "images": [
+            "/assets/velen-ringer-sky-blue.jpg"
+          ]
+        }
+      ],
+      "stock": 19,
+      "description": "Signature boxy cropped silhouette with dropped shoulders. Ultra-soft breathable cotton finish. High-density Velen branding tag at hem.",
+      "fabric": "100% Combed Heavy Cotton (250 GSM)",
+      "createdAt": "2026-10-28T10:05:00.000Z",
+      "sizeInventory": {
+        "S": 4,
+        "M": 8,
+        "L": 4,
+        "XL": 3
+      },
+      "costPrice": 4
+    },
+    {
+      "id": "prod-3",
+      "name": "VELEN Ringer Tee — White",
+      "category": "Tees",
+      "price": 13,
+      "comparePrice": 16,
+      "onSale": true,
+      "featured": true,
+      "image": "/assets/velen-ringer-white.jpg",
+      "images": [
+        "/assets/velen-ringer-white.jpg"
+      ],
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL"
+      ],
+      "colors": [
+        {
+          "name": "أبيض كلاسيك / Classic White",
+          "hex": "#ffffff",
+          "images": [
+            "/assets/velen-ringer-white.jpg"
+          ]
+        },
+        {
+          "name": "سماوي باستيل / Sky Blue",
+          "hex": "#7bb5d9",
+          "images": [
+            "/assets/velen-ringer-sky-blue.jpg"
+          ]
+        },
+        {
+          "name": "أسود فخم / Pitch Black",
+          "hex": "#111111",
+          "images": [
+            "/assets/velen-boxy-black.jpg"
+          ]
+        }
+      ],
+      "stock": 32,
+      "description": "Clean white base with contrast obsidian black ringer trims. Essential streetwear staple designed and manufactured locally in Amman, Jordan.",
+      "fabric": "100% Jordanian Cotton (260 GSM)",
+      "createdAt": "2026-10-28T10:10:00.000Z",
+      "sizeInventory": {
+        "S": 8,
+        "M": 13,
+        "L": 8,
+        "XL": 3
+      },
+      "costPrice": 4.8
+    },
+    {
+      "id": "prod-4",
+      "name": "VELEN Heavy Boxy Tee",
+      "category": "Tees",
+      "price": 11,
+      "comparePrice": 14,
+      "onSale": true,
+      "featured": true,
+      "image": "/assets/velen-boxy-black.jpg",
+      "images": [
+        "/assets/velen-boxy-black.jpg"
+      ],
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL"
+      ],
+      "colors": [
+        {
+          "name": "أسود داكن / Pitch Black",
+          "hex": "#111111",
+          "images": [
+            "/assets/velen-boxy-black.jpg"
+          ]
+        },
+        {
+          "name": "أبيض ناصع / Chalk White",
+          "hex": "#ffffff",
+          "images": [
+            "/assets/velen-boxy-white.jpg"
+          ]
+        },
+        {
+          "name": "رمادي فحمي / Charcoal Grey",
+          "hex": "#34495e",
+          "images": [
+            "/assets/velen-hero-clean.jpg"
+          ]
+        }
+      ],
+      "stock": 28,
+      "description": "Deep midnight black boxy cut tee. Heavyweight drape, reinforced double stitching, minimal understated luxury aesthetic.",
+      "fabric": "100% Combed Heavy Cotton (250 GSM)",
+      "createdAt": "2026-10-28T10:15:00.000Z",
+      "sizeInventory": {
+        "S": 7,
+        "M": 12,
+        "L": 7,
+        "XL": 2
+      },
+      "costPrice": 4
+    }
+  ],
+  "community": [
+    {
+      "id": "comm-1793548900530",
+      "author": "حمزة العبادي",
+      "authorTag": "@hamza_abbadi",
+      "avatar": "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&q=80",
+      "mediaType": "text",
+      "mediaUrl": null,
+      "videoUrl": null,
+      "subtitle": "Velen Style",
+      "rating": 5,
+      "comment": "الخامة خرافية والقصة البوكسي على اللبس ممتازة جداً، فخورين بمنتج أردني بهالمستوى!",
+      "itemWorn": "VELEN Ringer Tee — Sky Blue",
+      "likes": 0,
+      "approved": true,
+      "createdAt": "2026-11-01T16:01:40.530Z"
+    },
+    {
+      "id": "comm-1",
+      "author": "Omar_AlKhatib",
+      "authorTag": "@omar.style_jo",
+      "avatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80",
+      "mediaType": "video",
+      "mediaUrl": "/assets/velen-community-1.jpg",
+      "videoUrl": "https://assets.mixkit.co/videos/preview/mixkit-young-man-styling-a-casual-look-41555-large.mp4",
+      "subtitle": "بنطلون مع Ringer Sky Blue",
+      "rating": 5,
+      "comment": "خامة التيشيرت فوق الخيال! الفت بيرفكت والتوصيل بعمان وصلني بنفس اليوم 🔥",
+      "itemWorn": "VELEN Ringer Tee — Sky Blue",
+      "likes": 49,
+      "approved": true,
+      "createdAt": "2026-10-28T19:30:00.000Z"
+    },
+    {
+      "id": "comm-2",
+      "author": "Leen.Amman",
+      "authorTag": "@leen_fits",
+      "avatar": "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=150&q=80",
+      "mediaType": "photo",
+      "mediaUrl": "/assets/velen-community-2.jpg",
+      "subtitle": "Jabal Amman Cafe Fit",
+      "rating": 5,
+      "comment": "احلى بوكسي تيشيرت جربته بالأردن.. القطن تقيل وما بتغير مع الغسيل أبداً والتطريز راقي!",
+      "itemWorn": "VELEN Boxy Cropped Tee — Black",
+      "likes": 38,
+      "approved": true,
+      "createdAt": "2026-10-27T16:20:00.000Z"
+    },
+    {
+      "id": "comm-3",
+      "author": "Tariq_Z",
+      "authorTag": "@tariq.jo",
+      "avatar": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80",
+      "mediaType": "photo",
+      "mediaUrl": "/assets/velen-boxy-black.jpg",
+      "subtitle": "All Black Essentials",
+      "rating": 5,
+      "comment": "البراند الأقوى حالياً بدون مبالغة، السعر مقابل الجودة أسطوري والتفاصيل رهيبة.",
+      "itemWorn": "VELEN Boxy Cropped Tee — Black",
+      "likes": 31,
+      "approved": true,
+      "createdAt": "2026-10-26T12:00:00.000Z"
+    }
+  ],
+  "orders": [
+    {
+      "id": "ORD-1003",
+      "customerName": "Test Valid Order",
+      "phone": "0791234567",
+      "city": "Amman",
+      "address": "Sweifieh Paris St",
+      "notes": "",
+      "source": "Storefront (المتجر الإلكتروني)",
+      "items": [
+        {
+          "price": 11,
+          "quantity": 1,
+          "name": "VELEN Heavy Boxy Tee",
+          "id": "prod-1",
+          "size": "M"
+        }
+      ],
+      "subtotal": 0,
+      "shipping": 0,
+      "total": 0,
+      "paymentMethod": "Cash on Delivery",
+      "status": "Pending",
+      "createdAt": "2026-11-05T00:49:44.949Z"
+    },
+    {
+      "id": "ORD-1001",
+      "customerName": "سارة خالد (انستغرام)",
+      "phone": "",
+      "city": "Amman",
+      "address": "",
+      "notes": "طلب خاص عبر دايركت انستغرام",
+      "source": "instagram",
+      "items": [
+        {
+          "productId": "p1",
+          "name": "HOODIE BLACK VELEN",
+          "size": "L",
+          "quantity": 1,
+          "price": 35
+        }
+      ],
+      "subtotal": 35,
+      "shipping": 3,
+      "total": 38,
+      "paymentMethod": "cod",
+      "status": "Pending",
+      "createdAt": "2026-11-03T21:55:37.428Z"
+    },
+    {
+      "id": "ORD-1000",
+      "customerName": "محمد أحمد",
+      "phone": "",
+      "city": "Amman",
+      "address": "",
+      "notes": "",
+      "source": "web",
+      "items": [
+        {
+          "productId": "p1",
+          "name": "HOODIE BLACK VELEN",
+          "size": "M",
+          "quantity": 1,
+          "price": 35
+        }
+      ],
+      "subtotal": 35,
+      "shipping": 3,
+      "total": 38,
+      "paymentMethod": "cod",
+      "status": "Pending",
+      "createdAt": "2026-11-03T21:55:36.540Z"
+    },
+    {
+      "id": "ORD-1137",
+      "customerName": "يزن المصري",
+      "phone": "0795551234",
+      "city": "Amman (عبدون)",
+      "address": "عبدون، قرب السفارة الأمريكية، بناية 8",
+      "notes": "",
+      "items": [
+        {
+          "id": "prod-1",
+          "name": "VELEN Ringer Tee — Sky Blue",
+          "size": "L",
+          "price": 13,
+          "quantity": 1,
+          "image": "/assets/velen-ringer-sky-blue.jpg"
+        }
+      ],
+      "subtotal": 13,
+      "shipping": 0,
+      "total": 13,
+      "paymentMethod": "Cash on Delivery (دفع عند الاستلام)",
+      "status": "Pending",
+      "createdAt": "2026-10-29T07:16:37.520Z"
+    },
+    {
+      "id": "ORD-9821",
+      "customerName": "أحمد العبداللات",
+      "phone": "0791234567",
+      "city": "Amman (عمان - دابوق)",
+      "address": "شارع دابوق الرئيسي، بناية 14، طابق 2",
+      "items": [
+        {
+          "id": "prod-1",
+          "name": "VELEN Ringer Tee — Sky Blue",
+          "size": "L",
+          "price": 13,
+          "quantity": 1,
+          "image": "/assets/velen-ringer-sky-blue.jpg"
+        }
+      ],
+      "subtotal": 13,
+      "shipping": 0,
+      "total": 13,
+      "paymentMethod": "Cash on Delivery (دفع عند الاستلام)",
+      "status": "Out for Delivery",
+      "createdAt": "2026-10-29T08:15:00.000Z"
+    }
+  ],
+  "design": {
+    "theme": {
+      "primaryColor": "#ffffff",
+      "accentColor": "#e5b95f",
+      "bgColor": "#000000",
+      "saleBadgeText": "SALE"
+    },
+    "header": {
+      "showAnnouncement": true,
+      "announcementText": "FREE DELIVERY IN AMMAN • 1 JD ACROSS JORDAN",
+      "logoUrl": "/assets/velen-logo.jpg",
+      "brandName": "Velen Official"
+    },
+    "hero": {
+      "enabled": true,
+      "bgImage": "/uploads/velen-1793836148989-805155872.jpg",
+      "brandTitle": "VELEN",
+      "mainHeading": "Premium Everyday Essentials. Made in Jordan.",
+      "subHeading": "CLEAN FITS. PREMIUM FEEL. BUILT FOR EVERYDAY WEAR.",
+      "ctaText": "SHOP THE COLLECTION",
+      "ctaLink": "#collection"
+    },
+    "valueProps": {
+      "enabled": true,
+      "prop1": "توصيل مجاني في عمّان وبدينار لكافة المحافظات",
+      "prop2": "قطن أردني فاخر 260 GSM معالج ومثبت",
+      "prop3": "تبديل فوري للمقاس عند باب البيت"
+    },
+    "sectionsOrder": [
+      "hero",
+      "valueProps",
+      "collection",
+      "community",
+      "about"
+    ],
+    "sectionsVisibility": {
+      "hero": true,
+      "valueProps": true,
+      "collection": true,
+      "community": true,
+      "about": true
+    },
+    "collectionSection": {
+      "subtitle": "AUTUMN / ESSENTIALS 2026",
+      "title": "THE COLLECTION"
+    },
+    "communitySection": {
+      "title": "COMMUNITY WEARS VELEN",
+      "subtitle": "Real people. Real style.",
+      "desc": "شاركنا لوكك اليومي وفيديوهاتك مع قطع Velen، وقيم تجربتك من 5 نجوم لتدخل السحب الأسبوعي على بوكس إسنشيلز كامل!"
+    },
+    "aboutSection": {
+      "enabled": true,
+      "sub": "THE STORY",
+      "title": "WHY VELEN?",
+      "p1": "انطلقت Velen من عمّان لإعادة تعريف الملابس اليومية في الأردن. نركز على القصّات البوكسي المريحة (Boxy & Cropped Fit) والأقمشة القطنية الثقيلة 100% التي تحافظ على شكلها ونعومتها مع الاستخدام المتكرر.",
+      "feature1Title": "قطن محلي نخب أول",
+      "feature1Desc": "نسيج قطني محبوك بوزن 260 GSM معالجة ضد الانكماش والوبر.",
+      "feature2Title": "قصّة بوكسي معاصرة",
+      "feature2Desc": "تصميم أكتاف منسدلة وطول متناسق يعطي إطلالة ستريت وير نظيفة وفخمة.",
+      "feature3Title": "فخر الصناعة الأردنية",
+      "feature3Desc": "مُصمم ومُنتج بأيادٍ أردنية مبدعة لدعم الإنتاج المحلي بأعلى معايير العالمية.",
+      "image": "/assets/velen-logo.jpg",
+      "quote": "Clean fits. Premium feel. Built for everyday wear."
+    },
+    "comingSoon": {
+      "enabled": false,
+      "title": "THE NEXT DROP IS COMING",
+      "subtitle": "AUTUMN / WINTER ESSENTIALS 2026. MADE IN JORDAN.",
+      "launchDate": "2026-11-20T20:00:00.000Z",
+      "notifyNote": "BE THE FIRST TO ACCESS THE EXCLUSIVE COLLECTION."
+    },
+    "checkoutUpsell": {
+      "enabled": true,
+      "title": "عرض خاص وحصري مع طلبك",
+      "subtitle": "أضف تيشيرت رينجر إضافي إلى طلبك الآن بخصم خاص (9.500 JOD بدل 13.000)!",
+      "productId": "prod-1",
+      "specialPrice": 9.5
+    },
+    "socialLinks": {
+      "instagram": "https://www.instagram.com/velen.offical?dlrf=c3I5MGh6eTZneGYy"
+    }
+  },
+  "promoCodes": [
+    {
+      "code": "VELEN10",
+      "type": "percentage",
+      "value": 10,
+      "active": true,
+      "uses": 0,
+      "minOrder": 0,
+      "usageLimit": 50,
+      "timesUsed": 0
+    },
+    {
+      "code": "FREESHIP",
+      "type": "fixed",
+      "value": 1,
+      "active": true,
+      "uses": 0,
+      "minOrder": 15,
+      "usageLimit": 50,
+      "timesUsed": 0
+    }
+  ],
+  "expenses": [
+    {
+      "id": "exp-101",
+      "title": "دفعة أقمشة قطن 260 GSM معالج (150 متر)",
+      "category": "تصنيع وأقمشة",
+      "amount": 420,
+      "date": "2026-10-25",
+      "notes": "شراء رولات قطن نخب أول لمجموعة التيشيرتات والرينجر"
+    },
+    {
+      "id": "exp-102",
+      "title": "طباعة وتطريز ليبلات وعلامات Brand Tags",
+      "category": "ليبلات وتغليف",
+      "amount": 65,
+      "date": "2026-10-27",
+      "notes": "بوكسات Velen فاخرة وليبل الرقبة الداخلي"
+    },
+    {
+      "id": "exp-103",
+      "title": "إعلانات سبونسر Instagram & TikTok",
+      "category": "تسويق وإعلانات",
+      "amount": 85,
+      "date": "2026-11-01",
+      "notes": "حملة ترويجية لدروب الخريف دروب 2026"
+    }
+  ],
+  "reviews": [
+    {
+      "id": "rev-1",
+      "productId": "prod-1793258212025",
+      "author": "عمر القاسم",
+      "rating": 5,
+      "comment": "الهودي فخم بشكل مش طبيعي، القماش ثقيل والقصة البوكسي مع الجينز طالعة رهيبة. التوصيل وصلني بعمان بنفس اليوم!",
+      "fitFeedback": "True to size (مطابق للمقاس تماماً)",
+      "sizePurchased": "L",
+      "verified": true,
+      "createdAt": "2026-11-01T14:20:00.000Z"
+    },
+    {
+      "id": "rev-2",
+      "productId": "prod-1793258212025",
+      "author": "سند الخياط",
+      "rating": 5,
+      "comment": "Double layer hood واقفة صح بدون خيطان، خياطة أردنية تضاهي البراندات العالمية.",
+      "fitFeedback": "Relaxed Streetwear Fit",
+      "sizePurchased": "XL",
+      "verified": true,
+      "createdAt": "2026-11-02T18:10:00.000Z"
+    },
+    {
+      "id": "rev-3",
+      "productId": "prod-1",
+      "author": "حمزة النجار",
+      "rating": 5,
+      "comment": "الرينجر تي لون Sky Blue رائع بالواقع أكثر من الصور، القبة البيضاء قوية وما بتتمدد مع الغسيل.",
+      "fitFeedback": "Perfect Fit",
+      "sizePurchased": "M",
+      "verified": true,
+      "createdAt": "2026-10-30T16:00:00.000Z"
+    },
+    {
+      "id": "rev-4",
+      "productId": "prod-2",
+      "author": "راشد الزعبي",
+      "rating": 5,
+      "comment": "القصة البوكسي نمرة واحد، قطن مريح وبارد وصيفي ممتاز. شكر خاص لفيلين على سرعة التبديل.",
+      "fitFeedback": "True to size",
+      "sizePurchased": "M",
+      "verified": true,
+      "createdAt": "2026-10-31T11:45:00.000Z"
+    }
+  ]
+}
