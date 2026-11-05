@@ -811,6 +811,64 @@
                 <input type="text" id="desAboutQuote" value="Clean fits. Premium feel. Built for everyday wear.">
               </div>
             </div>
+          <!-- 6.5 FABRIC SPECIFICATION & SEASON CARE GUIDE -->
+          <div class="design-card">
+            <div class="design-card-head">
+              <div class="head-title">
+                <i class="fa-solid fa-shirt" style="color:var(--gold-accent, #e5b95f);"></i>
+                <h3>نوع القماش ودليل العناية للموسم (Fabric Specification & Care Guide)</h3>
+              </div>
+              <span class="status-pill" style="background:rgba(229,185,95,0.15); color:var(--gold-accent); font-size:11px;">تخصيص الفابرك للمواسم (صيف / شتاء)</span>
+            </div>
+            <p class="section-desc" style="font-size:12px; color:#aaa; margin-bottom:14px;">
+              تغيير نوع ووزن القماش المعروض في روابط الفوتر، القوائم الجانبية، وصفحة العناية بالملابس (مثل التغيير من صيفي 260 GSM إلى شتوي ميلتون 400 GSM أو أي نسيج للموسم الجديد):
+            </p>
+            <div class="form-row">
+              <div class="form-group flex-1">
+                <label>اسم ودليل القماش في القوائم والفوتر (English Menu / Footer Link) *</label>
+                <input type="text" id="desCareTitleEn" placeholder="Fabric & Garment Care Guide (Winter Edition)" value="Fabric & Garment Care Guide (260 GSM)">
+              </div>
+              <div class="form-group flex-1">
+                <label>اسم ودليل القماش في القوائم والفوتر (العربية) *</label>
+                <input type="text" id="desCareTitleAr" placeholder="دليل العناية بالملابس (قطن شتوي فاخر)" value="دليل العناية بالقطن الثقيل 260 GSM">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group flex-1">
+                <label>العنوان الفرعي لصفحة القماش (Page Subtitle EN)</label>
+                <input type="text" id="desCareSubEn" placeholder="HEAVYWEIGHT COTTON & FLEECE PROTOCOL" value="260 GSM HEAVYWEIGHT COMBED COTTON LONGEVITY PROTOCOL">
+              </div>
+              <div class="form-group flex-1">
+                <label>العنوان الفرعي لصفحة القماش (العربية)</label>
+                <input type="text" id="desCareSubAr" placeholder="بروتوكول الحفاظ على جودة الأقمشة الفاخرة" value="بروتوكول الحفاظ على القطن الأردني الثقيل الفاخر 260 GSM">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group flex-1">
+                <label>شارة ميزة القماش (Badge EN)</label>
+                <input type="text" id="desCareBadgeEn" placeholder="THE LUXURY FABRIC ADVANTAGE" value="THE 260 GSM ADVANTAGE">
+              </div>
+              <div class="form-group flex-1">
+                <label>شارة ميزة القماش (العربية)</label>
+                <input type="text" id="desCareBadgeAr" placeholder="ميزة الأقمشة الفاخرة" value="ميزة القطن الثقيل 260 GSM">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group flex-1">
+                <label>مقدمة وشرح القماش للموسم (Fabric Intro - EN)</label>
+                <textarea id="desCareIntroEn" rows="3" placeholder="VELEN essentials are crafted from custom heavyweight fabrics..."></textarea>
+              </div>
+              <div class="form-group flex-1">
+                <label>مقدمة وشرح القماش للموسم (العربية)</label>
+                <textarea id="desCareIntroAr" rows="3" placeholder="قطع فيلين مصنوعة من خامات قطنية فاخرة وثقيلة..."></textarea>
+              </div>
+            </div>
+            <div class="card-action-bar" style="margin-top:16px; padding-top:14px; border-top:1px solid #262626; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+              <span style="font-size:12px; color:#888;"><i class="fa-solid fa-circle-info" style="color:var(--gold-accent, #e5b95f);"></i> يتحدث تلقائياً في قائمة الفوتر، القائمة الجانبية، وصفحة Fabric Care فوراً</span>
+              <button type="button" class="btn-primary-action" onclick="window.velenAdmin.saveDesign()" style="padding:9px 18px; font-size:12px; font-weight:800; background:var(--gold-accent, #e5b95f); color:#000; border-radius:6px; display:inline-flex; align-items:center; gap:8px; cursor:pointer; border:none;">
+                <i class="fa-solid fa-floppy-disk"></i> حفظ ونشر إعدادات القماش
+              </button>
+            </div>
           </div>
 
           <!-- 7. COLORS & THEME -->
@@ -1032,23 +1090,45 @@
 
                 <div class="form-row">
                   <div class="form-group">
-                    <label>عنوان صفحة العناية (EN)</label>
-                    <input type="text" id="polCareTitleEn" placeholder="Fabric & Garment Care Guide (260 GSM)">
+                    <label>عنوان صفحة ودليل القماش في القوائم (EN) *</label>
+                    <input type="text" id="polCareTitleEn" placeholder="Fabric & Garment Care Guide (Winter Edition)">
                   </div>
                   <div class="form-group">
-                    <label>عنوان صفحة العناية (العربية)</label>
-                    <input type="text" id="polCareTitleAr" placeholder="دليل العناية بالقطن الثقيل 260 GSM">
+                    <label>عنوان صفحة ودليل القماش في القوائم (العربية) *</label>
+                    <input type="text" id="polCareTitleAr" placeholder="دليل العناية بالملابس (قطن شتوي فاخر)">
                   </div>
                 </div>
 
                 <div class="form-row">
                   <div class="form-group">
-                    <label>مقدمة القطن 260 GSM (Cotton Science Intro - EN)</label>
-                    <textarea id="polCareIntroEn" rows="3" placeholder="VELEN essentials are crafted from custom heavyweight 260 GSM combed cotton..."></textarea>
+                    <label>العنوان الفرعي لصفحة القماش (Page Subtitle EN)</label>
+                    <input type="text" id="polCareSubEn" placeholder="e.g. HEAVYWEIGHT COTTON & FLEECE PROTOCOL">
                   </div>
                   <div class="form-group">
-                    <label>مقدمة القطن 260 GSM (العربية)</label>
-                    <textarea id="polCareIntroAr" rows="3" placeholder="قطع فيلين مصنوعة من قطن ممشط ثقيل وفاخر بوزن 260 GSM..."></textarea>
+                    <label>العنوان الفرعي لصفحة القماش (العربية)</label>
+                    <input type="text" id="polCareSubAr" placeholder="مثال: بروتوكول الحفاظ على جودة الأقمشة الفاخرة">
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group">
+                    <label>شارة ميزة القماش (Badge EN)</label>
+                    <input type="text" id="polCareBadgeEn" placeholder="e.g. THE LUXURY FABRIC ADVANTAGE">
+                  </div>
+                  <div class="form-group">
+                    <label>شارة ميزة القماش (العربية)</label>
+                    <input type="text" id="polCareBadgeAr" placeholder="مثال: ميزة الأقمشة الفاخرة">
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group">
+                    <label>مقدمة وشرح القماش للموسم (Fabric Intro - EN)</label>
+                    <textarea id="polCareIntroEn" rows="3" placeholder="VELEN essentials are crafted from custom heavyweight fabrics..."></textarea>
+                  </div>
+                  <div class="form-group">
+                    <label>مقدمة وشرح القماش للموسم (العربية)</label>
+                    <textarea id="polCareIntroAr" rows="3" placeholder="قطع فيلين مصنوعة من خامات قطنية فاخرة وثقيلة..."></textarea>
                   </div>
                 </div>
               </div>

@@ -499,8 +499,22 @@ document.addEventListener('DOMContentLoaded', () => {
       if (p.care) {
         if (document.getElementById('polCareTitleEn')) document.getElementById('polCareTitleEn').value = p.care.titleEn || '';
         if (document.getElementById('polCareTitleAr')) document.getElementById('polCareTitleAr').value = p.care.titleAr || '';
+        if (document.getElementById('polCareSubEn')) document.getElementById('polCareSubEn').value = p.care.subEn || '';
+        if (document.getElementById('polCareSubAr')) document.getElementById('polCareSubAr').value = p.care.subAr || '';
+        if (document.getElementById('polCareBadgeEn')) document.getElementById('polCareBadgeEn').value = p.care.badgeEn || '';
+        if (document.getElementById('polCareBadgeAr')) document.getElementById('polCareBadgeAr').value = p.care.badgeAr || '';
         if (document.getElementById('polCareIntroEn')) document.getElementById('polCareIntroEn').value = p.care.introEn || '';
         if (document.getElementById('polCareIntroAr')) document.getElementById('polCareIntroAr').value = p.care.introAr || '';
+
+        // Also sync to Design Customizer fabric fields
+        if (document.getElementById('desCareTitleEn')) document.getElementById('desCareTitleEn').value = p.care.titleEn || '';
+        if (document.getElementById('desCareTitleAr')) document.getElementById('desCareTitleAr').value = p.care.titleAr || '';
+        if (document.getElementById('desCareSubEn')) document.getElementById('desCareSubEn').value = p.care.subEn || '';
+        if (document.getElementById('desCareSubAr')) document.getElementById('desCareSubAr').value = p.care.subAr || '';
+        if (document.getElementById('desCareBadgeEn')) document.getElementById('desCareBadgeEn').value = p.care.badgeEn || '';
+        if (document.getElementById('desCareBadgeAr')) document.getElementById('desCareBadgeAr').value = p.care.badgeAr || '';
+        if (document.getElementById('desCareIntroEn')) document.getElementById('desCareIntroEn').value = p.care.introEn || '';
+        if (document.getElementById('desCareIntroAr')) document.getElementById('desCareIntroAr').value = p.care.introAr || '';
       }
     }
   }
@@ -1218,10 +1232,14 @@ document.addEventListener('DOMContentLoaded', () => {
             exchangeAr: document.getElementById('polExchangeAr')?.value.trim() || ''
           },
           care: {
-            titleEn: document.getElementById('polCareTitleEn')?.value.trim() || 'Fabric & Garment Care Guide (260 GSM)',
-            titleAr: document.getElementById('polCareTitleAr')?.value.trim() || 'دليل العناية بالقطن الثقيل 260 GSM',
-            introEn: document.getElementById('polCareIntroEn')?.value.trim() || '',
-            introAr: document.getElementById('polCareIntroAr')?.value.trim() || ''
+            titleEn: document.getElementById('polCareTitleEn')?.value.trim() || document.getElementById('desCareTitleEn')?.value.trim() || 'Fabric & Garment Care Guide',
+            titleAr: document.getElementById('polCareTitleAr')?.value.trim() || document.getElementById('desCareTitleAr')?.value.trim() || 'دليل العناية بالملابس والأقمشة',
+            subEn: document.getElementById('polCareSubEn')?.value.trim() || document.getElementById('desCareSubEn')?.value.trim() || 'GARMENT LONGEVITY & FABRIC PROTOCOL',
+            subAr: document.getElementById('polCareSubAr')?.value.trim() || document.getElementById('desCareSubAr')?.value.trim() || 'بروتوكول الحفاظ على جودة الأقمشة الفاخرة',
+            badgeEn: document.getElementById('polCareBadgeEn')?.value.trim() || document.getElementById('desCareBadgeEn')?.value.trim() || 'THE FABRIC ADVANTAGE',
+            badgeAr: document.getElementById('polCareBadgeAr')?.value.trim() || document.getElementById('desCareBadgeAr')?.value.trim() || 'ميزة الأقمشة الفاخرة',
+            introEn: document.getElementById('polCareIntroEn')?.value.trim() || document.getElementById('desCareIntroEn')?.value.trim() || '',
+            introAr: document.getElementById('polCareIntroAr')?.value.trim() || document.getElementById('desCareIntroAr')?.value.trim() || ''
           }
         }
       };
@@ -1947,6 +1965,27 @@ document.addEventListener('DOMContentLoaded', () => {
       if (abQuote) abQuote.value = d.aboutSection.quote || '';
     }
 
+    // 6.5 Fabric Specification & Care Guide
+    const carePol = state.settings?.policies?.care;
+    if (carePol) {
+      const cTEn = document.getElementById('desCareTitleEn');
+      if (cTEn) cTEn.value = carePol.titleEn || '';
+      const cTAr = document.getElementById('desCareTitleAr');
+      if (cTAr) cTAr.value = carePol.titleAr || '';
+      const cSEn = document.getElementById('desCareSubEn');
+      if (cSEn) cSEn.value = carePol.subEn || '';
+      const cSAr = document.getElementById('desCareSubAr');
+      if (cSAr) cSAr.value = carePol.subAr || '';
+      const cBEn = document.getElementById('desCareBadgeEn');
+      if (cBEn) cBEn.value = carePol.badgeEn || '';
+      const cBAr = document.getElementById('desCareBadgeAr');
+      if (cBAr) cBAr.value = carePol.badgeAr || '';
+      const cIEn = document.getElementById('desCareIntroEn');
+      if (cIEn) cIEn.value = carePol.introEn || '';
+      const cIAr = document.getElementById('desCareIntroAr');
+      if (cIAr) cIAr.value = carePol.introAr || '';
+    }
+
     // 7. Theme & Colors
     if (d.theme) {
       const accent = d.theme.accentColor || '#e5b95f';
@@ -2266,8 +2305,43 @@ document.addEventListener('DOMContentLoaded', () => {
       const data = await res.json();
       if (data.success) {
         state.design = data.design;
+
+        // Also sync and save Fabric Specification & Care Guide settings to /api/settings
+        const desCareTitleEn = document.getElementById('desCareTitleEn')?.value.trim();
+        const desCareTitleAr = document.getElementById('desCareTitleAr')?.value.trim();
+        if (desCareTitleEn || desCareTitleAr) {
+          try {
+            const carePayload = {
+              policies: {
+                care: {
+                  titleEn: desCareTitleEn || 'Fabric & Garment Care Guide',
+                  titleAr: desCareTitleAr || 'دليل العناية بالملابس والأقمشة',
+                  subEn: document.getElementById('desCareSubEn')?.value.trim() || 'GARMENT LONGEVITY & FABRIC PROTOCOL',
+                  subAr: document.getElementById('desCareSubAr')?.value.trim() || 'بروتوكول الحفاظ على جودة الأقمشة الفاخرة',
+                  badgeEn: document.getElementById('desCareBadgeEn')?.value.trim() || 'THE FABRIC ADVANTAGE',
+                  badgeAr: document.getElementById('desCareBadgeAr')?.value.trim() || 'ميزة الأقمشة الفاخرة',
+                  introEn: document.getElementById('desCareIntroEn')?.value.trim() || '',
+                  introAr: document.getElementById('desCareIntroAr')?.value.trim() || ''
+                }
+              }
+            };
+            const setRes = await fetch('/api/settings', {
+              method: 'PUT',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(carePayload)
+            });
+            const setData = await setRes.json();
+            if (setData.success) {
+              state.settings = setData.settings;
+              populateSettings();
+            }
+          } catch (careErr) {
+            console.error('Care guide sync error:', careErr);
+          }
+        }
+
         populateDesignCustomizer();
-        showAdminToast('✨ تم حفظ وتطبيق جميع تعديلات التصميم والتركيبة فوراً بالبث المباشر!', 'success');
+        showAdminToast('✨ تم حفظ وتطبيق جميع تعديلات التصميم ونوع القماش فوراً بالبث المباشر!', 'success');
       } else {
         showAdminToast('فشل حفظ التصميم', 'error');
       }

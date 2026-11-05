@@ -170,7 +170,7 @@ document.addEventListener('DOMContentLoaded', () => {
       fabricDetails: 'تفاصيل القماش:',
       description: 'الوصف:',
       freeDeliveryAmman: 'توصيل مجاني وسريع داخل عمّان • 1 دينار للمحافظات',
-      fabricCare: 'دليل العناية بالملابس (260 GSM)',
+      fabricCare: 'دليل العناية بالملابس',
       termsOfService: 'الشروط والأحكام والتوصيل',
       footerCopyright: '© 2026 VELEN OFFICIAL. صنع بكل فخر في عمّان، الأردن 🇯🇴',
       // Cart Drawer Footer
@@ -209,9 +209,9 @@ document.addEventListener('DOMContentLoaded', () => {
       policyContactText: 'فريق فيلين متواجد يومياً عبر واتساب لمساعدتك في اختيار المقاس أو تعديل العنوان فوراً.',
       // Care View
       breadcrumbCare: 'دليل العناية بالملابس',
-      carePageTitle: 'دليل العناية بالقطن الثقيل 260 GSM',
+      carePageTitle: 'دليل العناية بالملابس والأقمشة',
       carePageSub: 'بروتوكول الحفاظ على النسيج وقَصّة البوكسي لسنوات طويلة',
-      careBadge: 'ميزات قطن 260 GSM',
+      careBadge: 'ميزة الأقمشة الفاخرة',
       careIntroTitle: 'صُنعت لتدوم طويلاً',
       careIntroDesc: 'قطع فيلين مصنوعة من قطن ممشط ثقيل وفاخر بوزن 260 GSM. للحفاظ على كثافة النسيج، ونقاء الألوان، وقَصّة البوكسي الفاخرة لسنوات طويلة، يرجى اتباع التعليمات المعتمدة أدناه.',
       careStep1Title: 'غسيل بالماء البارد (30°C)',
@@ -371,7 +371,7 @@ document.addEventListener('DOMContentLoaded', () => {
       fabricDetails: 'Fabric Details:',
       description: 'Description:',
       freeDeliveryAmman: 'Fast & Free Delivery in Amman • 1 JD Jordan-wide',
-      fabricCare: 'Fabric & Garment Care Guide (260 GSM)',
+      fabricCare: 'Fabric & Garment Care Guide',
       termsOfService: 'Terms & Shipping Policy',
       footerCopyright: '© 2026 VELEN OFFICIAL. Made with pride in Amman, Jordan 🇯🇴',
       // Cart Drawer Footer
@@ -410,9 +410,9 @@ document.addEventListener('DOMContentLoaded', () => {
       policyContactText: 'Our team in Amman is available on WhatsApp daily for instant size recommendations, address adjustments, or order questions.',
       // Care View
       breadcrumbCare: 'Fabric Care Guide',
-      carePageTitle: 'FABRIC & GARMENT CARE GUIDE (260 GSM)',
-      carePageSub: 'HEAVYWEIGHT COMBED COTTON LONGEVITY PROTOCOL',
-      careBadge: 'THE 260 GSM ADVANTAGE',
+      carePageTitle: 'FABRIC & GARMENT CARE GUIDE',
+      carePageSub: 'GARMENT LONGEVITY & FABRIC PROTOCOL',
+      careBadge: 'THE LUXURY FABRIC ADVANTAGE',
       careIntroTitle: 'Engineered to Endure',
       careIntroDesc: 'VELEN essentials are crafted from custom heavyweight 260 GSM combed cotton. To preserve its dense weave, rich color depth, and signature boxy drape, follow our tested garment longevity protocol below.',
       careStep1Title: 'Cold Machine Wash (Max 30°C / 86°F)',
@@ -637,23 +637,54 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
     
-    // Care Guide Dynamic Render
-    const careIntroDescEl = document.getElementById('careIntroDesc');
-    const careIntroTitleEl = document.getElementById('careIntroTitle');
-    const pageCareTitleEl = document.getElementById('pageCareMainTitle');
-    
+    // Care Guide Dynamic Render (Fully Customizable for Summer/Winter Seasons)
     if (policies?.care) {
-      if (careIntroDescEl) {
-        const text = isAr ? policies.care.introAr : policies.care.introEn;
-        if (text) careIntroDescEl.textContent = text;
+      const care = policies.care;
+      const careTitle = isAr ? (care.titleAr || care.titleEn) : (care.titleEn || care.titleAr);
+      const careSub = isAr ? (care.subAr || care.subEn) : (care.subEn || care.subAr);
+      const careBadge = isAr ? (care.badgeAr || care.badgeEn) : (care.badgeEn || care.badgeAr);
+      const careIntro = isAr ? (care.introAr || care.introEn) : (care.introEn || care.introAr);
+
+      // 1. Update all menu and footer links across the entire store
+      if (careTitle) {
+        document.querySelectorAll('[data-i18n="fabricCare"]').forEach(el => {
+          el.textContent = careTitle;
+        });
       }
+
+      // 2. Update Care page main title
+      const pageCareTitleEl = document.getElementById('pageCareMainTitle');
+      if (pageCareTitleEl && careTitle) {
+        pageCareTitleEl.textContent = careTitle;
+      }
+
+      // 3. Update Care page subtitle
+      const pageCareSubTitleEl = document.getElementById('pageCareSubTitle');
+      if (pageCareSubTitleEl && careSub) {
+        pageCareSubTitleEl.textContent = careSub;
+      }
+
+      // 4. Update Care intro badge
+      const careIntroBadgeEl = document.getElementById('careIntroBadge') || document.querySelector('.care-intro-badge span');
+      if (careIntroBadgeEl && careBadge) {
+        careIntroBadgeEl.textContent = careBadge;
+      }
+
+      // 5. Update Care intro title & description
+      const careIntroTitleEl = document.getElementById('careIntroTitle');
       if (careIntroTitleEl) {
-        const title = isAr ? (policies.care.titleAr || 'دليل العناية بالقطن') : (policies.care.titleEn || 'Engineered to Endure');
-        if (title) careIntroTitleEl.textContent = title;
+        careIntroTitleEl.textContent = isAr ? 'صُنعت لتدوم لسنوات' : 'Engineered to Endure';
       }
-      if (pageCareTitleEl) {
-        const title = isAr ? policies.care.titleAr : policies.care.titleEn;
-        if (title) pageCareTitleEl.textContent = title;
+
+      const careIntroDescEl = document.getElementById('careIntroDesc');
+      if (careIntroDescEl && careIntro) {
+        careIntroDescEl.textContent = careIntro;
+      }
+
+      // 6. Update Policy modal care heading if present
+      const policyCareHeading = document.getElementById('policyCareHeading');
+      if (policyCareHeading && careTitle) {
+        policyCareHeading.textContent = isAr ? `تعليمات: ${careTitle}` : `Instructions: ${careTitle}`;
       }
     }
   }

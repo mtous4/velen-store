@@ -263,7 +263,18 @@ app.get('/api/settings', async (req, res) => {
 
 app.put('/api/settings', async (req, res) => {
   const db = readDB();
-  db.settings = { ...db.settings, ...req.body };
+  const incoming = req.body || {};
+  db.settings = {
+    ...(db.settings || {}),
+    ...incoming,
+    social: { ...(db.settings?.social || {}), ...(incoming.social || {}) },
+    policies: {
+      ...(db.settings?.policies || {}),
+      ...(incoming.policies || {}),
+      shipping: { ...(db.settings?.policies?.shipping || {}), ...(incoming.policies?.shipping || {}) },
+      care: { ...(db.settings?.policies?.care || {}), ...(incoming.policies?.care || {}) }
+    }
+  };
   writeDB(db);
   await firebaseService.updateSettings(db.settings);
   broadcast('SETTINGS_UPDATED', db.settings);

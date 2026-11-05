@@ -143,6 +143,18 @@ module.exports = {
           social: {
             ...(localFallback?.settings?.social || {}),
             ...(firestoreData?.social || {})
+          },
+          policies: {
+            ...(localFallback?.settings?.policies || {}),
+            ...(firestoreData?.policies || {}),
+            shipping: {
+              ...(localFallback?.settings?.policies?.shipping || {}),
+              ...(firestoreData?.policies?.shipping || {})
+            },
+            care: {
+              ...(localFallback?.settings?.policies?.care || {}),
+              ...(firestoreData?.policies?.care || {})
+            }
           }
         };
       }
