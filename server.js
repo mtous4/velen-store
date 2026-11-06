@@ -195,6 +195,34 @@ app.use((req, res, next) => {
 });
 
 app.use('/uploads', express.static(UPLOADS_DIR));
+
+// Smart Media Delivery Route (Serves from local disk if available, or pulls from Firestore Cloud Media for Vercel)
+app.get('/uploads/:filename', async (req, res) => {
+  try {
+    const filename = path.basename(req.params.filename);
+    const localFile = path.join(UPLOADS_DIR, filename);
+
+    // 1. If file exists on local filesystem, stream it directly
+    if (fs.existsSync(localFile)) {
+      return res.sendFile(localFile);
+    }
+
+    // 2. If not on local disk (e.g. running in Vercel serverless), retrieve from Firestore
+    const media = await firebaseService.getMedia(filename);
+    if (media && media.buffer) {
+      res.setHeader('Content-Type', media.mimeType || 'image/jpeg');
+      res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+      return res.send(media.buffer);
+    }
+
+    // 3. Fallback placeholder if not found
+    return res.redirect('/assets/velen-logo.jpg');
+  } catch (err) {
+    console.error('Error serving media file:', err);
+    return res.redirect('/assets/velen-logo.jpg');
+  }
+});
+
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Configure Multer for media uploads (Images and Videos)
@@ -213,7 +241,7 @@ const upload = multer({
 
 // Upload media endpoint (single with robust error handling for videos and photos)
 app.post('/api/upload', (req, res) => {
-  upload.single('media')(req, res, (err) => {
+  upload.single('media')(req, res, async (err) => {
     if (err) {
       console.error('Multer single upload error:', err);
       return res.status(400).json({ 
@@ -229,6 +257,17 @@ app.post('/api/upload', (req, res) => {
     const ext = path.extname(req.file.originalname).toLowerCase();
     const isVideo = (req.file.mimetype && req.file.mimetype.startsWith('video')) || ['.mp4', '.mov', '.webm', '.m4v', '.quicktime', '.avi'].includes(ext);
     const fileUrl = '/uploads/' + req.file.filename;
+
+    // Automatically persist to Google Firestore so image is permanently available on Vercel
+    try {
+      if (req.file.path && fs.existsSync(req.file.path)) {
+        const fileBuf = fs.readFileSync(req.file.path);
+        await firebaseService.saveMedia(req.file.filename, fileBuf, req.file.mimetype);
+      }
+    } catch (syncErr) {
+      console.error('Failed to sync upload to Firestore:', syncErr);
+    }
+
     res.json({
       success: true,
       url: fileUrl,
@@ -239,10 +278,23 @@ app.post('/api/upload', (req, res) => {
 });
 
 // Upload multiple media endpoint (for unlimited product images in Admin)
-app.post('/api/upload-multiple', upload.array('images', 50), (req, res) => {
+app.post('/api/upload-multiple', upload.array('images', 50), async (req, res) => {
   if (!req.files || req.files.length === 0) {
     return res.status(400).json({ success: false, message: 'No files uploaded' });
   }
+
+  // Automatically persist all images to Google Firestore so they are permanently available on Vercel
+  for (const f of req.files) {
+    try {
+      if (f.path && fs.existsSync(f.path)) {
+        const fileBuf = fs.readFileSync(f.path);
+        await firebaseService.saveMedia(f.filename, fileBuf, f.mimetype);
+      }
+    } catch (syncErr) {
+      console.error('Failed to sync multiple upload to Firestore for', f.filename, syncErr);
+    }
+  }
+
   const files = req.files.map(f => ({
     url: '/uploads/' + f.filename,
     filename: f.filename,

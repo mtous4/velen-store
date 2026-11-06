@@ -89,6 +89,43 @@
   ],
   "products": [
     {
+      "id": "prod-1793962684956",
+      "name": "67",
+      "category": "Men",
+      "price": 20,
+      "costPrice": 5,
+      "comparePrice": 25,
+      "onSale": true,
+      "featured": true,
+      "image": "/uploads/velen-1793962661289-973749511.jpg",
+      "images": [
+        "/uploads/velen-1793962661289-973749511.jpg",
+        "/uploads/velen-1793962669390-51459409.jpg",
+        "/uploads/velen-1793962680766-889965188.jpg"
+      ],
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL"
+      ],
+      "colors": [
+        {
+          "name": "Default",
+          "hex": "#000000",
+          "images": [
+            "/uploads/velen-1793962661289-973749511.jpg",
+            "/uploads/velen-1793962669390-51459409.jpg",
+            "/uploads/velen-1793962680766-889965188.jpg"
+          ]
+        }
+      ],
+      "stock": 20,
+      "description": "Premium Everyday Essential designed by Velen.",
+      "fabric": "100% قطن أردني معالج ثقيل 260 GSM",
+      "createdAt": "2026-11-06T10:58:04.956Z"
+    },
+    {
       "id": "prod-double-zip",
       "name": "VELEN Double-Zip Cropped Sweatshirt",
       "category": "Sweatshirts",

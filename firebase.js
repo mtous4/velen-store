@@ -386,5 +386,71 @@ module.exports = {
     } catch (e) {
       console.error('Firestore deleteCategory error:', e);
     }
+  },
+
+  // Media Storage in Firestore (Synchronizes across Localhost & Vercel Serverless)
+  async saveMedia(filename, buffer, mimeType) {
+    if (!isFirebaseReady || !filename || !buffer) return false;
+    try {
+      const base64 = buffer.toString('base64');
+      const CHUNK_SIZE = 650000; // ~650KB per chunk to stay well under Firestore 1MB limit
+      const totalChunks = Math.ceil(base64.length / CHUNK_SIZE);
+
+      const docRef = db.collection('media').doc(filename);
+      await docRef.set({
+        filename,
+        mimeType: mimeType || 'image/jpeg',
+        totalChunks,
+        totalSize: buffer.length,
+        createdAt: new Date().toISOString()
+      });
+
+      const batch = db.batch();
+      for (let i = 0; i < totalChunks; i++) {
+        const chunkData = base64.slice(i * CHUNK_SIZE, (i + 1) * CHUNK_SIZE);
+        const chunkRef = docRef.collection('chunks').doc(String(i));
+        batch.set(chunkRef, { index: i, data: chunkData });
+      }
+      await batch.commit();
+      console.log(`☁️ Media saved to Firestore: ${filename} (${totalChunks} chunks, ${(buffer.length / 1024).toFixed(1)} KB)`);
+      return true;
+    } catch (e) {
+      console.error('Firestore saveMedia error:', e);
+      return false;
+    }
+  },
+
+  async getMedia(filename) {
+    if (!isFirebaseReady || !filename) return null;
+    try {
+      const docRef = db.collection('media').doc(filename);
+      const doc = await docRef.get();
+      if (!doc.exists) return null;
+
+      const meta = doc.data();
+      const totalChunks = meta.totalChunks || 1;
+
+      if (totalChunks === 1) {
+        const chunkSnap = await docRef.collection('chunks').doc('0').get();
+        if (chunkSnap.exists && chunkSnap.data().data) {
+          return {
+            mimeType: meta.mimeType || 'image/jpeg',
+            buffer: Buffer.from(chunkSnap.data().data, 'base64')
+          };
+        }
+      }
+
+      const chunksSnap = await docRef.collection('chunks').orderBy('index').get();
+      if (chunksSnap.empty) return null;
+
+      const fullBase64 = chunksSnap.docs.map(d => d.data().data).join('');
+      return {
+        mimeType: meta.mimeType || 'image/jpeg',
+        buffer: Buffer.from(fullBase64, 'base64')
+      };
+    } catch (e) {
+      console.error('Firestore getMedia error:', e);
+      return null;
+    }
   }
 };
