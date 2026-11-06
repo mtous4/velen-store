@@ -132,8 +132,8 @@ function broadcast(event, payload) {
 
 // Middleware
 app.use(cors());
-app.use(express.json({ limit: '100mb' }));
-app.use(express.urlencoded({ extended: true, limit: '100mb' }));
+app.use(express.json({ limit: '200mb' }));
+app.use(express.urlencoded({ extended: true, limit: '200mb' }));
 
 // ================= STEALTH ADMIN GUARD & DOMAIN ISOLATION =================
 // Intercept admin requests BEFORE express.static serves anything publicly
@@ -236,7 +236,7 @@ const storage = multer.diskStorage({
 });
 const upload = multer({
   storage,
-  limits: { fileSize: 100 * 1024 * 1024 } // 100MB for photos & videos
+  limits: { fileSize: 200 * 1024 * 1024 } // 200MB for photos & videos
 });
 
 // Upload media endpoint (single with robust error handling for videos and photos)
@@ -247,7 +247,7 @@ app.post('/api/upload', (req, res) => {
       return res.status(400).json({ 
         success: false, 
         message: err.code === 'LIMIT_FILE_SIZE' 
-          ? 'حجم الملف كبير جداً (الحد الأقصى 100MB)' 
+          ? 'حجم الملف كبير جداً (الحد الأقصى 200MB)' 
           : 'فشل الرفع: ' + (err.message || 'خطأ غير معروف')
       });
     }

@@ -3221,7 +3221,7 @@ document.addEventListener('DOMContentLoaded', () => {
         dropzone.innerHTML = `
           <i class="fa-solid fa-cloud-arrow-up" style="font-size:28px; color:var(--gold-accent); margin-bottom:8px; display:block;"></i>
           <p style="margin:0; font-size:13px; color:#fff;">اسحب وأفلت الفيديو أو الصورة هنا أو اضغط للاختيار</p>
-          <span style="font-size:11px; color:#777; display:block; margin-top:4px;">يدعم MP4, MOV, JPG, PNG حتى 100MB</span>
+          <span style="font-size:11px; color:#777; display:block; margin-top:4px;">يدعم MP4, MOV, JPG, PNG حتى 200MB</span>
         `;
       }
     };
@@ -3232,9 +3232,9 @@ document.addEventListener('DOMContentLoaded', () => {
     async function handleAdminUpload(rawFile) {
       if (!rawFile) return;
 
-      const MAX_SIZE = 100 * 1024 * 1024; // 100MB
+      const MAX_SIZE = 200 * 1024 * 1024; // 200MB
       if (rawFile.size > MAX_SIZE) {
-        showAdminToast('حجم الملف كبير جداً (أكبر من 100 ميغابايت)! يرجى اختيار ملف بحجم أقل من 100MB.', 'warning');
+        showAdminToast('حجم الملف كبير جداً (أكبر من 200 ميغابايت)! يرجى اختيار ملف بحجم أقل من 200MB.', 'warning');
         return;
       }
 
@@ -3270,7 +3270,7 @@ document.addEventListener('DOMContentLoaded', () => {
             dropzone.innerHTML = `
               <i class="fa-solid fa-cloud-arrow-up" style="font-size:28px; color:var(--gold-accent); margin-bottom:8px; display:block;"></i>
               <p style="margin:0; font-size:13px; color:#fff;">اسحب وأفلت الفيديو أو الصورة هنا أو اضغط للاختيار</p>
-              <span style="font-size:11px; color:#777; display:block; margin-top:4px;">يدعم MP4, MOV, JPG, PNG حتى 100MB</span>
+              <span style="font-size:11px; color:#777; display:block; margin-top:4px;">يدعم MP4, MOV, JPG, PNG حتى 200MB</span>
             `;
           }
         }
@@ -3281,7 +3281,7 @@ document.addEventListener('DOMContentLoaded', () => {
           dropzone.innerHTML = `
             <i class="fa-solid fa-cloud-arrow-up" style="font-size:28px; color:var(--gold-accent); margin-bottom:8px; display:block;"></i>
             <p style="margin:0; font-size:13px; color:#fff;">اسحب وأفلت الفيديو أو الصورة هنا أو اضغط للاختيار</p>
-            <span style="font-size:11px; color:#777; display:block; margin-top:4px;">يدعم MP4, MOV, JPG, PNG حتى 100MB</span>
+            <span style="font-size:11px; color:#777; display:block; margin-top:4px;">يدعم MP4, MOV, JPG, PNG حتى 200MB</span>
           `;
         }
       }

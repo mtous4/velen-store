@@ -405,13 +405,17 @@ module.exports = {
         createdAt: new Date().toISOString()
       });
 
-      const batch = db.batch();
-      for (let i = 0; i < totalChunks; i++) {
-        const chunkData = base64.slice(i * CHUNK_SIZE, (i + 1) * CHUNK_SIZE);
-        const chunkRef = docRef.collection('chunks').doc(String(i));
-        batch.set(chunkRef, { index: i, data: chunkData });
+      // Commit in sub-batches of 400 to respect Firestore 500 writes per batch limit
+      for (let i = 0; i < totalChunks; i += 400) {
+        const batch = db.batch();
+        const end = Math.min(i + 400, totalChunks);
+        for (let j = i; j < end; j++) {
+          const chunkData = base64.slice(j * CHUNK_SIZE, (j + 1) * CHUNK_SIZE);
+          const chunkRef = docRef.collection('chunks').doc(String(j));
+          batch.set(chunkRef, { index: j, data: chunkData });
+        }
+        await batch.commit();
       }
-      await batch.commit();
       console.log(`☁️ Media saved to Firestore: ${filename} (${totalChunks} chunks, ${(buffer.length / 1024).toFixed(1)} KB)`);
       return true;
     } catch (e) {
