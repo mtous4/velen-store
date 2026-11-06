@@ -368,7 +368,7 @@ document.addEventListener('DOMContentLoaded', () => {
       requiredLabel: '*مطلوب',
       cancelMediaBtn: 'إلغاء الميديا',
       commDropzoneText: 'اسحب وأفلت الصورة أو الفيديو هنا أو اضغط للاختيار',
-      commDropzoneHint: 'يدعم MP4, MOV, JPG, PNG حتى 50MB',
+      commDropzoneHint: 'يدعم MP4, MOV, JPG, PNG حتى 100MB',
       commOrUrl: 'أو رابط مباشر للصورة / الفيديو:',
       commUrlPh: 'https://example.com/photo.jpg',
       commCaptionLabel: 'كابشن / تعليق (اختياري)',
@@ -599,7 +599,7 @@ document.addEventListener('DOMContentLoaded', () => {
       requiredLabel: '*Required',
       cancelMediaBtn: 'Cancel Media',
       commDropzoneText: 'Drag & drop photo or video here, or click to browse',
-      commDropzoneHint: 'Supports MP4, MOV, JPG, PNG up to 50MB',
+      commDropzoneHint: 'Supports MP4, MOV, JPG, PNG up to 100MB',
       commOrUrl: 'Or direct photo/video URL:',
       commUrlPh: 'https://example.com/photo.jpg',
       commCaptionLabel: 'Caption / Thoughts (Optional)',
@@ -3145,13 +3145,13 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!file) return;
       const isAr = state.activeLang === 'ar';
 
-      // 1. Client-side file size check (50MB)
-      const MAX_SIZE = 50 * 1024 * 1024;
+      // 1. Client-side file size check (100MB)
+      const MAX_SIZE = 100 * 1024 * 1024;
       if (file.size > MAX_SIZE) {
         showToast(
           isAr 
-            ? 'حجم الملف يتجاوز 50 ميغابايت! يرجى اختيار فيديو أو صورة أصغر حجماً.' 
-            : 'File size exceeds 50MB! Please choose a smaller file.',
+            ? 'حجم الملف يتجاوز 100 ميغابايت! يرجى اختيار فيديو أو صورة أصغر حجماً.' 
+            : 'File size exceeds 100MB! Please choose a smaller file.',
           'warning'
         );
         return;

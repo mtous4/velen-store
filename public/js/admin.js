@@ -3221,7 +3221,7 @@ document.addEventListener('DOMContentLoaded', () => {
         dropzone.innerHTML = `
           <i class="fa-solid fa-cloud-arrow-up" style="font-size:28px; color:var(--gold-accent); margin-bottom:8px; display:block;"></i>
           <p style="margin:0; font-size:13px; color:#fff;">اسحب وأفلت الفيديو أو الصورة هنا أو اضغط للاختيار</p>
-          <span style="font-size:11px; color:#777; display:block; margin-top:4px;">يدعم MP4, MOV, JPG, PNG حتى 50MB</span>
+          <span style="font-size:11px; color:#777; display:block; margin-top:4px;">يدعم MP4, MOV, JPG, PNG حتى 100MB</span>
         `;
       }
     };
@@ -3231,6 +3231,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function handleAdminUpload(rawFile) {
       if (!rawFile) return;
+
+      const MAX_SIZE = 100 * 1024 * 1024; // 100MB
+      if (rawFile.size > MAX_SIZE) {
+        showAdminToast('حجم الملف كبير جداً (أكبر من 100 ميغابايت)! يرجى اختيار ملف بحجم أقل من 100MB.', 'warning');
+        return;
+      }
 
       if (dropzone) dropzone.innerHTML = `<i class="fa-solid fa-spinner fa-spin" style="font-size:24px; color:var(--gold-accent);"></i><p style="margin-top:6px; color:#fff;">جاري تحسين ورفع الملف للسيرفر...</p>`;
 
@@ -3259,12 +3265,25 @@ document.addEventListener('DOMContentLoaded', () => {
           }
           showAdminToast('تم رفع ملف الوسائط بنجاح!', 'success');
         } else {
-          showAdminToast('فشل رفع الملف', 'error');
-          closeModal();
+          showAdminToast(data.message || 'فشل رفع الملف', 'error');
+          if (dropzone) {
+            dropzone.innerHTML = `
+              <i class="fa-solid fa-cloud-arrow-up" style="font-size:28px; color:var(--gold-accent); margin-bottom:8px; display:block;"></i>
+              <p style="margin:0; font-size:13px; color:#fff;">اسحب وأفلت الفيديو أو الصورة هنا أو اضغط للاختيار</p>
+              <span style="font-size:11px; color:#777; display:block; margin-top:4px;">يدعم MP4, MOV, JPG, PNG حتى 100MB</span>
+            `;
+          }
         }
       } catch (err) {
         console.error('Admin comm upload error:', err);
         showAdminToast('خطأ في الاتصال أثناء الرفع', 'error');
+        if (dropzone) {
+          dropzone.innerHTML = `
+            <i class="fa-solid fa-cloud-arrow-up" style="font-size:28px; color:var(--gold-accent); margin-bottom:8px; display:block;"></i>
+            <p style="margin:0; font-size:13px; color:#fff;">اسحب وأفلت الفيديو أو الصورة هنا أو اضغط للاختيار</p>
+            <span style="font-size:11px; color:#777; display:block; margin-top:4px;">يدعم MP4, MOV, JPG, PNG حتى 100MB</span>
+          `;
+        }
       }
     }
 
