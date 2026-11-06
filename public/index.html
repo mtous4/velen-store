@@ -16,7 +16,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   
   <!-- Custom Styles -->
-  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css?v=2.6">
 </head>
 <body class="theme-dark">
 
@@ -929,62 +929,103 @@
   </div>
 
   <!-- ================= VELEN SIZE ASSISTANT MODAL (Matching Images 4 & 5) ================= -->
+  <!-- ================= VELEN SIZE ASSISTANT MODAL (Full Smart Sizing System) ================= -->
   <div id="sizeAssistantModal" class="size-assistant-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-label="VELEN Size Assistant">
     <div class="size-assistant-dialog">
       <div class="size-assistant-header">
-        <span class="size-assistant-tag">VELEN SIZE ASSISTANT</span>
-        <button type="button" id="sizeAssistantClose" class="modal-close-icon" aria-label="Close Size Assistant" title="Close / إغلاق">
+        <span class="size-assistant-tag"><i class="fa-solid fa-ruler-combined"></i> VELEN SIZE ASSISTANT</span>
+        <button type="button" id="sizeAssistantClose" class="modal-close-icon" onclick="window.velenApp?.closeSizeAssistant()" aria-label="Close Size Assistant" title="Close / إغلاق">
           <i class="fa-solid fa-xmark"></i>
         </button>
       </div>
 
       <div class="size-assistant-content">
-        <h3 class="size-assistant-title">Find Your Perfect Fit</h3>
-        <p class="size-assistant-subtitle">Enter your details and we'll recommend the best size for you.</p>
+        <h3 class="size-assistant-title" id="saTitle">Find Your Perfect Fit</h3>
+        <p class="size-assistant-subtitle" id="saSubtitle">Enter your height, weight and body preferences for an exact size match tailored to VELEN streetwear fits.</p>
 
+        <!-- Height & Weight with Synchronized Sliders and Inputs -->
         <div class="size-inputs-grid">
           <div class="size-input-field">
-            <label for="sizeInputHeight">Your Height</label>
-            <div class="size-unit-box">
-              <span class="unit-label">CM</span>
-              <input type="number" id="sizeInputHeight" value="175" min="140" max="220" aria-label="Your Height in Centimeters">
+            <div class="size-field-top">
+              <label for="sizeInputHeight"><i class="fa-solid fa-arrows-up-down"></i> <span id="saHeightLabel">Height / الطول</span></label>
+              <div class="size-unit-box">
+                <input type="number" id="sizeInputHeight" value="175" min="140" max="220" oninput="window.velenApp?.onHeightChange(this.value)" aria-label="Height in CM">
+                <span class="unit-label">CM</span>
+              </div>
             </div>
+            <input type="range" id="sizeSliderHeight" min="140" max="220" value="175" class="size-range-slider" oninput="window.velenApp?.onHeightChange(this.value)" aria-label="Height slider">
           </div>
 
           <div class="size-input-field">
-            <label for="sizeInputWeight">Your Weight</label>
-            <div class="size-unit-box">
-              <span class="unit-label">KG</span>
-              <input type="number" id="sizeInputWeight" value="70" min="40" max="160" aria-label="Your Weight in Kilograms">
+            <div class="size-field-top">
+              <label for="sizeInputWeight"><i class="fa-solid fa-weight-scale"></i> <span id="saWeightLabel">Weight / الوزن</span></label>
+              <div class="size-unit-box">
+                <input type="number" id="sizeInputWeight" value="70" min="40" max="150" oninput="window.velenApp?.onWeightChange(this.value)" aria-label="Weight in KG">
+                <span class="unit-label">KG</span>
+              </div>
             </div>
+            <input type="range" id="sizeSliderWeight" min="40" max="150" value="70" class="size-range-slider" oninput="window.velenApp?.onWeightChange(this.value)" aria-label="Weight slider">
           </div>
         </div>
 
-        <div class="size-fit-preference">
-          <label>Preferred Fit</label>
-          <div class="fit-toggle-row">
-            <button type="button" class="btn-fit-toggle" data-fit="oversized" id="btnFitOversized" aria-label="Oversized fit">
-              <span>Oversized Fit</span>
+        <!-- Body Build Selection -->
+        <div class="size-option-section">
+          <label class="size-section-label" id="saBuildLabel">Body Build / بنية الجسم</label>
+          <div class="build-toggle-row" id="saBuildToggleRow">
+            <button type="button" class="btn-build-toggle" data-build="slim" onclick="window.velenApp?.setSizeAssistantBuild('slim', this)">
+              <i class="fa-solid fa-person"></i>
+              <span>Slim / نحيف</span>
             </button>
-            <button type="button" class="btn-fit-toggle active" data-fit="regular" id="btnFitRegular" aria-label="Regular fit (Selected)">
-              <span>Regular Fit</span>
-              <small class="selected-badge">Selected</small>
+            <button type="button" class="btn-build-toggle active" data-build="average" onclick="window.velenApp?.setSizeAssistantBuild('average', this)">
+              <i class="fa-solid fa-person"></i>
+              <span>Average / متوسط</span>
+            </button>
+            <button type="button" class="btn-build-toggle" data-build="athletic" onclick="window.velenApp?.setSizeAssistantBuild('athletic', this)">
+              <i class="fa-solid fa-dumbbell"></i>
+              <span>Athletic / رياضي</span>
+            </button>
+            <button type="button" class="btn-build-toggle" data-build="heavy" onclick="window.velenApp?.setSizeAssistantBuild('heavy', this)">
+              <i class="fa-solid fa-shield-halved"></i>
+              <span>Broad / عريض</span>
             </button>
           </div>
         </div>
+
+        <!-- Preferred Fit Selection -->
+        <div class="size-option-section">
+          <label class="size-section-label" id="saFitLabel">Preferred Fit / القصة المفضلة</label>
+          <div class="fit-toggle-row fit-toggle-row-3" id="saFitToggleRow">
+            <button type="button" class="btn-fit-toggle" data-fit="fitted" id="btnFitFitted" onclick="window.velenApp?.setSizeAssistantFit('fitted', this)">
+              <span>Fitted</span>
+              <small>مضبوط</small>
+            </button>
+            <button type="button" class="btn-fit-toggle active" data-fit="regular" id="btnFitRegular" onclick="window.velenApp?.setSizeAssistantFit('regular', this)">
+              <span>Regular Boxy</span>
+              <small>بوكسي متوازن</small>
+            </button>
+            <button type="button" class="btn-fit-toggle" data-fit="oversized" id="btnFitOversized" onclick="window.velenApp?.setSizeAssistantFit('oversized', this)">
+              <span>Oversized</span>
+              <small>فضفاض وساقط</small>
+            </button>
+          </div>
+        </div>
+
 
         <!-- Live Calculation Recommendation Card -->
         <div class="size-recommendation-card">
-          <span class="rec-label">YOUR RECOMMENDED SIZE</span>
+          <div class="rec-top-row">
+            <span class="rec-label" id="saRecLabel">YOUR RECOMMENDED SIZE</span>
+            <span class="rec-match-badge" id="recMatchPercent">96% FIT MATCH</span>
+          </div>
           <div class="rec-size-letter" id="recSizeLetter">M</div>
-          <p class="rec-note">Based on your height and weight</p>
+          <p class="rec-note" id="recSizeNote">Signature relaxed boxy fit — clean drape & drop shoulders</p>
         </div>
 
-        <button type="button" class="btn-confirm-size" id="btnConfirmRecommendedSize" aria-label="Confirm Recommended Size">
+        <button type="button" class="btn-confirm-size" id="btnConfirmRecommendedSize" onclick="window.velenApp?.confirmRecommendedSize()" aria-label="Confirm Recommended Size">
           CONFIRM SIZE <span id="confirmSizeText">M</span>
         </button>
 
-        <p class="size-assistant-disclaimer">.Size recommendation is a guide. Actual fit may vary</p>
+        <p class="size-assistant-disclaimer">VELEN 260 GSM heavyweight cotton is pre-shrunk for shape longevity. Measurements are for guidance.</p>
       </div>
     </div>
   </div>
@@ -1309,6 +1350,6 @@
   <div id="toastContainer" class="toast-container"></div>
 
   <!-- Client Script -->
-  <script src="/js/app.js?v=2.5"></script>
+  <script src="/js/app.js?v=2.8"></script>
 </body>
 </html>

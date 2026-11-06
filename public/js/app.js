@@ -174,6 +174,9 @@ document.addEventListener('DOMContentLoaded', () => {
     { id: 'hoodies', nameEn: 'Hoodies & Sweats', nameAr: 'هوديز وسويت شيرت', slug: 'hoodies' }
   ];
 
+  // Early Stub for window.velenApp so inline onclick handlers never hit undefined
+  window.velenApp = window.velenApp || {};
+
   // Application State
   const state = {
     products: [...DEFAULT_PRODUCTS],
@@ -185,6 +188,10 @@ document.addEventListener('DOMContentLoaded', () => {
     sessionId: localStorage.getItem('velen_session_id') || ('sess_' + Math.random().toString(36).substring(2, 10)),
     cart: JSON.parse(localStorage.getItem('velen_cart') || '[]'),
     activeCategory: 'all',
+    activeFeaturedCategory: 'all',
+    saFit: 'regular',
+    saBuild: 'average',
+    saCurrentRecommendation: 'M',
     categories: [...DEFAULT_CATEGORIES],
     activeCommFilter: 'all',
     currentProductForModal: null,
@@ -876,29 +883,34 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Render Featured Drops on the Home Page (Matching Image 2)
-  let activeFeaturedCategory = 'all';
   function renderFeaturedProducts(filterCat) {
     if (typeof filterCat === 'string') {
-      activeFeaturedCategory = filterCat;
+      state.activeFeaturedCategory = filterCat;
     }
     const grid = document.getElementById('homeFeaturedGrid');
     if (!grid) return;
     if (!state.products || state.products.length === 0) {
-      grid.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; color: #888; padding: 40px;">Loading featured collection...</div>';
+      grid.innerHTML = `<div style="grid-column: 1 / -1; text-align: center; color: #888; padding: 40px;">${state.activeLang === 'ar' ? 'جاري تحميل التشكيلة المميزة...' : 'Loading featured collection...'}</div>`;
       return;
     }
 
+    const currentCat = state.activeFeaturedCategory || 'all';
     let filtered = state.products;
-    if (activeFeaturedCategory !== 'all') {
+    if (currentCat !== 'all') {
       filtered = state.products.filter(p => {
         const cat = (p.category || '').toLowerCase();
-        const target = activeFeaturedCategory.toLowerCase();
+        const target = currentCat.toLowerCase();
         return cat.includes(target) || (p.name && p.name.toLowerCase().includes(target));
       });
     }
 
+    // Graceful fallback: If category has no items, fall back to all products so grid is never empty!
+    if (!filtered || filtered.length === 0) {
+      filtered = state.products;
+    }
+
     // Limit to 4 pieces for clean grid display + editorial card
-    const displayList = filtered.slice(0, 4);
+    const displayList = (filtered || []).slice(0, 4);
     const isAr = state.activeLang === 'ar';
 
     const cardsHtml = displayList.map(product => {
@@ -2435,6 +2447,237 @@ document.addEventListener('DOMContentLoaded', () => {
     closeProductPage(true);
   }
 
+  // ================= VELEN SMART SIZE ASSISTANT =================
+  function updateSizeAssistantLang() {
+    const isAr = state.activeLang === 'ar';
+    const saTitle = document.getElementById('saTitle');
+    const saSubtitle = document.getElementById('saSubtitle');
+    const saHeightLabel = document.getElementById('saHeightLabel');
+    const saWeightLabel = document.getElementById('saWeightLabel');
+    const saBuildLabel = document.getElementById('saBuildLabel');
+    const saFitLabel = document.getElementById('saFitLabel');
+    const saRecLabel = document.getElementById('saRecLabel');
+
+    if (saTitle) saTitle.textContent = isAr ? 'دليلك لاختيار المقاس المثالي' : 'Find Your Perfect Fit';
+    if (saSubtitle) saSubtitle.textContent = isAr 
+      ? 'أدخل طولك ووزنك وبنية جسمك وسنحدد لك المقاس الدقيق المصمم لقصات VELEN الستريت وير.'
+      : 'Enter your height, weight and body preferences for an exact size match tailored to VELEN streetwear fits.';
+    if (saHeightLabel) saHeightLabel.textContent = isAr ? 'الطول / Height' : 'Height / الطول';
+    if (saWeightLabel) saWeightLabel.textContent = isAr ? 'الوزن / Weight' : 'Weight / الوزن';
+    if (saBuildLabel) saBuildLabel.textContent = isAr ? 'بنية الجسم وشكل القوام' : 'Body Build / بنية الجسم';
+    if (saFitLabel) saFitLabel.textContent = isAr ? 'القصة المفضلة لديك' : 'Preferred Fit / القصة المفضلة';
+    if (saRecLabel) saRecLabel.textContent = isAr ? 'المقاس الموصى به لك' : 'YOUR RECOMMENDED SIZE';
+  }
+
+  function openSizeAssistant() {
+    const modal = document.getElementById('sizeAssistantModal');
+    const overlay = document.getElementById('sizeAssistantOverlay');
+    if (!modal) return;
+    updateSizeAssistantLang();
+    calculateRecommendedSize();
+    modal.classList.add('active');
+    modal.setAttribute('aria-hidden', 'false');
+    if (overlay) overlay.classList.add('active');
+    lockBodyScroll();
+  }
+
+  function closeSizeAssistant() {
+    const modal = document.getElementById('sizeAssistantModal');
+    const overlay = document.getElementById('sizeAssistantOverlay');
+    if (modal) {
+      modal.classList.remove('active');
+      modal.setAttribute('aria-hidden', 'true');
+    }
+    if (overlay) overlay.classList.remove('active');
+    unlockBodyScroll();
+  }
+
+  function calculateRecommendedSize() {
+    const heightEl = document.getElementById('sizeInputHeight');
+    const weightEl = document.getElementById('sizeInputWeight');
+    const height = parseInt(heightEl ? heightEl.value : '175', 10) || 175;
+    const weight = parseInt(weightEl ? weightEl.value : '70', 10) || 70;
+
+    const h = Math.max(140, Math.min(220, height));
+    const w = Math.max(40, Math.min(150, weight));
+    const bmi = w / Math.pow(h / 100, 2);
+
+    // Size index scale: 0: XS, 1: S, 2: M, 3: L, 4: XL, 5: 2XL
+    const sizeScale = ['XS', 'S', 'M', 'L', 'XL', '2XL'];
+    let score = 2.0; // default M
+
+    // Baseline from Height
+    if (h < 162) {
+      score = 0.8;
+    } else if (h < 172) {
+      score = 1.3;
+    } else if (h < 180) {
+      score = 2.0;
+    } else if (h < 188) {
+      score = 3.0;
+    } else {
+      score = 4.0;
+    }
+
+    // Weight & BMI influence
+    if (bmi < 19.5) {
+      score -= 0.6;
+    } else if (bmi >= 19.5 && bmi < 23) {
+      score += 0.0;
+    } else if (bmi >= 23 && bmi < 26) {
+      score += 0.4;
+    } else if (bmi >= 26 && bmi < 29) {
+      score += 0.9;
+    } else if (bmi >= 29 && bmi < 33) {
+      score += 1.5;
+    } else {
+      score += 2.1;
+    }
+
+    // Body Build adjustments
+    const currentBuild = state.saBuild || 'average';
+    if (currentBuild === 'slim') {
+      score -= 0.4;
+    } else if (currentBuild === 'athletic') {
+      score += 0.5; // wider shoulders and chest
+    } else if (currentBuild === 'heavy') {
+      score += 0.8;
+    }
+
+    // Preferred Fit adjustments
+    const currentFit = state.saFit || 'regular';
+    if (currentFit === 'fitted') {
+      score -= 0.6;
+    } else if (currentFit === 'oversized') {
+      score += 0.7;
+    }
+
+    // Clamp score to sizeScale range
+    let idx = Math.round(score);
+    idx = Math.max(0, Math.min(sizeScale.length - 1, idx));
+    let recommended = sizeScale[idx];
+
+    // Check available sizes of current product if open
+    const prod = state.currentProductForModal;
+    const availableSizes = (prod && Array.isArray(prod.sizes) && prod.sizes.length > 0)
+      ? prod.sizes
+      : ['S', 'M', 'L', 'XL', '2XL'];
+
+    if (!availableSizes.includes(recommended)) {
+      const availIdxs = availableSizes.map(s => sizeScale.indexOf(s)).filter(i => i !== -1);
+      if (availIdxs.length > 0) {
+        availIdxs.sort((a, b) => Math.abs(a - idx) - Math.abs(b - idx));
+        recommended = sizeScale[availIdxs[0]];
+      }
+    }
+
+    state.saCurrentRecommendation = recommended;
+
+    // Match percentage (high confidence 94-98%)
+    const diff = Math.abs(score - idx);
+    const matchPct = Math.max(93, Math.min(99, Math.round(98 - diff * 8)));
+
+    // UI Updates
+    const recLetterEl = document.getElementById('recSizeLetter');
+    if (recLetterEl) recLetterEl.textContent = recommended;
+
+    const confirmSizeTextEl = document.getElementById('confirmSizeText');
+    if (confirmSizeTextEl) confirmSizeTextEl.textContent = recommended;
+
+    const matchBadgeEl = document.getElementById('recMatchPercent');
+    if (matchBadgeEl) {
+      matchBadgeEl.textContent = state.activeLang === 'ar' ? `تطابق بنسبة ${matchPct}%` : `${matchPct}% FIT MATCH`;
+    }
+
+    const noteEl = document.getElementById('recSizeNote');
+    if (noteEl) {
+      const isAr = state.activeLang === 'ar';
+      let note = '';
+      if (currentFit === 'oversized') {
+        note = isAr 
+          ? `مقاس ${recommended} يعطيك قصة ستريت وير أوفرسايزد واسعة مع أكتاف ساقطة مميزة وراحة كاملة.`
+          : `Size ${recommended} delivers an authentic dropped-shoulder oversized streetwear silhouette.`;
+      } else if (currentFit === 'fitted') {
+        note = isAr
+          ? `مقاس ${recommended} يمنحك قصة مرتبة ومضبوطة على الجسم بدون أي اتساع زائد في الأكمام.`
+          : `Size ${recommended} provides a clean, tailored contour with minimal excess fabric.`;
+      } else {
+        note = isAr
+          ? `مقاس ${recommended} هو القصة البوكسي المتوازنة والمثالية لوزنك وطولك بدون تضييق.`
+          : `Size ${recommended} is VELEN's signature relaxed boxy fit — clean drape & drop shoulders.`;
+      }
+      noteEl.textContent = note;
+    }
+
+    return recommended;
+  }
+
+  function confirmRecommendedSize() {
+    const recommended = state.saCurrentRecommendation || calculateRecommendedSize();
+    if (window.velenApp && typeof window.velenApp.selectModalSize === 'function') {
+      window.velenApp.selectModalSize(recommended);
+    } else {
+      state.selectedSize = recommended;
+      const selectedLabel = document.getElementById('prodSelectedSizeLabel');
+      if (selectedLabel) selectedLabel.textContent = recommended;
+    }
+    showToast(state.activeLang === 'ar' ? `تم اعتماد مقاس ${recommended} بنجاح` : `Size ${recommended} confirmed & selected`, 'success');
+    closeSizeAssistant();
+  }
+
+  function setupSizeAssistant() {
+    const hInput = document.getElementById('sizeInputHeight');
+    const hSlider = document.getElementById('sizeSliderHeight');
+    if (hInput && hSlider) {
+      hInput.addEventListener('input', () => {
+        hSlider.value = hInput.value;
+        calculateRecommendedSize();
+      });
+      hSlider.addEventListener('input', () => {
+        hInput.value = hSlider.value;
+        calculateRecommendedSize();
+      });
+    }
+
+    const wInput = document.getElementById('sizeInputWeight');
+    const wSlider = document.getElementById('sizeSliderWeight');
+    if (wInput && wSlider) {
+      wInput.addEventListener('input', () => {
+        wSlider.value = wInput.value;
+        calculateRecommendedSize();
+      });
+      wSlider.addEventListener('input', () => {
+        wInput.value = wSlider.value;
+        calculateRecommendedSize();
+      });
+    }
+
+    const buildBtns = document.querySelectorAll('#saBuildToggleRow .btn-build-toggle');
+    buildBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        buildBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        state.saBuild = btn.getAttribute('data-build') || 'average';
+        calculateRecommendedSize();
+      });
+    });
+
+    const fitBtns = document.querySelectorAll('#saFitToggleRow .btn-fit-toggle');
+    fitBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        fitBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        state.saFit = btn.getAttribute('data-fit') || 'regular';
+        calculateRecommendedSize();
+      });
+    });
+
+    document.getElementById('sizeAssistantClose')?.addEventListener('click', closeSizeAssistant);
+    document.getElementById('sizeAssistantOverlay')?.addEventListener('click', closeSizeAssistant);
+    document.getElementById('btnConfirmRecommendedSize')?.addEventListener('click', confirmRecommendedSize);
+  }
+
+
   function openCheckout() {
     if (state.cart.length === 0) {
       showToast(state.activeLang === 'ar' ? 'حقيبة التسوق فارغة!' : 'Your shopping bag is empty!', 'info');
@@ -3286,6 +3529,9 @@ document.addEventListener('DOMContentLoaded', () => {
       renderProductPageContent(state.currentProductForModal);
     }
 
+    if (typeof updateSizeAssistantLang === 'function') updateSizeAssistantLang();
+    if (typeof calculateRecommendedSize === 'function') calculateRecommendedSize();
+
     // Re-apply admin design customizations so live design overrides static dictionary
     if (state.design) {
       applyDesign(state.design);
@@ -3583,25 +3829,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Size Assistant Listeners
-    document.getElementById('sizeAssistantClose')?.addEventListener('click', closeSizeAssistant);
-    document.getElementById('sizeAssistantOverlay')?.addEventListener('click', closeSizeAssistant);
-    document.getElementById('btnFitOversized')?.addEventListener('click', () => {
-      sizeAssistantFit = 'oversized';
-      document.getElementById('btnFitOversized')?.classList.add('active');
-      document.getElementById('btnFitRegular')?.classList.remove('active');
-      const regularBadge = document.querySelector('#btnFitRegular .selected-badge');
-      if (regularBadge) regularBadge.remove();
-      calculateRecommendedSize();
-    });
-    document.getElementById('btnFitRegular')?.addEventListener('click', () => {
-      sizeAssistantFit = 'regular';
-      document.getElementById('btnFitRegular')?.classList.add('active');
-      document.getElementById('btnFitOversized')?.classList.remove('active');
-      calculateRecommendedSize();
-    });
-    document.getElementById('sizeInputHeight')?.addEventListener('input', calculateRecommendedSize);
-    document.getElementById('sizeInputWeight')?.addEventListener('input', calculateRecommendedSize);
-    document.getElementById('btnConfirmRecommendedSize')?.addEventListener('click', confirmRecommendedSize);
+    setupSizeAssistant();
 
     // Close Modals & Product Page
     document.getElementById('btnBackToStore')?.addEventListener('click', () => closeProductPage(true));
@@ -3713,11 +3941,12 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Expose global helpers to window for inline onclick handlers
-  window.velenApp = {
+  Object.assign(window.velenApp, {
     navigateTo: (viewName) => navigateTo(viewName, true),
     showView: (viewName) => showView(viewName, true),
     handleOrderLookup: (e) => handleOrderLookup(e),
     openProductModal,
+    openProductPage: (id) => openProductPage(id),
     selectModalSize: (size) => {
       const p = state.currentProductForModal;
       const color = state.selectedColor || (p && p.colors && p.colors[0]) || null;
@@ -3808,6 +4037,40 @@ document.addEventListener('DOMContentLoaded', () => {
     },
     confirmRecommendedSize: () => {
       confirmRecommendedSize();
+    },
+    setSizeAssistantBuild: (build, btn) => {
+      state.saBuild = build;
+      document.querySelectorAll('#saBuildToggleRow .btn-build-toggle').forEach(b => b.classList.remove('active'));
+      if (btn) {
+        btn.classList.add('active');
+      } else {
+        document.querySelector(`#saBuildToggleRow .btn-build-toggle[data-build="${build}"]`)?.classList.add('active');
+      }
+      calculateRecommendedSize();
+    },
+    setSizeAssistantFit: (fit, btn) => {
+      state.saFit = fit;
+      document.querySelectorAll('#saFitToggleRow .btn-fit-toggle').forEach(b => b.classList.remove('active'));
+      if (btn) {
+        btn.classList.add('active');
+      } else {
+        document.querySelector(`#saFitToggleRow .btn-fit-toggle[data-fit="${fit}"]`)?.classList.add('active');
+      }
+      calculateRecommendedSize();
+    },
+    onHeightChange: (val) => {
+      const hInput = document.getElementById('sizeInputHeight');
+      const hSlider = document.getElementById('sizeSliderHeight');
+      if (hInput && hInput.value !== String(val)) hInput.value = val;
+      if (hSlider && hSlider.value !== String(val)) hSlider.value = val;
+      calculateRecommendedSize();
+    },
+    onWeightChange: (val) => {
+      const wInput = document.getElementById('sizeInputWeight');
+      const wSlider = document.getElementById('sizeSliderWeight');
+      if (wInput && wInput.value !== String(val)) wInput.value = val;
+      if (wSlider && wSlider.value !== String(val)) wSlider.value = val;
+      calculateRecommendedSize();
     },
     toggleAccordion: (btn) => {
       toggleAccordion(btn);
@@ -3951,5 +4214,5 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       }
     }
-  };
+  });
 });

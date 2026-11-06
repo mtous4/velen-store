@@ -5861,6 +5861,9 @@ body.body-scroll-locked {
   position: relative;
   width: 100%;
   max-width: 440px;
+  max-height: 90vh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
   background: #0a0a0a;
   border: 1px solid rgba(255, 255, 255, 0.18);
   border-radius: 12px;
@@ -5871,6 +5874,7 @@ body.body-scroll-locked {
   direction: ltr;
   text-align: left;
 }
+
 
 [dir="rtl"] .size-assistant-dialog {
   direction: ltr;
@@ -5911,75 +5915,132 @@ body.body-scroll-locked {
   display: flex;
   flex-direction: column;
   gap: 12px;
-  margin-bottom: 18px;
+  margin-bottom: 16px;
 }
 
 .size-input-field {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
+  gap: 8px;
   background: #141414;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 6px;
-  padding: 10px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  padding: 12px 14px;
 }
 
-.size-input-field label {
+.size-field-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.size-field-top label {
   font-size: 13px;
   font-weight: 600;
-  color: #aaa;
+  color: #ccc;
   margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.size-field-top label i {
+  color: var(--accent-gold);
 }
 
 .size-unit-box {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.06);
+  padding: 3px 8px;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .size-unit-box .unit-label {
-  font-size: 12px;
-  color: #777;
-  font-weight: 600;
+  font-size: 11px;
+  color: var(--accent-gold);
+  font-weight: 700;
+  letter-spacing: 0.5px;
 }
 
 .size-unit-box input {
-  width: 60px;
+  width: 50px;
   background: transparent;
   border: none;
   color: #fff;
   font-size: 15px;
-  font-weight: 700;
+  font-weight: 800;
   text-align: right;
   padding: 0;
   outline: none;
 }
 
-.size-fit-preference {
-  margin-bottom: 20px;
+.size-range-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 2px;
+  outline: none;
+  cursor: pointer;
+  margin-top: 4px;
 }
 
-.size-fit-preference label {
+.size-range-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 2px solid var(--accent-gold);
+  cursor: pointer;
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.6);
+  transition: transform 0.15s;
+}
+
+.size-range-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+}
+
+.size-range-slider::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 2px solid var(--accent-gold);
+  cursor: pointer;
+}
+
+.size-option-section {
+  margin-bottom: 16px;
+}
+
+.size-section-label {
   display: block;
   font-size: 12px;
-  color: #888;
+  color: #999;
   font-weight: 600;
   margin-bottom: 8px;
+  letter-spacing: 0.5px;
 }
 
-.fit-toggle-row {
+.build-toggle-row {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
 }
 
-.btn-fit-toggle {
+.btn-build-toggle {
   background: #141414;
   border: 1px solid rgba(255, 255, 255, 0.1);
   color: #aaa;
-  padding: 12px 10px;
+  padding: 8px 4px;
   border-radius: 6px;
-  font-size: 13px;
+  font-size: 11px;
   font-weight: 600;
   cursor: pointer;
   display: flex;
@@ -5987,18 +6048,62 @@ body.body-scroll-locked {
   align-items: center;
   gap: 4px;
   transition: all 0.2s;
+  text-align: center;
+}
+
+.btn-build-toggle i {
+  font-size: 13px;
+  opacity: 0.7;
+}
+
+.btn-build-toggle.active {
+  border-color: var(--accent-gold);
+  color: #fff;
+  background: rgba(229, 185, 95, 0.12);
+}
+
+.btn-build-toggle.active i {
+  color: var(--accent-gold);
+  opacity: 1;
+}
+
+.fit-toggle-row-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.btn-fit-toggle {
+  background: #141414;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #aaa;
+  padding: 10px 6px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  transition: all 0.2s;
+  text-align: center;
+}
+
+.btn-fit-toggle small {
+  font-size: 10px;
+  color: #666;
+  font-weight: 500;
 }
 
 .btn-fit-toggle.active {
-  border-color: rgba(255, 255, 255, 0.5);
+  border-color: var(--accent-gold);
   color: #fff;
-  background: #1a1a1a;
+  background: rgba(229, 185, 95, 0.12);
 }
 
-.btn-fit-toggle .selected-badge {
-  font-size: 10px;
-  color: #2ecc71;
-  font-weight: 700;
+.btn-fit-toggle.active small {
+  color: #e5b95f;
 }
 
 .size-recommendation-card {
@@ -6008,36 +6113,53 @@ body.body-scroll-locked {
   padding: 16px;
   text-align: center;
   margin-bottom: 14px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.4);
+}
+
+.rec-top-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
 }
 
 .size-recommendation-card .rec-label {
   font-size: 10px;
   font-weight: 800;
   letter-spacing: 1.5px;
-  color: #666;
+  color: #555;
   text-transform: uppercase;
-  display: block;
-  margin-bottom: 4px;
+}
+
+.rec-match-badge {
+  font-size: 10px;
+  font-weight: 800;
+  background: #111111;
+  color: #2ecc71;
+  padding: 2px 8px;
+  border-radius: 12px;
+  letter-spacing: 0.5px;
 }
 
 .size-recommendation-card .rec-size-letter {
   font-family: var(--font-serif);
-  font-size: 38px;
-  font-weight: 800;
-  line-height: 1;
+  font-size: 42px;
+  font-weight: 900;
+  line-height: 1.05;
   color: #000;
   margin-bottom: 4px;
 }
 
 .size-recommendation-card .rec-note {
-  font-size: 11px;
-  color: #555;
+  font-size: 12px;
+  color: #444;
   margin: 0;
+  line-height: 1.4;
 }
 
 .btn-confirm-size {
   width: 100%;
-  background: #cfcfcf;
+  background: var(--accent-gold, #e5b95f);
   color: #000000;
   border: none;
   padding: 14px;
@@ -6047,11 +6169,13 @@ body.body-scroll-locked {
   letter-spacing: 1.5px;
   cursor: pointer;
   text-transform: uppercase;
-  transition: background 0.2s;
+  transition: all 0.2s;
+  box-shadow: 0 4px 14px rgba(229, 185, 95, 0.35);
 }
 
 .btn-confirm-size:hover {
   background: #ffffff;
+  box-shadow: 0 6px 18px rgba(255, 255, 255, 0.4);
 }
 
 .size-assistant-disclaimer {
