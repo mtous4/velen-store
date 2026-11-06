@@ -6264,33 +6264,65 @@ body.body-scroll-locked {
   position: relative;
 }
 
-/* Desktop Vertical Thumbnails (Image 1) */
+/* Desktop Vertical Thumbnails (Image 1) - Smooth Vertical Roll */
 .product-vertical-thumbs {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  width: 72px;
+  gap: 12px;
+  width: 76px;
+  max-height: 560px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 4px;
   flex-shrink: 0;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.22) transparent;
+  scroll-behavior: smooth;
+}
+
+.product-vertical-thumbs::-webkit-scrollbar {
+  width: 4px;
+}
+
+.product-vertical-thumbs::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.product-vertical-thumbs::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+}
+
+.product-vertical-thumbs::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.45);
 }
 
 .vert-thumb-btn {
   width: 72px;
   height: 72px;
-  border-radius: 6px;
+  border-radius: 8px;
   overflow: hidden;
-  border: 1px solid #222;
+  border: 1px solid rgba(255, 255, 255, 0.15);
   background: #111;
   padding: 0;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.22s ease;
+  flex-shrink: 0;
+  opacity: 0.65;
+  position: relative;
 }
 
 .vert-thumb-btn:hover {
-  border-color: #888;
+  opacity: 0.95;
+  border-color: rgba(255, 255, 255, 0.45);
+  transform: translateY(-1px);
 }
 
 .vert-thumb-btn.active {
+  opacity: 1;
   border: 2px solid #ffffff;
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.35);
+  transform: scale(1.02);
 }
 
 .vert-thumb-btn img {
@@ -6306,11 +6338,18 @@ body.body-scroll-locked {
   flex: 1;
   border-radius: 8px;
   overflow: hidden;
-  background: #111;
+  background: #0d0d0d;
   aspect-ratio: 4 / 5;
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: grab;
+  user-select: none;
+  touch-action: pan-y;
+}
+
+.product-main-showcase:active {
+  cursor: grabbing;
 }
 
 .product-hero-image {
@@ -6318,7 +6357,8 @@ body.body-scroll-locked {
   height: 100%;
   object-fit: cover;
   display: block;
-  transition: opacity 0.2s ease;
+  transition: opacity 0.18s ease, transform 0.18s ease;
+  pointer-events: none;
 }
 
 /* Brand Watermark (Image 1: Top-Left "V VELEN") */
@@ -6354,7 +6394,29 @@ body.body-scroll-locked {
   text-shadow: 0 2px 6px rgba(0,0,0,0.6);
 }
 
-/* Desktop Expand Button (Image 1: Bottom-Right) */
+/* Carousel Counter (Desktop & Mobile) */
+.mobile-carousel-counter {
+  display: flex !important;
+  align-items: center;
+  gap: 4px;
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: rgba(10, 10, 10, 0.7);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: #ffffff;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  z-index: 4;
+  pointer-events: none;
+}
+
+/* Desktop Expand Button (Bottom-Right) */
 .desktop-expand-btn {
   position: absolute;
   bottom: 16px;
@@ -6381,11 +6443,50 @@ body.body-scroll-locked {
   border-color: #ffffff;
 }
 
-/* Desktop: hide mobile carousel controls */
+/* Carousel Arrow Navigation Buttons (Desktop & Mobile) */
+.carousel-arrow-btn {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(10, 10, 10, 0.65);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  font-size: 15px;
+  z-index: 5;
+  cursor: pointer;
+  opacity: 0.85;
+  transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+}
+
+.carousel-arrow-btn:hover {
+  opacity: 1;
+  background: #ffffff;
+  color: #000000;
+  border-color: #ffffff;
+  transform: translateY(-50%) scale(1.08);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
+}
+
+.carousel-arrow-btn.prev {
+  left: 14px;
+}
+
+.carousel-arrow-btn.next {
+  right: 14px;
+}
+
+/* Desktop: hide mobile-only elements */
 @media (min-width: 901px) {
-  .mobile-carousel-counter,
   .mobile-zoom-btn,
-  .carousel-arrow-btn,
   .product-model-stats-pill,
   .product-mobile-thumbs-strip {
     display: none !important;
@@ -7043,23 +7144,23 @@ body.body-scroll-locked {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    width: 32px;
-    height: 32px;
+    width: 36px;
+    height: 36px;
     border-radius: 50%;
-    background: rgba(0, 0, 0, 0.6);
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    background: rgba(0, 0, 0, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.2);
     color: #ffffff;
-    font-size: 12px;
-    z-index: 3;
+    font-size: 13px;
+    z-index: 5;
     cursor: pointer;
   }
 
   .carousel-arrow-btn.prev {
-    left: 10px;
+    left: 8px;
   }
 
   .carousel-arrow-btn.next {
-    right: 10px;
+    right: 8px;
   }
 
   .product-model-stats-pill {
@@ -7129,5 +7230,157 @@ body.body-scroll-locked {
 
   .product-main-title {
     font-size: 26px;
+  }
+}
+
+/* ================= FULLSCREEN PRODUCT LIGHTBOX ================= */
+.velen-lightbox-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  background: rgba(0, 0, 0, 0.94);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+
+.velen-lightbox-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.velen-lightbox-backdrop {
+  position: absolute;
+  inset: 0;
+  cursor: zoom-out;
+}
+
+.velen-lightbox-content {
+  position: relative;
+  max-width: 92vw;
+  max-height: 92vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+}
+
+.lightbox-img-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 88vw;
+  max-height: 86vh;
+}
+
+.lightbox-img-wrap img {
+  max-width: 100%;
+  max-height: 86vh;
+  object-fit: contain;
+  border-radius: 8px;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.85);
+  transition: opacity 0.18s ease, transform 0.18s ease;
+}
+
+.lightbox-close-btn {
+  position: fixed;
+  top: 22px;
+  right: 24px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: #ffffff;
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  z-index: 10;
+}
+
+.lightbox-close-btn:hover {
+  background: #ffffff;
+  color: #000000;
+  transform: scale(1.08);
+}
+
+.lightbox-counter {
+  position: fixed;
+  top: 26px;
+  left: 28px;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 6px 14px;
+  border-radius: 20px;
+  z-index: 10;
+}
+
+.lightbox-arrow {
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: #ffffff;
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  z-index: 10;
+}
+
+.lightbox-arrow:hover {
+  background: #ffffff;
+  color: #000000;
+  transform: translateY(-50%) scale(1.1);
+}
+
+.lightbox-arrow.prev {
+  left: 24px;
+}
+
+.lightbox-arrow.next {
+  right: 24px;
+}
+
+@media (max-width: 768px) {
+  .lightbox-arrow {
+    width: 40px;
+    height: 40px;
+    font-size: 15px;
+  }
+  .lightbox-arrow.prev {
+    left: 10px;
+  }
+  .lightbox-arrow.next {
+    right: 10px;
+  }
+  .lightbox-close-btn {
+    top: 16px;
+    right: 16px;
+    width: 38px;
+    height: 38px;
+  }
+  .lightbox-counter {
+    top: 18px;
+    left: 16px;
+    font-size: 12px;
   }
 }

@@ -2149,7 +2149,255 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  // ================= VELEN PRODUCT PAGE GALLERY CONTROLLER =================
   let currentProductImageIdx = 0;
+
+  function getCurrentProductGalleryImages() {
+    const p = state.currentProductForModal;
+    if (!p) return [];
+    if (state.selectedColor && Array.isArray(state.selectedColor.images) && state.selectedColor.images.length > 0) {
+      return state.selectedColor.images;
+    }
+    if (Array.isArray(p.images) && p.images.length > 0) {
+      return p.images;
+    }
+    return [p.image || '/assets/velen-logo.jpg'];
+  }
+
+  function switchProductPageImage(target, sourceBtn) {
+    const images = getCurrentProductGalleryImages();
+    if (!images || images.length === 0) return;
+
+    let targetIdx = 0;
+    if (typeof target === 'number') {
+      targetIdx = ((target % images.length) + images.length) % images.length;
+    } else if (typeof target === 'string') {
+      const foundIdx = images.indexOf(target);
+      targetIdx = foundIdx !== -1 ? foundIdx : 0;
+    } else if (sourceBtn && sourceBtn.dataset && typeof sourceBtn.dataset.index !== 'undefined') {
+      targetIdx = parseInt(sourceBtn.dataset.index, 10) || 0;
+    }
+
+    currentProductImageIdx = targetIdx;
+    const selectedImgUrl = images[targetIdx];
+
+    // 1. Smooth fade on main image
+    const mainImg = document.getElementById('pageProductMainImg');
+    if (mainImg) {
+      mainImg.style.transition = 'opacity 0.16s ease, transform 0.16s ease';
+      mainImg.style.opacity = '0.35';
+      mainImg.style.transform = 'scale(0.985)';
+      setTimeout(() => {
+        mainImg.src = selectedImgUrl;
+        mainImg.style.opacity = '1';
+        mainImg.style.transform = 'scale(1)';
+      }, 100);
+    }
+
+    // 2. Update Counter
+    const carouselIndex = document.getElementById('pageCarouselIndex');
+    const carouselTotal = document.getElementById('pageCarouselTotal');
+    if (carouselIndex) carouselIndex.textContent = String(targetIdx + 1);
+    if (carouselTotal) carouselTotal.textContent = String(images.length);
+
+    // 3. Update Desktop Vertical Thumbnails
+    const vertThumbs = document.querySelectorAll('#productVerticalThumbs .vert-thumb-btn');
+    vertThumbs.forEach((thumb, i) => {
+      if (i === targetIdx) {
+        thumb.classList.add('active');
+        thumb.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      } else {
+        thumb.classList.remove('active');
+      }
+    });
+
+    // 4. Update Mobile Horizontal Thumbnails
+    const mobileThumbs = document.querySelectorAll('#productMobileThumbs .mobile-thumb-item');
+    mobileThumbs.forEach((thumb, i) => {
+      if (i === targetIdx) {
+        thumb.classList.add('active');
+        thumb.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+      } else {
+        thumb.classList.remove('active');
+      }
+    });
+
+    // 5. Update Lightbox if open
+    const lightboxImg = document.getElementById('lightboxActiveImg');
+    const lightboxCounter = document.querySelector('.lightbox-counter');
+    if (lightboxImg) lightboxImg.src = selectedImgUrl;
+    if (lightboxCounter) {
+      lightboxCounter.innerHTML = `<span>${targetIdx + 1}</span> / <span>${images.length}</span>`;
+    }
+  }
+
+  function nextProductPageImage() {
+    const images = getCurrentProductGalleryImages();
+    if (!images || images.length <= 1) return;
+    const nextIdx = (currentProductImageIdx + 1) % images.length;
+    switchProductPageImage(nextIdx);
+  }
+
+  function prevProductPageImage() {
+    const images = getCurrentProductGalleryImages();
+    if (!images || images.length <= 1) return;
+    const prevIdx = (currentProductImageIdx - 1 + images.length) % images.length;
+    switchProductPageImage(prevIdx);
+  }
+
+  function attachProductGalleryInteractions() {
+    const showcase = document.getElementById('productMainShowcase');
+    if (!showcase) return;
+
+    if (showcase.dataset.galleryBound === 'true') return;
+    showcase.dataset.galleryBound = 'true';
+
+    // Touch swipe for mobile / tablet
+    let startX = 0;
+    let startY = 0;
+    let endX = 0;
+    let endY = 0;
+
+    showcase.addEventListener('touchstart', (e) => {
+      if (e.touches.length === 1) {
+        startX = e.touches[0].clientX;
+        startY = e.touches[0].clientY;
+        endX = startX;
+        endY = startY;
+      }
+    }, { passive: true });
+
+    showcase.addEventListener('touchmove', (e) => {
+      if (e.touches.length === 1) {
+        endX = e.touches[0].clientX;
+        endY = e.touches[0].clientY;
+      }
+    }, { passive: true });
+
+    showcase.addEventListener('touchend', () => {
+      const diffX = endX - startX;
+      const diffY = endY - startY;
+      if (Math.abs(diffX) > 35 && Math.abs(diffX) > Math.abs(diffY)) {
+        if (diffX < 0) {
+          nextProductPageImage();
+        } else {
+          prevProductPageImage();
+        }
+      }
+    }, { passive: true });
+
+    // Desktop Mouse Drag to Roll
+    let isMouseDown = false;
+    let dragStartX = 0;
+
+    showcase.addEventListener('mousedown', (e) => {
+      if (e.target.closest('button')) return; // do not hijack button clicks
+      isMouseDown = true;
+      dragStartX = e.clientX;
+      showcase.style.cursor = 'grabbing';
+    });
+
+    window.addEventListener('mouseup', (e) => {
+      if (!isMouseDown) return;
+      isMouseDown = false;
+      showcase.style.cursor = 'grab';
+      const diffX = e.clientX - dragStartX;
+      if (Math.abs(diffX) > 40) {
+        if (diffX < 0) {
+          nextProductPageImage();
+        } else {
+          prevProductPageImage();
+        }
+      }
+    });
+
+    // Mouse wheel / trackpad roll (throttled)
+    let lastWheelTime = 0;
+    showcase.addEventListener('wheel', (e) => {
+      const now = Date.now();
+      if (now - lastWheelTime < 280) return;
+      const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+      if (Math.abs(delta) > 20) {
+        lastWheelTime = now;
+        if (delta > 0) {
+          nextProductPageImage();
+        } else {
+          prevProductPageImage();
+        }
+      }
+    }, { passive: true });
+  }
+
+  // Global Keyboard Navigation (Arrows for Product Gallery)
+  window.addEventListener('keydown', (e) => {
+    const prodPage = document.getElementById('productPage');
+    if (!prodPage || prodPage.style.display !== 'block') return;
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.isContentEditable) return;
+
+    if (e.key === 'ArrowRight') {
+      nextProductPageImage();
+    } else if (e.key === 'ArrowLeft') {
+      prevProductPageImage();
+    } else if (e.key === 'Escape') {
+      closeLightbox();
+    }
+  });
+
+  // Fullscreen Image Lightbox
+  function zoomProductImage() {
+    const images = getCurrentProductGalleryImages();
+    if (!images || images.length === 0) return;
+    const currentImgUrl = images[currentProductImageIdx] || images[0];
+
+    let lightbox = document.getElementById('velenProductLightbox');
+    if (!lightbox) {
+      lightbox = document.createElement('div');
+      lightbox.id = 'velenProductLightbox';
+      lightbox.className = 'velen-lightbox-overlay';
+      document.body.appendChild(lightbox);
+    }
+
+    lightbox.innerHTML = `
+      <div class="velen-lightbox-backdrop" onclick="window.velenApp.closeLightbox()"></div>
+      <div class="velen-lightbox-content">
+        <button type="button" class="lightbox-close-btn" onclick="window.velenApp.closeLightbox()" aria-label="Close zoom">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+        <div class="lightbox-counter">
+          <span>${currentProductImageIdx + 1}</span> / <span>${images.length}</span>
+        </div>
+        <button type="button" class="lightbox-arrow prev" onclick="window.velenApp.lightboxPrev(event)" aria-label="Previous">
+          <i class="fa-solid fa-chevron-left"></i>
+        </button>
+        <div class="lightbox-img-wrap">
+          <img id="lightboxActiveImg" src="${currentImgUrl}" alt="Product view" onerror="this.src='/assets/velen-logo.jpg'">
+        </div>
+        <button type="button" class="lightbox-arrow next" onclick="window.velenApp.lightboxNext(event)" aria-label="Next">
+          <i class="fa-solid fa-chevron-right"></i>
+        </button>
+      </div>
+    `;
+    lightbox.classList.add('active');
+    lockBodyScroll();
+  }
+
+  function closeLightbox() {
+    const lightbox = document.getElementById('velenProductLightbox');
+    if (lightbox) {
+      lightbox.classList.remove('active');
+    }
+    unlockBodyScroll();
+  }
+
+  function lightboxNext(e) {
+    if (e) e.stopPropagation();
+    nextProductPageImage();
+  }
+
+  function lightboxPrev(e) {
+    if (e) e.stopPropagation();
+    prevProductPageImage();
+  }
 
   function renderProductPageContent(product) {
     const container = document.getElementById('productPageDetails');
@@ -2199,24 +2447,24 @@ document.addEventListener('DOMContentLoaded', () => {
       <div class="product-page-main-layout">
         <!-- Left: Gallery Section -->
         <div class="product-gallery-section">
-          <!-- Desktop Vertical Thumbnail Strip (Image 1) -->
+          <!-- Desktop Vertical Thumbnail Strip - Full Roll (Image 1) -->
           <div class="product-vertical-thumbs" id="productVerticalThumbs">
-            ${currentImages.slice(0, 6).map((imgUrl, i) => `
-              <button type="button" class="vert-thumb-btn ${i === 0 ? 'active' : ''}" onclick="window.velenApp.switchProductPageImage('${imgUrl}', this)" aria-label="Thumbnail ${i + 1}">
+            ${currentImages.map((imgUrl, i) => `
+              <button type="button" class="vert-thumb-btn ${i === 0 ? 'active' : ''}" data-index="${i}" onclick="window.velenApp.switchProductPageImage(${i}, this)" aria-label="${isAr ? 'صورة' : 'Thumbnail'} ${i + 1}">
                 <img src="${imgUrl}" alt="${displayName} view ${i + 1}" loading="lazy" onerror="this.src='/assets/velen-logo.jpg'">
               </button>
             `).join('')}
           </div>
 
           <!-- Main Image Showcase Frame -->
-          <div class="product-main-showcase">
+          <div class="product-main-showcase" id="productMainShowcase" title="${isAr ? 'اسحب أو استخدم الأسهم للتقليب بين الصور' : 'Drag or use arrows to flip photos'}">
             <!-- Brand Watermark top-left (Image 1) -->
             <div class="product-brand-watermark">
               <span class="watermark-v">V</span>
               <span class="watermark-velen">VELEN</span>
             </div>
 
-            <!-- Mobile Carousel Counter (Image 3: "1 / 7") -->
+            <!-- Carousel Counter (Image 3: "1 / 7") -->
             <div class="mobile-carousel-counter" id="mobileCarouselCounter">
               <span id="pageCarouselIndex">1</span> / <span id="pageCarouselTotal">${currentImages.length}</span>
             </div>
@@ -2230,15 +2478,15 @@ document.addEventListener('DOMContentLoaded', () => {
             <img id="pageProductMainImg" src="${currentImages[0]}" alt="${displayName}" class="product-hero-image" onerror="this.src='/assets/velen-logo.jpg'">
 
             <!-- Desktop Expand button bottom-right (Image 1) -->
-            <button type="button" class="desktop-expand-btn" onclick="window.velenApp.zoomProductImage()" aria-label="Expand image view" title="Expand view">
+            <button type="button" class="desktop-expand-btn" onclick="window.velenApp.zoomProductImage()" aria-label="Expand image view" title="${isAr ? 'تكبير الصورة' : 'Expand view'}">
               <i class="fa-solid fa-up-right-and-down-left-from-center"></i>
             </button>
 
-            <!-- Mobile Navigation Arrows (Image 3) -->
-            <button type="button" class="carousel-arrow-btn prev" onclick="window.velenApp.prevProductPageImage()" aria-label="Previous image">
+            <!-- Carousel Navigation Arrows (Desktop & Mobile) -->
+            <button type="button" class="carousel-arrow-btn prev" onclick="window.velenApp.prevProductPageImage()" aria-label="${isAr ? 'الصورة السابقة' : 'Previous image'}" title="${isAr ? 'الصورة السابقة' : 'Previous'}">
               <i class="fa-solid fa-chevron-left"></i>
             </button>
-            <button type="button" class="carousel-arrow-btn next" onclick="window.velenApp.nextProductPageImage()" aria-label="Next image">
+            <button type="button" class="carousel-arrow-btn next" onclick="window.velenApp.nextProductPageImage()" aria-label="${isAr ? 'الصورة التالية' : 'Next image'}" title="${isAr ? 'الصورة التالية' : 'Next'}">
               <i class="fa-solid fa-chevron-right"></i>
             </button>
 
@@ -2252,7 +2500,7 @@ document.addEventListener('DOMContentLoaded', () => {
           <!-- Mobile Horizontal Thumbnail Strip (Image 3) -->
           <div class="product-mobile-thumbs-strip" id="productMobileThumbs">
             ${currentImages.map((imgUrl, i) => `
-              <button type="button" class="mobile-thumb-item ${i === 0 ? 'active' : ''}" onclick="window.velenApp.switchProductPageImage('${imgUrl}', this)" aria-label="Image ${i + 1}">
+              <button type="button" class="mobile-thumb-item ${i === 0 ? 'active' : ''}" data-index="${i}" onclick="window.velenApp.switchProductPageImage(${i}, this)" aria-label="${isAr ? 'صورة' : 'Image'} ${i + 1}">
                 <img src="${imgUrl}" alt="${displayName} ${i + 1}" loading="lazy" onerror="this.src='/assets/velen-logo.jpg'">
               </button>
             `).join('')}
@@ -2432,6 +2680,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     renderSizeBoxesForColor(product, state.selectedColor);
     loadProductReviews(product.id, isAr);
+    attachProductGalleryInteractions();
   }
 
   async function loadProductReviews(productId, isAr) {
@@ -4162,11 +4411,11 @@ document.addEventListener('DOMContentLoaded', () => {
       if (carouselIndex) carouselIndex.textContent = '1';
       if (carouselTotal) carouselTotal.textContent = colorImages.length;
 
-      // Update Desktop Vertical Thumbnails
+      // Update Desktop Vertical Thumbnails - Full Roll
       const vertThumbs = document.getElementById('productVerticalThumbs');
       if (vertThumbs) {
-        vertThumbs.innerHTML = colorImages.slice(0, 6).map((imgUrl, i) => `
-          <button type="button" class="vert-thumb-btn ${i === 0 ? 'active' : ''}" onclick="window.velenApp.switchProductPageImage('${imgUrl}', this)" aria-label="Thumbnail ${i + 1}">
+        vertThumbs.innerHTML = colorImages.map((imgUrl, i) => `
+          <button type="button" class="vert-thumb-btn ${i === 0 ? 'active' : ''}" data-index="${i}" onclick="window.velenApp.switchProductPageImage(${i}, this)" aria-label="${state.activeLang === 'ar' ? 'صورة' : 'Thumbnail'} ${i + 1}">
             <img src="${imgUrl}" alt="${p.name} view ${i + 1}" loading="lazy" onerror="this.src='/assets/velen-logo.jpg'">
           </button>
         `).join('');
@@ -4176,11 +4425,14 @@ document.addEventListener('DOMContentLoaded', () => {
       const mobileThumbs = document.getElementById('productMobileThumbs');
       if (mobileThumbs) {
         mobileThumbs.innerHTML = colorImages.map((imgUrl, i) => `
-          <button type="button" class="mobile-thumb-item ${i === 0 ? 'active' : ''}" onclick="window.velenApp.switchProductPageImage('${imgUrl}', this)" aria-label="Image ${i + 1}">
+          <button type="button" class="mobile-thumb-item ${i === 0 ? 'active' : ''}" data-index="${i}" onclick="window.velenApp.switchProductPageImage(${i}, this)" aria-label="${state.activeLang === 'ar' ? 'صورة' : 'Image'} ${i + 1}">
             <img src="${imgUrl}" alt="${p.name} ${i + 1}" loading="lazy" onerror="this.src='/assets/velen-logo.jpg'">
           </button>
         `).join('');
       }
+
+      // Re-attach interactive swipe/drag/wheel listeners to showcase
+      attachProductGalleryInteractions();
 
       // Switch sizes to this color's specific sizing/inventory
       renderSizeBoxesForColor(p, c);
@@ -4245,6 +4497,15 @@ document.addEventListener('DOMContentLoaded', () => {
     },
     zoomProductImage: () => {
       zoomProductImage();
+    },
+    closeLightbox: () => {
+      closeLightbox();
+    },
+    lightboxNext: (e) => {
+      lightboxNext(e);
+    },
+    lightboxPrev: (e) => {
+      lightboxPrev(e);
     },
     handlePaymentMethodChange: (val) => {
       handlePaymentMethodChange(val);

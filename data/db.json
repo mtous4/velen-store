@@ -34,11 +34,11 @@
       "care": {
         "titleEn": "Fabric & Garment Care Guide",
         "titleAr": "دليل العناية بالملابس والأقمشة",
-        "subEn": "PREMIUM COTTON LONGEVITY PROTOCOL",
+        "subEn": "PREMIUM HEAVYWEIGHT FABRICS LONGEVITY PROTOCOL",
         "subAr": "بروتوكول الحفاظ على الأقمشة الفاخرة",
-        "badgeEn": "PREMIUM COTTON ADVANTAGE",
+        "badgeEn": "THE LUXURY FABRIC ADVANTAGE",
         "badgeAr": "ميزة الأقمشة الفاخرة",
-        "introEn": "VELEN essentials are crafted from premium cotton fabrics. To preserve fabric density and clean drape, follow our care guidelines.",
+        "introEn": "VELEN essentials are crafted from custom luxury heavyweight fabrics. To preserve its dense weave and signature boxy drape, follow our tested garment longevity protocol below.",
         "introAr": "صُنعت قطع فيلين من أقمشة قطنية فاخرة مختارة بعناية. للحفاظ على مظهرها وجودتها، يرجى اتباع إرشادات الغسيل والعناية."
       }
     }
@@ -88,6 +88,82 @@
     }
   ],
   "products": [
+    {
+      "id": "prod-1793964201498",
+      "name": "78",
+      "category": "Men",
+      "price": 20,
+      "costPrice": 5,
+      "comparePrice": 28,
+      "onSale": true,
+      "featured": true,
+      "image": "/uploads/velen-1793964110845-841652343.jpg",
+      "images": [
+        "/uploads/velen-1793964110845-841652343.jpg",
+        "/uploads/velen-1793964129657-376856927.jpg",
+        "/uploads/velen-1793964146454-100233279.jpg",
+        "/uploads/velen-1793964163940-75487782.jpg",
+        "/uploads/velen-1793964184670-713056533.jpg"
+      ],
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL"
+      ],
+      "colors": [
+        {
+          "name": "Default",
+          "hex": "#000000",
+          "images": [
+            "/uploads/velen-1793964110845-841652343.jpg",
+            "/uploads/velen-1793964129657-376856927.jpg",
+            "/uploads/velen-1793964146454-100233279.jpg",
+            "/uploads/velen-1793964163940-75487782.jpg",
+            "/uploads/velen-1793964184670-713056533.jpg"
+          ]
+        }
+      ],
+      "stock": 20,
+      "description": "Premium Everyday Essential designed by Velen.",
+      "fabric": "100% قطن أردني معالج ثقيل 260 GSM",
+      "createdAt": "2026-11-06T11:23:21.498Z"
+    },
+    {
+      "id": "prod-1793963848827",
+      "name": "test",
+      "category": "Men",
+      "price": 55,
+      "costPrice": 5,
+      "comparePrice": 99,
+      "onSale": true,
+      "featured": true,
+      "image": "/uploads/velen-1793963806699-784643100.jpg",
+      "images": [
+        "/uploads/velen-1793963806699-784643100.jpg",
+        "/uploads/velen-1793963835109-292751618.jpg"
+      ],
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL"
+      ],
+      "colors": [
+        {
+          "name": "Default",
+          "hex": "#000000",
+          "images": [
+            "/uploads/velen-1793963806699-784643100.jpg",
+            "/uploads/velen-1793963835109-292751618.jpg"
+          ]
+        }
+      ],
+      "stock": 20,
+      "description": "Premium Everyday Essential designed by Velen.",
+      "fabric": "100% قطن أردني معالج ثقيل 260 GSM",
+      "createdAt": "2026-11-06T11:17:28.827Z"
+    },
     {
       "id": "prod-1793962684956",
       "name": "67",
@@ -558,6 +634,38 @@
   ],
   "community": [
     {
+      "id": "comm-1793964851049",
+      "author": "حمودي الوحش",
+      "authorTag": "@velen.official",
+      "avatar": "/assets/velen-logo.jpg",
+      "mediaType": "video",
+      "mediaUrl": "/uploads/velen-1793964820854-337162292.mp4",
+      "videoUrl": "/uploads/velen-1793964820854-337162292.mp4",
+      "subtitle": "VELEN Ringer Tee - VELEN Official",
+      "rating": 5,
+      "comment": "الكوتش الموديل الحلو",
+      "itemWorn": "VELEN Ringer Tee",
+      "likes": 0,
+      "approved": true,
+      "createdAt": "2026-11-06T11:34:11.049Z"
+    },
+    {
+      "id": "comm-1793964685285",
+      "author": "VELEN Official",
+      "authorTag": "@velen.official",
+      "avatar": "/assets/velen-logo.jpg",
+      "mediaType": "photo",
+      "mediaUrl": "/uploads/velen-1793964675301-491717273.jpg",
+      "videoUrl": null,
+      "subtitle": "VELEN Ringer Tee - VELEN Official",
+      "rating": 5,
+      "comment": "ثصبثصبثب",
+      "itemWorn": "VELEN Ringer Tee",
+      "likes": 0,
+      "approved": true,
+      "createdAt": "2026-11-06T11:31:25.285Z"
+    },
+    {
       "id": "comm-1793548900530",
       "author": "حمزة العبادي",
       "authorTag": "@hamza_abbadi",
@@ -743,8 +851,8 @@
   ],
   "design": {
     "theme": {
-      "primaryColor": "#ffffff",
-      "accentColor": "#ffffff",
+      "primaryColor": "#C4BFBF",
+      "accentColor": "#999999",
       "bgColor": "#000000",
       "saleBadgeText": "SALE"
     },
@@ -756,25 +864,25 @@
     },
     "hero": {
       "enabled": true,
-      "bgImage": "/assets/velen-hero-winter2026.png",
+      "bgImage": "/uploads/velen-1793964601674-976476339.jpg",
       "badge": "NEW DROP",
-      "brandTitle": "WINTER COLLECTION 2026",
-      "mainHeading": "WINTER COLLECTION 2026",
-      "subHeading": "Premium streetwear essentials for everyday wear.",
+      "brandTitle": "VELEN",
+      "mainHeading": "Premium Everyday Essentials. Made in Jordan.",
+      "subHeading": "CLEAN FITS. PREMIUM FEEL. BUILT FOR EVERYDAY WEAR.",
       "ctaText": "SHOP THE COLLECTION",
       "ctaLink": "#collection"
     },
     "valueProps": {
       "enabled": true,
-      "prop1": "Fast Delivery in Jordan",
-      "prop2": "Premium Quality",
-      "prop3": "Easy Returns",
+      "prop1": "توصيل مجاني في عمّان وبدينار لكافة المحافظات",
+      "prop2": "قطن أردني فاخر 260 GSM معالج ومثبت",
+      "prop3": "تبديل فوري للمقاس عند باب البيت",
       "prop4": "Secure Payment"
     },
     "sectionsOrder": [
+      "collection",
       "hero",
       "valueProps",
-      "collection",
       "community",
       "about"
     ],
@@ -787,7 +895,7 @@
     },
     "collectionSection": {
       "title": "THE COLLECTION",
-      "subtitle": "WINTER 2026"
+      "subtitle": "AUTUMN / ESSENTIALS 2026"
     },
     "communitySection": {
       "title": "COMMUNITY WEARS VELEN",
@@ -812,18 +920,24 @@
       "enabled": false,
       "title": "THE NEXT DROP IS COMING",
       "subtitle": "AUTUMN / WINTER ESSENTIALS 2026. MADE IN JORDAN.",
-      "launchDate": "2026-11-20T20:00:00.000Z",
-      "notifyNote": "BE THE FIRST TO ACCESS THE EXCLUSIVE COLLECTION."
+      "launchDate": "2026-11-07T20:00:00.000Z",
+      "notifyNote": "BE THE FIRST TO ACCESS THE EXCLUSIVE COLLECTION.",
+      "discountOffer": "Sign up for early access and get 15% off your first order."
     },
     "checkoutUpsell": {
       "enabled": true,
-      "title": "عرض خاص وحصري مع طلبك",
-      "subtitle": "أضف تيشيرت رينجر إضافي إلى طلبك الآن بخصم خاص (9.500 JOD بدل 13.000)!",
-      "productId": "prod-1",
-      "specialPrice": 9.5
+      "title": "عرض خاص مع طلبك (Exclusive Offer)",
+      "subtitle": "add this for special offer",
+      "productId": "prod-1793258212025",
+      "specialPrice": 15
     },
     "socialLinks": {
       "instagram": "https://www.instagram.com/velen.offical?dlrf=c3I5MGh6eTZneGYy"
+    },
+    "portalCards": {
+      "shopImage": "/uploads/velen-1793879708439-712682715.png",
+      "storyImage": "/assets/velen-boxy-white.jpg",
+      "communityImage": "/assets/velen-community-1.jpg"
     }
   },
   "promoCodes": [
