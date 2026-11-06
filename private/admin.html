@@ -364,6 +364,39 @@
         <div class="community-admin-grid" id="adminCommunityGrid">
           <!-- Rendered dynamically -->
         </div>
+
+        <!-- ================= CUSTOMER REVIEWS MODERATION ================= -->
+        <div class="reviews-moderation-card" style="margin-top: 36px; background: #141414; border: 1px solid #282828; border-radius: 10px; padding: 22px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px;">
+            <div>
+              <h3 style="margin: 0; font-size: 16px; color: #fff; display: flex; align-items: center; gap: 8px;">
+                <i class="fa-solid fa-star" style="color: #ffb703;"></i> تقييمات وآراء الزبائن في المتجر (Customer Reviews)
+              </h3>
+              <p style="margin: 4px 0 0 0; font-size: 12px; color: #888;">
+                إدارة وحذف التقييمات النصية والنجوم التي يضيفها الزبائن في صفحة التقييمات.
+              </p>
+            </div>
+            <span class="badge" id="adminReviewsCountBadge" style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); padding: 5px 12px; border-radius: 12px; font-size: 12px; color: #fff; font-weight: 600;">0 تقييم</span>
+          </div>
+
+          <div class="table-responsive">
+            <table class="admin-table" id="adminReviewsTable">
+              <thead>
+                <tr>
+                  <th style="width: 140px;">اسم الزبون</th>
+                  <th style="width: 130px;">التقييم</th>
+                  <th style="width: 160px;">القطعة</th>
+                  <th>نص التقييم والملاحظات</th>
+                  <th style="width: 130px;">التاريخ</th>
+                  <th style="width: 90px; text-align: center;">إجراء</th>
+                </tr>
+              </thead>
+              <tbody id="adminReviewsTableBody">
+                <!-- Populated dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
       </section>
 
       <!-- ================= TAB: DESIGN & LAYOUT CUSTOMIZER ================= -->

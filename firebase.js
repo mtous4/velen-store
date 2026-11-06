@@ -388,6 +388,39 @@ module.exports = {
     }
   },
 
+  // Customer Reviews Persistence
+  async getReviews(localFallback) {
+    if (!isFirebaseReady) return localFallback?.reviews || [];
+    try {
+      const snap = await db.collection('reviews').orderBy('createdAt', 'desc').get();
+      if (!snap.empty) {
+        return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      }
+      return localFallback?.reviews || [];
+    } catch (e) {
+      console.error('Firestore getReviews error:', e);
+      return localFallback?.reviews || [];
+    }
+  },
+
+  async saveReview(review) {
+    if (!isFirebaseReady || !review || !review.id) return;
+    try {
+      await db.collection('reviews').doc(review.id).set(review);
+    } catch (e) {
+      console.error('Firestore saveReview error:', e);
+    }
+  },
+
+  async deleteReview(id) {
+    if (!isFirebaseReady || !id) return;
+    try {
+      await db.collection('reviews').doc(id).delete();
+    } catch (e) {
+      console.error('Firestore deleteReview error:', e);
+    }
+  },
+
   // Media Storage in Firestore (Synchronizes across Localhost & Vercel Serverless)
   async saveMedia(filename, buffer, mimeType) {
     if (!isFirebaseReady || !filename || !buffer) return false;

@@ -103,7 +103,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // ================= FETCH ALL DATA =================
   async function fetchAllData() {
     try {
-      const [pRes, oRes, cRes, sRes, statsRes, dRes, promoRes, cartRes, expRes, catRes] = await Promise.all([
+      const [pRes, oRes, cRes, sRes, statsRes, dRes, promoRes, cartRes, expRes, catRes, revRes] = await Promise.all([
         fetch('/api/products'),
         fetch('/api/orders'),
         fetch('/api/community'),
@@ -113,7 +113,8 @@ document.addEventListener('DOMContentLoaded', () => {
         fetch('/api/promo-codes'),
         fetch('/api/cart/active'),
         fetch('/api/expenses'),
-        fetch('/api/categories')
+        fetch('/api/categories'),
+        fetch('/api/reviews')
       ]);
 
       state.products = await pRes.json();
@@ -126,11 +127,13 @@ document.addEventListener('DOMContentLoaded', () => {
       state.activeCarts = await cartRes.json();
       state.expenses = await expRes.json();
       state.categories = await catRes.json();
+      state.reviews = await revRes.json();
 
       renderDashboard();
       renderProducts();
       renderOrders();
       renderCommunity();
+      renderCustomerReviews();
       renderPromoCodes();
       renderActiveCarts();
       populateSettings();
@@ -201,6 +204,17 @@ document.addEventListener('DOMContentLoaded', () => {
         updateBadgeCounts();
         showAdminToast(`📸 إطلالة وتقييم جديد من ${payload.author} في المجتمع!`, 'info');
       }
+    } else if (evType === 'REVIEW_ADDED') {
+      state.reviews = state.reviews || [];
+      const exists = state.reviews.some(r => r.id === payload.id);
+      if (!exists) {
+        state.reviews.unshift(payload);
+        renderCustomerReviews();
+        showAdminToast(`⭐ تقييم جديد من الزبون ${payload.author}!`, 'info');
+      }
+    } else if (evType === 'REVIEW_DELETED') {
+      state.reviews = (state.reviews || []).filter(r => r.id !== payload.id);
+      renderCustomerReviews();
     } else if (evType === 'DESIGN_UPDATED') {
       state.design = payload;
       populateDesignCustomizer();
@@ -499,6 +513,37 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
       </div>
     `).join('');
+  }
+
+  // ================= RENDER CUSTOMER REVIEWS =================
+  function renderCustomerReviews() {
+    const tbody = document.getElementById('adminReviewsTableBody');
+    const badge = document.getElementById('adminReviewsCountBadge');
+    if (!tbody) return;
+    const reviews = state.reviews || [];
+    if (badge) badge.textContent = `${reviews.length} تقييم`;
+    if (reviews.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#777; padding:28px;">لا توجد تقييمات مسجلة بعد من الزبائن</td></tr>`;
+      return;
+    }
+    tbody.innerHTML = reviews.map(r => {
+      const stars = '★'.repeat(Math.min(5, Math.max(1, r.rating || 5))) + '☆'.repeat(Math.max(0, 5 - (r.rating || 5)));
+      const date = r.createdAt ? new Date(r.createdAt).toLocaleDateString('ar-JO', { month:'short', day:'numeric', hour:'2-digit', minute:'2-digit' }) : '—';
+      return `
+        <tr>
+          <td><strong style="color:#fff;">${r.author || 'زبون'}</strong></td>
+          <td style="color:#ffb703; font-size:13px; white-space:nowrap;">${stars} <span style="color:#888; font-size:11px;">(${r.rating || 5}/5)</span></td>
+          <td><span class="badge" style="background:#222; color:#ccc; border:1px solid #333; padding:2px 8px; border-radius:4px; font-size:11px;">${r.itemWorn || r.productName || 'عام'}</span></td>
+          <td style="max-width:320px; color:#ddd; font-size:12px; line-height:1.45;">${r.comment || ''}</td>
+          <td style="color:#888; font-size:11px; white-space:nowrap;">${date}</td>
+          <td style="text-align:center;">
+            <button type="button" class="btn-action-delete" onclick="window.velenAdmin.deleteReview('${r.id}')" title="حذف التقييم" style="padding:6px 12px; background:rgba(231,76,60,0.15); border:1px solid rgba(231,76,60,0.4); color:#e74c3c; border-radius:6px; cursor:pointer; font-size:11px;">
+              <i class="fa-solid fa-trash"></i> حذف
+            </button>
+          </td>
+        </tr>
+      `;
+    }).join('');
   }
 
   // ================= POPULATE SETTINGS =================
@@ -2659,6 +2704,23 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       } catch (e) {
         showAdminToast('فشل حذف المنشور', 'error');
+      }
+    },
+    deleteReview: async (id) => {
+      if (!confirm('هل أنت متأكد من حذف هذا التقييم نهائياً من المتجر؟')) return;
+      try {
+        const res = await fetch(`/api/reviews/${id}`, { method: 'DELETE' });
+        const data = await res.json();
+        if (data.success) {
+          state.reviews = (state.reviews || []).filter(r => r.id !== id);
+          renderCustomerReviews();
+          showAdminToast('تم حذف تقييم الزبون بنجاح', 'success');
+        } else {
+          showAdminToast(data.message || 'فشل حذف التقييم', 'error');
+        }
+      } catch (err) {
+        console.error(err);
+        showAdminToast('حدث خطأ أثناء محاولة الحذف', 'error');
       }
     },
     openWhatsApp: (phone, orderId, name) => {

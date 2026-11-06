@@ -1007,21 +1007,24 @@ document.addEventListener('DOMContentLoaded', () => {
     const currentCat = state.activeFeaturedCategory || 'all';
     let filtered = state.products;
     if (currentCat !== 'all') {
+      const target = currentCat.toLowerCase();
       filtered = state.products.filter(p => {
         const cat = (p.category || '').toLowerCase();
-        const target = currentCat.toLowerCase();
-        return cat.includes(target) || (p.name && p.name.toLowerCase().includes(target));
+        const pName = (p.name || '').toLowerCase();
+        const pNameAr = (p.nameAr || '').toLowerCase();
+        return cat === target || cat.includes(target) || target.includes(cat) || pName.includes(target) || pNameAr.includes(target);
       });
     }
 
-    // Graceful fallback: If category has no items, fall back to all products so grid is never empty!
+    const isAr = state.activeLang === 'ar';
+
     if (!filtered || filtered.length === 0) {
-      filtered = state.products;
+      grid.innerHTML = `<div style="grid-column: 1 / -1; text-align: center; color: #888; padding: 40px;">${isAr ? 'لا توجد قطع معروضة حالياً في هذا القسم' : 'No pieces currently available in this collection.'}</div>`;
+      return;
     }
 
-    // Limit to 4 pieces for clean grid display + editorial card
-    const displayList = (filtered || []).slice(0, 4);
-    const isAr = state.activeLang === 'ar';
+    // Display pieces for clean grid display (up to 12 pieces)
+    const displayList = (filtered || []).slice(0, 12);
 
     const cardsHtml = displayList.map(product => {
       const priceFormatted = Number(product.price).toFixed(3) + ' JOD';
@@ -1059,22 +1062,7 @@ document.addEventListener('DOMContentLoaded', () => {
       `;
     }).join('');
 
-    // Editorial Card matching Image 2 "THE DETAILS MATTER"
-    const editorialHtml = `
-      <div class="product-editorial-card" onclick="window.velenApp.showView('shop')">
-        <div class="editorial-media">
-          <img src="/assets/velen-product-showcase.png" alt="VELEN - The Details Matter" class="editorial-cover-img" onerror="this.src='/assets/velen-hero-winter2026.png'">
-          <div class="editorial-content-box">
-            <h3 class="editorial-title">${isAr ? 'التفاصيل<br>تصنع الفارق' : 'THE DETAILS<br>MATTER'}</h3>
-            <button type="button" class="editorial-arrow-btn" aria-label="${isAr ? 'تصفح التشكيلة في المتجر' : 'Explore the collection'}" title="${isAr ? 'تصفح التشكيلة' : 'View Collection'}">
-              <i class="fa-solid fa-arrow-right rtl-flip"></i>
-            </button>
-          </div>
-        </div>
-      </div>
-    `;
-
-    grid.innerHTML = cardsHtml + editorialHtml;
+    grid.innerHTML = cardsHtml;
   }
 
   // Live Order Tracking Lookup by Phone Number
@@ -1482,11 +1470,28 @@ document.addEventListener('DOMContentLoaded', () => {
     const homeTabsContainer = document.getElementById('homeCategoryTabs');
     if (homeTabsContainer) {
       const activeCat = state.activeFeaturedCategory || 'all';
-      homeTabsContainer.innerHTML = `
-        <button type="button" class="cat-pill ${activeCat === 'all' ? 'active' : ''}" data-cat="all" aria-label="${isAr ? 'عرض جميع القطع' : 'View all pieces'}">${allLabel}</button>
-        <button type="button" class="cat-pill ${activeCat === 'Sweatshirts' ? 'active' : ''}" data-cat="Sweatshirts" aria-label="${isAr ? 'فلترة حسب السويت شيرت' : 'Filter by sweatshirts'}">${isAr ? 'سويت شيرت' : 'Sweatshirts'}</button>
-        <button type="button" class="cat-pill ${activeCat === 'Sweatpants' ? 'active' : ''}" data-cat="Sweatpants" aria-label="${isAr ? 'فلترة حسب السويت بانتس' : 'Filter by sweatpants'}">${isAr ? 'سويت بانتس' : 'Sweatpants'}</button>
-      `;
+      const availableCategories = (state.categories && state.categories.length > 0)
+        ? state.categories.filter(c => c.id !== 'all')
+        : [
+            { id: 'sweatshirts', nameEn: 'Sweatshirts', nameAr: 'سويت شيرت', slug: 'sweatshirts' },
+            { id: 'sweatpants', nameEn: 'Sweatpants', nameAr: 'سويت بانتس', slug: 'sweatpants' },
+            { id: 'tees', nameEn: 'Tees', nameAr: 'تيشيرتات', slug: 'tees' },
+            { id: 'hoodies', nameEn: 'Hoodies', nameAr: 'هوديز', slug: 'hoodies' }
+          ];
+
+      const tabsHtml = [
+        `<button type="button" class="cat-pill ${activeCat === 'all' ? 'active' : ''}" data-cat="all" aria-label="${isAr ? 'عرض جميع القطع' : 'View all pieces'}">${allLabel}</button>`,
+        ...availableCategories.map(cat => {
+          const catVal = cat.nameEn || cat.id;
+          const label = isAr ? (cat.nameAr || cat.nameEn || cat.id) : (cat.nameEn || cat.id);
+          const isActive = (activeCat.toLowerCase() === (cat.id || '').toLowerCase() || 
+                            activeCat.toLowerCase() === (cat.nameEn || '').toLowerCase() || 
+                            activeCat.toLowerCase() === (cat.slug || '').toLowerCase());
+          return `<button type="button" class="cat-pill ${isActive ? 'active' : ''}" data-cat="${catVal}" aria-label="${label}">${label}</button>`;
+        })
+      ].join('');
+
+      homeTabsContainer.innerHTML = tabsHtml;
 
       homeTabsContainer.querySelectorAll('.cat-pill').forEach(tab => {
         tab.addEventListener('click', () => {
@@ -2005,7 +2010,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 <span>${isAr ? 'المقاس:' : 'Size:'} <strong>${item.size}</strong></span>
                 ${rawColor ? ` • <span>${isAr ? 'اللون:' : 'Color:'} <strong style="color:#ffffff;">${displayColor}</strong></span>` : ''}
               </div>
-              ${maxStock < 50 ? `<span style="font-size:11px; color:${isAtMax ? '#e74c3c' : '#888'}; display:block; margin-top:2px;">${isAr ? `(المتوفر بالستوك: ${maxStock})` : `(In stock: ${maxStock})`}</span>` : ''}
             </div>
             <div class="cart-item-bottom">
               <div class="cart-item-qty">
@@ -3322,29 +3326,43 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }
 
-    // Populate review product select
-    const reviewItemSelect = document.getElementById('reviewItemWorn');
-    if (reviewItemSelect && state.products && state.products.length > 0) {
-      reviewItemSelect.innerHTML = state.products.map(p => `<option value="${p.name}">${p.name}</option>`).join('');
+    // Open/Close review modal helpers
+    function openReviewModal() {
+      const reviewModal = document.getElementById('reviewModal');
+      const reviewItemSelect = document.getElementById('reviewItemWorn');
+      if (reviewItemSelect && state.products && state.products.length > 0) {
+        reviewItemSelect.innerHTML = `<option value="VELEN General">عام عن متجر VELEN (General Review)</option>` + 
+          state.products.map(p => `<option value="${p.name}">${p.name}</option>`).join('');
+      }
+      if (reviewModal) {
+        reviewModal.classList.add('active');
+        reviewModal.style.display = 'flex';
+      }
     }
 
-    // Open/Close review modal
+    function closeReviewModal() {
+      const reviewModal = document.getElementById('reviewModal');
+      if (reviewModal) {
+        reviewModal.classList.remove('active');
+        reviewModal.style.display = 'none';
+      }
+    }
+
+    window.velenApp.openReviewModal = openReviewModal;
+    window.velenApp.closeReviewModal = closeReviewModal;
+
     const addReviewBtn = document.getElementById('addReviewBtn');
     const reviewModal = document.getElementById('reviewModal');
     const reviewModalClose = document.getElementById('reviewModalClose');
 
-    if (addReviewBtn && reviewModal) {
-      addReviewBtn.addEventListener('click', () => {
-        const reviewItemSelect = document.getElementById('reviewItemWorn');
-        if (reviewItemSelect && state.products && state.products.length > 0) {
-          reviewItemSelect.innerHTML = state.products.map(p => `<option value="${p.name}">${p.name}</option>`).join('');
-        }
-        reviewModal.classList.add('active');
-      });
+    if (addReviewBtn) {
+      addReviewBtn.addEventListener('click', openReviewModal);
     }
-    if (reviewModalClose && reviewModal) {
-      reviewModalClose.addEventListener('click', () => reviewModal.classList.remove('active'));
-      reviewModal.addEventListener('click', (e) => { if (e.target === reviewModal) reviewModal.classList.remove('active'); });
+    if (reviewModalClose) {
+      reviewModalClose.addEventListener('click', closeReviewModal);
+    }
+    if (reviewModal) {
+      reviewModal.addEventListener('click', (e) => { if (e.target === reviewModal) closeReviewModal(); });
     }
 
     // Review form submit
@@ -3369,7 +3387,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!state.reviews) state.reviews = [];
             state.reviews.unshift(result.review);
             renderReviewsSection();
-            if (reviewModal) reviewModal.classList.remove('active');
+            closeReviewModal();
             reviewForm.reset();
             showToast('شكراً لك! تم نشر تقييمك بنجاح 🌟', 'success');
           }

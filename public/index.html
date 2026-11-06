@@ -557,6 +557,11 @@
               <span class="global-score" id="reviewsScore">5.0</span>
               <span class="global-count" id="reviewsCount">(0 reviews)</span>
             </div>
+            <div class="reviews-header-actions" style="margin-top: 18px; text-align: center;">
+              <button type="button" class="btn-velen-primary" id="addReviewBtn" style="display:inline-flex; align-items:center; gap:8px; padding:10px 24px; font-size:13px; letter-spacing:1px; cursor:pointer;">
+                <i class="fa-solid fa-pen-to-square"></i> <span data-i18n="writeReview">Write a Review</span>
+              </button>
+            </div>
           </div>
 
           <!-- Reviews Grid -->
@@ -1097,12 +1102,12 @@
           </div>
 
           <div class="checkout-summary-box">
-            <h4>ملخص طلبك</h4>
+            <h4>ORDER SUMMARY</h4>
             <div id="checkoutItemsList" class="checkout-items-mini"></div>
 
             <!-- Checkout Upsell Special Offer (Item 12) -->
             <div class="checkout-upsell-card" id="checkoutUpsellBox">
-              <div class="upsell-badge"><i class="fa-solid fa-fire"></i> عرض خاص مع طلبك (Exclusive Offer)</div>
+              <div class="upsell-badge"><i class="fa-solid fa-fire"></i> SPECIAL OFFER WITH YOUR ORDER</div>
               <div class="upsell-body">
                 <img src="/assets/velen-ringer-white.jpg" id="upsellImg" alt="Special Offer" class="upsell-thumb">
                 <div class="upsell-details">
@@ -1210,6 +1215,58 @@
           <p>• نستخدم في VELEN أجود أنواع القطن الفاخر (Premium Cotton) بوزن ثقيل ومريح للملابس اليومية العصرية.</p>
         </div>
       </div>
+    </div>
+  </div>
+
+  <!-- ================= CUSTOMER REVIEW MODAL ================= -->
+  <div id="reviewModal" class="checkout-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Write a Review" style="display:none;">
+    <div class="checkout-modal-dialog" style="max-width:500px; padding:24px;">
+      <button id="reviewModalClose" class="modal-close-icon" aria-label="Close review modal" title="Close / إغلاق"><i class="fa-solid fa-xmark"></i></button>
+      <div class="checkout-head" style="margin-bottom:18px;">
+        <span style="font-size:11px; letter-spacing:1.5px; text-transform:uppercase; color:#888;">VELEN REVIEWS</span>
+        <h3 id="reviewModalTitle" style="margin:4px 0 6px 0; font-size:18px; font-weight:700;">كتابة تقييم جديد • Write a Review</h3>
+        <p id="reviewModalSubtitle" style="margin:0; font-size:12px; color:#aaa;">شارك تجربتك ورأيك بالقطعة وجودة الأقمشة لمساعدة باقي الزبائن.</p>
+      </div>
+
+      <form id="reviewForm" class="checkout-form">
+        <!-- Star Rating Picker -->
+        <div class="form-group" style="margin-bottom:14px;">
+          <label style="display:block; font-size:12px; font-weight:600; color:#ccc; margin-bottom:6px;">التقييم بالنجوم / Rating *</label>
+          <div class="star-rating-picker" id="reviewStarPicker" style="display:flex; gap:8px; font-size:22px; color:#ffb703; cursor:pointer;">
+            <i class="fa-solid fa-star star-btn active" data-value="1"></i>
+            <i class="fa-solid fa-star star-btn active" data-value="2"></i>
+            <i class="fa-solid fa-star star-btn active" data-value="3"></i>
+            <i class="fa-solid fa-star star-btn active" data-value="4"></i>
+            <i class="fa-solid fa-star star-btn active" data-value="5"></i>
+          </div>
+          <span id="reviewStarLabel" style="display:block; font-size:11px; color:#aaa; margin-top:4px;">5 من 5 (ممتاز وفوق الخيال 🔥)</span>
+          <input type="hidden" id="reviewRatingVal" value="5">
+        </div>
+
+        <!-- Customer Name -->
+        <div class="form-group" style="margin-bottom:12px;">
+          <label for="reviewAuthor" style="display:block; font-size:12px; font-weight:600; color:#ccc; margin-bottom:4px;">اسمك الكريم / Your Name *</label>
+          <input type="text" id="reviewAuthor" required placeholder="مثال: يوسف، سارة، محمد..." style="width:100%; padding:10px 12px; background:#181818; border:1px solid #333; border-radius:6px; color:#fff; font-size:13px;">
+        </div>
+
+        <!-- Product / Item Worn -->
+        <div class="form-group" style="margin-bottom:12px;">
+          <label for="reviewItemWorn" style="display:block; font-size:12px; font-weight:600; color:#ccc; margin-bottom:4px;">القطعة / Item (اختياري)</label>
+          <select id="reviewItemWorn" style="width:100%; padding:10px 12px; background:#181818; border:1px solid #333; border-radius:6px; color:#fff; font-size:13px;">
+            <option value="VELEN General">عام عن متجر VELEN (General Review)</option>
+          </select>
+        </div>
+
+        <!-- Comment / Review Text -->
+        <div class="form-group" style="margin-bottom:18px;">
+          <label for="reviewComment" style="display:block; font-size:12px; font-weight:600; color:#ccc; margin-bottom:4px;">رأيك وتجربتك / Your Review *</label>
+          <textarea id="reviewComment" rows="3" required placeholder="أخبرنا عن خامة القماش، الراحة، المقاس والتوصيل..." style="width:100%; padding:10px 12px; background:#181818; border:1px solid #333; border-radius:6px; color:#fff; font-size:13px; resize:vertical;"></textarea>
+        </div>
+
+        <button type="submit" id="btnSubmitReview" class="btn-velen-primary" style="width:100%; padding:12px; font-weight:700; letter-spacing:1px; cursor:pointer;">
+          <i class="fa-solid fa-paper-plane"></i> نشر التقييم / SUBMIT REVIEW
+        </button>
+      </form>
     </div>
   </div>
 

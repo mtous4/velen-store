@@ -433,6 +433,8 @@ app.put('/api/products/:id', async (req, res) => {
   await firebaseService.saveProduct(updatedProduct);
 
   broadcast('PRODUCT_UPDATED', updatedProduct);
+  await syncPantsInventory(db, updatedProduct);
+  writeDB(db);
   res.json({ success: true, product: updatedProduct });
 });
 
@@ -511,8 +513,8 @@ app.delete('/api/community/:id', async (req, res) => {
 
 // ================= API: Product Reviews (Separate from Community) =================
 app.get('/api/reviews', async (req, res) => {
-  const db = readDB();
-  res.json(db.reviews || []);
+  const reviews = await firebaseService.getReviews(readDB());
+  res.json(reviews || []);
 });
 
 // Customer submits a pure star rating review (no photos required)
@@ -532,6 +534,7 @@ app.post('/api/reviews', async (req, res) => {
   db.reviews = db.reviews || [];
   db.reviews.unshift(review);
   writeDB(db);
+  await firebaseService.saveReview(review);
 
   broadcast('REVIEW_ADDED', review);
   res.status(201).json({ success: true, review });
@@ -542,6 +545,7 @@ app.delete('/api/reviews/:id', async (req, res) => {
   const db = readDB();
   db.reviews = (db.reviews || []).filter(r => r.id !== req.params.id);
   writeDB(db);
+  await firebaseService.deleteReview(req.params.id);
   broadcast('REVIEW_DELETED', { id: req.params.id });
   res.json({ success: true, message: 'Review removed' });
 });
@@ -551,6 +555,41 @@ app.get('/api/orders', async (req, res) => {
   const orders = await firebaseService.getOrders(readDB());
   res.json(orders || []);
 });
+
+// Helper: Synchronize pants / sweatpants inventory between Men and Women
+async function syncPantsInventory(db, updatedProd) {
+  if (!updatedProd) return;
+  const isPants = (cat, name) => {
+    const c = (cat || '').toLowerCase();
+    const n = (name || '').toLowerCase();
+    return c.includes('pant') || c.includes('sweatpant') || n.includes('pant') || n.includes('sweatpant') || n.includes('بنطلون') || n.includes('سويت بانتس');
+  };
+  if (!isPants(updatedProd.category, updatedProd.name)) return;
+
+  const normalize = (s) => (s || '').toLowerCase()
+    .replace(/\b(men|women|unisex|شباب|بنات|رجالي|ستاتي)\b/gi, '')
+    .replace(/[\(\)\-\–]/g, ' ')
+    .trim();
+
+  const targetBase = normalize(updatedProd.name);
+
+  for (const p of (db.products || [])) {
+    if (p.id === updatedProd.id) continue;
+    if (isPants(p.category, p.name)) {
+      const pBase = normalize(p.name);
+      if (pBase === targetBase || (targetBase && pBase.includes(targetBase)) || (pBase && targetBase.includes(pBase))) {
+        if (updatedProd.sizeInventory) {
+          p.sizeInventory = JSON.parse(JSON.stringify(updatedProd.sizeInventory));
+          p.stock = Object.values(p.sizeInventory).reduce((a, b) => a + b, 0);
+        } else {
+          p.stock = updatedProd.stock;
+        }
+        await firebaseService.saveProduct(p);
+        broadcast('PRODUCT_UPDATED', p);
+      }
+    }
+  }
+}
 
 // Helper: Sequential order numbering starting from 1000
 function getNextOrderNumber(db) {
@@ -638,6 +677,7 @@ app.post('/api/orders', async (req, res) => {
         }
         await firebaseService.saveProduct(prod);
         broadcast('PRODUCT_UPDATED', prod);
+        await syncPantsInventory(db, prod);
       }
     }
   }
@@ -828,6 +868,7 @@ app.patch('/api/orders/:id/status', async (req, res) => {
           }
           await firebaseService.saveProduct(prod);
           broadcast('PRODUCT_UPDATED', prod);
+          await syncPantsInventory(db, prod);
         }
       }
     } else if (oldStatus === 'Cancelled' && newStatus !== 'Cancelled' && Array.isArray(order.items)) {
@@ -843,6 +884,7 @@ app.patch('/api/orders/:id/status', async (req, res) => {
           }
           await firebaseService.saveProduct(prod);
           broadcast('PRODUCT_UPDATED', prod);
+          await syncPantsInventory(db, prod);
         }
       }
     }
@@ -1199,14 +1241,13 @@ app.delete('/api/expenses/:id', (req, res) => {
 });
 
 // ================= API: Product Reviews (Like Temu) =================
-app.get('/api/products/:id/reviews', (req, res) => {
-  const db = readDB();
-  db.reviews = db.reviews || [];
-  const prodReviews = db.reviews.filter(r => r.productId === req.params.id);
+app.get('/api/products/:id/reviews', async (req, res) => {
+  const reviews = await firebaseService.getReviews(readDB());
+  const prodReviews = (reviews || []).filter(r => r.productId === req.params.id);
   res.json(prodReviews);
 });
 
-app.post('/api/products/:id/reviews', (req, res) => {
+app.post('/api/products/:id/reviews', async (req, res) => {
   const db = readDB();
   const { author, rating, comment, fitFeedback, sizePurchased } = req.body;
   if (!author || !comment) {
@@ -1226,6 +1267,7 @@ app.post('/api/products/:id/reviews', (req, res) => {
   db.reviews = db.reviews || [];
   db.reviews.unshift(newReview);
   writeDB(db);
+  await firebaseService.saveReview(newReview);
   broadcast('REVIEW_ADDED', newReview);
   res.status(201).json({ success: true, review: newReview });
 });
