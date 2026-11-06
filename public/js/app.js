@@ -269,7 +269,7 @@ document.addEventListener('DOMContentLoaded', () => {
       heroTagline: 'قطع ملابس يومية فاخرة • قطن معالج 260 GSM • صُنع في الأردن',
       writeReview: 'كتابة تقييم',
       heroSubHeading: 'قصات بوكسي ستريت وير عصرية مصممة يومياً لتلائم تفاصيل يومك بجودة أردنية تدوم.',
-      heroMainHeading: 'THE NEW STANDARD OF STREETWEAR',
+      heroMainHeading: 'المعيار الجديد للملابس العصرية',
       prop1: 'توصيل مجاني في عمّان وبدينار لكافة المحافظات',
       prop2: 'قطن أردني فاخر 260 GSM معالج ومثبت',
       prop3: 'تبديل فوري للمقاس عند باب البيت',
@@ -404,7 +404,36 @@ document.addEventListener('DOMContentLoaded', () => {
       careStep5Title: 'الكي بدرجة حرارة خفيفة',
       careStep5Desc: 'عند الحاجة للكي، اكوي القطعة من الداخل بدرجة حرارة منخفضة، وتجنب ملامسة المكواة للطباعة مباشرة.',
       careStep6Title: 'الطي بدلاً من الشماعات الرفيعة',
-      careStep6Desc: 'نظراً لوزن القماش الفاخر 260 GSM، يفضل طي التيشيرت على الرف بدلاً من تعليقه على شماعات سلكية رفيعة لمنع تمدد الأكتاف.'
+      careStep6Desc: 'نظراً لوزن القماش الفاخر 260 GSM، يفضل طي التيشيرت على الرف بدلاً من تعليقه على شماعات سلكية رفيعة لمنع تمدد الأكتاف.',
+      heroBadgeTag: 'دروب جديد',
+      heroBrandName: 'تشكيلة شتاء 2026',
+      heroTagline: 'قطع ستريتوير يومية فاخرة • قطن أردني ثقيل • مصممة لتدوم',
+      heroShopBtn: 'تسوق التشكيلة الآن',
+      heroStoryBtn: 'قصة فيلين',
+      prop1: 'توصيل سريع في الأردن',
+      prop2: 'جودة وفخامة استثنائية',
+      prop3: 'تبديل فوري عند باب البيت',
+      prop4: 'دفع آمن عند الاستلام وCliQ',
+      featuredSectionTitle: 'التشكيلة الحصرية',
+      catAll: 'جميع القطع',
+      catSweatshirts: 'سويت شيرت',
+      catSweatpants: 'سويت بانتس',
+      drawerPagesHeading: 'صفحات الموقع',
+      drawerInfoHeading: 'معلومات',
+      drawerConnectHeading: 'تواصل معنا',
+      drawerOrigin: 'صنع بكل فخر في عمّان، الأردن 🇯🇴',
+      supportWaTitle: 'دعم واتساب مباشر',
+      supportWaText: 'هل تحتاج لتعديل في طلبك، أو استشارة بالمقاسات؟ فريقنا في عمّان جاهز لمساعدتك فوراً.',
+      supportDelTitle: 'مواعيد التوصيل',
+      supportDelText: 'عمّان: توصيل مجاني خلال 24 ساعة.\nباقي المحافظات: دينار واحد فقط خلال 48 ساعة لكافة مناطق المملكة.',
+      supportExTitle: 'سياسة التبديل والإرجاع',
+      supportExText: 'يُقبل التبديل والإرجاع فقط للعيوب المصنعية أو القطع المتضررة. تواصل معنا مع صور للتفاصيل.',
+      step1Title: 'غسيل بماء بارد',
+      step1Text: 'اغسل بماء بارد (30 درجة كحد أقصى) مع ألوان مماثلة للحفاظ على نعومة القطن ونقاء اللون.',
+      step2Title: 'تجفيف طبيعي بالظل',
+      step2Text: 'تجنب التجفيف بالنشافة الحرارية الساخنة للحفاظ على أبعاد القطن وقصّة البوكسي.',
+      step3Title: 'الكي من الداخل للخارج',
+      step3Text: 'اكوي القطعة من الداخل بدرجة حرارة معتدلة لحماية الطباعة وتفاصيل النسيج.'
     },
     en: {
       langToggle: 'عربي',
@@ -606,8 +635,89 @@ document.addEventListener('DOMContentLoaded', () => {
       careStep5Title: 'Reverse Low-Heat Iron',
       careStep5Desc: 'If pressing is needed, iron on low temperature from the inside out. Never apply direct iron heat over prints or labels.',
       careStep6Title: 'Fold, Don\'t Wire Hang',
-      careStep6Desc: 'Because of the substantial 260 GSM fabric weight, store folded on a shelf rather than on thin wire hangers to prevent shoulder stretching.'
+      careStep6Desc: 'Because of the substantial 260 GSM fabric weight, store folded on a shelf rather than on thin wire hangers to prevent shoulder stretching.',
+      heroBadgeTag: 'NEW DROP',
+      heroBrandName: 'WINTER COLLECTION 2026',
+      heroTagline: 'Premium streetwear essentials for everyday wear.',
+      heroShopBtn: 'SHOP THE COLLECTION',
+      heroStoryBtn: 'OUR STORY',
+      prop1: 'Fast Delivery in Jordan',
+      prop2: 'Premium Quality',
+      prop3: 'Easy Returns',
+      prop4: 'Secure Payment',
+      featuredSectionTitle: 'THE COLLECTION',
+      catAll: 'All Pieces',
+      catSweatshirts: 'Sweatshirts',
+      catSweatpants: 'Sweatpants',
+      drawerPagesHeading: 'PAGES',
+      drawerInfoHeading: 'INFORMATION',
+      drawerConnectHeading: 'CONNECT',
+      drawerOrigin: 'Handcrafted with pride in Amman, Jordan 🇯🇴',
+      supportWaTitle: 'Direct WhatsApp Support',
+      supportWaText: 'Need urgent changes, size advice, or custom inquiries? Our team in Amman is ready to assist you.',
+      supportDelTitle: 'Delivery Timeline',
+      supportDelText: 'Amman: Free delivery within 24 hours.\nOutside Amman: Flat 1 JOD delivery within 48 hours across Jordan.',
+      supportExTitle: 'Exchange & Return Policy',
+      supportExText: 'Exchanges and returns are accepted for manufacturing defects, damaged items, or incorrect products. Contact VELEN with photos for prompt assistance.',
+      step1Title: 'Wash Cold',
+      step1Text: 'Always wash in cold water (maximum 30°C) with similar dark or light colors to preserve pigment density.',
+      step2Title: 'Air Dry Only',
+      step2Text: 'Never tumble dry heavyweight cotton. Lay flat or hang dry in the shade to maintain crisp boxy shape.',
+      step3Title: 'Iron Inside Out',
+      step3Text: 'Iron inside-out on medium heat to protect the combed surface texture and neck ribbing.'
     }
+  };
+
+  const productNameAr = {
+    'prod-double-zip': 'سويت شيرت كروبد بسحاب مزدوج Two-Way Zip',
+    'prod-heavy-sweatpants': 'بنطال سويت بانتس قطن ثقيل بقصّة مستقيمة',
+    'prod-raw-sweatpants': 'بنطال سويت بانتس بقصّة رجل واسعة Raw-Cut',
+    'prod-1793258212025': 'هودي فيلين هيفي ويت المميز - فحمي',
+    'prod-1': 'تيشيرت فيلين بوكسي أسود فاخر',
+    'prod-2': 'تيشيرت فيلين رينجر أبيض كلاسيك',
+    'prod-3': 'تيشيرت فيلين رينجر أبيض',
+    'prod-4': 'تيشيرت فيلين هيفي بوكسي'
+  };
+
+  const categoryNamesAr = {
+    'Sweatshirts': 'سويت شيرت',
+    'Sweatpants': 'سويت بانتس',
+    'Hoodies': 'هوديز وسويت شيرت',
+    'Tees': 'تيشيرتات',
+    'Ringer Edition': 'ياقة ملونة',
+    'Boxy & Cropped': 'قصّة بوكسي',
+    'Pants & Bottoms': 'بناطيل وسراويل'
+  };
+
+  const colorNamesAr = {
+    'Crimson Red': 'أحمر خمري',
+    'Black': 'أسود',
+    'Heather Grey': 'رمادي هيذر',
+    'White': 'أبيض',
+    'Charcoal': 'فحمي',
+    'Beige': 'بيج',
+    'Navy': 'كحلي',
+    'Olive': 'زيتي',
+    'Standard': 'اللون الأساسي',
+    'Charcoal Grey': 'رمادي فحمي',
+    'Midnight Black': 'أسود ليلي',
+    'Off White': 'أوف وايت',
+    'Sky Blue': 'أزرق سماوي',
+    'Classic White': 'أبيض كلاسيكي',
+    'Ruby Red': 'أحمر ياقوتي',
+    'Chalk White': 'أبيض طباشيري',
+    'Pitch Black': 'أسود داكن'
+  };
+
+  const productDescriptionsAr = {
+    'prod-double-zip': 'سويت شيرت مريح بقصّة عصرية ومميزة لإطلالة ستريت وير يومية. مزود بسحاب مزدوج ثنائي الاتجاه يفتح من الطرفين، مع هودي بتصميم متقن وجيوب أمامية.\n\nالخامة: 70% قطن أردني فاخر',
+    'prod-heavy-sweatpants': 'تمتع بالدفء والراحة القصوى مع بنطال السويت بانتس المصنوع من القطن الثقيل الفاخر. مصمم بقصّة ستريت وير مريحة ومطاط خصر قابل للتعديل مع جيوب عملية.\n\nالخامة: 70% قطن أردني فاخر',
+    'prod-raw-sweatpants': 'بنطال سويت بانتس بقصّة رجل عريضة وأطراف عصرية. تصميم ستريتوير مريح وأنيق مع خصر قابل للتعديل.\n\nالخامة: 70% قطن أردني فاخر',
+    'prod-1793258212025': 'هودي ثقيل مصنوع من قطن معالج فاخر بقصّة مريحة ودافئة تدوم طويلاً.\n\nالخامة: 70% قطن أردني فاخر',
+    'prod-1': 'تيشيرت رينجر بياقة متباينة وتصميم عصري جذاب يمنحك إطلالة فريدة ومريحة.\n\nالخامة: 70% قطن أردني فاخر',
+    'prod-2': 'تيشيرت بوكسي كروبد بقصة ستريتوير واسعة ومريحة لجميع الأوقات.\n\nالخامة: 70% قطن أردني فاخر',
+    'prod-3': 'تيشيرت رينجر أبيض كلاسيكي مصنوع من أجود أنواع القطن بتفاصيل ياقة مميزة.\n\nالخامة: 70% قطن أردني فاخر',
+    'prod-4': 'تيشيرت هيفي بوكسي ثقيل 260 GSM بقصة عصرية متقنة تدوم طويلاً.\n\nالخامة: 70% قطن أردني فاخر'
   };
 
   // Centralized Modal / Drawer Body Scroll Lock
@@ -918,24 +1028,26 @@ document.addEventListener('DOMContentLoaded', () => {
       const comparePriceFormatted = product.comparePrice ? Number(product.comparePrice).toFixed(3) + ' JOD' : null;
       const isSoldOut = typeof product.stock !== 'undefined' && product.stock !== null && Number(product.stock) <= 0;
       const mainImg = product.image || (product.images && product.images[0]) || '/assets/velen-boxy-black.jpg';
-      const defaultColor = (product.colors && product.colors[0]?.name) || '';
+      const rawColor = (product.colors && product.colors[0]?.name) || '';
+      const defaultColor = isAr ? (colorNamesAr[rawColor] || rawColor) : rawColor;
+      const displayName = (isAr && (product.nameAr || productNameAr[product.id])) ? (product.nameAr || productNameAr[product.id]) : product.name;
 
       return `
         <div class="product-card" data-product-id="${product.id}" onclick="window.velenApp.openProductPage('${product.id}')">
           <div class="product-img-wrapper">
-            <span class="product-card-badge-new">NEW</span>
-            <button type="button" class="product-card-fav-btn" aria-label="Add ${product.name} to wishlist" onclick="event.stopPropagation(); this.classList.toggle('active');">
+            <span class="product-card-badge-new">${isAr ? 'جديد' : 'NEW'}</span>
+            <button type="button" class="product-card-fav-btn" aria-label="Add ${displayName} to wishlist" onclick="event.stopPropagation(); this.classList.toggle('active');">
               <i class="fa-regular fa-heart"></i>
             </button>
-            <img src="${mainImg}" alt="${product.name}" class="product-img" loading="lazy" onerror="this.onerror=null; this.src='/assets/velen-boxy-black.jpg';">
+            <img src="${mainImg}" alt="${displayName}" class="product-img" loading="lazy" onerror="this.onerror=null; this.src='/assets/velen-boxy-black.jpg';">
             ${!isSoldOut ? `
-              <button type="button" class="btn-floating-bag" onclick="event.stopPropagation(); window.velenApp.openProductPage('${product.id}')" aria-label="Select size and add ${product.name} to bag" title="${isAr ? 'اختيار المقاس واللون' : 'Select Size & Color'}">
+              <button type="button" class="btn-floating-bag" onclick="event.stopPropagation(); window.velenApp.openProductPage('${product.id}')" aria-label="Select size and add ${displayName} to bag" title="${isAr ? 'اختيار المقاس واللون' : 'Select Size & Color'}">
                 <i class="fa-solid fa-bag-shopping"></i>
               </button>
             ` : `<span class="badge-soldout">${isAr ? 'نَفِذَت الكمية' : 'SOLD OUT'}</span>`}
           </div>
           <div class="product-info">
-            <h3 class="product-title">${product.name}</h3>
+            <h3 class="product-title">${displayName}</h3>
             ${defaultColor ? `<span class="product-card-color-sub">${defaultColor}</span>` : ''}
             <div class="price-row">
               <span class="current-price">${priceFormatted}</span>
@@ -953,9 +1065,9 @@ document.addEventListener('DOMContentLoaded', () => {
         <div class="editorial-media">
           <img src="/assets/velen-product-showcase.png" alt="VELEN - The Details Matter" class="editorial-cover-img" onerror="this.src='/assets/velen-hero-winter2026.png'">
           <div class="editorial-content-box">
-            <h3 class="editorial-title">THE DETAILS<br>MATTER</h3>
-            <button type="button" class="editorial-arrow-btn" aria-label="Explore the collection" title="View Collection">
-              <i class="fa-solid fa-arrow-right"></i>
+            <h3 class="editorial-title">${isAr ? 'التفاصيل<br>تصنع الفارق' : 'THE DETAILS<br>MATTER'}</h3>
+            <button type="button" class="editorial-arrow-btn" aria-label="${isAr ? 'تصفح التشكيلة في المتجر' : 'Explore the collection'}" title="${isAr ? 'تصفح التشكيلة' : 'View Collection'}">
+              <i class="fa-solid fa-arrow-right rtl-flip"></i>
             </button>
           </div>
         </div>
@@ -1099,6 +1211,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!design) return;
     state.design = design;
 
+    const isAr = state.activeLang === 'ar';
+    const dict = translations[state.activeLang] || translations.en;
+
     // 1. Theme colors
     if (design.theme) {
       if (design.theme.accentColor) {
@@ -1117,8 +1232,12 @@ document.addEventListener('DOMContentLoaded', () => {
         annBar.style.display = design.header.showAnnouncement !== false ? 'flex' : 'none';
       }
       const annText = document.getElementById('announcementText');
-      if (annText && design.header.announcementText) {
-        annText.textContent = design.header.announcementText;
+      if (annText) {
+        if (isAr) {
+          annText.textContent = design.header.announcementTextAr || dict.announcement;
+        } else if (design.header.announcementText) {
+          annText.textContent = design.header.announcementText;
+        }
       }
       const navBrand = document.getElementById('navBrandTitle') || document.querySelector('.brand-title');
       if (navBrand && design.header.brandName) {
@@ -1138,25 +1257,32 @@ document.addEventListener('DOMContentLoaded', () => {
       if (heroBg && design.hero.bgImage) {
         heroBg.src = design.hero.bgImage;
       }
+      const badgeTag = document.getElementById('heroBadgeTag');
+      if (badgeTag) {
+        badgeTag.textContent = isAr ? 'دروب جديد' : (design.hero.badge || 'NEW DROP');
+      }
       const brandName = document.getElementById('heroBrandName');
-      if (brandName && design.hero.brandTitle) brandName.textContent = design.hero.brandTitle;
+      if (brandName) {
+        brandName.textContent = isAr ? (design.hero.brandTitleAr || dict.heroBrandName || 'تشكيلة شتاء 2026') : (design.hero.brandTitle || 'WINTER COLLECTION 2026');
+      }
       const mainH = document.getElementById('heroMainHeading');
-      if (mainH && design.hero.mainHeading) {
-        mainH.textContent = design.hero.mainHeading;
-        mainH.removeAttribute('data-i18n');
+      if (mainH) {
+        mainH.textContent = isAr ? (design.hero.mainHeadingAr || dict.heroMainHeading || 'المعيار الجديد للملابس العصرية') : (design.hero.mainHeading || 'WINTER COLLECTION 2026');
       }
       const tagline = document.getElementById('heroTagline');
-      if (tagline && design.hero.subHeading) {
-        tagline.textContent = design.hero.subHeading;
-        tagline.removeAttribute('data-i18n');
+      if (tagline) {
+        tagline.textContent = isAr ? (design.hero.subHeadingAr || dict.heroTagline || 'قطع ستريتوير يومية فاخرة • قطن أردني ثقيل • مصممة لتدوم') : (design.hero.subHeading || 'Premium streetwear essentials for everyday wear.');
       }
       const ctaBtn = document.getElementById('heroShopBtn');
       if (ctaBtn) {
-        if (design.hero.ctaText) {
-          ctaBtn.textContent = design.hero.ctaText;
-          ctaBtn.removeAttribute('data-i18n');
-        }
+        const ctaSpan = ctaBtn.querySelector('span') || ctaBtn;
+        ctaSpan.textContent = isAr ? (design.hero.ctaTextAr || dict.heroShopBtn || 'تسوق التشكيلة الآن') : (design.hero.ctaText || 'SHOP THE COLLECTION');
         if (design.hero.ctaLink) ctaBtn.setAttribute('href', design.hero.ctaLink);
+      }
+      const storyBtn = document.getElementById('heroStoryBtn');
+      if (storyBtn) {
+        const storySpan = storyBtn.querySelector('span') || storyBtn;
+        storySpan.textContent = isAr ? dict.heroStoryBtn : 'OUR STORY';
       }
     }
 
@@ -1165,11 +1291,13 @@ document.addEventListener('DOMContentLoaded', () => {
     if (secValue && design.valueProps) {
       secValue.style.display = design.valueProps.enabled !== false ? 'flex' : 'none';
       const p1 = document.getElementById('propText1');
-      if (p1 && design.valueProps.prop1) p1.textContent = design.valueProps.prop1;
+      if (p1) p1.textContent = isAr ? (design.valueProps.prop1Ar || dict.prop1) : (design.valueProps.prop1 || dict.prop1);
       const p2 = document.getElementById('propText2');
-      if (p2 && design.valueProps.prop2) p2.textContent = design.valueProps.prop2;
+      if (p2) p2.textContent = isAr ? (design.valueProps.prop2Ar || dict.prop2) : (design.valueProps.prop2 || dict.prop2);
       const p3 = document.getElementById('propText3');
-      if (p3 && design.valueProps.prop3) p3.textContent = design.valueProps.prop3;
+      if (p3) p3.textContent = isAr ? (design.valueProps.prop3Ar || dict.prop3) : (design.valueProps.prop3 || dict.prop3);
+      const p4 = document.getElementById('propText4');
+      if (p4) p4.textContent = isAr ? (design.valueProps.prop4Ar || dict.prop4) : (design.valueProps.prop4 || dict.prop4);
     }
 
     // 5. Sections Visibility
@@ -1186,19 +1314,21 @@ document.addEventListener('DOMContentLoaded', () => {
     // 6. Collection section texts
     if (design.collectionSection) {
       const sub = document.getElementById('collectionSubtitle');
-      if (sub && design.collectionSection.subtitle) sub.textContent = design.collectionSection.subtitle;
+      if (sub) sub.textContent = isAr ? (design.collectionSection.subtitleAr || dict.collectionSubtitle) : (design.collectionSection.subtitle || dict.collectionSubtitle);
       const title = document.getElementById('collectionTitle');
-      if (title && design.collectionSection.title) title.textContent = design.collectionSection.title;
+      if (title) title.textContent = isAr ? (design.collectionSection.titleAr || dict.collectionTitle) : (design.collectionSection.title || dict.collectionTitle);
+      const featTitle = document.getElementById('featuredSectionTitle');
+      if (featTitle) featTitle.textContent = isAr ? dict.featuredSectionTitle : (design.collectionSection.title || dict.featuredSectionTitle);
     }
 
     // 7. Community section texts
     if (design.communitySection) {
       const commT = document.getElementById('communityTitle');
-      if (commT && design.communitySection.title) commT.textContent = design.communitySection.title;
+      if (commT) commT.textContent = isAr ? (design.communitySection.titleAr || dict.communityTitle) : (design.communitySection.title || dict.communityTitle);
       const commSub = document.getElementById('communitySubtitle');
-      if (commSub && design.communitySection.subtitle) commSub.textContent = design.communitySection.subtitle;
+      if (commSub) commSub.textContent = isAr ? (design.communitySection.subtitleAr || dict.communitySubtitle) : (design.communitySection.subtitle || dict.communitySubtitle);
       const commD = document.getElementById('communityDesc');
-      if (commD && design.communitySection.desc) commD.textContent = design.communitySection.desc;
+      if (commD) commD.textContent = isAr ? (design.communitySection.descAr || dict.communityDesc) : (design.communitySection.desc || dict.communityDesc);
     }
 
     // 8. About section
@@ -1206,27 +1336,27 @@ document.addEventListener('DOMContentLoaded', () => {
     if (secAbout && design.aboutSection) {
       secAbout.style.display = design.aboutSection.enabled !== false ? 'block' : 'none';
       const aSub = document.getElementById('aboutSub');
-      if (aSub && design.aboutSection.sub) aSub.textContent = design.aboutSection.sub;
+      if (aSub) aSub.textContent = isAr ? (design.aboutSection.subAr || dict.aboutSub) : (design.aboutSection.sub || dict.aboutSub);
       const aTitle = document.getElementById('aboutTitle');
-      if (aTitle && design.aboutSection.title) aTitle.textContent = design.aboutSection.title;
+      if (aTitle) aTitle.textContent = isAr ? (design.aboutSection.titleAr || dict.aboutTitle) : (design.aboutSection.title || dict.aboutTitle);
       const aP = document.getElementById('aboutP1');
-      if (aP && design.aboutSection.p1) aP.textContent = design.aboutSection.p1;
+      if (aP) aP.textContent = isAr ? (design.aboutSection.p1Ar || dict.aboutP1) : (design.aboutSection.p1 || dict.aboutP1);
       const ft1 = document.getElementById('featTitle1');
-      if (ft1 && design.aboutSection.feature1Title) ft1.textContent = design.aboutSection.feature1Title;
+      if (ft1) ft1.textContent = isAr ? (design.aboutSection.feature1TitleAr || dict.featTitle1) : (design.aboutSection.feature1Title || dict.featTitle1);
       const fd1 = document.getElementById('featDesc1');
-      if (fd1 && design.aboutSection.feature1Desc) fd1.textContent = design.aboutSection.feature1Desc;
+      if (fd1) fd1.textContent = isAr ? (design.aboutSection.feature1DescAr || dict.featDesc1) : (design.aboutSection.feature1Desc || dict.featDesc1);
       const ft2 = document.getElementById('featTitle2');
-      if (ft2 && design.aboutSection.feature2Title) ft2.textContent = design.aboutSection.feature2Title;
+      if (ft2) ft2.textContent = isAr ? (design.aboutSection.feature2TitleAr || dict.featTitle2) : (design.aboutSection.feature2Title || dict.featTitle2);
       const fd2 = document.getElementById('featDesc2');
-      if (fd2 && design.aboutSection.feature2Desc) fd2.textContent = design.aboutSection.feature2Desc;
+      if (fd2) fd2.textContent = isAr ? (design.aboutSection.feature2DescAr || dict.featDesc2) : (design.aboutSection.feature2Desc || dict.featDesc2);
       const ft3 = document.getElementById('featTitle3');
-      if (ft3 && design.aboutSection.feature3Title) ft3.textContent = design.aboutSection.feature3Title;
+      if (ft3) ft3.textContent = isAr ? (design.aboutSection.feature3TitleAr || dict.featTitle3) : (design.aboutSection.feature3Title || dict.featTitle3);
       const fd3 = document.getElementById('featDesc3');
-      if (fd3 && design.aboutSection.feature3Desc) fd3.textContent = design.aboutSection.feature3Desc;
+      if (fd3) fd3.textContent = isAr ? (design.aboutSection.feature3DescAr || dict.featDesc3) : (design.aboutSection.feature3Desc || dict.featDesc3);
       const aImg = document.getElementById('aboutImg');
       if (aImg && design.aboutSection.image) aImg.src = design.aboutSection.image;
       const aQ = document.getElementById('aboutQuote');
-      if (aQ && design.aboutSection.quote) aQ.textContent = `"${design.aboutSection.quote}"`;
+      if (aQ) aQ.textContent = isAr ? (design.aboutSection.quoteAr ? `"${design.aboutSection.quoteAr}"` : '"نصنع ملابس نرتديها بأنفسنا كل يوم، بفخر من عمّان إلى العالم."') : `"${design.aboutSection.quote || 'Clean fits. Premium feel. Built for everyday wear.'}"`;
     }
 
     // 9. Explore Hub Portal Cards (Screenshot 4)
@@ -1321,32 +1451,53 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function renderCategoryTabs() {
-    const tabsContainer = document.getElementById('categoryTabs');
-    if (!tabsContainer) return;
-    if (!Array.isArray(state.categories) || state.categories.length === 0) return;
-
     const isAr = state.activeLang === 'ar';
     const allLabel = isAr ? 'جميع القطع' : 'All Pieces';
 
-    let html = `<button class="cat-pill ${state.activeCategory === 'all' ? 'active' : ''}" data-cat="all">${allLabel}</button>`;
+    // 1. Update Shop category tabs (#categoryTabs)
+    const tabsContainer = document.getElementById('categoryTabs');
+    if (tabsContainer && Array.isArray(state.categories) && state.categories.length > 0) {
+      let html = `<button class="cat-pill ${state.activeCategory === 'all' ? 'active' : ''}" data-cat="all">${allLabel}</button>`;
 
-    state.categories.forEach(cat => {
-      const label = isAr ? (cat.nameAr || cat.nameEn) : (cat.nameEn || cat.nameAr);
-      const targetVal = cat.nameEn || cat.id;
-      const isActive = state.activeCategory === targetVal || state.activeCategory === cat.id;
-      html += `<button class="cat-pill ${isActive ? 'active' : ''}" data-cat="${escapeHtml(targetVal)}">${escapeHtml(label)}</button>`;
-    });
-
-    tabsContainer.innerHTML = html;
-
-    tabsContainer.querySelectorAll('.cat-pill').forEach(pill => {
-      pill.addEventListener('click', () => {
-        tabsContainer.querySelectorAll('.cat-pill').forEach(p => p.classList.remove('active'));
-        pill.classList.add('active');
-        state.activeCategory = pill.getAttribute('data-cat');
-        renderProducts();
+      state.categories.forEach(cat => {
+        const label = isAr ? (cat.nameAr || categoryNamesAr[cat.nameEn] || cat.nameEn) : (cat.nameEn || cat.nameAr);
+        const targetVal = cat.nameEn || cat.id;
+        const isActive = state.activeCategory === targetVal || state.activeCategory === cat.id;
+        html += `<button class="cat-pill ${isActive ? 'active' : ''}" data-cat="${escapeHtml(targetVal)}">${escapeHtml(label)}</button>`;
       });
-    });
+
+      tabsContainer.innerHTML = html;
+
+      tabsContainer.querySelectorAll('.cat-pill').forEach(pill => {
+        pill.addEventListener('click', () => {
+          tabsContainer.querySelectorAll('.cat-pill').forEach(p => p.classList.remove('active'));
+          pill.classList.add('active');
+          state.activeCategory = pill.getAttribute('data-cat');
+          renderProducts();
+        });
+      });
+    }
+
+    // 2. Update Homepage category tabs (#homeCategoryTabs)
+    const homeTabsContainer = document.getElementById('homeCategoryTabs');
+    if (homeTabsContainer) {
+      const activeCat = state.activeFeaturedCategory || 'all';
+      homeTabsContainer.innerHTML = `
+        <button type="button" class="cat-pill ${activeCat === 'all' ? 'active' : ''}" data-cat="all" aria-label="${isAr ? 'عرض جميع القطع' : 'View all pieces'}">${allLabel}</button>
+        <button type="button" class="cat-pill ${activeCat === 'Sweatshirts' ? 'active' : ''}" data-cat="Sweatshirts" aria-label="${isAr ? 'فلترة حسب السويت شيرت' : 'Filter by sweatshirts'}">${isAr ? 'سويت شيرت' : 'Sweatshirts'}</button>
+        <button type="button" class="cat-pill ${activeCat === 'Sweatpants' ? 'active' : ''}" data-cat="Sweatpants" aria-label="${isAr ? 'فلترة حسب السويت بانتس' : 'Filter by sweatpants'}">${isAr ? 'سويت بانتس' : 'Sweatpants'}</button>
+      `;
+
+      homeTabsContainer.querySelectorAll('.cat-pill').forEach(tab => {
+        tab.addEventListener('click', () => {
+          homeTabsContainer.querySelectorAll('.cat-pill').forEach(t => t.classList.remove('active'));
+          tab.classList.add('active');
+          const cat = tab.getAttribute('data-cat') || 'all';
+          state.activeFeaturedCategory = cat;
+          renderFeaturedProducts(cat);
+        });
+      });
+    }
   }
 
   // ================= REAL-TIME WEBSOCKET SYNC =================
@@ -1502,20 +1653,24 @@ document.addEventListener('DOMContentLoaded', () => {
       const isAr = state.activeLang === 'ar';
       const isSoldOut = typeof product.stock !== 'undefined' && product.stock !== null && Number(product.stock) <= 0;
       const mainImg = product.image || (product.images && product.images[0]) || '/assets/velen-boxy-black.jpg';
+      const displayName = (isAr && (product.nameAr || productNameAr[product.id])) ? (product.nameAr || productNameAr[product.id]) : product.name;
+      const rawColor = (product.colors && product.colors[0]?.name) || '';
+      const defaultColor = isAr ? (colorNamesAr[rawColor] || rawColor) : rawColor;
 
       return `
         <div class="product-card" data-product-id="${product.id}">
-          <div class="product-img-wrapper" onclick="window.velenApp.openProductModal('${product.id}')">
-            ${isSoldOut ? `<span class="badge-soldout" style="position:absolute; top:12px; right:12px; background:rgba(231,76,60,0.92); color:#fff; font-size:11px; font-weight:700; padding:4px 8px; border-radius:4px; z-index:2; letter-spacing:0.5px;">${isAr ? 'نَفِذَت الكمية' : 'SOLD OUT'}</span>` : (product.onSale ? '<span class="badge-sale">SALE</span>' : '')}
-            <img src="${mainImg}" alt="${product.name}" class="product-img" loading="lazy" onerror="this.onerror=null; this.src='/assets/velen-boxy-black.jpg';">
+          <div class="product-img-wrapper" onclick="window.velenApp.openProductPage('${product.id}')">
+            ${isSoldOut ? `<span class="badge-soldout" style="position:absolute; top:12px; right:12px; background:rgba(231,76,60,0.92); color:#fff; font-size:11px; font-weight:700; padding:4px 8px; border-radius:4px; z-index:2; letter-spacing:0.5px;">${isAr ? 'نَفِذَت الكمية' : 'SOLD OUT'}</span>` : (product.onSale ? `<span class="badge-sale">${isAr ? 'تخفيض' : 'SALE'}</span>` : '')}
+            <img src="${mainImg}" alt="${displayName}" class="product-img" loading="lazy" onerror="this.onerror=null; this.src='/assets/velen-boxy-black.jpg';">
             ${!isSoldOut ? `
-              <button class="btn-floating-bag" onclick="event.stopPropagation(); window.velenApp.quickAddToCart('${product.id}')" title="${isAr ? 'اختيار المقاس واللون' : 'Select Size & Color'}" aria-label="Select Size & Color">
+              <button class="btn-floating-bag" onclick="event.stopPropagation(); window.velenApp.openProductPage('${product.id}')" title="${isAr ? 'اختيار المقاس واللون' : 'Select Size & Color'}" aria-label="${isAr ? 'اختيار المقاس واللون' : 'Select Size & Color'}">
                 <i class="fa-solid fa-cart-plus"></i>
               </button>
             ` : ''}
           </div>
-          <div class="product-info" onclick="window.velenApp.openProductModal('${product.id}')">
-            <h3 class="product-title">${product.name}</h3>
+          <div class="product-info" onclick="window.velenApp.openProductPage('${product.id}')">
+            <h3 class="product-title">${displayName}</h3>
+            ${defaultColor ? `<span class="product-card-color-sub">${defaultColor}</span>` : ''}
             <div class="price-row">
               <span class="current-price">${priceFormatted}</span>
               ${comparePriceFormatted ? `<span class="strike-price">${comparePriceFormatted}</span>` : ''}
@@ -1530,9 +1685,11 @@ document.addEventListener('DOMContentLoaded', () => {
   // Populate Product Selector in Community Modal
   function populateProductSelect() {
     if (!commItemWorn) return;
-    commItemWorn.innerHTML = state.products.map(p => `
-      <option value="${p.name}">${p.name}</option>
-    `).join('') + '<option value="Velen Signature">Velen Signature Drop</option>';
+    const isAr = state.activeLang === 'ar';
+    commItemWorn.innerHTML = state.products.map(p => {
+      const displayName = (isAr && (p.nameAr || productNameAr[p.id])) ? (p.nameAr || productNameAr[p.id]) : p.name;
+      return `<option value="${p.name}">${displayName}</option>`;
+    }).join('') + `<option value="Velen Signature">${isAr ? 'إصدار ڤيلين الخاص' : 'Velen Signature Drop'}</option>`;
   }
 
   // Render the Community Grid — Pure social sharing, no rating shown
@@ -1819,11 +1976,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if (state.cart.length === 0) {
+      const isAr = state.activeLang === 'ar';
       cartItemsList.innerHTML = `
         <div class="empty-cart-msg">
           <i class="fa-solid fa-bag-shopping"></i>
-          <h4>حقيبة التسوق فارغة</h4>
-          <p>تصفح المجموعة واكتشف ملابس Velen اليومية</p>
+          <h4>${isAr ? 'حقيبة التسوق فارغة' : 'Your Shopping Bag is Empty'}</h4>
+          <p>${isAr ? 'تصفح المجموعة واكتشف ملابس Velen اليومية' : 'Explore the collection and discover everyday Velen fits'}</p>
         </div>
       `;
       return;
@@ -1833,16 +1991,19 @@ document.addEventListener('DOMContentLoaded', () => {
       const maxStock = getCartItemMaxStock(item);
       const isAtMax = item.quantity >= maxStock;
       const isAr = state.activeLang === 'ar';
+      const displayName = (isAr && (item.nameAr || productNameAr[item.productId || item.id])) ? (item.nameAr || productNameAr[item.productId || item.id]) : item.name;
+      const rawColor = item.color || '';
+      const displayColor = isAr ? (colorNamesAr[rawColor] || rawColor) : rawColor;
 
       return `
         <div class="cart-item">
-          <img src="${item.image || '/assets/velen-logo.jpg'}" class="cart-item-img" alt="${item.name}" onerror="this.onerror=null; this.src='/assets/velen-boxy-black.jpg';">
+          <img src="${item.image || '/assets/velen-logo.jpg'}" class="cart-item-img" alt="${displayName}" onerror="this.onerror=null; this.src='/assets/velen-boxy-black.jpg';">
           <div class="cart-item-details">
             <div>
-              <h4 class="cart-item-title">${item.name}</h4>
+              <h4 class="cart-item-title">${displayName}</h4>
               <div class="cart-item-meta">
-                <span>المقاس: <strong>${item.size}</strong></span>
-                ${item.color ? ` • <span>اللون: <strong style="color:var(--accent-gold);">${item.color}</strong></span>` : ''}
+                <span>${isAr ? 'المقاس:' : 'Size:'} <strong>${item.size}</strong></span>
+                ${rawColor ? ` • <span>${isAr ? 'اللون:' : 'Color:'} <strong style="color:#ffffff;">${displayColor}</strong></span>` : ''}
               </div>
               ${maxStock < 50 ? `<span style="font-size:11px; color:${isAtMax ? '#e74c3c' : '#888'}; display:block; margin-top:2px;">${isAr ? `(المتوفر بالستوك: ${maxStock})` : `(In stock: ${maxStock})`}</span>` : ''}
             </div>
@@ -1850,7 +2011,7 @@ document.addEventListener('DOMContentLoaded', () => {
               <div class="cart-item-qty">
                 <button onclick="window.velenApp.updateCartQty(${idx}, -1)">-</button>
                 <span>${item.quantity}</span>
-                <button onclick="window.velenApp.updateCartQty(${idx}, 1)" ${isAtMax ? 'disabled style="opacity:0.25; cursor:not-allowed;" title="أقصى كمية متوفرة بالستوك"' : ''}>+</button>
+                <button onclick="window.velenApp.updateCartQty(${idx}, 1)" ${isAtMax ? `disabled style="opacity:0.25; cursor:not-allowed;" title="${isAr ? 'أقصى كمية متوفرة بالستوك' : 'Max stock reached'}"` : ''}>+</button>
               </div>
               <span class="cart-item-price">${(item.price * item.quantity).toFixed(3)} JOD</span>
             </div>
@@ -1894,7 +2055,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (prodPage) prodPage.style.display = 'block';
 
     const crumb = document.getElementById('prodPageCrumbTitle');
-    if (crumb) crumb.textContent = product.name;
+    if (crumb) crumb.textContent = (state.activeLang === 'ar' && (product.nameAr || productNameAr[product.id])) ? (product.nameAr || productNameAr[product.id]) : product.name;
 
     if (cartDrawer) cartDrawer.classList.remove('open');
     if (cartOverlay) cartOverlay.classList.remove('active');
@@ -1955,12 +2116,12 @@ document.addEventListener('DOMContentLoaded', () => {
     if (addBtn) {
       addBtn.disabled = allOutOfStock;
       const span = addBtn.querySelector('span');
-      if (span) span.textContent = allOutOfStock ? dict.soldOut : dict.addToBag;
+      if (span) span.textContent = allOutOfStock ? (isAr ? 'نَفِدَ من المخزون' : 'Sold Out') : (isAr ? 'إضافة للحقيبة 🛍️' : 'ADD TO BAG');
     }
     if (buyBtn) {
       buyBtn.disabled = allOutOfStock;
       const span = buyBtn.querySelector('span');
-      if (span) span.textContent = isAr ? 'اشتريها الآن ⚡' : 'Buy Now ⚡';
+      if (span) span.textContent = isAr ? 'شراء فوري ⚡' : 'BUY NOW';
     }
 
     const sizeBoxesContainer = document.getElementById('pageProductSizeBoxes');
@@ -1996,6 +2157,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const isAr = state.activeLang === 'ar';
     const dict = translations[state.activeLang] || translations.en;
+    const displayName = (isAr && (product.nameAr || productNameAr[product.id])) ? (product.nameAr || productNameAr[product.id]) : product.name;
     const priceFormatted = Number(product.price).toFixed(3) + ' JOD';
     const comparePriceFormatted = product.comparePrice ? Number(product.comparePrice).toFixed(3) + ' JOD' : null;
     const sizes = product.sizes || ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
@@ -2004,7 +2166,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const colors = Array.isArray(product.colors) && product.colors.length > 0 
       ? product.colors 
       : [{ 
-          name: isAr ? 'اللون الأساسي' : 'Standard', 
+          name: 'Standard', 
           hex: '#111111', 
           images: Array.isArray(product.images) && product.images.length > 0 ? product.images : [product.image || '/assets/velen-logo.jpg'] 
         }];
@@ -2028,9 +2190,9 @@ document.addEventListener('DOMContentLoaded', () => {
       <div class="product-page-breadcrumb" aria-label="Breadcrumb">
         <span class="crumb-link" onclick="window.velenApp.closeProductPage()">${isAr ? 'المتجر' : 'SHOP'}</span>
         <span class="crumb-sep">»</span>
-        <span class="crumb-link" onclick="window.velenApp.closeProductPage()">${(product.category || 'SWEATSHIRTS').toUpperCase()}</span>
+        <span class="crumb-link" onclick="window.velenApp.closeProductPage()">${(isAr && categoryNamesAr[product.category] ? categoryNamesAr[product.category] : (product.category || 'SWEATSHIRTS')).toUpperCase()}</span>
         <span class="crumb-sep">»</span>
-        <span class="crumb-active">${product.name.toUpperCase()}</span>
+        <span class="crumb-active">${displayName.toUpperCase()}</span>
       </div>
 
       <!-- Main Desktop & Mobile Product Layout -->
@@ -2041,7 +2203,7 @@ document.addEventListener('DOMContentLoaded', () => {
           <div class="product-vertical-thumbs" id="productVerticalThumbs">
             ${currentImages.slice(0, 6).map((imgUrl, i) => `
               <button type="button" class="vert-thumb-btn ${i === 0 ? 'active' : ''}" onclick="window.velenApp.switchProductPageImage('${imgUrl}', this)" aria-label="Thumbnail ${i + 1}">
-                <img src="${imgUrl}" alt="${product.name} view ${i + 1}" loading="lazy" onerror="this.src='/assets/velen-logo.jpg'">
+                <img src="${imgUrl}" alt="${displayName} view ${i + 1}" loading="lazy" onerror="this.src='/assets/velen-logo.jpg'">
               </button>
             `).join('')}
           </div>
@@ -2065,7 +2227,7 @@ document.addEventListener('DOMContentLoaded', () => {
             </button>
 
             <!-- Main Display Image -->
-            <img id="pageProductMainImg" src="${currentImages[0]}" alt="${product.name}" class="product-hero-image" onerror="this.src='/assets/velen-logo.jpg'">
+            <img id="pageProductMainImg" src="${currentImages[0]}" alt="${displayName}" class="product-hero-image" onerror="this.src='/assets/velen-logo.jpg'">
 
             <!-- Desktop Expand button bottom-right (Image 1) -->
             <button type="button" class="desktop-expand-btn" onclick="window.velenApp.zoomProductImage()" aria-label="Expand image view" title="Expand view">
@@ -2083,7 +2245,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <!-- Mobile Model Info Pill (Image 3: "Model: 186 cm, 77 kg | Wearing Size: L") -->
             <div class="product-model-stats-pill">
               <i class="fa-regular fa-user"></i>
-              <span>Model: 186 cm, 77 kg | Wearing Size: L</span>
+              <span>${isAr ? 'طول المودل: 186 سم، الوزن: 77 كغ | يرتدي مقاس: L' : 'Model: 186 cm, 77 kg | Wearing Size: L'}</span>
             </div>
           </div>
 
@@ -2091,7 +2253,7 @@ document.addEventListener('DOMContentLoaded', () => {
           <div class="product-mobile-thumbs-strip" id="productMobileThumbs">
             ${currentImages.map((imgUrl, i) => `
               <button type="button" class="mobile-thumb-item ${i === 0 ? 'active' : ''}" onclick="window.velenApp.switchProductPageImage('${imgUrl}', this)" aria-label="Image ${i + 1}">
-                <img src="${imgUrl}" alt="${product.name} ${i + 1}" loading="lazy" onerror="this.src='/assets/velen-logo.jpg'">
+                <img src="${imgUrl}" alt="${displayName} ${i + 1}" loading="lazy" onerror="this.src='/assets/velen-logo.jpg'">
               </button>
             `).join('')}
           </div>
@@ -2099,8 +2261,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         <!-- Right: Details Section -->
         <div class="product-details-section">
-          <div class="product-subtitle-tag">${(product.category || 'SWEATSHIRTS').toUpperCase()} » WINTER 2026</div>
-          <h1 class="product-main-title">${product.name}</h1>
+          <div class="product-subtitle-tag">${(isAr && categoryNamesAr[product.category] ? categoryNamesAr[product.category] : (product.category || 'SWEATSHIRTS')).toUpperCase()} » ${isAr ? 'شتاء 2026' : 'WINTER 2026'}</div>
+          <h1 class="product-main-title">${displayName}</h1>
           <div class="product-price-box">
             <span class="price-val">${priceFormatted}</span>
             ${comparePriceFormatted ? `<span class="strike-val">${comparePriceFormatted}</span>` : ''}
@@ -2109,15 +2271,16 @@ document.addEventListener('DOMContentLoaded', () => {
           <!-- Color Selector matching Image 1 & 3 (Circles with labels below) -->
           <div class="product-color-group">
             <div class="color-head-label">
-              <span>Color: <strong id="prodSelectedColorName">${state.selectedColor.name}</strong></span>
+              <span>${isAr ? 'اللون:' : 'Color:'} <strong id="prodSelectedColorName">${isAr ? (colorNamesAr[state.selectedColor.name] || state.selectedColor.name) : state.selectedColor.name}</strong></span>
             </div>
             <div class="color-swatches-row" id="pageProductColorSwatches">
               ${colors.map((c, i) => {
                 const isSelected = i === activeColorIdx;
+                const cName = isAr ? (colorNamesAr[c.name] || c.name) : c.name;
                 return `
-                  <button type="button" class="color-swatch-circle-wrap ${isSelected ? 'active' : ''}" onclick="window.velenApp.selectProductColor(${i})" aria-label="Select color ${c.name}">
+                  <button type="button" class="color-swatch-circle-wrap ${isSelected ? 'active' : ''}" onclick="window.velenApp.selectProductColor(${i})" aria-label="Select color ${cName}">
                     <span class="swatch-circle-dot" style="background-color: ${c.hex || '#111'};"></span>
-                    <span class="swatch-circle-text">${c.name}</span>
+                    <span class="swatch-circle-text">${cName}</span>
                   </button>
                 `;
               }).join('')}
@@ -2127,10 +2290,10 @@ document.addEventListener('DOMContentLoaded', () => {
           <!-- Size Selector with [Find My Size] pill button (Image 1 & 3) -->
           <div class="product-size-group">
             <div class="size-head-row">
-              <span class="size-head-text">Size: <strong id="prodSelectedSizeLabel">${state.selectedSize}</strong></span>
+              <span class="size-head-text">${isAr ? 'المقاس:' : 'Size:'} <strong id="prodSelectedSizeLabel">${state.selectedSize}</strong></span>
               <button type="button" class="btn-find-my-size-pill" onclick="window.velenApp.openSizeAssistant()" aria-label="Open VELEN Size Assistant">
                 <i class="fa-solid fa-ruler-horizontal"></i>
-                <span>Find My Size</span>
+                <span>${isAr ? 'تحديد مقاسي 📏' : 'Find My Size'}</span>
               </button>
             </div>
             <div class="size-boxes-row" id="pageProductSizeBoxes">
@@ -2140,13 +2303,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
           <!-- Dual CTAs: ADD TO BAG & BUY NOW (Image 1 & 3) -->
           <div class="product-cta-dual-row">
-            <button type="button" class="btn-add-to-bag-primary" id="btnPageAddToBag" onclick="window.velenApp.addCurrentModalToCart()" aria-label="Add ${product.name} to shopping bag">
+            <button type="button" class="btn-add-to-bag-primary" id="btnPageAddToBag" onclick="window.velenApp.addCurrentModalToCart()" aria-label="Add ${displayName} to shopping bag">
               <i class="fa-solid fa-bag-shopping"></i>
-              <span>ADD TO BAG</span>
+              <span>${isAr ? 'إضافة للحقيبة 🛍️' : 'ADD TO BAG'}</span>
             </button>
-            <button type="button" class="btn-buy-now-primary" id="btnPageBuyNow" onclick="window.velenApp.buyNowDirect()" aria-label="Buy ${product.name} now">
+            <button type="button" class="btn-buy-now-primary" id="btnPageBuyNow" onclick="window.velenApp.buyNowDirect()" aria-label="Buy ${displayName} now">
               <i class="fa-solid fa-bolt"></i>
-              <span>BUY NOW</span>
+              <span>${isAr ? 'شراء فوري ⚡' : 'BUY NOW'}</span>
             </button>
           </div>
 
@@ -2154,25 +2317,25 @@ document.addEventListener('DOMContentLoaded', () => {
           <div class="product-features-pills-row">
             <div class="feat-pill-item">
               <i class="fa-solid fa-leaf"></i>
-              <span>Heavyweight Cotton</span>
+              <span>${isAr ? 'قطن ثقيل فاخر' : 'Heavyweight Cotton'}</span>
             </div>
             <div class="feat-pill-item">
               <i class="fa-solid fa-wind"></i>
-              <span>Breathable & Warm</span>
+              <span>${isAr ? 'مريح ودافئ' : 'Breathable & Warm'}</span>
             </div>
             <div class="feat-pill-item">
               <i class="fa-solid fa-box-archive"></i>
-              <span>Practical Pockets</span>
+              <span>${isAr ? 'جيوب عملية' : 'Practical Pockets'}</span>
             </div>
             <div class="feat-pill-item">
               <i class="fa-solid fa-arrows-up-down-left-right"></i>
-              <span>Relaxed Straight Fit</span>
+              <span>${isAr ? 'قصّة مستقيمة مريحة' : 'Relaxed Straight Fit'}</span>
             </div>
           </div>
 
           <!-- Description paragraph with standardized 70% Premium Cotton (No polyester) -->
           <div class="product-description-block">
-            <p>${product.description || 'A relaxed streetwear essential crafted from luxury heavyweight cotton. Fabric: 70% Premium Cotton'}</p>
+            <p>${isAr ? (product.descriptionAr || productDescriptionsAr[product.id] || (product.description ? product.description.replace(/Fabric:\s*70%\s*Premium\s*Cotton/gi, 'الخامة: 70% قطن أردني فاخر') : 'سويت شيرت مريح بقصّة عصرية ومميزة لإطلالة ستريت وير يومية.\n\nالخامة: 70% قطن أردني فاخر')) : (product.description || 'A relaxed streetwear essential crafted from luxury heavyweight cotton. Fabric: 70% Premium Cotton')}</p>
           </div>
 
         </div>
@@ -2182,15 +2345,16 @@ document.addEventListener('DOMContentLoaded', () => {
       <div class="product-color-shelves-container">
         ${colors.map((col, cIdx) => {
           const colImgs = (col.images && col.images.length > 0) ? col.images : [currentImages[0]];
+          const colName = isAr ? (colorNamesAr[col.name] || col.name) : col.name;
           return `
             <div class="color-shelf-row">
               <div class="color-shelf-header">
-                <span class="color-shelf-pill-tag">${col.name}</span>
+                <span class="color-shelf-pill-tag">${colName}</span>
               </div>
               <div class="color-shelf-tiles">
                 ${colImgs.slice(0, 6).map((imgUrl, i) => `
-                  <div class="shelf-tile-item" onclick="window.velenApp.selectProductColor(${cIdx}); window.velenApp.switchProductPageImage('${imgUrl}')" role="button" tabindex="0" aria-label="View ${col.name} angle ${i + 1}">
-                    <img src="${imgUrl}" alt="${product.name} - ${col.name} ${i + 1}" loading="lazy" onerror="this.src='/assets/velen-logo.jpg'">
+                  <div class="shelf-tile-item" onclick="window.velenApp.selectProductColor(${cIdx}); window.velenApp.switchProductPageImage('${imgUrl}')" role="button" tabindex="0" aria-label="View ${colName} angle ${i + 1}">
+                    <img src="${imgUrl}" alt="${displayName} - ${colName} ${i + 1}" loading="lazy" onerror="this.src='/assets/velen-logo.jpg'">
                   </div>
                 `).join('')}
               </div>
@@ -3470,6 +3634,38 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
 
+    // Update City & Payment Options
+    const custCity = document.getElementById('custCity');
+    if (custCity) {
+      const cityVal = custCity.value;
+      const cities = [
+        { val: 'Amman', ship: '0', ar: 'عمّان (توصيل مجاني • خلال 24 ساعة)', en: 'Amman (Free Delivery • Up to 24h)' },
+        { val: 'Zarqa', ship: '1', ar: 'الزرقاء (1 دينار • خلال 48 ساعة)', en: 'Zarqa (1 JD • Up to 48h)' },
+        { val: 'Irbid', ship: '1', ar: 'إربد (1 دينار • خلال 48 ساعة)', en: 'Irbid (1 JD • Up to 48h)' },
+        { val: 'Balqa', ship: '1', ar: 'البلقاء / السلط (1 دينار • خلال 48 ساعة)', en: 'Balqa / Salt (1 JD • Up to 48h)' },
+        { val: 'Madaba', ship: '1', ar: 'مأدبا (1 دينار • خلال 48 ساعة)', en: 'Madaba (1 JD • Up to 48h)' },
+        { val: 'Aqaba', ship: '1', ar: 'العقبة (1 دينار • خلال 48 ساعة)', en: 'Aqaba (1 JD • Up to 48h)' },
+        { val: 'Mafraq', ship: '1', ar: 'المفرق (1 دينار • خلال 48 ساعة)', en: 'Mafraq (1 JD • Up to 48h)' },
+        { val: 'Jerash', ship: '1', ar: 'جرش (1 دينار • خلال 48 ساعة)', en: 'Jerash (1 JD • Up to 48h)' },
+        { val: 'Ajloun', ship: '1', ar: 'عجلون (1 دينار • خلال 48 ساعة)', en: 'Ajloun (1 JD • Up to 48h)' },
+        { val: 'Karak', ship: '1', ar: 'الكرك (1 دينار • خلال 48 ساعة)', en: 'Karak (1 JD • Up to 48h)' },
+        { val: 'Tafilah', ship: '1', ar: 'الطفيلة (1 دينار • خلال 48 ساعة)', en: 'Tafilah (1 JD • Up to 48h)' },
+        { val: 'Maan', ship: '1', ar: 'معان (1 دينار • خلال 48 ساعة)', en: "Ma'an (1 JD • Up to 48h)" }
+      ];
+      custCity.innerHTML = cities.map(c => `
+        <option value="${c.val}" data-shipping="${c.ship}" ${c.val === cityVal ? 'selected' : ''}>${lang === 'ar' ? c.ar : c.en}</option>
+      `).join('');
+    }
+
+    const custPayment = document.getElementById('custPayment');
+    if (custPayment) {
+      const payVal = custPayment.value;
+      custPayment.innerHTML = `
+        <option value="Cash on Delivery (دفع عند الاستلام)" ${payVal.includes('Cash') ? 'selected' : ''}>${lang === 'ar' ? 'الدفع نقداً عند الاستلام (COD)' : 'Cash on Delivery (COD)'}</option>
+        <option value="CliQ (كليك)" ${payVal.includes('CliQ') ? 'selected' : ''}>${lang === 'ar' ? 'تحويل عبر كليك CliQ (الدفع الإلكتروني المعتمد)' : 'CliQ (Official Electronic Payment)'}</option>
+      `;
+    }
+
     renderCategoryTabs();
     if (state.products && state.products.length > 0) {
       renderProducts();
@@ -3484,6 +3680,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const prodPage = document.getElementById('productPage');
     if (prodPage && prodPage.style.display === 'block' && state.currentProductForModal) {
       renderProductPageContent(state.currentProductForModal);
+    }
+
+    const crumbTitle = document.getElementById('prodPageCrumbTitle');
+    if (crumbTitle && state.currentProductForModal) {
+      const p = state.currentProductForModal;
+      crumbTitle.textContent = (lang === 'ar' && (p.nameAr || productNameAr[p.id])) ? (p.nameAr || productNameAr[p.id]) : p.name;
     }
 
     if (typeof updateSizeAssistantLang === 'function') updateSizeAssistantLang();
@@ -3936,7 +4138,7 @@ document.addEventListener('DOMContentLoaded', () => {
       state.selectedColor = c;
 
       const nameLabel = document.getElementById('prodSelectedColorName');
-      if (nameLabel) nameLabel.textContent = c.name;
+      if (nameLabel) nameLabel.textContent = (state.activeLang === 'ar' && colorNamesAr[c.name]) ? colorNamesAr[c.name] : c.name;
 
       const swatches = document.querySelectorAll('.color-swatch-circle-wrap');
       swatches.forEach((btn, idx) => {

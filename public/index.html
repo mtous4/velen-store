@@ -16,7 +16,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   
   <!-- Custom Styles -->
-  <link rel="stylesheet" href="/css/style.css?v=3.0">
+  <link rel="stylesheet" href="/css/style.css?v=3.2">
 </head>
 <body class="theme-dark">
 
@@ -133,7 +133,7 @@
 
     <div class="drawer-body">
       <div class="drawer-section">
-        <h3 class="drawer-heading" data-i18n="shop">PAGES • صفحات الموقع</h3>
+        <h3 class="drawer-heading" data-i18n="drawerPagesHeading">PAGES • صفحات الموقع</h3>
         <ul class="drawer-links">
           <li><a href="#home" class="drawer-link active" data-nav="home" onclick="window.velenApp?.navigateTo('home'); document.getElementById('navDrawerClose')?.click();"><i class="fa-solid fa-house"></i> <span data-i18n="navHome">Home</span> <i class="fa-solid fa-angle-right rtl-flip"></i></a></li>
           <li><a href="#shop" class="drawer-link" data-nav="shop" onclick="window.velenApp?.navigateTo('shop'); document.getElementById('navDrawerClose')?.click();"><i class="fa-solid fa-shirt"></i> <span data-i18n="navShop">Shop Collection</span> <i class="fa-solid fa-angle-right rtl-flip"></i></a></li>
@@ -145,7 +145,7 @@
       </div>
 
       <div class="drawer-section">
-        <h3 class="drawer-heading" data-i18n="aboutUs">INFORMATION • معلومات</h3>
+        <h3 class="drawer-heading" data-i18n="drawerInfoHeading">INFORMATION • معلومات</h3>
         <ul class="drawer-links">
           <li><a href="#shipping" class="drawer-link" data-nav="shipping" onclick="window.velenApp?.navigateTo('shipping'); document.getElementById('navDrawerClose')?.click();"><i class="fa-solid fa-file-contract"></i> <span data-i18n="policyAndShipping">Shipping & Exchange Policy</span> <i class="fa-solid fa-angle-right rtl-flip"></i></a></li>
           <li><a href="#care" class="drawer-link" data-nav="care" onclick="window.velenApp?.navigateTo('care'); document.getElementById('navDrawerClose')?.click();"><i class="fa-solid fa-jug-detergent"></i> <span data-i18n="fabricCare">Fabric & Garment Care Guide</span> <i class="fa-solid fa-angle-right rtl-flip"></i></a></li>
@@ -153,7 +153,7 @@
       </div>
 
       <div class="drawer-section">
-        <h3 class="drawer-heading" data-i18n="stayConnected">CONNECT • تواصل معنا</h3>
+        <h3 class="drawer-heading" data-i18n="drawerConnectHeading">CONNECT • تواصل معنا</h3>
         <div class="social-pills">
           <a href="https://www.instagram.com/velen.offical?dlrf=c3I5MGh6eTZneGYy" target="_blank" class="social-pill" id="drawerInstaLink" aria-label="Instagram"><i class="fa-brands fa-instagram"></i> Instagram</a>
           <a href="https://tiktok.com/@velenofficial" target="_blank" class="social-pill" id="drawerTiktokLink" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i> TikTok</a>
@@ -163,7 +163,7 @@
 
       <div class="drawer-bottom-brand">
         <h2>VELEN</h2>
-        <p class="origin-tag">Handcrafted with pride in Amman, Jordan 🇯🇴</p>
+        <p class="origin-tag" data-i18n="drawerOrigin">Handcrafted with pride in Amman, Jordan 🇯🇴</p>
       </div>
     </div>
   </div>
@@ -174,7 +174,7 @@
     <div class="search-modal-container">
       <div class="search-input-wrap">
         <i class="fa-solid fa-magnifying-glass search-icon"></i>
-        <input type="text" id="searchInput" placeholder="Search collection, sizes, colors..." aria-label="Search products" autofocus>
+        <input type="text" id="searchInput" data-i18n-ph="searchPlaceholder" placeholder="Search collection, sizes, colors..." aria-label="Search products" autofocus>
         <button id="searchCloseBtn" class="icon-btn" aria-label="Close search" title="Close / إغلاق"><i class="fa-solid fa-xmark"></i></button>
       </div>
       <div id="searchResults" class="search-results-grid"></div>
@@ -197,15 +197,15 @@
         </div>
 
         <div class="hero-content hero-content-v2">
-          <span class="hero-badge-tag" id="heroBadgeTag">NEW DROP</span>
-          <h1 class="hero-brand-name hero-title-v2" id="heroBrandName">WINTER COLLECTION 2026</h1>
-          <p class="hero-tagline hero-tagline-v2" id="heroTagline">Premium streetwear essentials for everyday wear.</p>
+          <span class="hero-badge-tag" id="heroBadgeTag" data-i18n="heroBadgeTag">NEW DROP</span>
+          <h1 class="hero-brand-name hero-title-v2" id="heroBrandName" data-i18n="heroBrandName">WINTER COLLECTION 2026</h1>
+          <p class="hero-tagline hero-tagline-v2" id="heroTagline" data-i18n="heroTagline">Premium streetwear essentials for everyday wear.</p>
           <div class="hero-cta-wrap">
             <button type="button" class="btn-velen-primary" id="heroShopBtn" onclick="window.velenApp?.navigateTo('shop')" aria-label="Shop the collection">
-              SHOP THE COLLECTION <i class="fa-solid fa-arrow-right rtl-flip" style="margin-left: 6px;"></i>
+              <span data-i18n="heroShopBtn">SHOP THE COLLECTION</span> <i class="fa-solid fa-arrow-right rtl-flip" style="margin-left: 6px;"></i>
             </button>
             <button type="button" class="btn-velen-secondary" id="heroStoryBtn" onclick="window.velenApp?.navigateTo('about')" aria-label="Our Story">
-              OUR STORY
+              <span data-i18n="heroStoryBtn">OUR STORY</span>
             </button>
           </div>
         </div>
@@ -215,19 +215,19 @@
       <div class="value-props-bar value-props-bar-v2" id="sec-valueProps">
         <div class="prop-item">
           <i class="fa-solid fa-truck-fast"></i>
-          <span id="propText1">Fast Delivery in Jordan</span>
+          <span id="propText1" data-i18n="prop1">Fast Delivery in Jordan</span>
         </div>
         <div class="prop-item">
           <i class="fa-solid fa-crown"></i>
-          <span id="propText2">Premium Quality</span>
+          <span id="propText2" data-i18n="prop2">Premium Quality</span>
         </div>
         <div class="prop-item">
           <i class="fa-solid fa-rotate-left"></i>
-          <span id="propText3">Easy Returns</span>
+          <span id="propText3" data-i18n="prop3">Easy Returns</span>
         </div>
         <div class="prop-item">
           <i class="fa-solid fa-shield-halved"></i>
-          <span id="propText4">Secure Payment</span>
+          <span id="propText4" data-i18n="prop4">Secure Payment</span>
         </div>
       </div>
 
@@ -236,7 +236,7 @@
         <div class="section-container">
           <div class="section-header-center section-header-with-lines">
             <div class="header-flank-line"></div>
-            <h2 class="section-title text-collection-title" id="featuredSectionTitle">THE COLLECTION</h2>
+            <h2 class="section-title text-collection-title" id="featuredSectionTitle" data-i18n="featuredSectionTitle">THE COLLECTION</h2>
             <div class="header-flank-line"></div>
           </div>
 
@@ -474,18 +474,18 @@
             <div class="fabric-steps-grid">
               <div class="step-card">
                 <span class="step-num">30°C</span>
-                <h5>Wash Cold</h5>
-                <p>Always wash in cold water (maximum 30°C) with similar dark or light colors to preserve pigment density.</p>
+                <h5 data-i18n="step1Title">Wash Cold</h5>
+                <p data-i18n="step1Text">Always wash in cold water (maximum 30°C) with similar dark or light colors to preserve pigment density.</p>
               </div>
               <div class="step-card">
                 <span class="step-num"><i class="fa-solid fa-wind"></i></span>
-                <h5>Air Dry Only</h5>
-                <p>Never tumble dry heavyweight cotton. Lay flat or hang dry in the shade to maintain crisp boxy shape.</p>
+                <h5 data-i18n="step2Title">Air Dry Only</h5>
+                <p data-i18n="step2Text">Never tumble dry heavyweight cotton. Lay flat or hang dry in the shade to maintain crisp boxy shape.</p>
               </div>
               <div class="step-card">
                 <span class="step-num"><i class="fa-solid fa-shirt"></i></span>
-                <h5>Iron Inside Out</h5>
-                <p>Iron inside-out on medium heat to protect the combed surface texture and neck ribbing.</p>
+                <h5 data-i18n="step3Title">Iron Inside Out</h5>
+                <p data-i18n="step3Text">Iron inside-out on medium heat to protect the combed surface texture and neck ribbing.</p>
               </div>
             </div>
           </div>
@@ -600,21 +600,21 @@
           <div class="track-support-cards">
             <div class="track-support-card">
               <i class="fa-brands fa-whatsapp support-icon wa-color"></i>
-              <h4>Direct WhatsApp Support</h4>
-              <p>Need urgent changes, size advice, or custom inquiries? Our team in Amman is ready to assist you.</p>
-              <a href="https://wa.me/962770188144" target="_blank" class="btn-wa-direct"><i class="fa-brands fa-whatsapp"></i> Chat on WhatsApp</a>
+              <h4 data-i18n="supportWaTitle">Direct WhatsApp Support</h4>
+              <p data-i18n="supportWaText">Need urgent changes, size advice, or custom inquiries? Our team in Amman is ready to assist you.</p>
+              <a href="https://wa.me/962770188144" target="_blank" class="btn-wa-direct"><i class="fa-brands fa-whatsapp"></i> <span data-i18n="chatWithUs">Chat on WhatsApp</span></a>
             </div>
 
             <div class="track-support-card">
               <i class="fa-solid fa-truck-fast support-icon gold-color"></i>
-              <h4>Delivery Timeline</h4>
-              <p><strong>Amman:</strong> Free delivery within 24 hours.<br><strong>Outside Amman:</strong> Flat 1 JOD delivery within 48 hours across Jordan.</p>
+              <h4 data-i18n="supportDelTitle">Delivery Timeline</h4>
+              <p data-i18n="supportDelText"><strong>Amman:</strong> Free delivery within 24 hours.<br><strong>Outside Amman:</strong> Flat 1 JOD delivery within 48 hours across Jordan.</p>
             </div>
 
             <div class="track-support-card">
               <i class="fa-solid fa-rotate-left support-icon"></i>
-              <h4>Exchange & Return Policy</h4>
-              <p>Exchanges and returns are accepted for manufacturing defects, damaged items, or incorrect products. Contact VELEN with photos for prompt assistance.</p>
+              <h4 data-i18n="supportExTitle">Exchange & Return Policy</h4>
+              <p data-i18n="supportExText">Exchanges and returns are accepted for manufacturing defects, damaged items, or incorrect products. Contact VELEN with photos for prompt assistance.</p>
             </div>
           </div>
         </div>
@@ -854,7 +854,7 @@
   <!-- Cart Drawer (With Critical Close Control & Accessibility) -->
   <div id="cartDrawer" class="cart-drawer" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="cartHeading">
     <div class="cart-drawer-header">
-      <h3 id="cartHeading">حقيبة التسوق (<span id="cartTotalItems">0</span>)</h3>
+      <h3 id="cartHeading"><span data-i18n="cartTitle">حقيبة التسوق</span> (<span id="cartTotalItems">0</span>)</h3>
       <button id="cartCloseBtn" class="icon-btn close-btn" aria-label="Close shopping bag" title="Close / إغلاق">
         <i class="fa-solid fa-xmark"></i>
       </button>
@@ -863,7 +863,7 @@
     <!-- Free Delivery Meter (Standardized Rule: Free in Amman, 1 JD outside Amman) -->
     <div class="delivery-progress-wrap">
       <div class="delivery-meter-text">
-        <span id="deliveryMeterMsg"><i class="fa-solid fa-truck-fast"></i> توصيل مجاني لكافة مناطق عمّان • وبدينار فقط لكافة المحافظات</span>
+        <span id="deliveryMeterMsg" data-i18n="freeDeliveryAmman"><i class="fa-solid fa-truck-fast"></i> توصيل مجاني لكافة مناطق عمّان • وبدينار فقط لكافة المحافظات</span>
       </div>
       <div class="delivery-bar">
         <div id="deliveryProgressFill" class="delivery-bar-fill" style="width: 100%;"></div>
@@ -878,8 +878,8 @@
       <!-- Promo Code Box in Cart Drawer -->
       <div class="cart-promo-box">
         <div class="promo-input-row">
-          <input type="text" id="cartPromoInput" placeholder="Promo Code (كود الخصم)" aria-label="Promo code">
-          <button type="button" id="applyCartPromoBtn" class="btn-apply-promo" aria-label="Apply promo code">Apply</button>
+          <input type="text" id="cartPromoInput" data-i18n-ph="promoPlaceholder" placeholder="Promo Code (كود الخصم)" aria-label="Promo code">
+          <button type="button" id="applyCartPromoBtn" class="btn-apply-promo" data-i18n="applyPromoBtn" aria-label="Apply promo code">Apply</button>
         </div>
         <div id="cartPromoMsg" class="promo-msg" style="display:none;"></div>
       </div>
@@ -906,7 +906,7 @@
       </button>
 
       <button type="button" class="btn-continue-shopping" id="cartContinueShoppingBtn" onclick="window.velenApp?.closeCart()" aria-label="Continue Shopping">
-        <i class="fa-solid fa-arrow-left rtl-flip"></i> <span>Continue Shopping • متابعة التسوق</span>
+        <i class="fa-solid fa-arrow-left rtl-flip"></i> <span data-i18n="continueShopping">Continue Shopping</span>
       </button>
     </div>
   </div>
@@ -1138,19 +1138,19 @@
 
             <div class="summary-totals">
               <div class="total-line">
-                <span>المجموع الفرعي:</span>
+                <span data-i18n="subtotal">المجموع الفرعي:</span>
                 <span id="checkoutSubtotal">0.000 JOD</span>
               </div>
               <div class="total-line checkout-promo-line" id="checkoutPromoLine" style="display:none; color:#2ecc71;">
-                <span>خصم الكود:</span>
+                <span data-i18n="discount">خصم الكود:</span>
                 <span id="checkoutPromoDiscount">-0.000 JOD</span>
               </div>
               <div class="total-line">
-                <span>رسوم التوصيل:</span>
+                <span data-i18n="shippingFee">رسوم التوصيل:</span>
                 <span id="checkoutShipping">0.000 JOD</span>
               </div>
               <div class="total-line final">
-                <span>المبلغ الإجمالي للدفع:</span>
+                <span data-i18n="total">المبلغ الإجمالي للدفع:</span>
                 <span id="checkoutFinalTotal">0.000 JOD</span>
               </div>
             </div>
@@ -1237,6 +1237,6 @@
   <div id="toastContainer" class="toast-container"></div>
 
   <!-- Client Script -->
-  <script src="/js/app.js?v=3.0"></script>
+  <script src="/js/app.js?v=3.2"></script>
 </body>
 </html>
