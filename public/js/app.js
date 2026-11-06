@@ -3,9 +3,180 @@
  */
 
 document.addEventListener('DOMContentLoaded', () => {
+  // Built-in Default Catalog (Immediate render fallback so store is never empty)
+  const DEFAULT_PRODUCTS = [
+    {
+      id: "prod-double-zip",
+      name: "VELEN Double-Zip Cropped Sweatshirt",
+      category: "Sweatshirts",
+      price: 39,
+      comparePrice: 49,
+      onSale: false,
+      stock: 60,
+      image: "/assets/velen-product-showcase.png",
+      images: [
+        "/assets/velen-product-showcase.png",
+        "/assets/velen-hero-clean.jpg",
+        "/assets/velen-boxy-black.jpg"
+      ],
+      colors: [
+        { name: "Crimson Red", hex: "#8b1e2c", images: ["/assets/velen-product-showcase.png"] },
+        { name: "Black", hex: "#111111", images: ["/assets/velen-boxy-black.jpg"] },
+        { name: "Heather Grey", hex: "#a8a8a8", images: ["/assets/velen-hero-clean.jpg"] }
+      ],
+      sizes: ["XS", "S", "M", "L", "XL"]
+    },
+    {
+      id: "prod-heavy-sweatpants",
+      name: "Heavyweight Straight Sweatpants",
+      category: "Sweatpants",
+      price: 20,
+      comparePrice: 28,
+      onSale: false,
+      stock: 50,
+      image: "/assets/velen-mobile-product.png",
+      images: [
+        "/assets/velen-mobile-product.png",
+        "/assets/velen-hero-clean.jpg"
+      ],
+      colors: [
+        { name: "Heather Grey", hex: "#a8a8a8", images: ["/assets/velen-mobile-product.png"] },
+        { name: "Black", hex: "#111111", images: ["/assets/velen-boxy-black.jpg"] },
+        { name: "Crimson Red", hex: "#8b1e2c", images: ["/assets/velen-product-showcase.png"] }
+      ],
+      sizes: ["XS", "S", "M", "L", "XL"]
+    },
+    {
+      id: "prod-raw-sweatpants",
+      name: "Raw-Cut Wide Leg Sweatpants",
+      category: "Sweatpants",
+      price: 32,
+      comparePrice: 40,
+      onSale: false,
+      stock: 40,
+      image: "/assets/velen-hero-clean.jpg",
+      images: [
+        "/assets/velen-hero-clean.jpg",
+        "/assets/velen-mobile-product.png"
+      ],
+      colors: [
+        { name: "Heather Grey", hex: "#a8a8a8", images: ["/assets/velen-hero-clean.jpg"] },
+        { name: "Black", hex: "#111111", images: ["/assets/velen-boxy-black.jpg"] }
+      ],
+      sizes: ["XS", "S", "M", "L", "XL"]
+    },
+    {
+      id: "prod-1793258212025",
+      name: "VELEN Signature Heavyweight Hoodie - Charcoal",
+      category: "Hoodies",
+      price: 24,
+      comparePrice: 28,
+      onSale: true,
+      stock: 19,
+      image: "/assets/velen-hero-clean.jpg",
+      images: [
+        "/assets/velen-hero-clean.jpg"
+      ],
+      colors: [
+        { name: "Charcoal Grey", hex: "#34495e", images: ["/assets/velen-hero-clean.jpg"] },
+        { name: "Midnight Black", hex: "#111111", images: ["/assets/velen-boxy-black.jpg"] },
+        { name: "Off White", hex: "#f5f6fa", images: ["/assets/velen-boxy-white.jpg"] }
+      ],
+      sizes: ["S", "M", "L", "XL"]
+    },
+    {
+      id: "prod-1",
+      name: "VELEN Ringer Tee",
+      category: "Tees",
+      price: 13,
+      comparePrice: 16,
+      onSale: true,
+      stock: 23,
+      image: "/assets/velen-ringer-sky-blue.jpg",
+      images: [
+        "/assets/velen-ringer-sky-blue.jpg",
+        "/assets/velen-hero-banner.jpg"
+      ],
+      colors: [
+        { name: "Sky Blue", hex: "#7bb5d9", images: ["/assets/velen-ringer-sky-blue.jpg"] },
+        { name: "Classic White", hex: "#ffffff", images: ["/assets/velen-ringer-white.jpg"] },
+        { name: "Ruby Red", hex: "#c0392b", images: ["/assets/velen-hero-clean.jpg"] }
+      ],
+      sizes: ["S", "M", "L", "XL"]
+    },
+    {
+      id: "prod-2",
+      name: "VELEN Boxy Cropped Tee",
+      category: "Tees",
+      price: 11,
+      comparePrice: 14,
+      onSale: true,
+      stock: 19,
+      image: "/assets/velen-boxy-white.jpg",
+      images: [
+        "/assets/velen-boxy-white.jpg",
+        "/assets/velen-hero-banner.jpg"
+      ],
+      colors: [
+        { name: "Chalk White", hex: "#ffffff", images: ["/assets/velen-boxy-white.jpg"] },
+        { name: "Pitch Black", hex: "#111111", images: ["/assets/velen-boxy-black.jpg"] },
+        { name: "Sky Blue", hex: "#7bb5d9", images: ["/assets/velen-ringer-sky-blue.jpg"] }
+      ],
+      sizes: ["S", "M", "L", "XL"]
+    },
+    {
+      id: "prod-3",
+      name: "VELEN Ringer Tee — White",
+      category: "Tees",
+      price: 13,
+      comparePrice: 16,
+      onSale: true,
+      stock: 32,
+      image: "/assets/velen-ringer-white.jpg",
+      images: [
+        "/assets/velen-ringer-white.jpg"
+      ],
+      colors: [
+        { name: "Classic White", hex: "#ffffff", images: ["/assets/velen-ringer-white.jpg"] },
+        { name: "Sky Blue", hex: "#7bb5d9", images: ["/assets/velen-ringer-sky-blue.jpg"] },
+        { name: "Pitch Black", hex: "#111111", images: ["/assets/velen-boxy-black.jpg"] }
+      ],
+      sizes: ["S", "M", "L", "XL"]
+    },
+    {
+      id: "prod-4",
+      name: "VELEN Heavy Boxy Tee",
+      category: "Tees",
+      price: 11,
+      comparePrice: 14,
+      onSale: true,
+      stock: 28,
+      image: "/assets/velen-boxy-black.jpg",
+      images: [
+        "/assets/velen-boxy-black.jpg"
+      ],
+      colors: [
+        { name: "Pitch Black", hex: "#111111", images: ["/assets/velen-boxy-black.jpg"] },
+        { name: "Chalk White", hex: "#ffffff", images: ["/assets/velen-boxy-white.jpg"] },
+        { name: "Charcoal Grey", hex: "#34495e", images: ["/assets/velen-hero-clean.jpg"] }
+      ],
+      sizes: ["S", "M", "L", "XL"]
+    }
+  ];
+
+  const DEFAULT_CATEGORIES = [
+    { id: 'all', nameEn: 'All Pieces', nameAr: 'جميع القطع', slug: 'all' },
+    { id: 'sweatshirts', nameEn: 'Sweatshirts', nameAr: 'سويت شيرت', slug: 'sweatshirts' },
+    { id: 'sweatpants', nameEn: 'Sweatpants', nameAr: 'بناطيل سويت بانتس', slug: 'sweatpants' },
+    { id: 'tees', nameEn: 'T-Shirts', nameAr: 'تيشيرتات', slug: 'tees' },
+    { id: 'ringer', nameEn: 'Ringers', nameAr: 'ياقة ملونة', slug: 'ringer' },
+    { id: 'boxy', nameEn: 'Boxy & Tees', nameAr: 'قصّة بوكسي', slug: 'boxy' },
+    { id: 'hoodies', nameEn: 'Hoodies & Sweats', nameAr: 'هوديز وسويت شيرت', slug: 'hoodies' }
+  ];
+
   // Application State
   const state = {
-    products: [],
+    products: [...DEFAULT_PRODUCTS],
     community: [],
     design: null,
     settings: null,
@@ -14,7 +185,7 @@ document.addEventListener('DOMContentLoaded', () => {
     sessionId: localStorage.getItem('velen_session_id') || ('sess_' + Math.random().toString(36).substring(2, 10)),
     cart: JSON.parse(localStorage.getItem('velen_cart') || '[]'),
     activeCategory: 'all',
-    categories: [],
+    categories: [...DEFAULT_CATEGORIES],
     activeCommFilter: 'all',
     currentProductForModal: null,
     selectedSize: 'M',
@@ -173,6 +344,7 @@ document.addEventListener('DOMContentLoaded', () => {
       fabricCare: 'دليل العناية بالملابس',
       termsOfService: 'الشروط والأحكام والتوصيل',
       footerCopyright: '© 2026 VELEN OFFICIAL. صنع بكل فخر في عمّان، الأردن 🇯🇴',
+      noProductsInCategory: 'لا توجد قطع متاحة في هذا التصنيف حالياً.',
       // Cart Drawer Footer
       cartSubtotalLabel: 'المجموع الفرعي:',
       cartDeliveryLabel: 'التوصيل (عمّان):',
@@ -374,6 +546,7 @@ document.addEventListener('DOMContentLoaded', () => {
       fabricCare: 'Fabric & Garment Care Guide',
       termsOfService: 'Terms & Shipping Policy',
       footerCopyright: '© 2026 VELEN OFFICIAL. Made with pride in Amman, Jordan 🇯🇴',
+      noProductsInCategory: 'No pieces available in this category currently.',
       // Cart Drawer Footer
       cartSubtotalLabel: 'Subtotal:',
       cartDeliveryLabel: 'Delivery (Amman):',
@@ -489,15 +662,28 @@ document.addEventListener('DOMContentLoaded', () => {
     setupPromoCodes();
     setupCommunityForm();
 
-    await fetchSettings();
-    await fetchDesign();
-    await fetchCategories();
-    await fetchProducts();
-    await fetchCommunity();
-    await fetchReviews();
-    updateCartUI();
+    // Render immediately from initial catalog so user never sees empty or loading state
+    renderProducts();
+    renderFeaturedProducts();
+    renderCategoryTabs();
+    populateProductSelect();
+
+    // Parallel fetch from APIs with Promise.allSettled so no network delay blocks the store
+    Promise.allSettled([
+      fetchSettings(),
+      fetchDesign(),
+      fetchCategories(),
+      fetchProducts(),
+      fetchCommunity(),
+      fetchReviews()
+    ]).then(() => {
+      updateCartUI();
+      initComingSoonTimer();
+    }).catch(e => {
+      console.warn('Init fetch settled with warning:', e);
+    });
+
     initWebSocket();
-    initComingSoonTimer();
     setupReviewForm();
     setupWaybillModal();
 
@@ -1050,20 +1236,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
   async function fetchProducts() {
     try {
-      const res = await fetch('/api/products');
-      state.products = await res.json();
-      renderProducts();
-      renderFeaturedProducts();
-      populateProductSelect();
-
-      // If page was loaded directly with #product-id URL, open product page now
-      const hash = window.location.hash || '';
-      if (hash.startsWith('#product-')) {
-        const id = hash.replace('#product-', '');
-        openProductPage(id, false);
+      const res = await fetch('/api/products', { redirect: 'follow' });
+      if (res.ok) {
+        const data = await res.json();
+        if (Array.isArray(data) && data.length > 0) {
+          state.products = data;
+        }
       }
     } catch (err) {
-      console.error('Error fetching products:', err);
+      console.warn('Network fetchProducts failed, retaining active catalog:', err);
+    }
+
+    renderProducts();
+    renderFeaturedProducts();
+    populateProductSelect();
+
+    // If page was loaded directly with #product-id URL, open product page now
+    const hash = window.location.hash || '';
+    if (hash.startsWith('#product-')) {
+      const id = hash.replace('#product-', '');
+      openProductPage(id, false);
     }
   }
 
@@ -1281,9 +1473,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if (filtered.length === 0) {
+      const emptyMsg = state.activeLang === 'ar'
+        ? (translations.ar?.noProductsInCategory || 'لا توجد قطع متاحة في هذا التصنيف حالياً.')
+        : (translations.en?.noProductsInCategory || 'No pieces available in this category currently.');
       productsGrid.innerHTML = `
-        <div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: #666;">
-          <p>لا توجد قطع متاحة في هذا التصنيف حالياً.</p>
+        <div style="grid-column: 1 / -1; text-align: center; padding: 48px 20px; color: #888;">
+          <p style="font-size: 15px; letter-spacing: 0.5px;">${emptyMsg}</p>
         </div>
       `;
       return;
@@ -3376,13 +3571,13 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
 
-    // Homepage Category Tabs Filter
-    const homeTabs = document.querySelectorAll('.home-tab-btn');
+    // Homepage Category Tabs Filter (All Pieces | Sweatshirts | Sweatpants)
+    const homeTabs = document.querySelectorAll('#homeCategoryTabs .cat-pill, .home-tab-btn');
     homeTabs.forEach(tab => {
       tab.addEventListener('click', () => {
-        homeTabs.forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('#homeCategoryTabs .cat-pill, .home-tab-btn').forEach(t => t.classList.remove('active'));
         tab.classList.add('active');
-        const cat = tab.getAttribute('data-category') || 'all';
+        const cat = tab.getAttribute('data-cat') || tab.getAttribute('data-category') || 'all';
         renderFeaturedProducts(cat);
       });
     });

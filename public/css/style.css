@@ -292,20 +292,17 @@ input:focus, textarea:focus, select:focus {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center 30%;
-  filter: brightness(0.92);
+  object-position: center 20%;
+  filter: brightness(0.95);
 }
 
 .hero-vignette-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    180deg,
-    rgba(0, 0, 0, 0.3) 0%,
-    rgba(0, 0, 0, 0.1) 40%,
-    rgba(0, 0, 0, 0.8) 80%,
-    #000000 100%
-  );
+  background: 
+    linear-gradient(90deg, rgba(0, 0, 0, 0.82) 0%, rgba(0, 0, 0, 0.45) 45%, rgba(0, 0, 0, 0.1) 68%, rgba(0, 0, 0, 0.4) 100%),
+    linear-gradient(180deg, rgba(0, 0, 0, 0.25) 0%, transparent 40%, rgba(0, 0, 0, 0.75) 85%, #000000 100%);
+  pointer-events: none;
 }
 
 .hero-content {
