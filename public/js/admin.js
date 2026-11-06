@@ -1988,7 +1988,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 7. Theme & Colors
     if (d.theme) {
-      const accent = d.theme.accentColor || '#e5b95f';
+      const accent = d.theme.accentColor || '#ffffff';
       const bg = d.theme.bgColor || '#000000';
       const text = d.theme.primaryColor || '#ffffff';
       const sale = d.theme.saleBadgeText || 'SALE';
@@ -2096,7 +2096,7 @@ document.addEventListener('DOMContentLoaded', () => {
       state.design = {
         theme: {
           primaryColor: '#ffffff',
-          accentColor: '#e5b95f',
+          accentColor: '#ffffff',
           bgColor: '#000000',
           saleBadgeText: 'SALE'
         },
@@ -2224,7 +2224,7 @@ document.addEventListener('DOMContentLoaded', () => {
       theme: {
         ...(state.design?.theme || {}),
         primaryColor: document.getElementById('desTextColorHex')?.value.trim() || '#ffffff',
-        accentColor: document.getElementById('desAccentColorHex')?.value.trim() || '#e5b95f',
+        accentColor: document.getElementById('desAccentColorHex')?.value.trim() || '#ffffff',
         bgColor: document.getElementById('desBgColorHex')?.value.trim() || '#000000',
         saleBadgeText: document.getElementById('desSaleBadgeText')?.value.trim() || 'SALE'
       },

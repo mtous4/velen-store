@@ -707,7 +707,7 @@
   "design": {
     "theme": {
       "primaryColor": "#ffffff",
-      "accentColor": "#e5b95f",
+      "accentColor": "#ffffff",
       "bgColor": "#000000",
       "saleBadgeText": "SALE"
     },

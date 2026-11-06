@@ -16,7 +16,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   
   <!-- Custom Styles -->
-  <link rel="stylesheet" href="/css/style.css?v=2.6">
+  <link rel="stylesheet" href="/css/style.css?v=3.0">
 </head>
 <body class="theme-dark">
 
@@ -317,7 +317,7 @@
               <div class="portal-bg-abstract reviews-accent-bg"></div>
               <div class="portal-overlay"></div>
               <div class="portal-content">
-                <span class="portal-badge" style="background:rgba(229,185,95,0.2); color:#e5b95f; border-color:rgba(229,185,95,0.4);"><i class="fa-solid fa-star"></i> <span data-i18n="portalBadgeReviews">VERIFIED RATINGS</span></span>
+                <span class="portal-badge" style="background:rgba(255,255,255,0.12); color:#ffffff; border-color:rgba(255,255,255,0.3);"><i class="fa-solid fa-star"></i> <span data-i18n="portalBadgeReviews">VERIFIED RATINGS</span></span>
                 <h3 class="portal-title" data-i18n="portalReviewsTitle">CUSTOMER REVIEWS</h3>
                 <p class="portal-desc" data-i18n="portalReviewsSub">Read verified customer feedback on sizing, heavyweight cotton texture, and fast delivery.</p>
                 <button type="button" class="btn-portal-action" aria-label="Read Customer Reviews">
@@ -513,12 +513,9 @@
             <span class="section-sub">VELEN COMMUNITY</span>
             <h2 class="community-title" id="communityTitle" data-i18n="communityTitle">Community Wears Velen</h2>
             <p class="community-subtitle" id="communitySubtitle" data-i18n="communitySubtitle">Real People • Real Streetwear Style</p>
-            <p class="community-desc" id="communityDesc" data-i18n="communityDesc">Share your daily look and styling videos with Velen — tag your Instagram handle and share your fit!</p>
+            <p class="community-desc" id="communityDesc" data-i18n="communityDesc">Exclusive streetwear fits and styling reels from the official VELEN community.</p>
             
-            <div class="community-actions-bar">
-              <button id="addLookBtn" class="btn-community-share">
-                <i class="fa-brands fa-instagram"></i> <span data-i18n="addLookBtn">Share Your Look in Community</span>
-              </button>
+            <div class="community-actions-bar" style="justify-content:center;">
               <div class="community-filter-pills">
                 <button class="comm-pill active" data-comm-filter="all" data-i18n="allPosts">All Looks</button>
                 <button class="comm-pill" data-comm-filter="video" data-i18n="videoReels"><i class="fa-solid fa-play"></i> Reels Videos</button>
@@ -560,9 +557,6 @@
               <span class="global-score" id="reviewsScore">5.0</span>
               <span class="global-count" id="reviewsCount">(0 reviews)</span>
             </div>
-            <button id="addReviewBtn" class="btn-add-review">
-              <i class="fa-solid fa-star"></i> <span data-i18n="writeReview">Write a Review</span>
-            </button>
           </div>
 
           <!-- Reviews Grid -->
@@ -1031,114 +1025,7 @@
   </div>
   <div id="sizeAssistantOverlay" class="drawer-overlay" onclick="window.velenApp?.closeSizeAssistant()" aria-label="Close size assistant backdrop"></div>
 
-  <!-- Community Submission Modal (Share look) -->
-  <div id="communityModal" class="community-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Share community look">
-    <div class="community-modal-dialog">
-      <button id="communityModalClose" class="modal-close-icon" aria-label="Close community modal" title="Close / إغلاق"><i class="fa-solid fa-xmark"></i></button>
-      <div class="community-modal-content">
-        <div class="modal-head">
-          <img src="/assets/velen-logo.jpg" alt="Velen" class="modal-logo">
-          <h3>شارك إطلالتك مع مجتمع VELEN</h3>
-          <p>ارفع صورتك أو فيديو الريلز مع اسم حسابك على انستغرام — بدون تقييم، فقط الستايل!</p>
-        </div>
 
-        <form id="communityForm" class="community-form">
-          <div class="form-group">
-            <label><i class="fa-brands fa-instagram" style="color:#e1306c;"></i> <span data-i18n="commAuthorLabel">Instagram Handle / Your Name</span></label>
-            <input type="text" id="commAuthor" placeholder="@your.handle (e.g. @khalid.jo)" data-i18n-ph="commAuthorPh" required>
-          </div>
-
-          <!-- Media Upload: Photo or Video (Required for community) -->
-          <div class="form-group media-upload-group">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-              <label><span data-i18n="commMediaLabel">Photo or Video / Reels</span> <span style="color:#ff4757; font-size:11px;" data-i18n="requiredLabel">*Required</span></label>
-              <button type="button" id="clearCommMediaBtn" style="display:none; color:#ff4757; font-size:11px; background:transparent; border:none; cursor:pointer;" title="إزالة الوسائط">
-                <i class="fa-solid fa-trash"></i> <span data-i18n="cancelMediaBtn">Cancel</span>
-              </button>
-            </div>
-            
-            <div class="upload-dropzone" id="commDropzone" style="cursor:pointer;">
-              <i class="fa-solid fa-cloud-arrow-up upload-icon"></i>
-              <p id="commDropzoneText" data-i18n="commDropzoneText">Drag & drop photo or video here, or click to choose</p>
-              <span class="upload-hint" data-i18n="commDropzoneHint">Supports MP4, MOV, JPG, PNG up to 50MB</span>
-            </div>
-            <!-- File input placed safely outside dropzone to eliminate click recursion -->
-            <input type="file" id="commFileInput" accept="image/*,video/*" style="display:none;">
-            
-            <div id="commFilePreview" class="upload-preview-area" style="display:none;"></div>
-            
-            <div class="url-fallback-wrap">
-              <span class="or-separator" data-i18n="commOrUrl">Or direct photo/video URL:</span>
-              <input type="url" id="commUrlInput" placeholder="https://example.com/photo.jpg" data-i18n-ph="commUrlPh">
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label data-i18n="commCaptionLabel">Caption / Thoughts (Optional)</label>
-            <textarea id="commComment" rows="2" placeholder="Tell us about your sizing, how you styled it, or feedback!" data-i18n-ph="commCaptionPh"></textarea>
-          </div>
-
-          <button type="submit" id="commSubmitBtn" class="btn-submit-look">
-            <i class="fa-brands fa-instagram"></i>
-            <span data-i18n="commSubmitBtn">Post to Community Now</span>
-          </button>
-        </form>
-      </div>
-    </div>
-  </div>
-
-  <!-- Review Submission Modal (Product Star Rating — Pure Review) -->
-  <div id="reviewModal" class="community-modal" aria-hidden="true">
-    <div class="community-modal-dialog">
-      <button id="reviewModalClose" class="modal-close-icon" aria-label="Close review modal" title="Close / إغلاق"><i class="fa-solid fa-xmark"></i></button>
-      <div class="community-modal-content">
-        <div class="modal-head">
-          <img src="/assets/velen-logo.jpg" alt="Velen" class="modal-logo">
-          <h3>قيّم تجربتك مع Velen</h3>
-          <p>تقييمك يساعد باقي الزبائن — نجومك وكلماتك كافية، لا حاجة لصور!</p>
-        </div>
-
-        <form id="reviewForm" class="community-form">
-          <div class="form-row">
-            <div class="form-group">
-              <label>اسمك</label>
-              <input type="text" id="reviewAuthor" placeholder="مثال: محمد / Ahmad" required>
-            </div>
-            <div class="form-group">
-              <label>القطعة التي اشتريتها</label>
-              <select id="reviewItemWorn" required>
-                <!-- Populated dynamically -->
-              </select>
-            </div>
-          </div>
-
-          <!-- Star Rating (required for reviews) -->
-          <div class="form-group rating-selector-group">
-            <label>تقييمك من 5 نجوم: <span style="color:#ff4757; font-size:11px;">*مطلوب</span></label>
-            <div class="star-rating-picker" id="reviewStarPicker">
-              <i class="fa-solid fa-star star-btn active" data-value="1"></i>
-              <i class="fa-solid fa-star star-btn active" data-value="2"></i>
-              <i class="fa-solid fa-star star-btn active" data-value="3"></i>
-              <i class="fa-solid fa-star star-btn active" data-value="4"></i>
-              <i class="fa-solid fa-star star-btn active" data-value="5"></i>
-              <span id="reviewStarLabel" class="rating-label">5 من 5 (ممتاز جداً 🔥)</span>
-            </div>
-            <input type="hidden" id="reviewRatingVal" value="5">
-          </div>
-
-          <div class="form-group">
-            <label>رأيك وتقييمك <span style="color:#ff4757; font-size:11px;">*مطلوب</span></label>
-            <textarea id="reviewComment" rows="3" placeholder="احكيلنا عن جودة القماش، دقة المقاس، وسرعة التوصيل..." required></textarea>
-          </div>
-
-          <button type="submit" id="reviewSubmitBtn" class="btn-submit-look" style="background: linear-gradient(135deg, #e5b95f, #c9962d);">
-            <i class="fa-solid fa-star"></i>
-            <span>نشر التقييم الآن</span>
-          </button>
-        </form>
-      </div>
-    </div>
-  </div>
 
   <!-- Checkout Modal (Order Placement) -->
   <div id="checkoutModal" class="checkout-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Express Checkout">
@@ -1193,8 +1080,8 @@
             </div>
 
             <!-- Official CliQ Details Note (Shown when CliQ is selected) -->
-            <div id="cliqPaymentInfoNote" class="cliq-payment-box" style="display:none; margin-bottom:14px; padding:12px; background:rgba(229,185,95,0.08); border:1px solid rgba(229,185,95,0.25); border-radius:8px; font-size:12px;">
-              <div style="font-weight:700; color:#e5b95f; margin-bottom:4px;"><i class="fa-solid fa-bolt"></i> الدفع عبر كليك (CliQ)</div>
+            <div id="cliqPaymentInfoNote" class="cliq-payment-box" style="display:none; margin-bottom:14px; padding:12px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.2); border-radius:8px; font-size:12px;">
+              <div style="font-weight:700; color:#ffffff; margin-bottom:4px;"><i class="fa-solid fa-bolt"></i> الدفع عبر كليك (CliQ)</div>
               <p style="margin:0; color:#ccc; line-height:1.45;">يتم التحويل عبر CliQ عند استلام الطرد إلى تفاصيل VELEN الرسمية (رقم الهاتف: 0770188144 / Alias: VELEN) مع تأكيد فوري عبر واتساب.</p>
             </div>
 
@@ -1350,6 +1237,6 @@
   <div id="toastContainer" class="toast-container"></div>
 
   <!-- Client Script -->
-  <script src="/js/app.js?v=2.8"></script>
+  <script src="/js/app.js?v=3.0"></script>
 </body>
 </html>

@@ -1624,7 +1624,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (reviews.length === 0) {
       grid.innerHTML = `
         <div style="grid-column:1/-1; text-align:center; padding:48px; color:#555;">
-          <i class="fa-solid fa-star" style="font-size:32px; margin-bottom:12px; display:block; color:#e5b95f44;"></i>
+          <i class="fa-solid fa-star" style="font-size:32px; margin-bottom:12px; display:block; color:rgba(255,255,255,0.2);"></i>
           <p>كن أول من يقيّم منتجات Velen ويشارك تجربته!</p>
         </div>
       `;
@@ -2175,49 +2175,6 @@ document.addEventListener('DOMContentLoaded', () => {
             <p>${product.description || 'A relaxed streetwear essential crafted from luxury heavyweight cotton. Fabric: 70% Premium Cotton'}</p>
           </div>
 
-          <!-- Collapsible Accordions (Image 1 & 3) -->
-          <div class="product-accordions-wrap">
-            <!-- Accordion 1: Product Details -->
-            <div class="product-accordion-item">
-              <button type="button" class="accordion-trigger" onclick="window.velenApp.toggleAccordion(this)" aria-expanded="false">
-                <span>PRODUCT DETAILS</span>
-                <i class="fa-solid fa-chevron-down accordion-arrow"></i>
-              </button>
-              <div class="accordion-body">
-                <p>• <strong>Fabric:</strong> 70% Premium Cotton (Heavyweight combed weave for warmth & longevity).</p>
-                <p>• <strong>Hardware:</strong> Custom two-way metal zipper engineered for seamless styling from both ends.</p>
-                <p>• <strong>Design:</strong> Clean hood construction, dropped shoulders, and deep front hand pockets.</p>
-                <p>• <strong>Craftsmanship:</strong> Designed and finished with pride in Amman, Jordan.</p>
-              </div>
-            </div>
-
-            <!-- Accordion 2: Size & Fit -->
-            <div class="product-accordion-item">
-              <button type="button" class="accordion-trigger" onclick="window.velenApp.toggleAccordion(this)" aria-expanded="false">
-                <span>SIZE & FIT</span>
-                <i class="fa-solid fa-chevron-down accordion-arrow"></i>
-              </button>
-              <div class="accordion-body">
-                <p>• <strong>Model Info:</strong> Height 186 cm, Weight 77 kg — Wearing Size L.</p>
-                <p>• <strong>Silhouette:</strong> Relaxed boxy streetwear fit designed for everyday comfort.</p>
-                <p>• <strong>Recommendation:</strong> True to size for a relaxed drape. Click <em>Find My Size</em> above for precision sizing.</p>
-              </div>
-            </div>
-
-            <!-- Accordion 3: Delivery & Returns (Standardized Policy) -->
-            <div class="product-accordion-item">
-              <button type="button" class="accordion-trigger" onclick="window.velenApp.toggleAccordion(this)" aria-expanded="false">
-                <span>DELIVERY & RETURNS</span>
-                <i class="fa-solid fa-chevron-down accordion-arrow"></i>
-              </button>
-              <div class="accordion-body">
-                <p>• <strong>Delivery in Amman:</strong> Free delivery (takes up to 24 hours).</p>
-                <p>• <strong>Delivery outside Amman:</strong> 1 JOD delivery fee (takes up to 48 hours).</p>
-                <p>• <strong>Payment Methods:</strong> Cash on Delivery (COD) and instant CliQ only.</p>
-                <p>• <strong>Exchange & Return Policy:</strong> Accepted only for manufacturing defects, damaged items, or incorrect product received. Contact VELEN with photos for instant assistance.</p>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
 
