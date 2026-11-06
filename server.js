@@ -650,6 +650,20 @@ app.post('/api/orders', async (req, res) => {
     const pCodeUpper = appliedCode.trim().toUpperCase();
     const pObj = (db.promoCodes || []).find(p => p.code === pCodeUpper);
     if (pObj) {
+      const now = new Date();
+      if (pObj.startDate || pObj.startsAt) {
+        const start = new Date(pObj.startDate || pObj.startsAt);
+        if (!isNaN(start.getTime()) && now < start) {
+          return res.status(400).json({ success: false, message: `عذراً، كود الخصم (${pCodeUpper}) غير مفعل حالياً (لم يبدأ بعد)!` });
+        }
+      }
+      if (pObj.endDate || pObj.expiresAt) {
+        const end = new Date(pObj.endDate || pObj.expiresAt);
+        if (!isNaN(end.getTime()) && now > end) {
+          return res.status(400).json({ success: false, message: `عذراً، انتهت صلاحية كود الخصم (${pCodeUpper})!` });
+        }
+      }
+
       const used = parseInt(pObj.timesUsed || pObj.uses || 0, 10);
       const limit = (pObj.usageLimit !== null && pObj.usageLimit !== undefined && pObj.usageLimit !== '') ? parseInt(pObj.usageLimit, 10) : null;
       if (limit !== null && limit > 0 && used >= limit) {
@@ -1055,12 +1069,14 @@ app.get('/api/promo-codes', async (req, res) => {
 
 app.post('/api/promo-codes', async (req, res) => {
   const db = readDB();
-  const { code, type, discountType, value, discountValue, minOrder, active, usageLimit } = req.body;
+  const { code, type, discountType, value, discountValue, minOrder, active, usageLimit, startDate, startsAt, endDate, expiresAt } = req.body;
   if (!code) return res.status(400).json({ success: false, message: 'Code is required' });
 
   const finalType = discountType || type || 'percentage';
   const finalVal = parseFloat(discountValue !== undefined ? discountValue : value) || 10;
   const codeUpper = code.trim().toUpperCase();
+  const finalStart = startDate || startsAt || null;
+  const finalEnd = endDate || expiresAt || null;
 
   db.promoCodes = db.promoCodes || [];
   const existingIndex = db.promoCodes.findIndex(p => p.code === codeUpper);
@@ -1082,6 +1098,10 @@ app.post('/api/promo-codes', async (req, res) => {
     usageLimit: (usageLimit !== undefined && usageLimit !== null && usageLimit !== '') ? parseInt(usageLimit, 10) : null,
     timesUsed: finalTimesUsed,
     uses: finalTimesUsed,
+    startDate: finalStart,
+    startsAt: finalStart,
+    endDate: finalEnd,
+    expiresAt: finalEnd,
     createdAt: (existingIndex !== -1 && db.promoCodes[existingIndex].createdAt) ? db.promoCodes[existingIndex].createdAt : new Date().toISOString()
   };
 
@@ -1115,6 +1135,33 @@ app.post('/api/promo-codes/validate', async (req, res) => {
 
   if (!promo) {
     return res.status(400).json({ valid: false, success: false, message: 'كود الخصم غير صحيح أو غير مفعل' });
+  }
+
+  // Check start date timer
+  const now = new Date();
+  if (promo.startDate || promo.startsAt) {
+    const start = new Date(promo.startDate || promo.startsAt);
+    if (!isNaN(start.getTime()) && now < start) {
+      const formattedDate = start.toLocaleString('ar-JO', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+      return res.status(400).json({
+        valid: false,
+        success: false,
+        message: `عذراً، هذا الكود غير مفعل حالياً! سيبدأ تفعيله بتاريخ: ${formattedDate}`
+      });
+    }
+  }
+
+  // Check end date expiry timer
+  if (promo.endDate || promo.expiresAt) {
+    const end = new Date(promo.endDate || promo.expiresAt);
+    if (!isNaN(end.getTime()) && now > end) {
+      const formattedDate = end.toLocaleString('ar-JO', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+      return res.status(400).json({
+        valid: false,
+        success: false,
+        message: `عذراً، انتهت صلاحية كود الخصم هذا (انتهى بتاريخ: ${formattedDate})`
+      });
+    }
   }
 
   // Check usage limit strictly

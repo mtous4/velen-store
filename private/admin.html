@@ -1201,6 +1201,7 @@
                   <th>قيمة الخصم</th>
                   <th>الحد الأدنى للطلب</th>
                   <th>مرات الاستخدام</th>
+                  <th>فترة الصلاحية والتايمر</th>
                   <th>الحالة</th>
                   <th>إجراء</th>
                 </tr>
@@ -1645,6 +1646,20 @@
               <input type="checkbox" id="promoActiveCheck" checked>
               <span>الكود نشط وفعال حالياً</span>
             </label>
+          </div>
+        </div>
+
+        <!-- Promo Timer: Start & End Dates -->
+        <div class="form-row" style="background: rgba(229, 185, 95, 0.05); border: 1px solid rgba(229, 185, 95, 0.2); border-radius: 8px; padding: 12px; margin-bottom: 16px;">
+          <div class="form-group" style="margin-bottom:0;">
+            <label style="color:#e5b95f; font-weight:700;"><i class="fa-solid fa-play"></i> تاريخ ووقت البداية (Start Date):</label>
+            <input type="datetime-local" id="promoStartDateInput">
+            <span style="font-size:11px; color:#888;">اتركه فارغاً ليبدأ الكود فوراً بدون انتظار.</span>
+          </div>
+          <div class="form-group" style="margin-bottom:0;">
+            <label style="color:#e5b95f; font-weight:700;"><i class="fa-solid fa-stopwatch"></i> تاريخ ووقت الانتهاء (End Date / Timer):</label>
+            <input type="datetime-local" id="promoEndDateInput">
+            <span style="font-size:11px; color:#888;">اتركه فارغاً إذا كان الكود دائم بدون تاريخ انتهاء.</span>
           </div>
         </div>
 

@@ -1922,26 +1922,29 @@ input:focus, textarea:focus, select:focus {
   color: #888;
 }
 
-.checkout-body-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 24px;
+.checkout-modal-dialog {
+  max-width: 580px !important;
+  width: 92% !important;
+  max-height: 90vh !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  padding: 28px 24px !important;
+  box-sizing: border-box !important;
 }
 
-@media (min-width: 680px) {
-  .checkout-modal-dialog {
-    max-width: 860px !important;
-    width: 92% !important;
-  }
-  .checkout-body-grid {
-    grid-template-columns: 1.15fr 0.85fr !important;
-    gap: 28px !important;
-    align-items: start !important;
-  }
-  .checkout-summary-box {
-    position: sticky !important;
-    top: 16px !important;
-  }
+.checkout-body-grid {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 22px !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+.checkout-inputs,
+.checkout-summary-box {
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
 }
 
 .checkout-summary-box {

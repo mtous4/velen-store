@@ -1584,12 +1584,26 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('promoModalTitle').textContent = 'إنشاء كود خصم جديد (Promo Code)';
     document.getElementById('promoCodeInput').readOnly = false;
     document.getElementById('promoActiveCheck').checked = true;
+    const startInp = document.getElementById('promoStartDateInput');
+    const endInp = document.getElementById('promoEndDateInput');
+    if (startInp) startInp.value = '';
+    if (endInp) endInp.value = '';
     if (promoModal) promoModal.classList.add('active');
   }
 
   function editPromo(code) {
     const promo = (state.promos || []).find(p => p.code === code);
     if (!promo) return;
+
+    const toLocalDatetime = (isoStr) => {
+      if (!isoStr) return '';
+      try {
+        const d = new Date(isoStr);
+        if (isNaN(d.getTime())) return '';
+        const pad = n => String(n).padStart(2, '0');
+        return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+      } catch (e) { return ''; }
+    };
 
     document.getElementById('editPromoCodeOriginal').value = promo.code;
     document.getElementById('promoModalTitle').textContent = `تعديل كود الخصم: ${promo.code}`;
@@ -1600,6 +1614,11 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('promoMinOrderInput').value = promo.minOrder || 0;
     document.getElementById('promoUsageLimitInput').value = promo.usageLimit || '';
     document.getElementById('promoActiveCheck').checked = promo.active !== false;
+
+    const startInp = document.getElementById('promoStartDateInput');
+    const endInp = document.getElementById('promoEndDateInput');
+    if (startInp) startInp.value = toLocalDatetime(promo.startDate || promo.startsAt);
+    if (endInp) endInp.value = toLocalDatetime(promo.endDate || promo.expiresAt);
 
     if (promoModal) promoModal.classList.add('active');
   }
@@ -1619,6 +1638,8 @@ document.addEventListener('DOMContentLoaded', () => {
       const usageLimitVal = document.getElementById('promoUsageLimitInput')?.value;
       const usageLimit = usageLimitVal ? (parseInt(usageLimitVal, 10) || null) : null;
       const active = Boolean(document.getElementById('promoActiveCheck')?.checked);
+      const startDate = document.getElementById('promoStartDateInput')?.value || null;
+      const endDate = document.getElementById('promoEndDateInput')?.value || null;
 
       if (!code || discountValue <= 0) {
         showAdminToast('يرجى كتابة رمز الكود وقيمة الخصم بشكل صحيح', 'error');
@@ -1640,14 +1661,18 @@ document.addEventListener('DOMContentLoaded', () => {
             minOrder,
             usageLimit,
             active,
-            timesUsed
+            timesUsed,
+            startDate,
+            startsAt: startDate,
+            endDate,
+            expiresAt: endDate
           })
         });
         const data = await res.json();
         if (data.success) {
           closePromoModal();
           await fetchPromoCodes();
-          showAdminToast(originalCode ? `تم تعديل كود الخصم (${code}) وتحديث الليميت!` : `تم إنشاء وتفعيل كود الخصم (${code}) بنجاح!`, 'success');
+          showAdminToast(originalCode ? `تم تعديل كود الخصم (${code}) وتحديث الليميت والتايمر!` : `تم إنشاء وتفعيل كود الخصم (${code}) بالتايمر بنجاح!`, 'success');
         } else {
           showAdminToast(data.error || 'فشل حفظ كود الخصم', 'error');
         }
@@ -1673,14 +1698,73 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!tbody) return;
 
     if (!state.promos || state.promos.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:#777; padding:24px;">لا توجد كودات خصم مضافة حالياً. اضغط "إنشاء كود خصم جديد" لإضافة كود.</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; color:#777; padding:24px;">لا توجد كودات خصم مضافة حالياً. اضغط "إنشاء كود خصم جديد" لإضافة كود.</td></tr>`;
       return;
     }
+
+    const now = new Date();
 
     tbody.innerHTML = state.promos.map(p => {
       const used = parseInt(p.timesUsed || p.uses || 0, 10);
       const limit = p.usageLimit ? parseInt(p.usageLimit, 10) : null;
       const isExceeded = limit !== null && used >= limit;
+
+      const hasStart = Boolean(p.startDate || p.startsAt);
+      const hasEnd = Boolean(p.endDate || p.expiresAt);
+      const startDate = hasStart ? new Date(p.startDate || p.startsAt) : null;
+      const endDate = hasEnd ? new Date(p.endDate || p.expiresAt) : null;
+
+      let timerHtml = '';
+      let isExpired = false;
+      let isScheduled = false;
+
+      if (startDate && !isNaN(startDate.getTime()) && now < startDate) {
+        isScheduled = true;
+        const diffMs = startDate - now;
+        const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+        const diffDays = Math.floor(diffHours / 24);
+        const diffHoursRem = diffHours % 24;
+        const timeStr = diffDays > 0 ? `${diffDays} يوم و ${diffHoursRem} س` : `${diffHours} ساعة`;
+        timerHtml = `<span class="badge" style="background:rgba(52,152,219,0.15); color:#3498db; border:1px solid rgba(52,152,219,0.4); padding:3px 8px; border-radius:4px; font-size:11px;">
+          <i class="fa-solid fa-clock"></i> يبدأ بعد: ${timeStr}
+        </span><br><small style="color:#888; font-size:10px;">${startDate.toLocaleDateString('ar-JO')} ${startDate.toLocaleTimeString('ar-JO', {hour:'2-digit', minute:'2-digit'})}</small>`;
+      } else if (endDate && !isNaN(endDate.getTime())) {
+        if (now > endDate) {
+          isExpired = true;
+          timerHtml = `<span class="badge" style="background:rgba(231,76,60,0.15); color:#e74c3c; border:1px solid rgba(231,76,60,0.4); padding:3px 8px; border-radius:4px; font-size:11px;">
+            <i class="fa-solid fa-hourglass-end"></i> منتهي الصلاحية
+          </span><br><small style="color:#777; font-size:10px;">انتهى: ${endDate.toLocaleDateString('ar-JO')}</small>`;
+        } else {
+          const diffMs = endDate - now;
+          const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+          const diffDays = Math.floor(diffHours / 24);
+          const diffHoursRem = diffHours % 24;
+          const diffMinsRem = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+          const timeStr = diffDays > 0 ? `${diffDays} يوم و ${diffHoursRem} س` : (diffHours > 0 ? `${diffHours} س و ${diffMinsRem} د` : `${diffMinsRem} دقيقة`);
+          timerHtml = `<span class="badge" style="background:rgba(46,204,113,0.15); color:#2ecc71; border:1px solid rgba(46,204,113,0.4); padding:3px 8px; border-radius:4px; font-size:11px; font-weight:700;">
+            <i class="fa-solid fa-stopwatch"></i> باقي: ${timeStr}
+          </span><br><small style="color:#aaa; font-size:10px;">ينتهي: ${endDate.toLocaleDateString('ar-JO')} ${endDate.toLocaleTimeString('ar-JO', {hour:'2-digit', minute:'2-digit'})}</small>`;
+        }
+      } else {
+        timerHtml = `<span style="color:#888; font-size:11px;"><i class="fa-solid fa-infinity"></i> دائم (مستمر)</span>`;
+      }
+
+      // Status label and badge
+      let statusLabel = 'فعال';
+      let statusClass = 'status-active-promo';
+      if (p.active === false) {
+        statusLabel = 'معطل';
+        statusClass = 'status-inactive-promo';
+      } else if (isExpired) {
+        statusLabel = 'منتهي';
+        statusClass = 'status-inactive-promo';
+      } else if (isScheduled) {
+        statusLabel = 'يبدأ قريباً';
+        statusClass = 'status-pending-promo';
+      } else if (isExceeded) {
+        statusLabel = 'مكتمل';
+        statusClass = 'status-inactive-promo';
+      }
 
       return `
         <tr>
@@ -1693,10 +1777,11 @@ document.addEventListener('DOMContentLoaded', () => {
             <span style="color:${isExceeded ? '#ff6b6b' : '#aaa'}; font-weight:${isExceeded ? '700' : 'normal'};">${limit ? `${limit} مرة` : 'غير محدود'}</span>
             ${isExceeded ? '<br><span style="color:#ff6b6b; font-size:10px; font-weight:700;">(استُنفد الحد الأقصى)</span>' : ''}
           </td>
-          <td><span class="${p.active !== false && !isExceeded ? 'status-active-promo' : 'status-inactive-promo'}">${p.active !== false ? (isExceeded ? 'مكتمل' : 'فعال') : 'معطل'}</span></td>
+          <td>${timerHtml}</td>
+          <td><span class="${statusClass}">${statusLabel}</span></td>
           <td>
             <div style="display:flex; gap:6px;">
-              <button class="link-btn" style="color:var(--gold-accent);" onclick="window.velenAdmin.editPromo('${p.code}')" title="تعديل الكود والليميت">
+              <button class="link-btn" style="color:var(--gold-accent);" onclick="window.velenAdmin.editPromo('${p.code}')" title="تعديل الكود والتايمر">
                 <i class="fa-solid fa-pen"></i>
               </button>
               <button class="link-btn" style="color:#ff6b6b;" onclick="window.velenAdmin.deletePromo('${p.code}')" title="حذف الكود">
