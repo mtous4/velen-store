@@ -433,8 +433,6 @@ app.put('/api/products/:id', async (req, res) => {
   await firebaseService.saveProduct(updatedProduct);
 
   broadcast('PRODUCT_UPDATED', updatedProduct);
-  await syncPantsInventory(db, updatedProduct);
-  writeDB(db);
   res.json({ success: true, product: updatedProduct });
 });
 
@@ -556,41 +554,6 @@ app.get('/api/orders', async (req, res) => {
   res.json(orders || []);
 });
 
-// Helper: Synchronize pants / sweatpants inventory between Men and Women
-async function syncPantsInventory(db, updatedProd) {
-  if (!updatedProd) return;
-  const isPants = (cat, name) => {
-    const c = (cat || '').toLowerCase();
-    const n = (name || '').toLowerCase();
-    return c.includes('pant') || c.includes('sweatpant') || n.includes('pant') || n.includes('sweatpant') || n.includes('بنطلون') || n.includes('سويت بانتس');
-  };
-  if (!isPants(updatedProd.category, updatedProd.name)) return;
-
-  const normalize = (s) => (s || '').toLowerCase()
-    .replace(/\b(men|women|unisex|شباب|بنات|رجالي|ستاتي)\b/gi, '')
-    .replace(/[\(\)\-\–]/g, ' ')
-    .trim();
-
-  const targetBase = normalize(updatedProd.name);
-
-  for (const p of (db.products || [])) {
-    if (p.id === updatedProd.id) continue;
-    if (isPants(p.category, p.name)) {
-      const pBase = normalize(p.name);
-      if (pBase === targetBase || (targetBase && pBase.includes(targetBase)) || (pBase && targetBase.includes(pBase))) {
-        if (updatedProd.sizeInventory) {
-          p.sizeInventory = JSON.parse(JSON.stringify(updatedProd.sizeInventory));
-          p.stock = Object.values(p.sizeInventory).reduce((a, b) => a + b, 0);
-        } else {
-          p.stock = updatedProd.stock;
-        }
-        await firebaseService.saveProduct(p);
-        broadcast('PRODUCT_UPDATED', p);
-      }
-    }
-  }
-}
-
 // Helper: Sequential order numbering starting from 1000
 function getNextOrderNumber(db) {
   let next = parseInt(db.settings?.nextOrderNumber, 10);
@@ -677,7 +640,6 @@ app.post('/api/orders', async (req, res) => {
         }
         await firebaseService.saveProduct(prod);
         broadcast('PRODUCT_UPDATED', prod);
-        await syncPantsInventory(db, prod);
       }
     }
   }
@@ -868,7 +830,6 @@ app.patch('/api/orders/:id/status', async (req, res) => {
           }
           await firebaseService.saveProduct(prod);
           broadcast('PRODUCT_UPDATED', prod);
-          await syncPantsInventory(db, prod);
         }
       }
     } else if (oldStatus === 'Cancelled' && newStatus !== 'Cancelled' && Array.isArray(order.items)) {
@@ -884,7 +845,6 @@ app.patch('/api/orders/:id/status', async (req, res) => {
           }
           await firebaseService.saveProduct(prod);
           broadcast('PRODUCT_UPDATED', prod);
-          await syncPantsInventory(db, prod);
         }
       }
     }
