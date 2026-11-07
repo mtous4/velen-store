@@ -353,7 +353,12 @@ app.put('/api/design', async (req, res) => {
     communitySection: { ...(db.design?.communitySection || {}), ...(incoming.communitySection || {}) },
     aboutSection: { ...(db.design?.aboutSection || {}), ...(incoming.aboutSection || {}) },
     comingSoon: { ...(db.design?.comingSoon || {}), ...(incoming.comingSoon || {}) },
-    checkoutUpsell: { ...(db.design?.checkoutUpsell || {}), ...(incoming.checkoutUpsell || {}) },
+    checkoutUpsell: {
+      ...(db.design?.checkoutUpsell || {}),
+      ...(incoming.checkoutUpsell || {}),
+      specialPrice: incoming.checkoutUpsell?.specialPrice !== undefined ? parseFloat(incoming.checkoutUpsell.specialPrice) : (db.design?.checkoutUpsell?.specialPrice !== undefined ? db.design.checkoutUpsell.specialPrice : 18),
+      discountPrice: incoming.checkoutUpsell?.specialPrice !== undefined ? parseFloat(incoming.checkoutUpsell.specialPrice) : (db.design?.checkoutUpsell?.discountPrice !== undefined ? db.design.checkoutUpsell.discountPrice : 18)
+    },
     portalCards: { ...(db.design?.portalCards || {}), ...(incoming.portalCards || {}) }
   };
   writeDB(db);
@@ -440,6 +445,9 @@ app.post('/api/products', async (req, res) => {
     modelSize: req.body.modelSize || 'L',
     // Linked / Shared Inventory
     linkedProductId: req.body.linkedProductId || null,
+    // Per-Product Checkout Upsell
+    upsellProductId: req.body.upsellProductId || null,
+    upsellPrice: req.body.upsellPrice !== undefined && req.body.upsellPrice !== null && req.body.upsellPrice !== '' ? parseFloat(req.body.upsellPrice) : null,
     createdAt: new Date().toISOString()
   };
 
@@ -476,7 +484,10 @@ app.put('/api/products/:id', async (req, res) => {
     modelWeight: req.body.modelWeight !== undefined ? req.body.modelWeight : (existing.modelWeight || '77 kg'),
     modelSize: req.body.modelSize !== undefined ? req.body.modelSize : (existing.modelSize || 'L'),
     // Linked / Shared Inventory
-    linkedProductId: req.body.linkedProductId !== undefined ? req.body.linkedProductId : (existing.linkedProductId || null)
+    linkedProductId: req.body.linkedProductId !== undefined ? req.body.linkedProductId : (existing.linkedProductId || null),
+    // Per-Product Checkout Upsell
+    upsellProductId: req.body.upsellProductId !== undefined ? req.body.upsellProductId : (existing.upsellProductId || null),
+    upsellPrice: req.body.upsellPrice !== undefined ? (req.body.upsellPrice !== null && req.body.upsellPrice !== '' ? parseFloat(req.body.upsellPrice) : null) : (existing.upsellPrice !== undefined ? existing.upsellPrice : null)
   };
 
   db.products = db.products || [];

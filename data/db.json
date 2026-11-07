@@ -1216,10 +1216,11 @@
     },
     "checkoutUpsell": {
       "enabled": true,
-      "title": "عرض خاص مع طلبك (Exclusive Offer)",
-      "subtitle": "add this for special offer",
-      "productId": "prod-1793258212025",
-      "specialPrice": 15
+      "title": "An Exclusive Offer Just for You",
+      "subtitle": "Add this piece to your order at a special price.",
+      "productId": "prod-1794069687504",
+      "specialPrice": 18,
+      "discountPrice": 18
     },
     "socialLinks": {
       "instagram": "https://www.instagram.com/velen.offical?dlrf=c3I5MGh6eTZneGYy"

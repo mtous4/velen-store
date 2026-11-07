@@ -1721,6 +1721,28 @@
           </p>
         </div>
 
+        <!-- Custom Checkout Upsell / Recommended Cross-Sell -->
+        <div class="form-group" style="background:#141414; padding:16px; border-radius:8px; border:1px solid #2e2e2e; margin-bottom:18px;">
+          <label style="margin:0 0 8px 0; font-weight:700; color:#fff; display:flex; align-items:center; gap:8px; font-size:14px;">
+            <i class="fa-solid fa-fire" style="color:var(--gold-accent, #e5b95f);"></i> العرض المقترح المخصص في صفحة الدفع (Custom Checkout Upsell):
+          </label>
+          <div class="form-row" style="display:flex; gap:12px; margin-bottom:10px; flex-wrap:wrap;">
+            <div class="form-group flex-2" style="margin-bottom:0; min-width:220px;">
+              <label style="font-size:12px; color:#aaa; margin-bottom:4px; display:block;">القطعة المقترحة عند شراء هذا المنتج</label>
+              <select id="prodUpsellProductId" style="background:#0a0a0a; color:#fff; border:1px solid #444; padding:10px 14px; border-radius:6px; width:100%; font-size:13px;">
+                <option value="">-- اقتراح ذكي تلقائي (مثال: بنطال مع سويت شيرت) --</option>
+              </select>
+            </div>
+            <div class="form-group flex-1" style="margin-bottom:0; min-width:140px;">
+              <label style="font-size:12px; color:#aaa; margin-bottom:4px; display:block;">سعر العرض الخاص (JOD)</label>
+              <input type="number" step="0.250" id="prodUpsellPrice" placeholder="مثال: 18.000" style="background:#0a0a0a; color:#fff; border:1px solid #444; padding:10px 14px; border-radius:6px; width:100%; font-size:13px;">
+            </div>
+          </div>
+          <p style="font-size:11px; color:#888; margin:0;">
+            <i class="fa-solid fa-circle-info"></i> حدد القطعة المقترحة وسعرها الخاص لهذا المنتج تحديداً (مثلاً: اقتراح بنطال بسعر 18 دينار عند شراء سويت شيرت). إذا تُرِكَت فارغة، سيقوم النظام تلقائياً باقتراح قطعة مكملة بذكاء بدون تكرار نفس الصنف.
+          </p>
+        </div>
+
         <div class="modal-actions-bar">
           <button type="button" class="btn-cancel" id="cancelProductBtn">إلغاء</button>
           <button type="submit" class="btn-primary-action" id="saveProductBtn">

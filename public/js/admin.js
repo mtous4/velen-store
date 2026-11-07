@@ -1607,7 +1607,9 @@ document.addEventListener('DOMContentLoaded', () => {
         modelHeight: document.getElementById('prodModelHeight')?.value?.trim() || '186 cm',
         modelWeight: document.getElementById('prodModelWeight')?.value?.trim() || '77 kg',
         modelSize: document.getElementById('prodModelSize')?.value?.trim() || 'L',
-        linkedProductId: document.getElementById('prodLinkedProductId')?.value || null
+        linkedProductId: document.getElementById('prodLinkedProductId')?.value || null,
+        upsellProductId: document.getElementById('prodUpsellProductId')?.value || null,
+        upsellPrice: document.getElementById('prodUpsellPrice')?.value !== '' && document.getElementById('prodUpsellPrice')?.value !== undefined ? parseFloat(document.getElementById('prodUpsellPrice').value) : null
       };
 
       try {
@@ -1722,6 +1724,15 @@ document.addEventListener('DOMContentLoaded', () => {
         state.products.map(p => `<option value="${p.id}">${p.name} (${p.category || 'Piece'}) — متوفر: ${p.stock || 0} قطعة</option>`).join('');
       linkSelect.value = '';
     }
+
+    // Populate Custom Upsell select
+    const upSelect = document.getElementById('prodUpsellProductId');
+    if (upSelect) {
+      upSelect.innerHTML = `<option value="">-- اقتراح ذكي تلقائي (مثال: بنطال مع سويت شيرت) --</option>` +
+        (state.products || []).map(p => `<option value="${p.id}">${p.name} (${p.category || 'Piece'}) — ${Number(p.price).toFixed(3)} JOD</option>`).join('');
+      upSelect.value = '';
+    }
+    if (document.getElementById('prodUpsellPrice')) document.getElementById('prodUpsellPrice').value = '';
 
     const dropzone = document.getElementById('prodDropzone');
     if (dropzone) {
@@ -2548,7 +2559,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const upEn = document.getElementById('desUpsellEnabled');
     if (upEn) upEn.checked = d.checkoutUpsell?.enabled !== false;
     const upPrice = document.getElementById('desUpsellPrice');
-    if (upPrice) upPrice.value = d.checkoutUpsell?.specialPrice !== undefined ? d.checkoutUpsell.specialPrice : 9.5;
+    if (upPrice) {
+      const sp = (d.checkoutUpsell?.specialPrice !== undefined && d.checkoutUpsell?.specialPrice !== null) 
+        ? d.checkoutUpsell.specialPrice 
+        : (d.checkoutUpsell?.discountPrice !== undefined ? d.checkoutUpsell.discountPrice : 18);
+      upPrice.value = sp;
+    }
     const upTitle = document.getElementById('desUpsellTitle');
     if (upTitle) upTitle.value = d.checkoutUpsell?.title || 'عرض خاص مع طلبك (Exclusive Offer)';
     const upSub = document.getElementById('desUpsellSubtitle');
@@ -2908,7 +2924,8 @@ document.addEventListener('DOMContentLoaded', () => {
         ...(state.design?.checkoutUpsell || {}),
         enabled: Boolean(document.getElementById('desUpsellEnabled')?.checked),
         productId: document.getElementById('desUpsellProductId')?.value || 'prod-1',
-        specialPrice: parseFloat(document.getElementById('desUpsellPrice')?.value) || 9.5,
+        specialPrice: parseFloat(document.getElementById('desUpsellPrice')?.value) || 18,
+        discountPrice: parseFloat(document.getElementById('desUpsellPrice')?.value) || 18,
         title: document.getElementById('desUpsellTitle')?.value.trim() || 'عرض خاص مع طلبك (Exclusive Offer)',
         subtitle: document.getElementById('desUpsellSubtitle')?.value.trim() || 'أضف قطعة إضافية إلى طلبك الآن بسعر خاص!'
       }
@@ -3153,6 +3170,17 @@ document.addEventListener('DOMContentLoaded', () => {
         linkSelect.innerHTML = `<option value="">-- مخزون مستقل (غير مرتبط بأي قطعة أخرى) --</option>` +
           state.products.filter(x => x.id !== p.id).map(x => `<option value="${x.id}">${x.name} (${x.category || 'Piece'}) — متوفر: ${x.stock || 0} قطعة</option>`).join('');
         linkSelect.value = p.linkedProductId || '';
+      }
+
+      // Populate Custom Upsell select
+      const upSelect = document.getElementById('prodUpsellProductId');
+      if (upSelect) {
+        upSelect.innerHTML = `<option value="">-- اقتراح ذكي تلقائي (مثال: بنطال مع سويت شيرت) --</option>` +
+          state.products.filter(x => x.id !== p.id).map(x => `<option value="${x.id}">${x.name} (${x.category || 'Piece'}) — ${Number(x.price).toFixed(3)} JOD</option>`).join('');
+        upSelect.value = p.upsellProductId || '';
+      }
+      if (document.getElementById('prodUpsellPrice')) {
+        document.getElementById('prodUpsellPrice').value = (p.upsellPrice !== undefined && p.upsellPrice !== null) ? p.upsellPrice : '';
       }
 
       const prodImgInput = document.getElementById('prodImageUrl');

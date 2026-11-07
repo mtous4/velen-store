@@ -3748,52 +3748,167 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // ================= CHECKOUT UPSELL SETUP (Admin Configurable) =================
+  // ================= CHECKOUT UPSELL SETUP (Per-Product & Smart Cross-Sell) =================
+  // Resolve which product and what price to offer in the checkout upsell
+  function resolveCheckoutUpsell() {
+    const upsellConfig = state.design?.checkoutUpsell;
+    if (!upsellConfig || upsellConfig.enabled === false) {
+      return null;
+    }
+
+    if (!state.products || state.products.length === 0) return null;
+
+    // Identify what the customer has in their bag (excluding any current upsell item)
+    const cartItems = (state.cart || []).filter(it => !it.isUpsell);
+    const primaryCartItem = cartItems[0] || state.cart[0];
+    const baseProduct = primaryCartItem ? state.products.find(p => p.id === primaryCartItem.id) : null;
+
+    let targetProduct = null;
+    let customPrice = null;
+
+    // 1. Check if the specific product being purchased has a custom upsell recommendation!
+    if (baseProduct && baseProduct.upsellProductId) {
+      const candidate = state.products.find(p => p.id === baseProduct.upsellProductId);
+      if (candidate) {
+        targetProduct = candidate;
+        if (baseProduct.upsellPrice !== undefined && baseProduct.upsellPrice !== null && !isNaN(baseProduct.upsellPrice) && Number(baseProduct.upsellPrice) > 0) {
+          customPrice = Number(baseProduct.upsellPrice);
+        }
+      }
+    }
+
+    // 2. If no custom upsell was set on this product, use smart recommendation logic:
+    // Avoid offering the same category (e.g. don't recommend sweatpants if they are already buying sweatpants!)
+    if (!targetProduct) {
+      const globalProductId = upsellConfig.productId;
+      const globalCandidate = state.products.find(p => p.id === globalProductId);
+
+      const isSameCategory = baseProduct && globalCandidate && (
+        (baseProduct.id === globalCandidate.id) ||
+        (baseProduct.name && globalCandidate.name &&
+         (baseProduct.name.toLowerCase().includes('sweatpant') && globalCandidate.name.toLowerCase().includes('sweatpant') ||
+          baseProduct.name.toLowerCase().includes('sweatshirt') && globalCandidate.name.toLowerCase().includes('sweatshirt') ||
+          baseProduct.name.toLowerCase().includes('tee') && globalCandidate.name.toLowerCase().includes('tee')))
+      );
+
+      if (isSameCategory) {
+        // Smart complementary pairing:
+        // If customer is buying pants -> suggest a sweatshirt, hoodie, or tee
+        // If customer is buying top -> suggest sweatpants
+        const isBuyingPants = (baseProduct.name || '').toLowerCase().includes('sweatpant') || (baseProduct.category || '').toLowerCase().includes('sweatpant');
+        const isWomen = (baseProduct.category || '').toLowerCase().includes('women') || (baseProduct.name || '').toLowerCase().includes('women');
+
+        // Look for matching gender piece from complementary category
+        targetProduct = state.products.find(p => {
+          if (p.id === baseProduct.id) return false;
+          const pName = (p.name || '').toLowerCase();
+          const pCat = (p.category || '').toLowerCase();
+          const pIsWomen = pCat.includes('women') || pName.includes('women');
+          if (pIsWomen !== isWomen) return false; // Match gender
+
+          return isBuyingPants 
+            ? (pName.includes('sweatshirt') || pName.includes('tee') || pName.includes('hoodie')) 
+            : (pName.includes('sweatpant') || pCat.includes('sweatpant'));
+        });
+
+        // Fallback without gender restriction if needed
+        if (!targetProduct) {
+          targetProduct = state.products.find(p => {
+            if (p.id === baseProduct.id) return false;
+            const pName = (p.name || '').toLowerCase();
+            return isBuyingPants ? (pName.includes('sweatshirt') || pName.includes('tee')) : pName.includes('sweatpant');
+          });
+        }
+      }
+
+      if (!targetProduct) {
+        targetProduct = globalCandidate || state.products[0];
+      }
+    }
+
+    if (!targetProduct) return null;
+
+    // 3. Resolve price accurately (Supports custom price from product, or specialPrice / discountPrice from admin)
+    let finalPrice = customPrice;
+    if (finalPrice === null || finalPrice === undefined || isNaN(finalPrice)) {
+      if (upsellConfig.specialPrice !== undefined && upsellConfig.specialPrice !== null && !isNaN(upsellConfig.specialPrice) && Number(upsellConfig.specialPrice) > 0) {
+        finalPrice = Number(upsellConfig.specialPrice);
+      } else if (upsellConfig.discountPrice !== undefined && upsellConfig.discountPrice !== null && !isNaN(upsellConfig.discountPrice) && Number(upsellConfig.discountPrice) > 0) {
+        finalPrice = Number(upsellConfig.discountPrice);
+      } else {
+        finalPrice = Number(targetProduct.price * 0.8);
+      }
+    }
+
+    const isAr = state.activeLang === 'ar';
+    const displayTitle = upsellConfig.title || (isAr ? 'عرض خاص مع طلبك (Exclusive Offer)' : 'An Exclusive Offer Just for You');
+    const displaySubtitle = upsellConfig.subtitle || (isAr ? 'أضف هذه القطعة المميزة إلى طلبك الآن بسعر خاص!' : 'Add this piece to your order at a special price.');
+
+    return {
+      product: targetProduct,
+      price: finalPrice,
+      originalPrice: Number(targetProduct.price || 20),
+      title: displayTitle,
+      subtitle: displaySubtitle
+    };
+  }
+
   function renderCheckoutUpsell() {
     const box = document.getElementById('checkoutUpsellBox');
     if (!box) return;
 
-    const upsellConfig = state.design?.checkoutUpsell;
-    if (!upsellConfig || upsellConfig.enabled === false) {
-      box.style.display = 'none';
-      return;
-    }
-
-    // Find the product selected by Admin or default to first product
-    const targetProduct = (state.products && state.products.length > 0)
-      ? (state.products.find(p => p.id === upsellConfig.productId) || state.products[0])
-      : null;
-
-    if (!targetProduct) {
+    const resolved = resolveCheckoutUpsell();
+    if (!resolved || !resolved.product) {
       box.style.display = 'none';
       return;
     }
 
     box.style.display = 'block';
 
+    const targetProduct = resolved.product;
+    const discountPrice = Number(resolved.price);
+    const originalPrice = Number(resolved.originalPrice);
     const isAr = state.activeLang === 'ar';
+
     const titleEl = document.getElementById('upsellTitle');
     const descEl = box.querySelector('.upsell-desc');
     const imgEl = document.getElementById('upsellImg');
     const priceEl = document.getElementById('upsellPrice');
     const origPriceEl = document.getElementById('upsellOrigPrice');
     const sizeSelect = document.getElementById('upsellSizeSelect');
+    const colorSelect = document.getElementById('upsellColorSelect');
     const btn = document.getElementById('btnApplyUpsell');
 
-    const discountPrice = Number(upsellConfig.discountPrice || (targetProduct.price * 0.8));
-    const originalPrice = Number(targetProduct.price || 13);
-    const displayTitle = upsellConfig.title || targetProduct.name;
-    const displaySubtitle = upsellConfig.subtitle || (isAr ? 'أضف قطعة إضافية إلى طلبك الآن بسعر خاص!' : 'Add an extra piece to your order now at a special price!');
-    const mainImg = targetProduct.image || (targetProduct.images && targetProduct.images[0]) || '/assets/velen-ringer-white.jpg';
+    if (titleEl) titleEl.textContent = resolved.title;
+    if (descEl) descEl.textContent = resolved.subtitle;
+    if (priceEl) priceEl.textContent = discountPrice.toFixed(3) + ' JOD';
+    if (origPriceEl) origPriceEl.textContent = originalPrice.toFixed(3) + ' JOD';
 
-    if (titleEl) titleEl.textContent = displayTitle;
-    if (descEl) descEl.textContent = displaySubtitle;
+    // Populate colors if available
+    let activeColor = (targetProduct.colors && targetProduct.colors[0]) || null;
+    if (colorSelect) {
+      if (Array.isArray(targetProduct.colors) && targetProduct.colors.length > 1) {
+        colorSelect.style.display = 'inline-block';
+        colorSelect.innerHTML = targetProduct.colors.map(c => `
+          <option value="${c.name}">${c.name}</option>
+        `).join('');
+        // When color changes, update image
+        colorSelect.onchange = function() {
+          const selectedCol = targetProduct.colors.find(c => c.name === this.value);
+          if (selectedCol && (selectedCol.image || (selectedCol.images && selectedCol.images[0]))) {
+            imgEl.src = selectedCol.image || selectedCol.images[0];
+          }
+        };
+      } else {
+        colorSelect.style.display = 'none';
+      }
+    }
+
+    const mainImg = (activeColor && activeColor.image) || targetProduct.image || (targetProduct.images && targetProduct.images[0]) || '/assets/velen-ringer-white.jpg';
     if (imgEl) {
       imgEl.src = mainImg;
       imgEl.onerror = function() { this.src = '/assets/velen-boxy-black.jpg'; };
     }
-    if (priceEl) priceEl.textContent = discountPrice.toFixed(3) + ' JOD';
-    if (origPriceEl) origPriceEl.textContent = originalPrice.toFixed(3) + ' JOD';
 
     // Populate sizes
     if (sizeSelect) {
@@ -3824,26 +3939,28 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!btn) return;
 
     btn.addEventListener('click', () => {
-      const upsellConfig = state.design?.checkoutUpsell;
-      const targetProduct = (state.products && state.products.length > 0)
-        ? (state.products.find(p => p.id === upsellConfig?.productId) || state.products[0])
-        : null;
+      const resolved = resolveCheckoutUpsell();
+      if (!resolved || !resolved.product) return;
 
-      if (!targetProduct) return;
-
+      const targetProduct = resolved.product;
       const sizeSelect = document.getElementById('upsellSizeSelect');
+      const colorSelect = document.getElementById('upsellColorSelect');
       const size = sizeSelect ? sizeSelect.value : 'M';
-      const discountPrice = Number(upsellConfig?.discountPrice || (targetProduct.price * 0.8));
-      const displayTitle = upsellConfig?.title || targetProduct.name;
+      const colorName = colorSelect && colorSelect.value ? colorSelect.value : ((targetProduct.colors && targetProduct.colors[0]?.name) || '');
+      const discountPrice = Number(resolved.price);
       const isAr = state.activeLang === 'ar';
+
+      const selectedColorObj = (targetProduct.colors && targetProduct.colors.find(c => c.name === colorName)) || (targetProduct.colors && targetProduct.colors[0]) || null;
+      const imgUrl = (selectedColorObj && selectedColorObj.image) || targetProduct.image || (targetProduct.images && targetProduct.images[0]) || '/assets/velen-logo.jpg';
 
       const upsellItem = {
         id: `upsell_${targetProduct.id}`,
-        name: `${displayTitle} (Exclusive Offer)`,
+        name: `${targetProduct.name} ${colorName ? `(${colorName})` : ''}`,
         price: discountPrice,
-        image: targetProduct.image || (targetProduct.images && targetProduct.images[0]) || '/assets/velen-logo.jpg',
+        image: imgUrl,
         category: targetProduct.category || 'Special Offer',
         fabric: targetProduct.fabric || '100% قطن أردني معالج نخب أول',
+        color: colorName || null,
         isUpsell: true
       };
 
