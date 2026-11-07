@@ -87,6 +87,12 @@
         <span class="badge-count" id="navProdCount">0</span>
       </button>
 
+      <button class="nav-item" data-tab="inventory">
+        <i class="fa-solid fa-boxes-stacked" style="color:#3498db;"></i>
+        <span>المخزون (Inventory)</span>
+        <span class="badge-count" id="navInventoryCount">0</span>
+      </button>
+
       <button class="nav-item" data-tab="orders">
         <i class="fa-solid fa-bag-shopping"></i>
         <span>الطلبات والمبيعات (Orders)</span>
@@ -282,6 +288,87 @@
 
         <div class="products-admin-grid" id="adminProductsGrid">
           <!-- Rendered dynamically -->
+        </div>
+      </section>
+
+      <!-- ================= TAB: INVENTORY (المخزون والمستودع) ================= -->
+      <section class="admin-tab-pane" id="tab-inventory">
+        <!-- Top KPI Summary Cards -->
+        <div class="dashboard-kpi-grid" style="margin-bottom:20px;">
+          <div class="kpi-card" style="border-right:3px solid #3498db;">
+            <div class="kpi-icon" style="background:rgba(52,152,219,0.15); color:#3498db;">
+              <i class="fa-solid fa-boxes-stacked"></i>
+            </div>
+            <div class="kpi-details">
+              <span>إجمالي القطع في المستودع</span>
+              <h3 id="invKpiTotalUnits">0 قطعة</h3>
+              <small style="color:#888;">مجموع كافة المقاسات المتوفرة</small>
+            </div>
+          </div>
+
+          <div class="kpi-card" style="border-right:3px solid #e74c3c;">
+            <div class="kpi-icon" style="background:rgba(231,76,60,0.15); color:#e74c3c;">
+              <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+            <div class="kpi-details">
+              <span>قطع أوشكت على النفاد / نفذت</span>
+              <h3 id="invKpiLowStock">0 قطع</h3>
+              <small style="color:#888;">الكمية المتوفرة 3 قطع أو أقل</small>
+            </div>
+          </div>
+
+          <div class="kpi-card" style="border-right:3px solid #2ecc71;">
+            <div class="kpi-icon" style="background:rgba(46,204,113,0.15); color:#2ecc71;">
+              <i class="fa-solid fa-link"></i>
+            </div>
+            <div class="kpi-details">
+              <span>قطع بمخزون مشترك موحد</span>
+              <h3 id="invKpiLinkedCount">0 قطعة</h3>
+              <small style="color:#888;">مرتبطة مع موديلات أخرى تلقائياً</small>
+            </div>
+          </div>
+        </div>
+
+        <!-- Action Bar -->
+        <div class="tab-action-bar">
+          <div class="search-filter-box">
+            <div class="input-with-icon">
+              <i class="fa-solid fa-magnifying-glass"></i>
+              <input type="text" id="inventorySearchInput" placeholder="بحث بالاسم أو الكوليكشن في المخزون...">
+            </div>
+            <select id="inventoryLinkFilter">
+              <option value="all">جميع القطع</option>
+              <option value="linked">المربوطة بمخزون مشترك فقط 🔗</option>
+              <option value="unlinked">مخزون مستقل فقط</option>
+              <option value="low">منخفضة المخزون (<= 3 قطع)</option>
+              <option value="out">نافذة من المخزون (0)</option>
+            </select>
+          </div>
+
+          <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+            <button id="openLinkInventoryModalBtn" type="button" class="btn-primary-action" style="background:#3498db; color:#fff; display:inline-flex; align-items:center; gap:8px;">
+              <i class="fa-solid fa-link"></i> ربط قطعتين بمخزون موحد (Shared Stock)
+            </button>
+          </div>
+        </div>
+
+        <!-- Inventory Table Container -->
+        <div class="admin-table-container" style="background:#111; border-radius:8px; border:1px solid #222; overflow-x:auto;">
+          <table class="admin-table" id="inventoryTable">
+            <thead>
+              <tr>
+                <th style="min-width:220px;">القطعة / الموديل</th>
+                <th>التصنيف</th>
+                <th style="min-width:190px;">المخزون الموحد / الربط</th>
+                <th style="min-width:280px; text-align:center;">تفصيل كميات المقاسات</th>
+                <th style="text-align:center;">إجمالي الكمية</th>
+                <th style="min-width:140px; text-align:center;">إجراءات</th>
+              </tr>
+            </thead>
+            <tbody id="inventoryTableBody">
+              <!-- Rendered dynamically -->
+            </tbody>
+          </table>
         </div>
       </section>
 
@@ -1591,6 +1678,49 @@
           <textarea id="prodDescription" rows="3" placeholder="قصة بوكسي مريحة، أكتاف منسدلة، معالجة ضد الانكماش..."></textarea>
         </div>
 
+        <!-- Model Measurements & Fit Badge (Image 1) -->
+        <div class="form-group" style="background:#141414; padding:16px; border-radius:8px; border:1px solid #2e2e2e; margin-bottom:18px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:10px;">
+            <label style="margin:0; font-weight:700; color:#fff; display:flex; align-items:center; gap:8px; font-size:14px;">
+              <i class="fa-solid fa-person" style="color:var(--gold-accent);"></i> شارة قياسات المودل (Model Measurements):
+            </label>
+            <label class="toggle-switch-label" style="margin:0;">
+              <input type="checkbox" id="prodShowModelStats" checked>
+              <span>إظهار شارة المودل على الصور</span>
+            </label>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>طول المودل (Height)</label>
+              <input type="text" id="prodModelHeight" placeholder="186 cm" value="186 cm">
+            </div>
+            <div class="form-group">
+              <label>وزن المودل (Weight)</label>
+              <input type="text" id="prodModelWeight" placeholder="77 kg" value="77 kg">
+            </div>
+            <div class="form-group">
+              <label>المقاس المرتدى (Wearing Size)</label>
+              <input type="text" id="prodModelSize" placeholder="L" value="L">
+            </div>
+          </div>
+          <p style="font-size:11px; color:#888; margin:0;">
+            <i class="fa-solid fa-circle-info"></i> تظهر هذه المعلومات كشارة أنيقة على صورة القطعة (مثال: Model: 186 cm, 77 kg | Wearing Size: L).
+          </p>
+        </div>
+
+        <!-- Shared Inventory / Linked Product -->
+        <div class="form-group" style="background:#141414; padding:16px; border-radius:8px; border:1px solid #2e2e2e; margin-bottom:18px;">
+          <label style="margin:0 0 8px 0; font-weight:700; color:#fff; display:flex; align-items:center; gap:8px; font-size:14px;">
+            <i class="fa-solid fa-link" style="color:#3498db;"></i> توحيد المخزون مع قطعة أخرى (Shared Inventory / Linked Piece):
+          </label>
+          <select id="prodLinkedProductId" style="background:#0a0a0a; color:#fff; border:1px solid #444; padding:10px 14px; border-radius:6px; width:100%; font-size:13px;">
+            <option value="">-- مخزون مستقل (غير مرتبط بأي قطعة أخرى) --</option>
+          </select>
+          <p style="font-size:11px; color:#888; margin-top:8px; margin-bottom:0;">
+            <i class="fa-solid fa-circle-info"></i> عند اختيار قطعة أخرى (مثل الكوليكشن النسائي من نفس الموديل)، سيتم توحيد المخزون وكميات المقاسات بينهما تلقائياً، بحيث إذا اشترى زبون قطعة من كوليكشن الرجال تنقص الكمية فوراً من كوليكشن النساء والعكس صحيح.
+          </p>
+        </div>
+
         <div class="modal-actions-bar">
           <button type="button" class="btn-cancel" id="cancelProductBtn">إلغاء</button>
           <button type="submit" class="btn-primary-action" id="saveProductBtn">
@@ -2141,6 +2271,79 @@
           <button type="button" id="cancelAdminCommModal" class="btn-cancel">إلغاء</button>
           <button type="submit" id="submitAdminCommPostBtn" class="btn-primary-action" style="background:var(--gold-accent); color:#000; font-weight:700;">
             <i class="fa-solid fa-paper-plane"></i> نشر في Community فوراً
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Link Products Inventory Modal -->
+  <div id="linkInventoryModal" class="admin-modal" aria-hidden="true">
+    <div class="admin-modal-dialog" style="max-width:550px;">
+      <button id="closeLinkInventoryModal" class="modal-close-icon"><i class="fa-solid fa-xmark"></i></button>
+      <div class="modal-head">
+        <h3 style="color:#3498db; display:flex; align-items:center; gap:8px;">
+          <i class="fa-solid fa-link"></i> ربط قطعتين بمخزون مشترك موحد
+        </h3>
+        <p>اختر قطعتين (مثال: جاكيت رجالي وجاكيت نسائي لنفس الموديل) لتوحيد مخزونهما معاً في المستودع.</p>
+      </div>
+      <form id="linkInventoryForm">
+        <div class="form-group">
+          <label>القطعة الأولى (الأساسية) *</label>
+          <select id="linkProductASelect" required style="width:100%; background:#161616; color:#fff; border:1px solid #444; padding:10px; border-radius:6px; font-size:13px;">
+            <!-- Populated dynamically -->
+          </select>
+        </div>
+        <div class="form-group">
+          <label>القطعة الثانية (المراد توحيد المخزون معها) *</label>
+          <select id="linkProductBSelect" required style="width:100%; background:#161616; color:#fff; border:1px solid #444; padding:10px; border-radius:6px; font-size:13px;">
+            <!-- Populated dynamically -->
+          </select>
+        </div>
+        <div style="background:rgba(52,152,219,0.1); border:1px solid rgba(52,152,219,0.3); border-radius:6px; padding:12px; margin-bottom:16px; font-size:12px; color:#ddd; line-height:1.6;">
+          <i class="fa-solid fa-circle-info" style="color:#3498db;"></i>
+          <strong>كيف يعمل توحيد المخزون؟</strong><br>
+          سيتم مزامنة كميات المقاسات فوراً بين القطعتين. بيع أي مقاس في إحداهما يخصمه فوراً من الأخرى بالبث المباشر.
+        </div>
+        <div class="modal-actions-bar">
+          <button type="button" class="btn-cancel" id="cancelLinkInventoryBtn">إلغاء</button>
+          <button type="submit" class="btn-primary-action" style="background:#3498db; color:#fff; font-weight:700;">
+            <i class="fa-solid fa-check"></i> توحيد المخزون وربط القطعتين فوراً
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Quick Stock Edit Modal -->
+  <div id="quickStockModal" class="admin-modal" aria-hidden="true">
+    <div class="admin-modal-dialog" style="max-width:520px;">
+      <button id="closeQuickStockModal" class="modal-close-icon"><i class="fa-solid fa-xmark"></i></button>
+      <div class="modal-head">
+        <h3 id="quickStockModalTitle" style="color:#e5b95f; display:flex; align-items:center; gap:8px;">
+          <i class="fa-solid fa-boxes-stacked"></i> تعديل كميات المخزون
+        </h3>
+        <p id="quickStockModalSub">حدد الكمية المتوفرة لكل مقاس في المستودع.</p>
+      </div>
+      <form id="quickStockForm">
+        <input type="hidden" id="quickStockProductId" value="">
+        <div id="quickStockLinkedNotice" style="display:none; background:rgba(46,204,113,0.12); border:1px solid rgba(46,204,113,0.3); border-radius:6px; padding:10px 14px; margin-bottom:14px; font-size:12px; color:#2ecc71;">
+          <i class="fa-solid fa-link"></i> هذه القطعة مرتبطة مع قطعة أخرى — أي تعديل هنا سيحدث القطعتين معاً فوراً في المتجر والمستودع!
+        </div>
+
+        <div class="size-inventory-grid" id="quickStockSizeGrid" style="grid-template-columns: repeat(3, 1fr); gap:12px; margin-bottom:16px;">
+          <!-- Rendered dynamically -->
+        </div>
+
+        <div style="display:flex; justify-content:space-between; align-items:center; background:#161616; padding:12px 16px; border-radius:6px; border:1px solid #333; margin-bottom:16px;">
+          <span style="font-weight:700; color:#fff;">إجمالي الكمية بعد التعديل:</span>
+          <span id="quickStockTotalCalculated" style="font-size:18px; font-weight:800; color:#e5b95f;">0 قطعة</span>
+        </div>
+
+        <div class="modal-actions-bar">
+          <button type="button" class="btn-cancel" id="cancelQuickStockBtn">إلغاء</button>
+          <button type="submit" class="btn-primary-action" style="background:#e5b95f; color:#000; font-weight:800;">
+            <i class="fa-solid fa-check"></i> حفظ الكميات وتحديث المتجر فوراً
           </button>
         </div>
       </form>

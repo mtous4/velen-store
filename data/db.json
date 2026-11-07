@@ -630,6 +630,296 @@
         "XL": 2
       },
       "costPrice": 4
+    },
+    {
+      "id": "prod-1793968948036",
+      "name": "Heavyweight Straight Sweatpants",
+      "category": "Men",
+      "price": 22,
+      "costPrice": 15.25,
+      "comparePrice": null,
+      "onSale": false,
+      "featured": false,
+      "image": "/uploads/velen-1794067864959-743120950.jpg",
+      "images": [
+        "/uploads/velen-1794067864959-743120950.jpg",
+        "/uploads/velen-1794067875952-37925114.jpg",
+        "/uploads/velen-1794067870810-987013908.jpg",
+        "/uploads/velen-1793968588638-573261814.jpg",
+        "/uploads/velen-1793968588626-249627723.jpg",
+        "/uploads/velen-1793968588629-921231845.jpg",
+        "/uploads/velen-1793968588633-808985216.jpg",
+        "/uploads/velen-1793968588636-167481813.jpg",
+        "/uploads/velen-1793968588637-133190839.jpg",
+        "/uploads/velen-1793968926992-557165120.jpg",
+        "/uploads/velen-1793968926997-460552680.jpg",
+        "/uploads/velen-1793968926998-762696540.jpg",
+        "/uploads/velen-1793968927001-644959647.jpg",
+        "/uploads/velen-1793968927004-17604485.jpg",
+        "/uploads/velen-1793968927004-460421200.jpg",
+        "/uploads/velen-1793968943294-522619195.jpg",
+        "/uploads/velen-1793968943295-984080962.jpg",
+        "/uploads/velen-1793968943296-69349869.jpg",
+        "/uploads/velen-1793968943296-699120242.jpg",
+        "/uploads/velen-1793968943297-194749899.jpg",
+        "/uploads/velen-1794068237275-701997918.jpg",
+        "/uploads/velen-1794068324882-21659705.jpg",
+        "/uploads/velen-1794068324883-917335435.jpg",
+        "/uploads/velen-1794068339143-695591125.jpg",
+        "/uploads/velen-1794068339145-978806516.jpg",
+        "/uploads/velen-1794068151661-72193471.jpg",
+        "/uploads/velen-1794068182565-427336284.jpg",
+        "/uploads/velen-1794068182565-766080786.jpg",
+        "/uploads/velen-1794068194720-112772891.jpg",
+        "/uploads/velen-1794068194723-989937481.jpg",
+        "/uploads/velen-1794067907992-292549168.jpg",
+        "/uploads/velen-1794068071552-133172107.jpg",
+        "/uploads/velen-1794068077036-157434301.jpg",
+        "/uploads/velen-1794068083763-958413162.jpg",
+        "/uploads/velen-1794068095582-125880995.jpg",
+        "/uploads/velen-1794074765024-630457959.webp",
+        "/uploads/velen-1794074748194-256440590.webp",
+        "/uploads/velen-1794074787084-407117322.webp"
+      ],
+      "sizes": [
+        "XS",
+        "S",
+        "M",
+        "L",
+        "XL"
+      ],
+      "colors": [
+        {
+          "name": "Light Grey",
+          "hex": "#BCBBC0",
+          "images": [
+            "/uploads/velen-1794068237275-701997918.jpg",
+            "/uploads/velen-1794068324882-21659705.jpg",
+            "/uploads/velen-1794068324883-917335435.jpg",
+            "/uploads/velen-1794068339143-695591125.jpg",
+            "/uploads/velen-1794068339145-978806516.jpg",
+            "/uploads/velen-1794074765024-630457959.webp"
+          ],
+          "image": "/uploads/velen-1794068237275-701997918.jpg",
+          "sizeInventory": {
+            "XS": 3,
+            "S": 6,
+            "M": 5,
+            "L": 8,
+            "XL": 2
+          },
+          "sizes": [
+            "XS",
+            "S",
+            "M",
+            "L",
+            "XL"
+          ],
+          "stock": 24
+        },
+        {
+          "name": "Deep Burgundy",
+          "hex": "#4F0B16",
+          "images": [
+            "/uploads/velen-1794068151661-72193471.jpg",
+            "/uploads/velen-1794068182565-427336284.jpg",
+            "/uploads/velen-1794068182565-766080786.jpg",
+            "/uploads/velen-1794068194720-112772891.jpg",
+            "/uploads/velen-1794068194723-989937481.jpg",
+            "/uploads/velen-1794074748194-256440590.webp"
+          ],
+          "image": "/uploads/velen-1794068151661-72193471.jpg",
+          "sizeInventory": {
+            "XS": 3,
+            "S": 7,
+            "M": 7,
+            "L": 6,
+            "XL": 2
+          },
+          "sizes": [
+            "XS",
+            "S",
+            "M",
+            "L",
+            "XL"
+          ],
+          "stock": 25
+        },
+        {
+          "name": "black",
+          "hex": "#000000",
+          "images": [
+            "/uploads/velen-1794067907992-292549168.jpg",
+            "/uploads/velen-1794068071552-133172107.jpg",
+            "/uploads/velen-1794068077036-157434301.jpg",
+            "/uploads/velen-1794068083763-958413162.jpg",
+            "/uploads/velen-1794068095582-125880995.jpg",
+            "/uploads/velen-1794074787084-407117322.webp"
+          ],
+          "image": "/uploads/velen-1794067907992-292549168.jpg",
+          "sizeInventory": {
+            "XS": 2,
+            "S": 7,
+            "M": 5,
+            "L": 8,
+            "XL": 2
+          },
+          "sizes": [
+            "XS",
+            "S",
+            "M",
+            "L",
+            "XL"
+          ],
+          "stock": 24
+        }
+      ],
+      "stock": 50,
+      "description": "Stay warm and comfortable with our heavyweight cotton sweatpants. Designed with a relaxed streetwear fit, adjustable waistband and practical pockets.\n\nPerfect for everyday outfits and effortless styling.",
+      "fabric": "70% premium cotton, featuring a heavyweight winter texture",
+      "createdAt": "2026-11-06T12:42:28.036Z",
+      "sizeInventory": {
+        "XS": 2,
+        "XL": 8,
+        "XXL": 3,
+        "L": 12,
+        "S": 10,
+        "M": 15
+      },
+      "linkedProductId": "prod-1794069687504"
+    },
+    {
+      "id": "prod-1794069687504",
+      "name": "Heavyweight Straight Sweatpants",
+      "category": "Women",
+      "price": 22,
+      "costPrice": 15.25,
+      "comparePrice": null,
+      "onSale": false,
+      "featured": true,
+      "image": "/uploads/velen-1794069497680-611861733.jpg",
+      "images": [
+        "/uploads/velen-1794069497680-611861733.jpg",
+        "/uploads/velen-1794069497678-958369348.jpg",
+        "/uploads/velen-1794069497679-326921050.jpg",
+        "/uploads/velen-1794069510403-945710849.jpg",
+        "/uploads/velen-1794069534453-329710625.jpg",
+        "/uploads/velen-1794069534454-813027662.jpg",
+        "/uploads/velen-1794069534455-500435827.jpg",
+        "/uploads/velen-1794069534456-357953826.jpg",
+        "/uploads/velen-1794069565539-903877669.jpg",
+        "/uploads/velen-1794069608188-79910869.jpg",
+        "/uploads/velen-1794069608190-130763971.jpg",
+        "/uploads/velen-1794069608194-357457006.jpg",
+        "/uploads/velen-1794069608194-781705416.jpg",
+        "/uploads/velen-1794069635081-297969745.jpg",
+        "/uploads/velen-1794069664816-277499430.jpg",
+        "/uploads/velen-1794069664819-89016695.jpg",
+        "/uploads/velen-1794069664821-430101440.jpg",
+        "/uploads/velen-1794069664821-615729957.jpg",
+        "/uploads/velen-1794074952381-425009823.webp",
+        "/uploads/velen-1794074967296-217757856.webp",
+        "/uploads/velen-1794074982600-873737690.webp"
+      ],
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL"
+      ],
+      "colors": [
+        {
+          "name": "black",
+          "hex": "#000000",
+          "images": [
+            "/uploads/velen-1794069510403-945710849.jpg",
+            "/uploads/velen-1794069534453-329710625.jpg",
+            "/uploads/velen-1794069534454-813027662.jpg",
+            "/uploads/velen-1794069534455-500435827.jpg",
+            "/uploads/velen-1794069534456-357953826.jpg",
+            "/uploads/velen-1794074952381-425009823.webp"
+          ],
+          "image": "/uploads/velen-1794069510403-945710849.jpg",
+          "sizeInventory": {
+            "S": 5,
+            "M": 5,
+            "L": 5,
+            "XL": 5
+          },
+          "sizes": [
+            "S",
+            "M",
+            "L",
+            "XL"
+          ],
+          "stock": 20
+        },
+        {
+          "name": "Deep Burgundy",
+          "hex": "#580E1B",
+          "images": [
+            "/uploads/velen-1794069565539-903877669.jpg",
+            "/uploads/velen-1794069608188-79910869.jpg",
+            "/uploads/velen-1794069608190-130763971.jpg",
+            "/uploads/velen-1794069608194-357457006.jpg",
+            "/uploads/velen-1794069608194-781705416.jpg",
+            "/uploads/velen-1794074967296-217757856.webp"
+          ],
+          "image": "/uploads/velen-1794069565539-903877669.jpg",
+          "sizeInventory": {
+            "S": 5,
+            "M": 5,
+            "L": 5,
+            "XL": 5
+          },
+          "sizes": [
+            "S",
+            "M",
+            "L",
+            "XL"
+          ],
+          "stock": 20
+        },
+        {
+          "name": "Light Grey",
+          "hex": "#D3D0D7",
+          "images": [
+            "/uploads/velen-1794069635081-297969745.jpg",
+            "/uploads/velen-1794069664816-277499430.jpg",
+            "/uploads/velen-1794069664819-89016695.jpg",
+            "/uploads/velen-1794069664821-430101440.jpg",
+            "/uploads/velen-1794069664821-615729957.jpg",
+            "/uploads/velen-1794074982600-873737690.webp"
+          ],
+          "image": "/uploads/velen-1794069635081-297969745.jpg",
+          "sizeInventory": {
+            "S": 5,
+            "M": 5,
+            "L": 5,
+            "XL": 5
+          },
+          "sizes": [
+            "S",
+            "M",
+            "L",
+            "XL"
+          ],
+          "stock": 20
+        }
+      ],
+      "stock": 50,
+      "description": "Stay warm and comfortable with our heavyweight cotton sweatpants. Designed with a relaxed streetwear fit, adjustable waistband and practical pockets.\n\nPerfect for everyday outfits and effortless styling.",
+      "fabric": "70% premium cotton, featuring a heavyweight winter texture",
+      "createdAt": "2026-11-07T16:41:27.504Z",
+      "sizeInventory": {
+        "XS": 2,
+        "XL": 8,
+        "XXL": 3,
+        "L": 12,
+        "S": 10,
+        "M": 15
+      },
+      "linkedProductId": "prod-1793968948036"
     }
   ],
   "community": [

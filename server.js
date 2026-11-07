@@ -375,6 +375,44 @@ app.get('/api/products/:id', async (req, res) => {
   res.json(product);
 });
 
+// ================= SHARED INVENTORY & LINKED PRODUCTS HELPERS =================
+async function getLinkedProducts(db, productId) {
+  const products = await firebaseService.getProducts(db);
+  const prod = (products || []).find(p => p.id === productId);
+  if (!prod) return [];
+  const linked = [];
+  const targetId = prod.linkedProductId;
+  for (const p of products) {
+    if (p.id === productId) continue;
+    if (targetId && p.id === targetId) {
+      linked.push(p);
+    } else if (p.linkedProductId && p.linkedProductId === productId) {
+      linked.push(p);
+    }
+  }
+  return linked;
+}
+
+async function syncLinkedInventory(db, primaryProduct) {
+  if (!primaryProduct) return;
+  const linkedList = await getLinkedProducts(db, primaryProduct.id);
+  db.products = db.products || [];
+  for (const linked of linkedList) {
+    if (primaryProduct.sizeInventory) {
+      linked.sizeInventory = JSON.parse(JSON.stringify(primaryProduct.sizeInventory));
+    }
+    linked.stock = primaryProduct.stock;
+    if (linked.linkedProductId !== primaryProduct.id) {
+      linked.linkedProductId = primaryProduct.id;
+    }
+    const idx = db.products.findIndex(p => p.id === linked.id);
+    if (idx !== -1) db.products[idx] = linked; else db.products.push(linked);
+    await firebaseService.saveProduct(linked);
+    broadcast('PRODUCT_UPDATED', linked);
+  }
+  writeDB(db);
+}
+
 // Admin creates new product -> instantly syncs to store & Firestore
 app.post('/api/products', async (req, res) => {
   const db = readDB();
@@ -390,10 +428,18 @@ app.post('/api/products', async (req, res) => {
     image: req.body.image || '/assets/velen-logo.jpg',
     images: req.body.images && req.body.images.length > 0 ? req.body.images : [req.body.image || '/assets/velen-logo.jpg'],
     sizes: req.body.sizes && req.body.sizes.length > 0 ? req.body.sizes : ['S', 'M', 'L', 'XL'],
+    sizeInventory: req.body.sizeInventory || { XS: 0, S: 5, M: 5, L: 5, XL: 5, XXL: 0 },
     colors: req.body.colors || [{ name: 'Default', hex: '#000000' }],
     stock: parseInt(req.body.stock, 10) || 20,
     description: req.body.description || 'Premium Everyday Essential designed by Velen.',
     fabric: req.body.fabric || '100% Premium Jordanian Cotton',
+    // Model stats controls
+    showModelStats: req.body.showModelStats !== undefined ? Boolean(req.body.showModelStats) : true,
+    modelHeight: req.body.modelHeight || '186 cm',
+    modelWeight: req.body.modelWeight || '77 kg',
+    modelSize: req.body.modelSize || 'L',
+    // Linked / Shared Inventory
+    linkedProductId: req.body.linkedProductId || null,
     createdAt: new Date().toISOString()
   };
 
@@ -401,6 +447,10 @@ app.post('/api/products', async (req, res) => {
   db.products.unshift(newProduct);
   writeDB(db);
   await firebaseService.saveProduct(newProduct);
+
+  if (newProduct.linkedProductId) {
+    await syncLinkedInventory(db, newProduct);
+  }
 
   broadcast('PRODUCT_ADDED', newProduct);
   res.status(201).json({ success: true, product: newProduct });
@@ -419,7 +469,14 @@ app.put('/api/products/:id', async (req, res) => {
     price: parseFloat(req.body.price !== undefined ? req.body.price : existing.price),
     costPrice: req.body.costPrice !== undefined ? (parseFloat(req.body.costPrice) || 0) : (existing.costPrice || 0),
     comparePrice: req.body.comparePrice !== undefined ? (req.body.comparePrice ? parseFloat(req.body.comparePrice) : null) : existing.comparePrice,
-    stock: parseInt(req.body.stock !== undefined ? req.body.stock : existing.stock, 10)
+    stock: parseInt(req.body.stock !== undefined ? req.body.stock : existing.stock, 10),
+    // Model stats controls
+    showModelStats: req.body.showModelStats !== undefined ? Boolean(req.body.showModelStats) : (existing.showModelStats !== undefined ? existing.showModelStats : true),
+    modelHeight: req.body.modelHeight !== undefined ? req.body.modelHeight : (existing.modelHeight || '186 cm'),
+    modelWeight: req.body.modelWeight !== undefined ? req.body.modelWeight : (existing.modelWeight || '77 kg'),
+    modelSize: req.body.modelSize !== undefined ? req.body.modelSize : (existing.modelSize || 'L'),
+    // Linked / Shared Inventory
+    linkedProductId: req.body.linkedProductId !== undefined ? req.body.linkedProductId : (existing.linkedProductId || null)
   };
 
   db.products = db.products || [];
@@ -432,8 +489,156 @@ app.put('/api/products/:id', async (req, res) => {
   writeDB(db);
   await firebaseService.saveProduct(updatedProduct);
 
+  // Sync to linked partner product if configured
+  if (updatedProduct.linkedProductId) {
+    const partner = (db.products || []).find(p => p.id === updatedProduct.linkedProductId);
+    if (partner) {
+      partner.linkedProductId = updatedProduct.id;
+      partner.sizeInventory = JSON.parse(JSON.stringify(updatedProduct.sizeInventory || {}));
+      partner.stock = updatedProduct.stock;
+      await firebaseService.saveProduct(partner);
+      broadcast('PRODUCT_UPDATED', partner);
+    }
+  } else if (existing.linkedProductId && !updatedProduct.linkedProductId) {
+    // Unlink old partner
+    const oldPartner = (db.products || []).find(p => p.id === existing.linkedProductId);
+    if (oldPartner && oldPartner.linkedProductId === updatedProduct.id) {
+      oldPartner.linkedProductId = null;
+      await firebaseService.saveProduct(oldPartner);
+      broadcast('PRODUCT_UPDATED', oldPartner);
+    }
+  }
+
   broadcast('PRODUCT_UPDATED', updatedProduct);
   res.json({ success: true, product: updatedProduct });
+});
+
+// ================= API: Dedicated Inventory Management =================
+app.get('/api/inventory', async (req, res) => {
+  const db = readDB();
+  const products = await firebaseService.getProducts(db);
+  const list = (products || []).map(p => {
+    const partner = (products || []).find(x => x.id !== p.id && ((p.linkedProductId && x.id === p.linkedProductId) || (x.linkedProductId && x.linkedProductId === p.id)));
+    return {
+      ...p,
+      linkedPartner: partner ? { id: partner.id, name: partner.name, image: partner.image, category: partner.category, stock: partner.stock } : null
+    };
+  });
+  res.json({ success: true, inventory: list });
+});
+
+app.post('/api/inventory/update-stock', async (req, res) => {
+  const db = readDB();
+  const products = await firebaseService.getProducts(db);
+  const { productId, sizeInventory, stock } = req.body;
+  const prod = (products || []).find(p => p.id === productId);
+  if (!prod) return res.status(404).json({ success: false, message: 'القطعة غير موجودة' });
+
+  if (sizeInventory) {
+    prod.sizeInventory = sizeInventory;
+    prod.stock = Object.values(sizeInventory).reduce((a, b) => a + (parseInt(b, 10) || 0), 0);
+  } else if (stock !== undefined) {
+    prod.stock = parseInt(stock, 10) || 0;
+  }
+
+  db.products = db.products || [];
+  const idx = db.products.findIndex(p => p.id === productId);
+  if (idx !== -1) db.products[idx] = prod; else db.products.push(prod);
+  writeDB(db);
+  await firebaseService.saveProduct(prod);
+  broadcast('PRODUCT_UPDATED', prod);
+
+  // Sync to linked partner products
+  await syncLinkedInventory(db, prod);
+
+  res.json({ success: true, product: prod, message: 'تم تحديث المخزون بنجاح!' });
+});
+
+app.post('/api/inventory/link', async (req, res) => {
+  const db = readDB();
+  const products = await firebaseService.getProducts(db);
+  const { productAId, productBId } = req.body;
+
+  const prodA = (products || []).find(p => p.id === productAId);
+  if (!prodA) return res.status(404).json({ success: false, message: 'القطعة الأساسية غير موجودة' });
+
+  // If unlinking
+  if (!productBId || productBId === 'none' || productBId === 'null') {
+    const oldTarget = prodA.linkedProductId;
+    prodA.linkedProductId = null;
+    await firebaseService.saveProduct(prodA);
+    broadcast('PRODUCT_UPDATED', prodA);
+
+    if (oldTarget) {
+      const oldPartner = (products || []).find(p => p.id === oldTarget);
+      if (oldPartner) {
+        oldPartner.linkedProductId = null;
+        await firebaseService.saveProduct(oldPartner);
+        broadcast('PRODUCT_UPDATED', oldPartner);
+      }
+    }
+
+    const others = (products || []).filter(p => p.linkedProductId === prodA.id);
+    for (const o of others) {
+      o.linkedProductId = null;
+      await firebaseService.saveProduct(o);
+      broadcast('PRODUCT_UPDATED', o);
+    }
+
+    writeDB(db);
+    return res.json({ success: true, message: 'تم فك ارتباط المخزون بنجاح' });
+  }
+
+  const prodB = (products || []).find(p => p.id === productBId);
+  if (!prodB) return res.status(404).json({ success: false, message: 'القطعة المراد الربط معها غير موجودة' });
+
+  // Unlink any previous partners
+  if (prodA.linkedProductId && prodA.linkedProductId !== prodB.id) {
+    const prevA = (products || []).find(p => p.id === prodA.linkedProductId);
+    if (prevA) {
+      prevA.linkedProductId = null;
+      await firebaseService.saveProduct(prevA);
+      broadcast('PRODUCT_UPDATED', prevA);
+    }
+  }
+  if (prodB.linkedProductId && prodB.linkedProductId !== prodA.id) {
+    const prevB = (products || []).find(p => p.id === prodB.linkedProductId);
+    if (prevB) {
+      prevB.linkedProductId = null;
+      await firebaseService.saveProduct(prevB);
+      broadcast('PRODUCT_UPDATED', prevB);
+    }
+  }
+
+  // Set bi-directional link
+  prodA.linkedProductId = prodB.id;
+  prodB.linkedProductId = prodA.id;
+
+  // Unify inventory
+  const sourceInventory = (prodA.sizeInventory && Object.keys(prodA.sizeInventory).length > 0) ? prodA.sizeInventory : prodB.sizeInventory;
+  if (sourceInventory) {
+    prodA.sizeInventory = JSON.parse(JSON.stringify(sourceInventory));
+    prodB.sizeInventory = JSON.parse(JSON.stringify(sourceInventory));
+    prodA.stock = Object.values(sourceInventory).reduce((a, b) => a + (parseInt(b, 10) || 0), 0);
+    prodB.stock = prodA.stock;
+  } else {
+    prodB.stock = prodA.stock || 20;
+  }
+
+  db.products = db.products || [];
+  const idxA = db.products.findIndex(p => p.id === prodA.id);
+  if (idxA !== -1) db.products[idxA] = prodA;
+  const idxB = db.products.findIndex(p => p.id === prodB.id);
+  if (idxB !== -1) db.products[idxB] = prodB;
+  writeDB(db);
+
+  await firebaseService.saveProduct(prodA);
+  await firebaseService.saveProduct(prodB);
+
+  broadcast('PRODUCT_UPDATED', prodA);
+  broadcast('PRODUCT_UPDATED', prodB);
+
+  res.json({ success: true, message: `تم توحيد المخزون وربط (${prodA.name}) مع (${prodB.name}) بنجاح!`, productA: prodA, productB: prodB });
 });
 
 // Admin deletes product
@@ -640,6 +845,7 @@ app.post('/api/orders', async (req, res) => {
         }
         await firebaseService.saveProduct(prod);
         broadcast('PRODUCT_UPDATED', prod);
+        await syncLinkedInventory(db, prod);
       }
     }
   }
@@ -844,6 +1050,7 @@ app.patch('/api/orders/:id/status', async (req, res) => {
           }
           await firebaseService.saveProduct(prod);
           broadcast('PRODUCT_UPDATED', prod);
+          await syncLinkedInventory(db, prod);
         }
       }
     } else if (oldStatus === 'Cancelled' && newStatus !== 'Cancelled' && Array.isArray(order.items)) {
@@ -859,6 +1066,7 @@ app.patch('/api/orders/:id/status', async (req, res) => {
           }
           await firebaseService.saveProduct(prod);
           broadcast('PRODUCT_UPDATED', prod);
+          await syncLinkedInventory(db, prod);
         }
       }
     }

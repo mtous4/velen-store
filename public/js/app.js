@@ -2462,27 +2462,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
           <!-- Main Image Showcase Frame -->
           <div class="product-main-showcase" id="productMainShowcase" title="${isAr ? 'اسحب أو استخدم الأسهم للتقليب بين الصور' : 'Drag or use arrows to flip photos'}">
-            <!-- Brand Watermark top-left (Image 1) -->
-            <div class="product-brand-watermark">
-              <span class="watermark-v">V</span>
-              <span class="watermark-velen">VELEN</span>
-            </div>
-
-            <!-- Carousel Counter (Image 3: "1 / 7") -->
+            <!-- Carousel Counter (Instagram Style) -->
             <div class="mobile-carousel-counter" id="mobileCarouselCounter">
-              <span id="pageCarouselIndex">1</span> / <span id="pageCarouselTotal">${currentImages.length}</span>
+              <span id="pageCarouselIndex">1</span>/<span id="pageCarouselTotal">${currentImages.length}</span>
             </div>
-
-            <!-- Mobile Zoom Icon top-right (Image 3) -->
-            <button type="button" class="mobile-zoom-btn" onclick="window.velenApp.zoomProductImage()" aria-label="Zoom image">
-              <i class="fa-solid fa-magnifying-glass-plus"></i>
-            </button>
 
             <!-- Main Display Image -->
             <img id="pageProductMainImg" src="${currentImages[0]}" alt="${displayName}" class="product-hero-image" onerror="this.src='/assets/velen-logo.jpg'">
 
-            <!-- Desktop Expand button bottom-right (Image 1) -->
-            <button type="button" class="desktop-expand-btn" onclick="window.velenApp.zoomProductImage()" aria-label="Expand image view" title="${isAr ? 'تكبير الصورة' : 'Expand view'}">
+            <!-- Expand button bottom-right -->
+            <button type="button" class="desktop-expand-btn product-expand-btn" onclick="window.velenApp.zoomProductImage()" aria-label="Expand image view" title="${isAr ? 'تكبير الصورة' : 'Expand view'}">
               <i class="fa-solid fa-up-right-and-down-left-from-center"></i>
             </button>
 
@@ -2494,11 +2483,13 @@ document.addEventListener('DOMContentLoaded', () => {
               <i class="fa-solid fa-chevron-right"></i>
             </button>
 
-            <!-- Mobile Model Info Pill (Image 3: "Model: 186 cm, 77 kg | Wearing Size: L") -->
-            <div class="product-model-stats-pill">
-              <i class="fa-regular fa-user"></i>
-              <span>${isAr ? 'طول المودل: 186 سم، الوزن: 77 كغ | يرتدي مقاس: L' : 'Model: 186 cm, 77 kg | Wearing Size: L'}</span>
-            </div>
+            <!-- Model Info Pill -->
+            ${product.showModelStats !== false ? `
+              <div class="product-model-stats-pill">
+                <i class="fa-regular fa-user"></i>
+                <span>${isAr ? `طول المودل: ${product.modelHeight || '186 سم'}، الوزن: ${product.modelWeight || '77 كغ'} | يرتدي مقاس: ${product.modelSize || 'L'}` : `Model: ${product.modelHeight || '186 cm'}, ${product.modelWeight || '77 kg'} | Wearing Size: ${product.modelSize || 'L'}`}</span>
+              </div>
+            ` : ''}
           </div>
 
           <!-- Mobile Horizontal Thumbnail Strip (Image 3) -->

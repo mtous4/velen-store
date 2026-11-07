@@ -131,6 +131,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       renderDashboard();
       renderProducts();
+      renderInventoryTable();
       renderOrders();
       renderCommunity();
       renderCustomerReviews();
@@ -192,9 +193,21 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!exists) {
         state.products.unshift(payload);
         renderProducts();
+        renderInventoryTable();
         renderDashboard();
         updateBadgeCounts();
       }
+    } else if (evType === 'PRODUCT_UPDATED') {
+      const idx = state.products.findIndex(p => p.id === payload.id);
+      if (idx !== -1) {
+        state.products[idx] = payload;
+      } else {
+        state.products.unshift(payload);
+      }
+      renderProducts();
+      renderInventoryTable();
+      renderDashboard();
+      updateBadgeCounts();
     } else if (evType === 'COMMUNITY_NEW_POST') {
       const exists = state.community.some(c => c.id === payload.id);
       if (!exists) {
@@ -254,12 +267,14 @@ document.addEventListener('DOMContentLoaded', () => {
       gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.4);
       osc.start();
       osc.stop(ctx.currentTime + 0.4);
-    } catch (e) {}
+    } catch (e) { }
   }
 
   // ================= BADGE COUNTS & STATS =================
   function updateBadgeCounts() {
     document.getElementById('navProdCount').textContent = state.products.length;
+    const invBadge = document.getElementById('navInventoryCount');
+    if (invBadge) invBadge.textContent = state.products.length;
     document.getElementById('navCommCount').textContent = state.community.length;
 
     const promoBadge = document.getElementById('navPromosCount');
@@ -279,7 +294,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('kpiPendingOrders').textContent = `${pendingOrders} قيد الانتظار${cancelledOrders.length ? ` • ${cancelledOrders.length} ملغي` : ''}`;
     document.getElementById('kpiProducts').textContent = state.products.length;
 
-    const avg = state.community.length > 0 
+    const avg = state.community.length > 0
       ? (state.community.reduce((acc, c) => acc + (Number(c.rating) || 5), 0) / state.community.length).toFixed(1)
       : '5.0';
     document.getElementById('kpiRating').textContent = `${avg} / 5`;
@@ -300,7 +315,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const res = await fetch('/api/cart/active');
       state.activeCarts = await res.json();
       renderActiveCarts();
-    } catch (e) {}
+    } catch (e) { }
   }
 
   // ================= RENDER DASHBOARD =================
@@ -391,10 +406,10 @@ document.addEventListener('DOMContentLoaded', () => {
             ${p.comparePrice ? `<span style="color:#666; text-decoration:line-through; font-size:12px;">${Number(p.comparePrice).toFixed(3)} JOD</span>` : ''}
           </div>
           <div style="font-size:11px; color:#aaa; margin-top:4px;">
-            ${p.sizeInventory 
-              ? `<span style="color:#e5b95f; font-weight:600;">المخزون بالمقاس:</span> ` + Object.entries(p.sizeInventory).map(([s, q]) => `<span style="display:inline-block; margin-left:3px; padding:1px 5px; border-radius:3px; background:#1b1b1b; color:${q > 0 ? '#fff' : '#e74c3c'}; font-size:10px;">${s}:<strong>${q}</strong></span>`).join('')
-              : `المقاسات: ${(p.sizes || []).join(', ')}`
-            }
+            ${p.sizeInventory
+        ? `<span style="color:#e5b95f; font-weight:600;">المخزون بالمقاس:</span> ` + Object.entries(p.sizeInventory).map(([s, q]) => `<span style="display:inline-block; margin-left:3px; padding:1px 5px; border-radius:3px; background:#1b1b1b; color:${q > 0 ? '#fff' : '#e74c3c'}; font-size:10px;">${s}:<strong>${q}</strong></span>`).join('')
+        : `المقاسات: ${(p.sizes || []).join(', ')}`
+      }
           </div>
           
           <div class="admin-prod-actions">
@@ -410,7 +425,259 @@ document.addEventListener('DOMContentLoaded', () => {
     `).join('');
   }
 
-  // ================= RENDER ORDERS =================
+  // ================= INVENTORY & SHARED STOCK MANAGEMENT =================
+  function renderInventoryTable() {
+    const tbody = document.getElementById('inventoryTableBody');
+    if (!tbody) return;
+
+    const search = document.getElementById('inventorySearchInput')?.value.toLowerCase().trim() || '';
+    const filter = document.getElementById('inventoryLinkFilter')?.value || 'all';
+
+    let totalUnits = 0;
+    let lowStockCount = 0;
+    let linkedCount = 0;
+
+    // Calculate totals across all products
+    state.products.forEach(p => {
+      const stock = p.stock !== undefined ? Number(p.stock) : 0;
+      totalUnits += stock;
+      if (stock <= 3) lowStockCount++;
+      const hasLink = Boolean(p.linkedProductId || state.products.some(x => x.id !== p.id && x.linkedProductId === p.id));
+      if (hasLink) linkedCount++;
+    });
+
+    const totalEl = document.getElementById('invKpiTotalUnits');
+    if (totalEl) totalEl.textContent = `${totalUnits} قطعة`;
+    const lowEl = document.getElementById('invKpiLowStock');
+    if (lowEl) lowEl.textContent = `${lowStockCount} قطع`;
+    const linkedEl = document.getElementById('invKpiLinkedCount');
+    if (linkedEl) linkedEl.textContent = `${linkedCount} قطعة`;
+
+    let list = state.products;
+    if (search) {
+      list = list.filter(p => (p.name || '').toLowerCase().includes(search) || (p.category || '').toLowerCase().includes(search));
+    }
+
+    if (filter === 'linked') {
+      list = list.filter(p => Boolean(p.linkedProductId || state.products.some(x => x.id !== p.id && x.linkedProductId === p.id)));
+    } else if (filter === 'unlinked') {
+      list = list.filter(p => !p.linkedProductId && !state.products.some(x => x.id !== p.id && x.linkedProductId === p.id));
+    } else if (filter === 'low') {
+      list = list.filter(p => (p.stock !== undefined ? Number(p.stock) : 0) <= 3 && (p.stock !== undefined ? Number(p.stock) : 0) > 0);
+    } else if (filter === 'out') {
+      list = list.filter(p => (p.stock !== undefined ? Number(p.stock) : 0) <= 0);
+    }
+
+    if (list.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#666; padding:35px;"><i class="fa-solid fa-boxes-stacked" style="font-size:24px; margin-bottom:8px; display:block;"></i> لا توجد قطع مطابقة في المخزون</td></tr>`;
+      return;
+    }
+
+    const sizesKeys = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
+
+    tbody.innerHTML = list.map(p => {
+      // Find linked partner
+      const partner = state.products.find(x => x.id !== p.id && ((p.linkedProductId && x.id === p.linkedProductId) || (x.linkedProductId && x.linkedProductId === p.id)));
+
+      const inv = p.sizeInventory || {};
+      const totalStock = p.stock !== undefined ? Number(p.stock) : Object.values(inv).reduce((a, b) => a + (Number(b) || 0), 0);
+
+      // Status pill for linking
+      let linkBadgeHtml = '';
+      if (partner) {
+        linkBadgeHtml = `
+          <div style="display:flex; flex-direction:column; gap:4px;">
+            <span style="display:inline-flex; align-items:center; gap:6px; background:rgba(46,204,113,0.12); color:#2ecc71; border:1px solid rgba(46,204,113,0.3); padding:4px 8px; border-radius:4px; font-size:11px; font-weight:700;">
+              <i class="fa-solid fa-link"></i> موحد مع: ${partner.name}
+            </span>
+            <button type="button" onclick="window.velenAdmin.unlinkInventory('${p.id}')" style="background:none; border:none; color:#e74c3c; font-size:10px; cursor:pointer; text-decoration:underline; text-align:right; padding:0;">
+              <i class="fa-solid fa-link-slash"></i> فك الارتباط
+            </button>
+          </div>
+        `;
+      } else {
+        linkBadgeHtml = `
+          <div style="display:flex; align-items:center; gap:6px;">
+            <span style="display:inline-flex; align-items:center; gap:4px; background:rgba(255,255,255,0.06); color:#888; border:1px solid #333; padding:3px 8px; border-radius:4px; font-size:11px;">
+              مستقل
+            </span>
+            <button type="button" onclick="window.velenAdmin.openLinkModalFor('${p.id}')" style="background:#1b1b1b; border:1px solid #444; color:#3498db; font-size:10px; padding:3px 8px; border-radius:4px; cursor:pointer; font-weight:600;">
+              <i class="fa-solid fa-link"></i> ربط
+            </button>
+          </div>
+        `;
+      }
+
+      // Sizes breakdown pills
+      const sizePillsHtml = sizesKeys.map(sz => {
+        const qty = inv[sz] !== undefined ? Number(inv[sz]) : (p.sizes && p.sizes.includes(sz) ? '—' : 0);
+        let color = '#2ecc71';
+        let bg = 'rgba(46,204,113,0.1)';
+        let border = 'rgba(46,204,113,0.25)';
+        if (qty === 0 || qty === '0') {
+          color = '#e74c3c';
+          bg = 'rgba(231,76,60,0.1)';
+          border = 'rgba(231,76,60,0.25)';
+        } else if (qty > 0 && qty <= 3) {
+          color = '#f39c12';
+          bg = 'rgba(243,156,18,0.1)';
+          border = 'rgba(243,156,18,0.25)';
+        }
+        return `
+          <div style="display:inline-flex; flex-direction:column; align-items:center; background:${bg}; border:1px solid ${border}; border-radius:4px; padding:3px 6px; min-width:36px; margin:2px;">
+            <span style="font-size:10px; color:#aaa; font-weight:700;">${sz}</span>
+            <strong style="font-size:12px; color:${color};">${qty}</strong>
+          </div>
+        `;
+      }).join('');
+
+      let stockBadgeColor = '#2ecc71';
+      if (totalStock === 0) stockBadgeColor = '#e74c3c';
+      else if (totalStock <= 3) stockBadgeColor = '#f39c12';
+
+      return `
+        <tr>
+          <td>
+            <div style="display:flex; align-items:center; gap:12px;">
+              <img src="${p.image || '/assets/velen-logo.jpg'}" alt="${p.name}" style="width:44px; height:52px; object-fit:cover; border-radius:4px; border:1px solid #333;" onerror="this.src='/assets/velen-logo.jpg'">
+              <div>
+                <strong style="color:#fff; font-size:13px; display:block;">${p.name}</strong>
+                <span style="color:#888; font-size:11px;">${Number(p.price).toFixed(3)} JOD</span>
+              </div>
+            </div>
+          </td>
+          <td><span style="background:#1b1b1b; padding:3px 8px; border-radius:4px; font-size:11px; color:#ccc;">${p.category || 'Tees'}</span></td>
+          <td>${linkBadgeHtml}</td>
+          <td style="text-align:center;">
+            <div style="display:inline-flex; flex-wrap:wrap; justify-content:center; gap:2px;">
+              ${sizePillsHtml}
+            </div>
+          </td>
+          <td style="text-align:center;">
+            <span style="display:inline-block; font-size:14px; font-weight:800; color:${stockBadgeColor}; background:#161616; border:1px solid #333; padding:4px 10px; border-radius:4px;">
+              ${totalStock} قطعة
+            </span>
+          </td>
+          <td style="text-align:center;">
+            <button type="button" class="btn-card-edit" onclick="window.velenAdmin.openQuickStockModal('${p.id}')" style="padding:6px 12px; font-size:12px; display:inline-flex; align-items:center; gap:6px; background:#1e1e1e; color:#fff; border:1px solid #444; border-radius:4px; cursor:pointer;">
+              <i class="fa-solid fa-pen-to-square" style="color:var(--gold-accent);"></i> تعديل الكميات
+            </button>
+          </td>
+        </tr>
+      `;
+    }).join('');
+  }
+
+  function openQuickStockModal(id) {
+    const p = state.products.find(x => x.id === id);
+    if (!p) return;
+
+    const modal = document.getElementById('quickStockModal');
+    if (!modal) return;
+
+    document.getElementById('quickStockProductId').value = p.id;
+    document.getElementById('quickStockModalTitle').innerHTML = `<i class="fa-solid fa-boxes-stacked"></i> تعديل مخزون: ${p.name}`;
+
+    const partner = state.products.find(x => x.id !== p.id && ((p.linkedProductId && x.id === p.linkedProductId) || (x.linkedProductId && x.linkedProductId === p.id)));
+    const linkedNotice = document.getElementById('quickStockLinkedNotice');
+    if (linkedNotice) {
+      if (partner) {
+        linkedNotice.style.display = 'block';
+        linkedNotice.innerHTML = `<i class="fa-solid fa-link"></i> <strong>مخزون موحد:</strong> هذه القطعة مرتبطة مع (${partner.name}) — أي تعديل على الكميات هنا سيحدث القطعتين معاً فوراً في المستودع والمتجر!`;
+      } else {
+        linkedNotice.style.display = 'none';
+      }
+    }
+
+    const sizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
+    const grid = document.getElementById('quickStockSizeGrid');
+    const inv = p.sizeInventory || {};
+
+    grid.innerHTML = sizes.map(sz => {
+      const qty = inv[sz] !== undefined ? Number(inv[sz]) : (p.sizes && p.sizes.includes(sz) ? 5 : 0);
+      return `
+        <div style="background:#161616; border:1px solid #333; border-radius:6px; padding:10px; text-align:center;">
+          <div style="font-weight:700; color:#fff; font-size:13px; margin-bottom:6px;">مقاس ${sz}</div>
+          <div style="display:flex; align-items:center; justify-content:center; gap:6px;">
+            <button type="button" onclick="window.velenAdmin.changeQuickQty('${sz}', -1)" style="width:28px; height:28px; background:#222; border:1px solid #444; color:#fff; border-radius:4px; font-weight:700; cursor:pointer;">-</button>
+            <input type="number" min="0" class="quick-size-input" data-size="${sz}" value="${qty}" oninput="window.velenAdmin.recalculateQuickStock()" style="width:55px; text-align:center; background:#0a0a0a; border:1px solid #555; color:#fff; border-radius:4px; padding:4px; font-weight:700;">
+            <button type="button" onclick="window.velenAdmin.changeQuickQty('${sz}', 1)" style="width:28px; height:28px; background:#222; border:1px solid #444; color:#fff; border-radius:4px; font-weight:700; cursor:pointer;">+</button>
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    recalculateQuickStock();
+    modal.classList.add('active');
+  }
+
+  function recalculateQuickStock() {
+    let total = 0;
+    const inputs = document.querySelectorAll('.quick-size-input');
+    inputs.forEach(inp => {
+      total += Math.max(0, parseInt(inp.value, 10) || 0);
+    });
+    const totalEl = document.getElementById('quickStockTotalCalculated');
+    if (totalEl) totalEl.textContent = `${total} قطعة`;
+  }
+
+  function changeQuickQty(size, delta) {
+    const inp = document.querySelector(`.quick-size-input[data-size="${size}"]`);
+    if (inp) {
+      const current = parseInt(inp.value, 10) || 0;
+      inp.value = Math.max(0, current + delta);
+      recalculateQuickStock();
+    }
+  }
+
+  function openLinkInventoryModal(preselectedId) {
+    const modal = document.getElementById('linkInventoryModal');
+    if (!modal) return;
+
+    const selectA = document.getElementById('linkProductASelect');
+    const selectB = document.getElementById('linkProductBSelect');
+    if (!selectA || !selectB) return;
+
+    const options = state.products.map(p => `
+      <option value="${p.id}">${p.name} (${p.category || 'Piece'}) — المتوفر: ${p.stock || 0} قطعة</option>
+    `).join('');
+
+    selectA.innerHTML = options;
+    selectB.innerHTML = options;
+
+    if (preselectedId) {
+      selectA.value = preselectedId;
+      const other = state.products.find(p => p.id !== preselectedId);
+      if (other) selectB.value = other.id;
+    } else if (state.products.length > 1) {
+      selectA.value = state.products[0].id;
+      selectB.value = state.products[1].id;
+    }
+
+    modal.classList.add('active');
+  }
+
+  async function unlinkInventory(productId) {
+    const p = state.products.find(x => x.id === productId);
+    if (!p) return;
+    if (!confirm(`هل أنت متأكد من فك ارتباط المخزون الموحد لقطعة (${p.name})؟`)) return;
+
+    try {
+      const res = await fetch('/api/inventory/link', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ productAId: productId, productBId: 'none' })
+      });
+      const data = await res.json();
+      if (data.success) {
+        showAdminToast(data.message || 'تم فك الارتباط بنجاح', 'success');
+        await fetchAllData();
+      }
+    } catch (e) {
+      console.error(e);
+      showAdminToast('حدث خطأ أثناء فك الارتباط', 'error');
+    }
+  }
   function renderOrders() {
     const tbody = document.getElementById('ordersFullTable');
     if (!tbody) return;
@@ -420,9 +687,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let list = state.orders;
     if (search) {
-      list = list.filter(o => 
-        o.id.toLowerCase().includes(search) || 
-        o.customerName.toLowerCase().includes(search) || 
+      list = list.filter(o =>
+        o.id.toLowerCase().includes(search) ||
+        o.customerName.toLowerCase().includes(search) ||
         o.phone.includes(search)
       );
     }
@@ -528,7 +795,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     tbody.innerHTML = reviews.map(r => {
       const stars = '★'.repeat(Math.min(5, Math.max(1, r.rating || 5))) + '☆'.repeat(Math.max(0, 5 - (r.rating || 5)));
-      const date = r.createdAt ? new Date(r.createdAt).toLocaleDateString('ar-JO', { month:'short', day:'numeric', hour:'2-digit', minute:'2-digit' }) : '—';
+      const date = r.createdAt ? new Date(r.createdAt).toLocaleDateString('ar-JO', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : '—';
       return `
         <tr>
           <td><strong style="color:#fff;">${r.author || 'زبون'}</strong></td>
@@ -1269,7 +1536,12 @@ document.addEventListener('DOMContentLoaded', () => {
         sizes: sizes.length > 0 ? sizes : ['S', 'M', 'L', 'XL'],
         colors: state.productColors && state.productColors.length > 0 ? state.productColors : [{ name: 'Default', hex: '#000000', images: allImages }],
         image: primaryImage,
-        images: allImages
+        images: allImages,
+        showModelStats: document.getElementById('prodShowModelStats')?.checked ?? true,
+        modelHeight: document.getElementById('prodModelHeight')?.value?.trim() || '186 cm',
+        modelWeight: document.getElementById('prodModelWeight')?.value?.trim() || '77 kg',
+        modelSize: document.getElementById('prodModelSize')?.value?.trim() || 'L',
+        linkedProductId: document.getElementById('prodLinkedProductId')?.value || null
       };
 
       try {
@@ -1370,7 +1642,21 @@ document.addEventListener('DOMContentLoaded', () => {
     if (document.getElementById('prodCostPrice')) {
       document.getElementById('prodCostPrice').value = '5.000';
     }
-    
+
+    // Reset Model Measurements
+    if (document.getElementById('prodShowModelStats')) document.getElementById('prodShowModelStats').checked = true;
+    if (document.getElementById('prodModelHeight')) document.getElementById('prodModelHeight').value = '186 cm';
+    if (document.getElementById('prodModelWeight')) document.getElementById('prodModelWeight').value = '77 kg';
+    if (document.getElementById('prodModelSize')) document.getElementById('prodModelSize').value = 'L';
+
+    // Populate Linked Product select
+    const linkSelect = document.getElementById('prodLinkedProductId');
+    if (linkSelect) {
+      linkSelect.innerHTML = `<option value="">-- مخزون مستقل (غير مرتبط بأي قطعة أخرى) --</option>` +
+        state.products.map(p => `<option value="${p.id}">${p.name} (${p.category || 'Piece'}) — متوفر: ${p.stock || 0} قطعة</option>`).join('');
+      linkSelect.value = '';
+    }
+
     const dropzone = document.getElementById('prodDropzone');
     if (dropzone) {
       dropzone.style.display = 'block';
@@ -1439,6 +1725,85 @@ document.addEventListener('DOMContentLoaded', () => {
         const text = r.textContent.toLowerCase();
         r.style.display = text.includes(q) ? '' : 'none';
       });
+    });
+
+    // Inventory Listeners & Modals
+    document.getElementById('inventorySearchInput')?.addEventListener('input', renderInventoryTable);
+    document.getElementById('inventoryLinkFilter')?.addEventListener('change', renderInventoryTable);
+    document.getElementById('openLinkInventoryModalBtn')?.addEventListener('click', () => openLinkInventoryModal());
+    document.getElementById('closeLinkInventoryModal')?.addEventListener('click', () => {
+      document.getElementById('linkInventoryModal')?.classList.remove('active');
+    });
+    document.getElementById('cancelLinkInventoryBtn')?.addEventListener('click', () => {
+      document.getElementById('linkInventoryModal')?.classList.remove('active');
+    });
+    document.getElementById('closeQuickStockModal')?.addEventListener('click', () => {
+      document.getElementById('quickStockModal')?.classList.remove('active');
+    });
+    document.getElementById('cancelQuickStockBtn')?.addEventListener('click', () => {
+      document.getElementById('quickStockModal')?.classList.remove('active');
+    });
+
+    document.getElementById('quickStockForm')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const productId = document.getElementById('quickStockProductId').value;
+      const inputs = document.querySelectorAll('.quick-size-input');
+      const sizeInventory = {};
+      let totalStock = 0;
+      inputs.forEach(inp => {
+        const size = inp.getAttribute('data-size');
+        const qty = Math.max(0, parseInt(inp.value, 10) || 0);
+        sizeInventory[size] = qty;
+        totalStock += qty;
+      });
+
+      try {
+        const res = await fetch('/api/inventory/update-stock', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ productId, sizeInventory, stock: totalStock })
+        });
+        const data = await res.json();
+        if (data.success) {
+          document.getElementById('quickStockModal')?.classList.remove('active');
+          showAdminToast('تم تحديث كميات المخزون وتوحيدها بالبث الحي!', 'success');
+          await fetchAllData();
+        } else {
+          showAdminToast(data.message || 'فشل التحديث', 'error');
+        }
+      } catch (err) {
+        console.error(err);
+        showAdminToast('حدث خطأ أثناء تحديث المخزون', 'error');
+      }
+    });
+
+    document.getElementById('linkInventoryForm')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const prodA = document.getElementById('linkProductASelect').value;
+      const prodB = document.getElementById('linkProductBSelect').value;
+      if (prodA === prodB) {
+        showAdminToast('لا يمكن ربط القطعة مع نفسها! اختر قطعتين مختلفتين.', 'error');
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/inventory/link', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ productAId: prodA, productBId: prodB })
+        });
+        const data = await res.json();
+        if (data.success) {
+          document.getElementById('linkInventoryModal')?.classList.remove('active');
+          showAdminToast(data.message || 'تم توحيد المخزون وربط القطعتين بنجاح!', 'success');
+          await fetchAllData();
+        } else {
+          showAdminToast(data.message || 'فشل ربط المخزون', 'error');
+        }
+      } catch (err) {
+        console.error(err);
+        showAdminToast('حدث خطأ أثناء ربط المخزون', 'error');
+      }
     });
 
     // Test Email Button
@@ -1571,7 +1936,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       try {
         await fetch('/api/admin/logout', { method: 'POST' });
-      } catch (e) {}
+      } catch (e) { }
       showAdminToast('تم قفل لوحة التحكم', 'info');
     });
   }
@@ -1601,7 +1966,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const d = new Date(isoStr);
         if (isNaN(d.getTime())) return '';
         const pad = n => String(n).padStart(2, '0');
-        return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+        return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
       } catch (e) { return ''; }
     };
 
@@ -1727,7 +2092,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const timeStr = diffDays > 0 ? `${diffDays} يوم و ${diffHoursRem} س` : `${diffHours} ساعة`;
         timerHtml = `<span class="badge" style="background:rgba(52,152,219,0.15); color:#3498db; border:1px solid rgba(52,152,219,0.4); padding:3px 8px; border-radius:4px; font-size:11px;">
           <i class="fa-solid fa-clock"></i> يبدأ بعد: ${timeStr}
-        </span><br><small style="color:#888; font-size:10px;">${startDate.toLocaleDateString('ar-JO')} ${startDate.toLocaleTimeString('ar-JO', {hour:'2-digit', minute:'2-digit'})}</small>`;
+        </span><br><small style="color:#888; font-size:10px;">${startDate.toLocaleDateString('ar-JO')} ${startDate.toLocaleTimeString('ar-JO', { hour: '2-digit', minute: '2-digit' })}</small>`;
       } else if (endDate && !isNaN(endDate.getTime())) {
         if (now > endDate) {
           isExpired = true;
@@ -1743,7 +2108,7 @@ document.addEventListener('DOMContentLoaded', () => {
           const timeStr = diffDays > 0 ? `${diffDays} يوم و ${diffHoursRem} س` : (diffHours > 0 ? `${diffHours} س و ${diffMinsRem} د` : `${diffMinsRem} دقيقة`);
           timerHtml = `<span class="badge" style="background:rgba(46,204,113,0.15); color:#2ecc71; border:1px solid rgba(46,204,113,0.4); padding:3px 8px; border-radius:4px; font-size:11px; font-weight:700;">
             <i class="fa-solid fa-stopwatch"></i> باقي: ${timeStr}
-          </span><br><small style="color:#aaa; font-size:10px;">ينتهي: ${endDate.toLocaleDateString('ar-JO')} ${endDate.toLocaleTimeString('ar-JO', {hour:'2-digit', minute:'2-digit'})}</small>`;
+          </span><br><small style="color:#aaa; font-size:10px;">ينتهي: ${endDate.toLocaleDateString('ar-JO')} ${endDate.toLocaleTimeString('ar-JO', { hour: '2-digit', minute: '2-digit' })}</small>`;
         }
       } else {
         timerHtml = `<span style="color:#888; font-size:11px;"><i class="fa-solid fa-infinity"></i> دائم (مستمر)</span>`;
@@ -1894,6 +2259,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const titles = {
       dashboard: 'نظرة عامة والإحصائيات',
       products: 'إدارة المنتجات وكتالوج Velen',
+      inventory: 'إدارة المخزون والمستودع والربط المشترك (Inventory)',
       orders: 'الطلبات والمبيعات وإدارة التوصيل',
       community: 'مشاركات المجتمع وتقييمات الـ 5 نجوم',
       promos: 'إدارة كودات الخصم والعروض الترويجية',
@@ -1903,6 +2269,10 @@ document.addEventListener('DOMContentLoaded', () => {
       ai: 'Velen AI Copilot — مستشار الذكاء الاصطناعي'
     };
     if (pageTitle) pageTitle.textContent = titles[tabId] || 'لوحة التحكم';
+
+    if (tabId === 'inventory') {
+      renderInventoryTable();
+    }
 
     if (window.innerWidth <= 768) {
       adminSidebar.classList.remove('open');
@@ -2013,7 +2383,7 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
           const dt = new Date(d.comingSoon.launchDate);
           const pad = n => String(n).padStart(2, '0');
-          csDate.value = `${dt.getFullYear()}-${pad(dt.getMonth()+1)}-${pad(dt.getDate())}T${pad(dt.getHours())}:${pad(dt.getMinutes())}`;
+          csDate.value = `${dt.getFullYear()}-${pad(dt.getMonth() + 1)}-${pad(dt.getDate())}T${pad(dt.getHours())}:${pad(dt.getMinutes())}`;
         } catch (e) {
           csDate.value = d.comingSoon.launchDate;
         }
@@ -2691,7 +3061,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (catSelect) {
         catSelect.value = p.category;
         if (!catSelect.value && p.category) {
-          const matchOpt = Array.from(catSelect.options).find(o => 
+          const matchOpt = Array.from(catSelect.options).find(o =>
             o.value.toLowerCase() === p.category.toLowerCase() ||
             o.text.toLowerCase().includes(p.category.toLowerCase())
           );
@@ -2704,7 +3074,21 @@ document.addEventListener('DOMContentLoaded', () => {
       document.getElementById('prodFeatured').checked = Boolean(p.featured);
       document.getElementById('prodFabric').value = p.fabric || '';
       document.getElementById('prodDescription').value = p.description || '';
-      
+
+      // Populate Model Measurements
+      if (document.getElementById('prodShowModelStats')) document.getElementById('prodShowModelStats').checked = p.showModelStats !== false;
+      if (document.getElementById('prodModelHeight')) document.getElementById('prodModelHeight').value = p.modelHeight || '186 cm';
+      if (document.getElementById('prodModelWeight')) document.getElementById('prodModelWeight').value = p.modelWeight || '77 kg';
+      if (document.getElementById('prodModelSize')) document.getElementById('prodModelSize').value = p.modelSize || 'L';
+
+      // Populate Linked Product select
+      const linkSelect = document.getElementById('prodLinkedProductId');
+      if (linkSelect) {
+        linkSelect.innerHTML = `<option value="">-- مخزون مستقل (غير مرتبط بأي قطعة أخرى) --</option>` +
+          state.products.filter(x => x.id !== p.id).map(x => `<option value="${x.id}">${x.name} (${x.category || 'Piece'}) — متوفر: ${x.stock || 0} قطعة</option>`).join('');
+        linkSelect.value = p.linkedProductId || '';
+      }
+
       const prodImgInput = document.getElementById('prodImageUrl');
       if (prodImgInput) prodImgInput.value = p.image || '';
 
@@ -2720,7 +3104,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const size = card.getAttribute('data-size');
         const check = card.querySelector('.size-enable-check');
         const input = card.querySelector('.size-qty-input');
-        
+
         if (p.sizeInventory && typeof p.sizeInventory[size] !== 'undefined') {
           const qty = parseInt(p.sizeInventory[size], 10) || 0;
           check.checked = true;
@@ -3017,7 +3401,13 @@ document.addEventListener('DOMContentLoaded', () => {
       } catch (e) {
         showAdminToast('حدث خطأ في الاتصال بالخادم', 'error');
       }
-    }
+    },
+    openQuickStockModal,
+    recalculateQuickStock,
+    changeQuickQty,
+    openLinkModalFor: (id) => openLinkInventoryModal(id),
+    unlinkInventory,
+    renderInventoryTable
   };
 
   // ================= SETUP MANUAL ORDERS (INSTAGRAM / PHONE) =================
@@ -3596,7 +3986,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (document.getElementById('finTotalRevenue')) document.getElementById('finTotalRevenue').textContent = totalRevenue.toFixed(3) + ' JOD';
     if (document.getElementById('finTotalCOGS')) document.getElementById('finTotalCOGS').textContent = totalCOGS.toFixed(3) + ' JOD';
     if (document.getElementById('finTotalExpenses')) document.getElementById('finTotalExpenses').textContent = totalExpenses.toFixed(3) + ' JOD';
-    
+
     const netEl = document.getElementById('finNetProfit');
     if (netEl) {
       netEl.textContent = (netProfit >= 0 ? '+' : '') + netProfit.toFixed(3) + ' JOD';
