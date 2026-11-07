@@ -4511,23 +4511,29 @@ html[dir="ltr"] .nav-brand-logo {
 
 .order-tracker-box {
   max-width: 660px;
+  width: 100%;
+  box-sizing: border-box;
   margin: 0 auto 40px;
-  padding: 36px 30px;
+  padding: 32px 26px;
   background: linear-gradient(135deg, #141414 0%, #1a1a1a 100%);
   border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: 16px;
   box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
 }
 
 .lookup-input-group {
   display: flex;
   align-items: center;
   background: #0c0c0c;
-  border: 1.5px solid rgba(255, 255, 255, 0.15);
+  border: 1.5px solid rgba(255, 255, 255, 0.18);
   border-radius: 10px;
-  padding: 6px 8px 6px 16px;
-  gap: 12px;
+  padding: 6px 6px 6px 14px;
+  gap: 10px;
   transition: border-color 0.2s;
+  width: 100%;
+  box-sizing: border-box;
+  max-width: 100%;
 }
 
 .lookup-input-group:focus-within {
@@ -4537,32 +4543,37 @@ html[dir="ltr"] .nav-brand-logo {
 
 .lookup-input-group i {
   color: #ffffff;
-  font-size: 16px;
+  font-size: 15px;
+  flex-shrink: 0;
 }
 
 .lookup-input-group input {
   flex: 1;
+  min-width: 0;
+  width: 100%;
   background: transparent;
   border: none;
   color: #ffffff;
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 600;
   outline: none;
-  letter-spacing: 1px;
+  letter-spacing: 0.5px;
 }
 
 .btn-lookup-submit {
+  flex-shrink: 0;
   background: #ffffff;
   color: #000000;
   border: none;
   border-radius: 8px;
-  padding: 12px 22px;
-  font-weight: 800;
-  font-size: 14px;
+  padding: 10px 18px;
+  font-weight: 700;
+  font-size: 13px;
   cursor: pointer;
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 8px;
+  justify-content: center;
+  gap: 6px;
   transition: background 0.2s, transform 0.2s;
   white-space: nowrap;
 }
@@ -4570,6 +4581,35 @@ html[dir="ltr"] .nav-brand-logo {
 .btn-lookup-submit:hover {
   background: #ffffff;
   transform: scale(1.02);
+}
+
+@media (max-width: 640px) {
+  .track-order-section {
+    padding: 20px 10px 60px;
+  }
+  .order-tracker-box {
+    padding: 22px 14px;
+    border-radius: 12px;
+    margin-bottom: 24px;
+  }
+  .lookup-input-group {
+    padding: 6px 6px 6px 12px;
+    gap: 6px;
+  }
+  .lookup-input-group input {
+    font-size: 14px;
+  }
+  .btn-lookup-submit {
+    padding: 9px 12px;
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 380px) {
+  .btn-lookup-submit {
+    padding: 8px 10px;
+    font-size: 11px;
+  }
 }
 
 .lookup-hint {
@@ -4661,15 +4701,27 @@ html[dir="ltr"] .nav-brand-logo {
 }
 
 .badge-status.out-delivery {
-  background: rgba(255, 255, 255, 0.1);
-  color: #ffffff;
-  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: rgba(52, 152, 219, 0.18);
+  color: #3498db;
+  border: 1px solid rgba(52, 152, 219, 0.35);
+}
+
+.badge-status.preparing {
+  background: rgba(243, 156, 18, 0.18);
+  color: #f39c12;
+  border: 1px solid rgba(243, 156, 18, 0.35);
 }
 
 .badge-status.pending {
-  background: rgba(52, 152, 219, 0.15);
-  color: #3498db;
-  border: 1px solid rgba(52, 152, 219, 0.3);
+  background: rgba(229, 185, 95, 0.18);
+  color: #e5b95f;
+  border: 1px solid rgba(229, 185, 95, 0.35);
+}
+
+.badge-status.cancelled {
+  background: rgba(231, 76, 60, 0.18);
+  color: #e74c3c;
+  border: 1px solid rgba(231, 76, 60, 0.35);
 }
 
 .track-item-row {

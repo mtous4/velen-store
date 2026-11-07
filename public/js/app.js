@@ -992,6 +992,31 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  // Helper to reliably match product categories without substring collision (e.g. "women" vs "men")
+  function matchCategoryHelper(product, targetFilter) {
+    if (!targetFilter || targetFilter === 'all') return true;
+    const f = String(targetFilter).toLowerCase().trim();
+    const pCat = String(product.category || '').toLowerCase().trim();
+    const pGen = String(product.gender || '').toLowerCase().trim();
+    const pName = String(product.name || '').toLowerCase();
+    const pNameAr = String(product.nameAr || '').toLowerCase();
+
+    // Specific gender disambiguation to prevent "women" matching "men" and vice versa
+    const isMenFilter = (f === 'men' || f === 'رجال' || f === 'الرجال');
+    const isWomenFilter = (f === 'women' || f === 'نساء' || f === 'النساء');
+
+    if (isMenFilter) {
+      if (pCat === 'women' || pGen === 'women' || pCat.includes('نساء') || pGen.includes('نساء')) return false;
+      return (pCat === 'men' || pGen === 'men' || pCat.includes('رجال') || pGen.includes('رجال'));
+    }
+    if (isWomenFilter) {
+      if (pCat === 'men' || pGen === 'men' || pCat === 'الرجال' || pGen === 'الرجال') return false;
+      return (pCat === 'women' || pGen === 'women' || pCat.includes('نساء') || pGen.includes('نساء'));
+    }
+
+    return pCat === f || pCat.includes(f) || pName.includes(f) || pNameAr.includes(f);
+  }
+
   // Render Featured Drops on the Home Page (Matching Image 2)
   function renderFeaturedProducts(filterCat) {
     if (typeof filterCat === 'string') {
@@ -1007,13 +1032,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const currentCat = state.activeFeaturedCategory || 'all';
     let filtered = state.products;
     if (currentCat !== 'all') {
-      const target = currentCat.toLowerCase();
-      filtered = state.products.filter(p => {
-        const cat = (p.category || '').toLowerCase();
-        const pName = (p.name || '').toLowerCase();
-        const pNameAr = (p.nameAr || '').toLowerCase();
-        return cat === target || cat.includes(target) || target.includes(cat) || pName.includes(target) || pNameAr.includes(target);
-      });
+      filtered = state.products.filter(p => matchCategoryHelper(p, currentCat));
     }
 
     const isAr = state.activeLang === 'ar';
@@ -1115,43 +1134,107 @@ document.addEventListener('DOMContentLoaded', () => {
         <div class="orders-matched-list">
           <h4 class="matched-title">${isAr ? `الطلبات المسجلة (${matched.length})` : `Found Orders (${matched.length})`}</h4>
           ${matched.map(ord => {
-            const status = ord.status || 'pending';
+            const rawStatus = String(ord.status || 'Pending').toLowerCase().trim();
             let statusBadge = '';
-            if (status === 'completed' || status === 'delivered') {
+            let stepIndex = 1; // 1: Placed, 2: Preparing, 3: Out for Delivery, 4: Delivered, 0: Cancelled
+
+            if (rawStatus === 'cancelled' || rawStatus.includes('ملغي')) {
+              stepIndex = 0;
+              statusBadge = `<span class="badge-status cancelled"><i class="fa-solid fa-circle-xmark"></i> ${isAr ? 'ملغي' : 'Cancelled'}</span>`;
+            } else if (rawStatus === 'delivered' || rawStatus === 'completed' || rawStatus.includes('تسليم')) {
+              stepIndex = 4;
               statusBadge = `<span class="badge-status delivered"><i class="fa-solid fa-circle-check"></i> ${isAr ? 'تم التسليم بنجاح' : 'Delivered'}</span>`;
-            } else if (status === 'shipped' || status === 'out_for_delivery') {
+            } else if (rawStatus === 'out for delivery' || rawStatus === 'out_for_delivery' || rawStatus === 'shipped' || rawStatus.includes('مندوب')) {
+              stepIndex = 3;
               statusBadge = `<span class="badge-status out-delivery"><i class="fa-solid fa-truck-fast"></i> ${isAr ? 'مع المندوب للتوصيل' : 'Out for Delivery'}</span>`;
+            } else if (rawStatus === 'preparing' || rawStatus.includes('تجهيز')) {
+              stepIndex = 2;
+              statusBadge = `<span class="badge-status preparing"><i class="fa-solid fa-box-open"></i> ${isAr ? 'جاري التجهيز' : 'Preparing'}</span>`;
             } else {
-              statusBadge = `<span class="badge-status pending"><i class="fa-solid fa-clock"></i> ${isAr ? 'قيد التجهيز والتغليف' : 'Processing'}</span>`;
+              stepIndex = 1;
+              statusBadge = `<span class="badge-status pending"><i class="fa-solid fa-clock"></i> ${isAr ? 'قيد المراجعة والانتظار' : 'Order Placed'}</span>`;
+            }
+
+            const steps = [
+              { num: 1, label: isAr ? 'تم الطلب' : 'Placed', icon: 'fa-check' },
+              { num: 2, label: isAr ? 'التجهيز' : 'Preparing', icon: 'fa-box' },
+              { num: 3, label: isAr ? 'مع المندوب' : 'Out for Delivery', icon: 'fa-truck-fast' },
+              { num: 4, label: isAr ? 'تم التسليم' : 'Delivered', icon: 'fa-house-circle-check' }
+            ];
+
+            let timelineHtml = '';
+            if (stepIndex > 0) {
+              const progressPct = ((stepIndex - 1) / 3) * 100;
+              timelineHtml = `
+                <div class="order-stepper-wrap" style="margin: 14px 0 16px; padding: 14px 10px; background: #0c0c0c; border: 1px solid #222; border-radius: 8px;">
+                  <div style="display:flex; justify-content:space-between; align-items:center; position:relative;">
+                    <div style="position:absolute; top:14px; left:12%; right:12%; height:2px; background:#222; z-index:1;"></div>
+                    <div style="position:absolute; top:14px; left:12%; width:calc((100% - 24%) * ${progressPct / 100}); height:2px; background:var(--gold-accent, #e5b95f); z-index:2; transition:width 0.4s ease;"></div>
+                    ${steps.map(s => {
+                      const isDone = stepIndex >= s.num;
+                      const isCurrent = stepIndex === s.num;
+                      const circleBg = isDone ? 'var(--gold-accent, #e5b95f)' : '#161616';
+                      const circleColor = isDone ? '#000' : '#666';
+                      const borderCol = isCurrent ? '#fff' : (isDone ? 'var(--gold-accent, #e5b95f)' : '#333');
+                      return `
+                        <div style="display:flex; flex-direction:column; align-items:center; z-index:3; width:25%;">
+                          <div style="width:28px; height:28px; border-radius:50%; background:${circleBg}; color:${circleColor}; border:2px solid ${borderCol}; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:800; transition:all 0.3s;">
+                            <i class="fa-solid ${s.icon}"></i>
+                          </div>
+                          <span style="font-size:10px; color:${isDone ? '#fff' : '#666'}; font-weight:${isCurrent ? '700' : '500'}; margin-top:6px; text-align:center; white-space:nowrap;">${s.label}</span>
+                        </div>
+                      `;
+                    }).join('')}
+                  </div>
+                </div>
+              `;
+            } else {
+              timelineHtml = `
+                <div style="margin: 14px 0; padding: 10px 14px; background: rgba(231,76,60,0.1); border: 1px solid rgba(231,76,60,0.3); border-radius: 8px; color: #e74c3c; font-size: 12px; display: flex; align-items: center; gap: 8px;">
+                  <i class="fa-solid fa-ban" style="font-size: 15px;"></i>
+                  <span>${isAr ? 'تم إلغاء هذا الطلب. للاستفسار أو إعادة الطلب يمكنك مراسلتنا فوراً عبر واتساب.' : 'This order has been cancelled. For inquiries, feel free to contact us on WhatsApp.'}</span>
+                </div>
+              `;
             }
 
             const items = Array.isArray(ord.items) ? ord.items : [];
             const dateStr = ord.createdAt ? new Date(ord.createdAt).toLocaleDateString(isAr ? 'ar-JO' : 'en-US', { day:'numeric', month:'short', year:'numeric' }) : '';
             const totalF = Number(ord.total || 0).toFixed(3) + ' JOD';
+            const orderIdVal = ord.orderNumber || ord.id;
+            const cleanPhone = (ord.phone || '').replace(/[^0-9]/g, '');
+            const waQuery = encodeURIComponent(`مرحباً Velen، أستفسر عن حالة طلبي رقم #${orderIdVal}`);
 
             return `
               <div class="matched-order-card">
                 <div class="order-card-top">
                   <div>
-                    <span class="order-number-tag">#${ord.orderNumber || ord.id}</span>
+                    <span class="order-number-tag">#${orderIdVal}</span>
                     <span class="order-date-tag">${dateStr}</span>
                   </div>
                   ${statusBadge}
                 </div>
+
+                ${timelineHtml}
+
                 <div class="order-card-items">
                   ${items.map(it => `
                     <div class="track-item-row">
-                      <span>• ${it.name} ${it.size ? `(${it.size})` : ''} ${it.color ? `— ${it.color}` : ''} × ${it.qty || 1}</span>
-                      <span class="track-item-price">${Number(it.price * (it.qty || 1)).toFixed(3)} JOD</span>
+                      <span>• ${it.name} ${it.size ? `(${it.size})` : ''} ${it.color ? `— ${it.color}` : ''} × ${it.qty || it.quantity || 1}</span>
+                      <span class="track-item-price">${Number(it.price * (it.qty || it.quantity || 1)).toFixed(3)} JOD</span>
                     </div>
                   `).join('')}
                 </div>
-                <div class="order-card-footer">
+                <div class="order-card-footer" style="flex-wrap:wrap; gap:10px;">
                   <div class="order-dest">
                     <i class="fa-solid fa-location-dot"></i> ${ord.city || 'Amman'} — ${ord.address || ''}
                   </div>
-                  <div class="order-total-highlight">
-                    <span>${isAr ? 'المجموع:' : 'Total:'}</span> <strong>${totalF}</strong>
+                  <div style="display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
+                    <div class="order-total-highlight">
+                      <span>${isAr ? 'المجموع:' : 'Total:'}</span> <strong>${totalF}</strong>
+                    </div>
+                    <a href="https://wa.me/962770188144?text=${waQuery}" target="_blank" class="track-wa-btn" style="display:inline-flex; align-items:center; gap:6px; background:rgba(37,211,102,0.12); color:#25d366; border:1px solid rgba(37,211,102,0.3); padding:4px 10px; border-radius:20px; font-size:11px; font-weight:700; text-decoration:none;">
+                      <i class="fa-brands fa-whatsapp"></i> ${isAr ? 'استفسار عبر واتساب' : 'WhatsApp'}
+                    </a>
                   </div>
                 </div>
               </div>
@@ -1480,14 +1563,14 @@ document.addEventListener('DOMContentLoaded', () => {
           ];
 
       const tabsHtml = [
-        `<button type="button" class="cat-pill ${activeCat === 'all' ? 'active' : ''}" data-cat="all" aria-label="${isAr ? 'عرض جميع القطع' : 'View all pieces'}">${allLabel}</button>`,
+        `<button type="button" class="cat-pill ${activeCat === 'all' ? 'active' : ''}" data-cat="all" onclick="if(window.velenApp && window.velenApp.filterHomeCollection) window.velenApp.filterHomeCollection('all')" aria-label="${isAr ? 'عرض جميع القطع' : 'View all pieces'}">${allLabel}</button>`,
         ...availableCategories.map(cat => {
           const catVal = cat.nameEn || cat.id;
           const label = isAr ? (cat.nameAr || cat.nameEn || cat.id) : (cat.nameEn || cat.id);
           const isActive = (activeCat.toLowerCase() === (cat.id || '').toLowerCase() || 
                             activeCat.toLowerCase() === (cat.nameEn || '').toLowerCase() || 
                             activeCat.toLowerCase() === (cat.slug || '').toLowerCase());
-          return `<button type="button" class="cat-pill ${isActive ? 'active' : ''}" data-cat="${catVal}" aria-label="${label}">${label}</button>`;
+          return `<button type="button" class="cat-pill ${isActive ? 'active' : ''}" data-cat="${escapeHtml(catVal)}" onclick="if(window.velenApp && window.velenApp.filterHomeCollection) window.velenApp.filterHomeCollection('${escapeHtml(catVal)}')" aria-label="${escapeHtml(label)}">${escapeHtml(label)}</button>`;
         })
       ].join('');
 
@@ -1619,25 +1702,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let filtered = state.products;
     if (state.activeCategory && state.activeCategory !== 'all') {
-      const activeCat = (state.categories || []).find(c => 
-        (c.id && c.id.toLowerCase() === state.activeCategory.toLowerCase()) || 
-        (c.nameEn && c.nameEn.toLowerCase() === state.activeCategory.toLowerCase()) ||
-        c.nameAr === state.activeCategory
-      );
-      const catId = (activeCat?.id || '').toLowerCase();
-      const catEn = (activeCat?.nameEn || state.activeCategory).toLowerCase();
-      const catAr = (activeCat?.nameAr || '').toLowerCase();
-
-      filtered = state.products.filter(p => {
-        const pCat = (p.category || '').toLowerCase();
-        const pName = (p.name || '').toLowerCase();
-        return pCat === catEn || 
-               pCat === catId || 
-               (catId && pCat.includes(catId)) || 
-               (catEn && pCat.includes(catEn)) || 
-               (catEn && pName.includes(catEn)) ||
-               (catAr && (pCat.includes(catAr) || pName.includes(catAr)));
-      });
+      filtered = state.products.filter(p => matchCategoryHelper(p, state.activeCategory));
     }
 
     if (filtered.length === 0) {
@@ -4234,16 +4299,21 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
 
-    // Homepage Category Tabs Filter (All Pieces | Sweatshirts | Sweatpants)
-    const homeTabs = document.querySelectorAll('#homeCategoryTabs .cat-pill, .home-tab-btn');
-    homeTabs.forEach(tab => {
-      tab.addEventListener('click', () => {
-        document.querySelectorAll('#homeCategoryTabs .cat-pill, .home-tab-btn').forEach(t => t.classList.remove('active'));
-        tab.classList.add('active');
-        const cat = tab.getAttribute('data-cat') || tab.getAttribute('data-category') || 'all';
-        renderFeaturedProducts(cat);
+    // Homepage Category Tabs Filter (All Pieces | Men | Women | Collections)
+    const homeCatTabsEl = document.getElementById('homeCategoryTabs');
+    if (homeCatTabsEl) {
+      homeCatTabsEl.addEventListener('click', (e) => {
+        const tab = e.target.closest('.cat-pill, .home-tab-btn');
+        if (tab) {
+          const cat = tab.getAttribute('data-cat') || tab.getAttribute('data-category') || 'all';
+          if (window.velenApp && window.velenApp.filterHomeCollection) {
+            window.velenApp.filterHomeCollection(cat);
+          } else {
+            renderFeaturedProducts(cat);
+          }
+        }
       });
-    });
+    }
 
     // Size Assistant Listeners
     setupSizeAssistant();
@@ -4521,6 +4591,22 @@ document.addEventListener('DOMContentLoaded', () => {
     },
     renderFeaturedProducts: (cat) => {
       renderFeaturedProducts(cat);
+    },
+    filterHomeCollection: (cat) => {
+      const catVal = cat || 'all';
+      state.activeFeaturedCategory = catVal;
+      const homeTabsContainer = document.getElementById('homeCategoryTabs');
+      if (homeTabsContainer) {
+        homeTabsContainer.querySelectorAll('.cat-pill').forEach(btn => {
+          const bCat = btn.getAttribute('data-cat') || 'all';
+          if (bCat.toLowerCase() === catVal.toLowerCase()) {
+            btn.classList.add('active');
+          } else {
+            btn.classList.remove('active');
+          }
+        });
+      }
+      renderFeaturedProducts(catVal);
     },
     addCurrentModalToCart: () => {
       if (state.currentProductForModal) {

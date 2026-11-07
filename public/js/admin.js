@@ -884,6 +884,10 @@ document.addEventListener('DOMContentLoaded', () => {
   state.productImages = [];
   state.productColors = [];
 
+  // Drag and Drop State Tracking
+  let draggedColorImgIndex = null;
+  let draggedGalleryImgIndex = null;
+
   function renderProductGalleryManager() {
     const grid = document.getElementById('prodGalleryGrid');
     const countBadge = document.getElementById('prodGalleryCount');
@@ -898,13 +902,44 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    grid.innerHTML = state.productImages.map((url, idx) => `
-      <div style="position:relative; width:80px; height:80px; border-radius:6px; overflow:hidden; border:${idx === 0 ? '2px solid var(--gold-accent)' : '1px solid #333'}; background:#111; display:inline-block;">
-        <img src="${url}" style="width:100%; height:100%; object-fit:cover;" onerror="this.src='/assets/velen-logo.jpg'">
-        ${idx === 0 ? '<span style="position:absolute; top:2px; right:2px; background:var(--gold-accent); color:#000; font-size:9px; font-weight:800; padding:1px 4px; border-radius:3px;">★ رئيسية</span>' : `<button type="button" onclick="window.velenAdmin.setCoverImage(${idx})" title="تعيين كصورة رئيسية" style="position:absolute; top:2px; right:2px; background:rgba(0,0,0,0.7); color:#fff; font-size:9px; border:none; padding:1px 4px; border-radius:3px; cursor:pointer;">غلاف</button>`}
-        <button type="button" onclick="window.velenAdmin.removeProductImage(${idx})" title="حذف الصورة" style="position:absolute; bottom:2px; left:2px; background:rgba(255,71,87,0.9); color:#fff; font-size:11px; border:none; width:20px; height:20px; border-radius:50%; cursor:pointer; display:flex; align-items:center; justify-content:center; line-height:1;">✕</button>
+    const itemsHtml = state.productImages.map((url, idx) => `
+      <div class="draggable-img-box"
+           draggable="true"
+           data-idx="${idx}"
+           ondragstart="window.velenAdmin.onGalleryImgDragStart(event, ${idx})"
+           ondragover="window.velenAdmin.onGalleryImgDragOver(event)"
+           ondragenter="window.velenAdmin.onGalleryImgDragEnter(event)"
+           ondragleave="window.velenAdmin.onGalleryImgDragLeave(event)"
+           ondrop="window.velenAdmin.onGalleryImgDrop(event, ${idx})"
+           ondragend="window.velenAdmin.onGalleryImgDragEnd(event)"
+           style="position:relative; width:84px; height:84px; border-radius:8px; overflow:hidden; border:${idx === 0 ? '2px solid var(--gold-accent)' : '1px solid #444'}; background:#111; cursor:grab; transition:transform 0.2s, box-shadow 0.2s; user-select:none; flex-shrink:0;">
+        <img src="${url}" style="width:100%; height:100%; object-fit:cover; pointer-events:none;" onerror="this.src='/assets/velen-logo.jpg'">
+        
+        <!-- Cover badge / button -->
+        ${idx === 0 
+          ? '<span style="position:absolute; top:3px; right:3px; background:var(--gold-accent); color:#000; font-size:9px; font-weight:800; padding:1px 5px; border-radius:3px; z-index:2; box-shadow:0 1px 4px rgba(0,0,0,0.6);">★ رئيسية</span>' 
+          : `<button type="button" onclick="event.stopPropagation(); window.velenAdmin.setCoverImage(${idx})" title="تعيين كصورة رئيسية للقطعة" style="position:absolute; top:3px; right:3px; background:rgba(0,0,0,0.75); color:#fff; font-size:8px; font-weight:700; border:1px solid #666; padding:1px 4px; border-radius:3px; cursor:pointer; z-index:2;">غلاف</button>`}
+        
+        <!-- Delete button -->
+        <button type="button" onclick="event.stopPropagation(); window.velenAdmin.removeProductImage(${idx})" title="حذف الصورة" style="position:absolute; top:3px; left:3px; background:rgba(231,76,60,0.85); color:#fff; font-size:9px; border:none; width:18px; height:18px; border-radius:50%; cursor:pointer; display:flex; align-items:center; justify-content:center; z-index:2;">✕</button>
+        
+        <!-- Position number -->
+        <span style="position:absolute; bottom:3px; right:4px; font-size:8px; color:#bbb; font-weight:700; background:rgba(0,0,0,0.6); padding:0 3px; border-radius:2px; z-index:1;">#${idx + 1}</span>
+
+        <!-- Arrow reorder controls -->
+        <div style="position:absolute; bottom:3px; left:3px; display:flex; gap:3px; z-index:2;">
+          ${idx > 0 ? `<button type="button" onclick="event.stopPropagation(); window.velenAdmin.moveProductGalleryImage(${idx}, -1)" title="تقديم الصورة للأمام" style="background:rgba(0,0,0,0.8); color:#fff; border:1px solid rgba(255,255,255,0.3); width:19px; height:17px; border-radius:3px; font-size:9px; cursor:pointer; display:flex; align-items:center; justify-content:center; padding:0;">◀</button>` : ''}
+          ${idx < state.productImages.length - 1 ? `<button type="button" onclick="event.stopPropagation(); window.velenAdmin.moveProductGalleryImage(${idx}, 1)" title="تأخير الصورة للخلف" style="background:rgba(0,0,0,0.8); color:#fff; border:1px solid rgba(255,255,255,0.3); width:19px; height:17px; border-radius:3px; font-size:9px; cursor:pointer; display:flex; align-items:center; justify-content:center; padding:0;">▶</button>` : ''}
+        </div>
       </div>
     `).join('');
+
+    grid.innerHTML = itemsHtml + `
+      <div style="width:100%; font-size:11px; color:#999; margin-top:8px; display:flex; align-items:center; gap:6px;">
+        <i class="fa-solid fa-arrows-up-down-left-right" style="color:var(--gold-accent);"></i>
+        <span>اسحب وأفلت الصور (Drag & Drop) أو استخدم الأسهم ◀ ▶ لتغيير الترتيب، الصورة الأولى #1 هي الغلاف تلقائياً.</span>
+      </div>
+    `;
   }
   window._renderProductGalleryManager = renderProductGalleryManager;
 
@@ -918,17 +953,48 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!grid) return;
 
     if (state.currentColorEditingImages.length === 0) {
-      grid.innerHTML = `<span style="font-size:11px; color:#777; width:100%; text-align:center; padding:6px 0;">لم يتم رفع أي صور لهذا اللون بعد.</span>`;
+      grid.innerHTML = `<span style="font-size:11px; color:#777; width:100%; text-align:center; padding:8px 0;">لم يتم رفع أي صور لهذا اللون بعد. يمكنك رفع عدة صور وسحبها لترتيبها.</span>`;
       return;
     }
 
-    grid.innerHTML = state.currentColorEditingImages.map((url, i) => `
-      <div style="position:relative; width:65px; height:65px; border-radius:6px; overflow:hidden; border:${i === 0 ? '2px solid var(--gold-accent)' : '1px solid #444'}; background:#111;">
-        <img src="${url}" style="width:100%; height:100%; object-fit:cover;" onerror="this.src='/assets/velen-logo.jpg'">
-        ${i === 0 ? '<span style="position:absolute; top:2px; right:2px; background:var(--gold-accent); color:#000; font-size:8px; font-weight:800; padding:1px 3px; border-radius:2px;">غلاف</span>' : ''}
-        <button type="button" onclick="window.velenAdmin.removeColorEditingImage(${i})" title="حذف الصورة" style="position:absolute; bottom:2px; left:2px; background:rgba(255,71,87,0.9); color:#fff; font-size:10px; border:none; width:18px; height:18px; border-radius:50%; cursor:pointer; display:flex; align-items:center; justify-content:center; line-height:1;">✕</button>
+    const itemsHtml = state.currentColorEditingImages.map((url, i) => `
+      <div class="draggable-color-img-box"
+           draggable="true"
+           data-idx="${i}"
+           ondragstart="window.velenAdmin.onColorImgDragStart(event, ${i})"
+           ondragover="window.velenAdmin.onColorImgDragOver(event)"
+           ondragenter="window.velenAdmin.onColorImgDragEnter(event)"
+           ondragleave="window.velenAdmin.onColorImgDragLeave(event)"
+           ondrop="window.velenAdmin.onColorImgDrop(event, ${i})"
+           ondragend="window.velenAdmin.onColorImgDragEnd(event)"
+           style="position:relative; width:80px; height:80px; border-radius:8px; overflow:hidden; border:${i === 0 ? '2px solid var(--gold-accent)' : '1px solid #444'}; background:#111; cursor:grab; transition:transform 0.2s, box-shadow 0.2s; user-select:none; flex-shrink:0;">
+        <img src="${url}" style="width:100%; height:100%; object-fit:cover; pointer-events:none;" onerror="this.src='/assets/velen-logo.jpg'">
+        
+        <!-- Cover badge / button -->
+        ${i === 0 
+          ? '<span style="position:absolute; top:3px; right:3px; background:var(--gold-accent); color:#000; font-size:9px; font-weight:800; padding:1px 5px; border-radius:3px; z-index:2; box-shadow:0 1px 4px rgba(0,0,0,0.6);">★ غلاف</span>' 
+          : `<button type="button" onclick="event.stopPropagation(); window.velenAdmin.setColorCoverImage(${i})" title="تعيين كصورة غلاف أولى لهذا اللون" style="position:absolute; top:3px; right:3px; background:rgba(0,0,0,0.75); color:#fff; font-size:8px; font-weight:700; border:1px solid #666; padding:1px 4px; border-radius:3px; cursor:pointer; z-index:2;">غلاف</button>`}
+        
+        <!-- Delete button -->
+        <button type="button" onclick="event.stopPropagation(); window.velenAdmin.removeColorEditingImage(${i})" title="حذف الصورة" style="position:absolute; top:3px; left:3px; background:rgba(231,76,60,0.85); color:#fff; font-size:9px; border:none; width:18px; height:18px; border-radius:50%; cursor:pointer; display:flex; align-items:center; justify-content:center; z-index:2;">✕</button>
+        
+        <!-- Position number -->
+        <span style="position:absolute; bottom:3px; right:4px; font-size:8px; color:#bbb; font-weight:700; background:rgba(0,0,0,0.6); padding:0 3px; border-radius:2px; z-index:1;">#${i + 1}</span>
+
+        <!-- Arrow reorder controls -->
+        <div style="position:absolute; bottom:3px; left:3px; display:flex; gap:3px; z-index:2;">
+          ${i > 0 ? `<button type="button" onclick="event.stopPropagation(); window.velenAdmin.moveColorEditingImage(${i}, -1)" title="تقديم الصورة للأمام" style="background:rgba(0,0,0,0.8); color:#fff; border:1px solid rgba(255,255,255,0.3); width:19px; height:17px; border-radius:3px; font-size:9px; cursor:pointer; display:flex; align-items:center; justify-content:center; padding:0;">◀</button>` : ''}
+          ${i < state.currentColorEditingImages.length - 1 ? `<button type="button" onclick="event.stopPropagation(); window.velenAdmin.moveColorEditingImage(${i}, 1)" title="تأخير الصورة للخلف" style="background:rgba(0,0,0,0.8); color:#fff; border:1px solid rgba(255,255,255,0.3); width:19px; height:17px; border-radius:3px; font-size:9px; cursor:pointer; display:flex; align-items:center; justify-content:center; padding:0;">▶</button>` : ''}
+        </div>
       </div>
     `).join('');
+
+    grid.innerHTML = itemsHtml + `
+      <div style="width:100%; font-size:11px; color:#999; margin-top:8px; display:flex; align-items:center; gap:6px;">
+        <i class="fa-solid fa-arrows-up-down-left-right" style="color:var(--gold-accent);"></i>
+        <span>اسحب وأفلت الصور (Drag & Drop) أو استخدم الأسهم ◀ ▶ لتغيير الترتيب، الصورة الأولى #1 هي غلاف هذا اللون تلقائياً.</span>
+      </div>
+    `;
   }
 
   function recalculateColorVarStock() {
@@ -3339,6 +3405,143 @@ document.addEventListener('DOMContentLoaded', () => {
         if (typeof renderColorVarImagesGrid === 'function') renderColorVarImagesGrid();
         showAdminToast('تمت إزالة صورة اللون', 'info');
       }
+    },
+    moveColorEditingImage: (idx, direction) => {
+      if (!state.currentColorEditingImages) return;
+      const targetIdx = idx + direction;
+      if (targetIdx < 0 || targetIdx >= state.currentColorEditingImages.length) return;
+      const [moved] = state.currentColorEditingImages.splice(idx, 1);
+      state.currentColorEditingImages.splice(targetIdx, 0, moved);
+      if (typeof renderColorVarImagesGrid === 'function') renderColorVarImagesGrid();
+    },
+    setColorCoverImage: (idx) => {
+      if (!state.currentColorEditingImages || idx < 0 || idx >= state.currentColorEditingImages.length) return;
+      const [moved] = state.currentColorEditingImages.splice(idx, 1);
+      state.currentColorEditingImages.unshift(moved);
+      if (typeof renderColorVarImagesGrid === 'function') renderColorVarImagesGrid();
+      showAdminToast('تم تعيين الصورة كغلاف لهذا اللون', 'success');
+    },
+    onColorImgDragStart: (e, idx) => {
+      draggedColorImgIndex = idx;
+      if (e.dataTransfer) {
+        e.dataTransfer.effectAllowed = 'move';
+        e.dataTransfer.setData('text/plain', idx);
+      }
+      setTimeout(() => {
+        const box = e.target.closest('.draggable-color-img-box');
+        if (box) box.style.opacity = '0.35';
+      }, 0);
+    },
+    onColorImgDragOver: (e) => {
+      e.preventDefault();
+      if (e.dataTransfer) e.dataTransfer.dropEffect = 'move';
+    },
+    onColorImgDragEnter: (e) => {
+      e.preventDefault();
+      const box = e.target.closest('.draggable-color-img-box');
+      if (box) {
+        box.style.transform = 'scale(1.08)';
+        box.style.borderColor = 'var(--gold-accent)';
+      }
+    },
+    onColorImgDragLeave: (e) => {
+      const box = e.target.closest('.draggable-color-img-box');
+      if (box) {
+        box.style.transform = 'scale(1)';
+        const idx = parseInt(box.getAttribute('data-idx'), 10);
+        box.style.borderColor = idx === 0 ? 'var(--gold-accent)' : '#444';
+      }
+    },
+    onColorImgDrop: (e, targetIdx) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const box = e.target.closest('.draggable-color-img-box');
+      if (box) box.style.transform = 'scale(1)';
+      const srcIdx = (draggedColorImgIndex !== null) ? draggedColorImgIndex : parseInt(e.dataTransfer?.getData('text/plain'), 10);
+      if (srcIdx !== null && !isNaN(srcIdx) && srcIdx !== targetIdx) {
+        if (srcIdx >= 0 && srcIdx < state.currentColorEditingImages.length && targetIdx >= 0 && targetIdx < state.currentColorEditingImages.length) {
+          const [moved] = state.currentColorEditingImages.splice(srcIdx, 1);
+          state.currentColorEditingImages.splice(targetIdx, 0, moved);
+          if (typeof renderColorVarImagesGrid === 'function') renderColorVarImagesGrid();
+          showAdminToast('تم تغيير ترتيب صور اللون بنجاح', 'info');
+        }
+      }
+      draggedColorImgIndex = null;
+    },
+    onColorImgDragEnd: (e) => {
+      const box = e.target.closest('.draggable-color-img-box');
+      if (box) box.style.opacity = '1';
+      document.querySelectorAll('.draggable-color-img-box').forEach(b => {
+        b.style.opacity = '1';
+        b.style.transform = 'scale(1)';
+      });
+      draggedColorImgIndex = null;
+    },
+
+    // Main Gallery Drag & Drop + Reordering
+    onGalleryImgDragStart: (e, idx) => {
+      draggedGalleryImgIndex = idx;
+      if (e.dataTransfer) {
+        e.dataTransfer.effectAllowed = 'move';
+        e.dataTransfer.setData('text/plain', idx);
+      }
+      setTimeout(() => {
+        const box = e.target.closest('.draggable-img-box');
+        if (box) box.style.opacity = '0.35';
+      }, 0);
+    },
+    onGalleryImgDragOver: (e) => {
+      e.preventDefault();
+      if (e.dataTransfer) e.dataTransfer.dropEffect = 'move';
+    },
+    onGalleryImgDragEnter: (e) => {
+      e.preventDefault();
+      const box = e.target.closest('.draggable-img-box');
+      if (box) {
+        box.style.transform = 'scale(1.08)';
+        box.style.borderColor = 'var(--gold-accent)';
+      }
+    },
+    onGalleryImgDragLeave: (e) => {
+      const box = e.target.closest('.draggable-img-box');
+      if (box) {
+        box.style.transform = 'scale(1)';
+        const idx = parseInt(box.getAttribute('data-idx'), 10);
+        box.style.borderColor = idx === 0 ? 'var(--gold-accent)' : '#444';
+      }
+    },
+    onGalleryImgDrop: (e, targetIdx) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const box = e.target.closest('.draggable-img-box');
+      if (box) box.style.transform = 'scale(1)';
+      const srcIdx = (draggedGalleryImgIndex !== null) ? draggedGalleryImgIndex : parseInt(e.dataTransfer?.getData('text/plain'), 10);
+      if (srcIdx !== null && !isNaN(srcIdx) && srcIdx !== targetIdx) {
+        if (srcIdx >= 0 && srcIdx < state.productImages.length && targetIdx >= 0 && targetIdx < state.productImages.length) {
+          const [moved] = state.productImages.splice(srcIdx, 1);
+          state.productImages.splice(targetIdx, 0, moved);
+          if (window._renderProductGalleryManager) window._renderProductGalleryManager();
+          showAdminToast('تم تغيير ترتيب صور المعرض بنجاح', 'info');
+        }
+      }
+      draggedGalleryImgIndex = null;
+    },
+    onGalleryImgDragEnd: (e) => {
+      const box = e.target.closest('.draggable-img-box');
+      if (box) box.style.opacity = '1';
+      document.querySelectorAll('.draggable-img-box').forEach(b => {
+        b.style.opacity = '1';
+        b.style.transform = 'scale(1)';
+      });
+      draggedGalleryImgIndex = null;
+    },
+    moveProductGalleryImage: (idx, direction) => {
+      if (!state.productImages) return;
+      const targetIdx = idx + direction;
+      if (targetIdx < 0 || targetIdx >= state.productImages.length) return;
+      const [moved] = state.productImages.splice(idx, 1);
+      state.productImages.splice(targetIdx, 0, moved);
+      if (window._renderProductGalleryManager) window._renderProductGalleryManager();
     },
     editPromo: (code) => {
       if (typeof editPromo === 'function') editPromo(code);

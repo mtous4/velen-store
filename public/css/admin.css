@@ -1940,3 +1940,23 @@ input:focus, select:focus, textarea:focus {
   font-size: 11px;
   font-weight: 700;
 }
+
+/* Image Reorder & Drag & Drop Styles */
+.draggable-color-img-box,
+.draggable-img-box {
+  cursor: grab;
+  transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+  position: relative;
+}
+
+.draggable-color-img-box:active,
+.draggable-img-box:active {
+  cursor: grabbing;
+}
+
+.draggable-color-img-box:hover,
+.draggable-img-box:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+  border-color: rgba(229, 185, 95, 0.6) !important;
+}
