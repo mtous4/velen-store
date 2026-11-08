@@ -1014,6 +1014,70 @@ document.addEventListener('DOMContentLoaded', () => {
     if (badge) badge.textContent = total;
   }
 
+  function toggleAllColorSizes(selectAll = true) {
+    const grid = document.getElementById('colorVarSizeGrid');
+    if (!grid) return;
+    grid.querySelectorAll('.size-stock-card').forEach(card => {
+      const check = card.querySelector('.color-size-enable-check');
+      const input = card.querySelector('.color-size-qty-input');
+      check.checked = selectAll;
+      if (selectAll) {
+        card.classList.add('active');
+        if (parseInt(input.value, 10) <= 0) input.value = 5;
+      } else {
+        card.classList.remove('active');
+        input.value = 0;
+      }
+    });
+    recalculateColorVarStock();
+  }
+
+  function applySizeGuidePreset(type) {
+    const presets = {
+      men: {
+        XS: { minH: 155, maxH: 165, minW: 50, maxW: 60 },
+        S:  { minH: 163, maxH: 172, minW: 60, maxW: 70 },
+        M:  { minH: 170, maxH: 180, minW: 69, maxW: 79 },
+        L:  { minH: 177, maxH: 187, minW: 78, maxW: 88 },
+        XL: { minH: 183, maxH: 193, minW: 87, maxW: 99 },
+        XXL:{ minH: 188, maxH: 202, minW: 98, maxW: 115 }
+      },
+      women: {
+        XS: { minH: 148, maxH: 158, minW: 40, maxW: 49 },
+        S:  { minH: 155, maxH: 165, minW: 48, maxW: 57 },
+        M:  { minH: 162, maxH: 172, minW: 56, maxW: 66 },
+        L:  { minH: 168, maxH: 178, minW: 65, maxW: 76 },
+        XL: { minH: 173, maxH: 183, minW: 75, maxW: 87 },
+        XXL:{ minH: 178, maxH: 190, minW: 85, maxW: 100 }
+      },
+      pants: {
+        XS: { minH: 150, maxH: 162, minW: 42, maxW: 52 },
+        S:  { minH: 160, maxH: 170, minW: 52, maxW: 64 },
+        M:  { minH: 168, maxH: 178, minW: 63, maxW: 75 },
+        L:  { minH: 175, maxH: 184, minW: 74, maxW: 86 },
+        XL: { minH: 182, maxH: 192, minW: 85, maxW: 98 },
+        XXL:{ minH: 188, maxH: 200, minW: 97, maxW: 112 }
+      }
+    };
+
+    const target = presets[type] || presets.men;
+    ['XS', 'S', 'M', 'L', 'XL', 'XXL'].forEach(sz => {
+      const g = target[sz];
+      if (g) {
+        const elMinH = document.getElementById(`sgMinH_${sz}`);
+        const elMaxH = document.getElementById(`sgMaxH_${sz}`);
+        const elMinW = document.getElementById(`sgMinW_${sz}`);
+        const elMaxW = document.getElementById(`sgMaxW_${sz}`);
+        if (elMinH) elMinH.value = g.minH;
+        if (elMaxH) elMaxH.value = g.maxH;
+        if (elMinW) elMinW.value = g.minW;
+        if (elMaxW) elMaxW.value = g.maxW;
+      }
+    });
+    const label = type === 'women' ? 'النسائي 👗' : type === 'pants' ? 'البناطيل 👖' : 'الرجالي 👔';
+    showAdminToast(`تم تعبئة أرقام اقتراح المقاس وفق معيار ${label} بنجاح! يمكنك تعديل أي رقم يدويًا.`, 'success');
+  }
+
   function openAddColorModal() {
     const modal = document.getElementById('colorVariantModal');
     if (!modal) return;
@@ -1412,7 +1476,7 @@ document.addEventListener('DOMContentLoaded', () => {
         images: [...state.currentColorEditingImages],
         image: state.currentColorEditingImages[0] || '',
         sizeInventory,
-        sizes: sizes.length > 0 ? sizes : ['S', 'M', 'L', 'XL'],
+        sizes: sizes.length > 0 ? sizes : Object.keys(sizeInventory),
         stock: colorStock
       };
 
@@ -1609,7 +1673,27 @@ document.addEventListener('DOMContentLoaded', () => {
         modelSize: document.getElementById('prodModelSize')?.value?.trim() || 'L',
         linkedProductId: document.getElementById('prodLinkedProductId')?.value || null,
         upsellProductId: document.getElementById('prodUpsellProductId')?.value || null,
-        upsellPrice: document.getElementById('prodUpsellPrice')?.value !== '' && document.getElementById('prodUpsellPrice')?.value !== undefined ? parseFloat(document.getElementById('prodUpsellPrice').value) : null
+        upsellPrice: document.getElementById('prodUpsellPrice')?.value !== '' && document.getElementById('prodUpsellPrice')?.value !== undefined ? parseFloat(document.getElementById('prodUpsellPrice').value) : null,
+        sizeGuide: (function() {
+          const guide = {};
+          let hasData = false;
+          ['XS', 'S', 'M', 'L', 'XL', 'XXL'].forEach(sz => {
+            const minH = parseFloat(document.getElementById(`sgMinH_${sz}`)?.value);
+            const maxH = parseFloat(document.getElementById(`sgMaxH_${sz}`)?.value);
+            const minW = parseFloat(document.getElementById(`sgMinW_${sz}`)?.value);
+            const maxW = parseFloat(document.getElementById(`sgMaxW_${sz}`)?.value);
+            if (!isNaN(minH) || !isNaN(maxH) || !isNaN(minW) || !isNaN(maxW)) {
+              hasData = true;
+              guide[sz] = {
+                minH: !isNaN(minH) ? minH : null,
+                maxH: !isNaN(maxH) ? maxH : null,
+                minW: !isNaN(minW) ? minW : null,
+                maxW: !isNaN(maxW) ? maxW : null
+              };
+            }
+          });
+          return hasData ? guide : null;
+        })()
       };
 
       try {
@@ -1733,6 +1817,14 @@ document.addEventListener('DOMContentLoaded', () => {
       upSelect.value = '';
     }
     if (document.getElementById('prodUpsellPrice')) document.getElementById('prodUpsellPrice').value = '';
+
+    // Reset Size Recommendation Guide inputs
+    ['XS', 'S', 'M', 'L', 'XL', 'XXL'].forEach(sz => {
+      if (document.getElementById(`sgMinH_${sz}`)) document.getElementById(`sgMinH_${sz}`).value = '';
+      if (document.getElementById(`sgMaxH_${sz}`)) document.getElementById(`sgMaxH_${sz}`).value = '';
+      if (document.getElementById(`sgMinW_${sz}`)) document.getElementById(`sgMinW_${sz}`).value = '';
+      if (document.getElementById(`sgMaxW_${sz}`)) document.getElementById(`sgMaxW_${sz}`).value = '';
+    });
 
     const dropzone = document.getElementById('prodDropzone');
     if (dropzone) {
@@ -3110,6 +3202,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // Global methods for window
   window.velenAdmin = {
     switchTab,
+    applySizeGuidePreset,
+    toggleAllColorSizes,
     moveSection: (fromIdx, direction) => {
       if (!state.design || !Array.isArray(state.design.sectionsOrder)) return;
       const order = [...state.design.sectionsOrder];
@@ -3182,6 +3276,16 @@ document.addEventListener('DOMContentLoaded', () => {
       if (document.getElementById('prodUpsellPrice')) {
         document.getElementById('prodUpsellPrice').value = (p.upsellPrice !== undefined && p.upsellPrice !== null) ? p.upsellPrice : '';
       }
+
+      // Populate Size Recommendation Guide
+      const sg = p.sizeGuide || null;
+      ['XS', 'S', 'M', 'L', 'XL', 'XXL'].forEach(sz => {
+        const item = sg ? sg[sz] : null;
+        if (document.getElementById(`sgMinH_${sz}`)) document.getElementById(`sgMinH_${sz}`).value = (item && item.minH !== null && item.minH !== undefined) ? item.minH : '';
+        if (document.getElementById(`sgMaxH_${sz}`)) document.getElementById(`sgMaxH_${sz}`).value = (item && item.maxH !== null && item.maxH !== undefined) ? item.maxH : '';
+        if (document.getElementById(`sgMinW_${sz}`)) document.getElementById(`sgMinW_${sz}`).value = (item && item.minW !== null && item.minW !== undefined) ? item.minW : '';
+        if (document.getElementById(`sgMaxW_${sz}`)) document.getElementById(`sgMaxW_${sz}`).value = (item && item.maxW !== null && item.maxW !== undefined) ? item.maxW : '';
+      });
 
       const prodImgInput = document.getElementById('prodImageUrl');
       if (prodImgInput) prodImgInput.value = p.image || '';

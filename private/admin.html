@@ -1708,6 +1708,151 @@
           </p>
         </div>
 
+        <!-- Size Recommendation Guide by Height & Weight (Smart Sizing) -->
+        <div class="form-group" style="background:#141414; padding:16px; border-radius:8px; border:1px solid #2e2e2e; margin-bottom:18px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:10px;">
+            <label style="margin:0; font-weight:700; color:#fff; display:flex; align-items:center; gap:8px; font-size:14px;">
+              <i class="fa-solid fa-ruler-combined" style="color:var(--gold-accent, #e5b95f);"></i> دليل اقتراح المقاس بالوزن والطول (Size Fit Recommendation Guide):
+            </label>
+            <div style="display:flex; gap:6px; flex-wrap:wrap;">
+              <button type="button" onclick="window.velenAdmin.applySizeGuidePreset('men')" style="background:#222; color:#3498db; border:1px solid #3498db; padding:4px 10px; border-radius:4px; font-size:11px; font-weight:700; cursor:pointer;">
+                <i class="fa-solid fa-mars"></i> تعبئة رجالي
+              </button>
+              <button type="button" onclick="window.velenAdmin.applySizeGuidePreset('women')" style="background:#222; color:#e84393; border:1px solid #e84393; padding:4px 10px; border-radius:4px; font-size:11px; font-weight:700; cursor:pointer;">
+                <i class="fa-solid fa-venus"></i> تعبئة نسائي
+              </button>
+              <button type="button" onclick="window.velenAdmin.applySizeGuidePreset('pants')" style="background:#222; color:#f39c12; border:1px solid #f39c12; padding:4px 10px; border-radius:4px; font-size:11px; font-weight:700; cursor:pointer;">
+                <i class="fa-solid fa-vest-patches"></i> تعبئة بناطيل
+              </button>
+            </div>
+          </div>
+          <p style="font-size:11px; color:#aaa; margin:0 0 12px 0;">
+            حدد نطاق الطول والوزن المناسب لكل مقاس في هذا الموديل. سيستخدمها زر [تحديد مقاسي 📏] في الموقع لاقتراح المقاس المثالي للعميل بدقة.
+          </p>
+
+          <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(230px, 1fr)); gap:10px;" id="sizeGuideInputsContainer">
+            <!-- XS -->
+            <div style="background:#0a0a0a; padding:10px 12px; border-radius:6px; border:1px solid #333;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                <strong style="color:var(--gold-accent); font-size:13px;">مقاس XS</strong>
+                <span style="font-size:10px; color:#777;">نحيف / قامة قصيرة</span>
+              </div>
+              <div style="display:flex; gap:6px; align-items:center; font-size:11px; color:#bbb; margin-bottom:4px;">
+                <span>الطول (سم):</span>
+                <input type="number" id="sgMinH_XS" placeholder="148" style="width:55px; background:#181818; color:#fff; border:1px solid #444; border-radius:4px; padding:3px 5px; font-size:11px; text-align:center;">
+                <span>إلى</span>
+                <input type="number" id="sgMaxH_XS" placeholder="158" style="width:55px; background:#181818; color:#fff; border:1px solid #444; border-radius:4px; padding:3px 5px; font-size:11px; text-align:center;">
+              </div>
+              <div style="display:flex; gap:6px; align-items:center; font-size:11px; color:#bbb;">
+                <span>الوزن (كغ):</span>
+                <input type="number" id="sgMinW_XS" placeholder="40" style="width:55px; background:#181818; color:#fff; border:1px solid #444; border-radius:4px; padding:3px 5px; font-size:11px; text-align:center;">
+                <span>إلى</span>
+                <input type="number" id="sgMaxW_XS" placeholder="49" style="width:55px; background:#181818; color:#fff; border:1px solid #444; border-radius:4px; padding:3px 5px; font-size:11px; text-align:center;">
+              </div>
+            </div>
+
+            <!-- S -->
+            <div style="background:#0a0a0a; padding:10px 12px; border-radius:6px; border:1px solid #333;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                <strong style="color:var(--gold-accent); font-size:13px;">مقاس S</strong>
+                <span style="font-size:10px; color:#777;">صغير</span>
+              </div>
+              <div style="display:flex; gap:6px; align-items:center; font-size:11px; color:#bbb; margin-bottom:4px;">
+                <span>الطول (سم):</span>
+                <input type="number" id="sgMinH_S" placeholder="165" style="width:55px; background:#181818; color:#fff; border:1px solid #444; border-radius:4px; padding:3px 5px; font-size:11px; text-align:center;">
+                <span>إلى</span>
+                <input type="number" id="sgMaxH_S" placeholder="173" style="width:55px; background:#181818; color:#fff; border:1px solid #444; border-radius:4px; padding:3px 5px; font-size:11px; text-align:center;">
+              </div>
+              <div style="display:flex; gap:6px; align-items:center; font-size:11px; color:#bbb;">
+                <span>الوزن (كغ):</span>
+                <input type="number" id="sgMinW_S" placeholder="55" style="width:55px; background:#181818; color:#fff; border:1px solid #444; border-radius:4px; padding:3px 5px; font-size:11px; text-align:center;">
+                <span>إلى</span>
+                <input type="number" id="sgMaxW_S" placeholder="67" style="width:55px; background:#181818; color:#fff; border:1px solid #444; border-radius:4px; padding:3px 5px; font-size:11px; text-align:center;">
+              </div>
+            </div>
+
+            <!-- M -->
+            <div style="background:#0a0a0a; padding:10px 12px; border-radius:6px; border:1px solid #333;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                <strong style="color:var(--gold-accent); font-size:13px;">مقاس M</strong>
+                <span style="font-size:10px; color:#777;">متوسط</span>
+              </div>
+              <div style="display:flex; gap:6px; align-items:center; font-size:11px; color:#bbb; margin-bottom:4px;">
+                <span>الطول (سم):</span>
+                <input type="number" id="sgMinH_M" placeholder="172" style="width:55px; background:#181818; color:#fff; border:1px solid #444; border-radius:4px; padding:3px 5px; font-size:11px; text-align:center;">
+                <span>إلى</span>
+                <input type="number" id="sgMaxH_M" placeholder="180" style="width:55px; background:#181818; color:#fff; border:1px solid #444; border-radius:4px; padding:3px 5px; font-size:11px; text-align:center;">
+              </div>
+              <div style="display:flex; gap:6px; align-items:center; font-size:11px; color:#bbb;">
+                <span>الوزن (كغ):</span>
+                <input type="number" id="sgMinW_M" placeholder="66" style="width:55px; background:#181818; color:#fff; border:1px solid #444; border-radius:4px; padding:3px 5px; font-size:11px; text-align:center;">
+                <span>إلى</span>
+                <input type="number" id="sgMaxW_M" placeholder="77" style="width:55px; background:#181818; color:#fff; border:1px solid #444; border-radius:4px; padding:3px 5px; font-size:11px; text-align:center;">
+              </div>
+            </div>
+
+            <!-- L -->
+            <div style="background:#0a0a0a; padding:10px 12px; border-radius:6px; border:1px solid #333;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                <strong style="color:var(--gold-accent); font-size:13px;">مقاس L</strong>
+                <span style="font-size:10px; color:#777;">كبير</span>
+              </div>
+              <div style="display:flex; gap:6px; align-items:center; font-size:11px; color:#bbb; margin-bottom:4px;">
+                <span>الطول (سم):</span>
+                <input type="number" id="sgMinH_L" placeholder="178" style="width:55px; background:#181818; color:#fff; border:1px solid #444; border-radius:4px; padding:3px 5px; font-size:11px; text-align:center;">
+                <span>إلى</span>
+                <input type="number" id="sgMaxH_L" placeholder="187" style="width:55px; background:#181818; color:#fff; border:1px solid #444; border-radius:4px; padding:3px 5px; font-size:11px; text-align:center;">
+              </div>
+              <div style="display:flex; gap:6px; align-items:center; font-size:11px; color:#bbb;">
+                <span>الوزن (كغ):</span>
+                <input type="number" id="sgMinW_L" placeholder="76" style="width:55px; background:#181818; color:#fff; border:1px solid #444; border-radius:4px; padding:3px 5px; font-size:11px; text-align:center;">
+                <span>إلى</span>
+                <input type="number" id="sgMaxW_L" placeholder="87" style="width:55px; background:#181818; color:#fff; border:1px solid #444; border-radius:4px; padding:3px 5px; font-size:11px; text-align:center;">
+              </div>
+            </div>
+
+            <!-- XL -->
+            <div style="background:#0a0a0a; padding:10px 12px; border-radius:6px; border:1px solid #333;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                <strong style="color:var(--gold-accent); font-size:13px;">مقاس XL</strong>
+                <span style="font-size:10px; color:#777;">كبير جداً</span>
+              </div>
+              <div style="display:flex; gap:6px; align-items:center; font-size:11px; color:#bbb; margin-bottom:4px;">
+                <span>الطول (سم):</span>
+                <input type="number" id="sgMinH_XL" placeholder="185" style="width:55px; background:#181818; color:#fff; border:1px solid #444; border-radius:4px; padding:3px 5px; font-size:11px; text-align:center;">
+                <span>إلى</span>
+                <input type="number" id="sgMaxH_XL" placeholder="194" style="width:55px; background:#181818; color:#fff; border:1px solid #444; border-radius:4px; padding:3px 5px; font-size:11px; text-align:center;">
+              </div>
+              <div style="display:flex; gap:6px; align-items:center; font-size:11px; color:#bbb;">
+                <span>الوزن (كغ):</span>
+                <input type="number" id="sgMinW_XL" placeholder="86" style="width:55px; background:#181818; color:#fff; border:1px solid #444; border-radius:4px; padding:3px 5px; font-size:11px; text-align:center;">
+                <span>إلى</span>
+                <input type="number" id="sgMaxW_XL" placeholder="98" style="width:55px; background:#181818; color:#fff; border:1px solid #444; border-radius:4px; padding:3px 5px; font-size:11px; text-align:center;">
+              </div>
+            </div>
+
+            <!-- XXL -->
+            <div style="background:#0a0a0a; padding:10px 12px; border-radius:6px; border:1px solid #333;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                <strong style="color:var(--gold-accent); font-size:13px;">مقاس XXL</strong>
+                <span style="font-size:10px; color:#777;">عريض جداً</span>
+              </div>
+              <div style="display:flex; gap:6px; align-items:center; font-size:11px; color:#bbb; margin-bottom:4px;">
+                <span>الطول (سم):</span>
+                <input type="number" id="sgMinH_XXL" placeholder="190" style="width:55px; background:#181818; color:#fff; border:1px solid #444; border-radius:4px; padding:3px 5px; font-size:11px; text-align:center;">
+                <span>إلى</span>
+                <input type="number" id="sgMaxH_XXL" placeholder="202" style="width:55px; background:#181818; color:#fff; border:1px solid #444; border-radius:4px; padding:3px 5px; font-size:11px; text-align:center;">
+              </div>
+              <div style="display:flex; gap:6px; align-items:center; font-size:11px; color:#bbb;">
+                <span>الوزن (كغ):</span>
+                <input type="number" id="sgMinW_XXL" placeholder="96" style="width:55px; background:#181818; color:#fff; border:1px solid #444; border-radius:4px; padding:3px 5px; font-size:11px; text-align:center;">
+                <span>إلى</span>
+                <input type="number" id="sgMaxW_XXL" placeholder="115" style="width:55px; background:#181818; color:#fff; border:1px solid #444; border-radius:4px; padding:3px 5px; font-size:11px; text-align:center;">
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- Shared Inventory / Linked Product -->
         <div class="form-group" style="background:#141414; padding:16px; border-radius:8px; border:1px solid #2e2e2e; margin-bottom:18px;">
           <label style="margin:0 0 8px 0; font-weight:700; color:#fff; display:flex; align-items:center; gap:8px; font-size:14px;">
@@ -1869,9 +2014,13 @@
 
         <!-- Color Sizes & Stock Inventory -->
         <div class="form-group" style="margin-top:14px;">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; flex-wrap:wrap; gap:6px;">
             <label style="margin:0; font-weight:700;"><i class="fa-solid fa-ruler-combined" style="color:var(--gold-accent);"></i> المقاسات والكميات المتوفرة لهذا اللون:</label>
-            <span style="font-size:12px; color:var(--gold-accent); font-weight:700;">المجموع لهذا اللون: <span id="colorVarTotalStockBadge">0</span> قطعة</span>
+            <div style="display:flex; align-items:center; gap:8px;">
+              <button type="button" onclick="window.velenAdmin?.toggleAllColorSizes(true)" style="background:#222; color:#fff; border:1px solid #444; padding:3px 8px; border-radius:4px; font-size:11px; cursor:pointer;">تحديد الكل</button>
+              <button type="button" onclick="window.velenAdmin?.toggleAllColorSizes(false)" style="background:#222; color:#bbb; border:1px solid #444; padding:3px 8px; border-radius:4px; font-size:11px; cursor:pointer;">إلغاء التحديد</button>
+              <span style="font-size:12px; color:var(--gold-accent); font-weight:700; margin-right:4px;">المجموع: <span id="colorVarTotalStockBadge">0</span> قطعة</span>
+            </div>
           </div>
           <div class="size-inventory-grid" id="colorVarSizeGrid">
             <div class="size-stock-card" data-size="XS">

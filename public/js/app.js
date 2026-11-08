@@ -2100,21 +2100,34 @@ document.addEventListener('DOMContentLoaded', () => {
     state.currentStage = 'product';
     sendVisitorPulse('product', product.name);
 
-    const sizes = product.sizes || ['S', 'M', 'L', 'XL'];
-    const sizeInv = product.sizeInventory || null;
+    // Initialize product color & its specific sizes
+    const colors = Array.isArray(product.colors) && product.colors.length > 0 ? product.colors : null;
+    state.selectedColor = (colors && colors[0]) || null;
+
+    const activeColor = state.selectedColor;
+    let sizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
+    let sizeInv = null;
+
+    if (activeColor && activeColor.sizeInventory && Object.keys(activeColor.sizeInventory).length > 0) {
+      sizeInv = activeColor.sizeInventory;
+      sizes = Array.isArray(activeColor.sizes) && activeColor.sizes.length > 0 ? activeColor.sizes : Object.keys(activeColor.sizeInventory);
+    } else if (activeColor && Array.isArray(activeColor.sizes) && activeColor.sizes.length > 0) {
+      sizes = activeColor.sizes;
+    } else if (product.sizeInventory && Object.keys(product.sizeInventory).length > 0) {
+      sizeInv = product.sizeInventory;
+      sizes = Array.isArray(product.sizes) && product.sizes.length > 0 ? product.sizes : Object.keys(product.sizeInventory);
+    } else if (Array.isArray(product.sizes) && product.sizes.length > 0) {
+      sizes = product.sizes;
+    }
 
     let initialSize = 'M';
     if (sizeInv) {
       const available = sizes.find(s => typeof sizeInv[s] === 'undefined' || sizeInv[s] > 0);
       initialSize = available || sizes[0] || 'M';
     } else {
-      initialSize = (product.sizes && product.sizes[0]) || 'M';
+      initialSize = sizes[0] || 'M';
     }
     state.selectedSize = initialSize;
-
-    // Initialize product color
-    const colors = Array.isArray(product.colors) && product.colors.length > 0 ? product.colors : null;
-    state.selectedColor = (colors && colors[0]) || null;
 
     renderProductPageContent(product);
 
@@ -2922,124 +2935,215 @@ document.addEventListener('DOMContentLoaded', () => {
     unlockBodyScroll();
   }
 
+  function renderSizeGuideMiniTable(guide, activeSize, isAr, genderKey) {
+    const tableBody = document.getElementById('saGuideTableBody');
+    const genderBadge = document.getElementById('saGenderBadge');
+    if (!tableBody) return;
+
+    if (genderBadge) {
+      genderBadge.textContent = isAr 
+        ? (genderKey === 'women' ? 'كوليكشن نسائي 👗' : genderKey === 'pants' ? 'بناطيل 👖' : 'رجالي / للجنسين 👔')
+        : (genderKey === 'women' ? 'Women 👗' : genderKey === 'pants' ? 'Pants 👖' : 'Men / Unisex 👔');
+    }
+
+    const sizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
+    tableBody.innerHTML = `
+      <table style="width:100%; border-collapse:collapse; text-align:center; font-size:11px;">
+        <thead>
+          <tr style="color:#888; border-bottom:1px solid #222;">
+            <th style="padding:4px 6px;">${isAr ? 'المقاس' : 'Size'}</th>
+            <th style="padding:4px 6px;">${isAr ? 'الطول المناسب' : 'Height Range'}</th>
+            <th style="padding:4px 6px;">${isAr ? 'الوزن المناسب' : 'Weight Range'}</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${sizes.map(sz => {
+            const g = guide[sz];
+            if (!g) return '';
+            const isRec = sz === activeSize;
+            const hText = (g.minH && g.maxH) ? `${g.minH} - ${g.maxH} cm` : (g.minH ? `≥ ${g.minH} cm` : (g.maxH ? `≤ ${g.maxH} cm` : '—'));
+            const wText = (g.minW && g.maxW) ? `${g.minW} - ${g.maxW} kg` : (g.minW ? `≥ ${g.minW} kg` : (g.maxW ? `≤ ${g.maxW} kg` : '—'));
+            return `
+              <tr style="border-bottom:1px solid #1a1a1a; ${isRec ? 'background:rgba(229,185,95,0.15); color:var(--gold-accent, #e5b95f); font-weight:700;' : 'color:#bbb;'}">
+                <td style="padding:5px 6px;">
+                  <span style="${isRec ? 'border:1px solid var(--gold-accent); padding:1px 6px; border-radius:4px;' : ''}">${sz}</span>
+                  ${isRec ? `<span style="font-size:9px; margin-right:4px;">(${isAr ? 'مقاسك' : 'Yours'})</span>` : ''}
+                </td>
+                <td style="padding:5px 6px;">${hText}</td>
+                <td style="padding:5px 6px;">${wText}</td>
+              </tr>
+            `;
+          }).join('')}
+        </tbody>
+      </table>
+    `;
+  }
+
   function calculateRecommendedSize() {
     const heightEl = document.getElementById('sizeInputHeight');
     const weightEl = document.getElementById('sizeInputWeight');
     const height = parseInt(heightEl ? heightEl.value : '175', 10) || 175;
     const weight = parseInt(weightEl ? weightEl.value : '70', 10) || 70;
 
-    const h = Math.max(140, Math.min(220, height));
-    const w = Math.max(40, Math.min(150, weight));
-    const bmi = w / Math.pow(h / 100, 2);
+    const h = Math.max(130, Math.min(220, height));
+    const w = Math.max(35, Math.min(160, weight));
 
-    // Size index scale: 0: XS, 1: S, 2: M, 3: L, 4: XL, 5: 2XL
-    const sizeScale = ['XS', 'S', 'M', 'L', 'XL', '2XL'];
-    let score = 2.0; // default M
+    const prod = state.currentProductForModal;
+    const activeColor = state.selectedColor;
 
-    // Baseline from Height
-    if (h < 162) {
-      score = 0.8;
-    } else if (h < 172) {
-      score = 1.3;
-    } else if (h < 180) {
-      score = 2.0;
-    } else if (h < 188) {
-      score = 3.0;
-    } else {
-      score = 4.0;
+    // Available sizes for this product/color
+    let availableSizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
+    if (activeColor && Array.isArray(activeColor.sizes) && activeColor.sizes.length > 0) {
+      availableSizes = activeColor.sizes;
+    } else if (activeColor && activeColor.sizeInventory && Object.keys(activeColor.sizeInventory).length > 0) {
+      availableSizes = Object.keys(activeColor.sizeInventory).filter(s => activeColor.sizeInventory[s] > 0);
+      if (availableSizes.length === 0) availableSizes = Object.keys(activeColor.sizeInventory);
+    } else if (prod && Array.isArray(prod.sizes) && prod.sizes.length > 0) {
+      availableSizes = prod.sizes;
     }
 
-    // Weight & BMI influence
-    if (bmi < 19.5) {
-      score -= 0.6;
-    } else if (bmi >= 19.5 && bmi < 23) {
-      score += 0.0;
-    } else if (bmi >= 23 && bmi < 26) {
-      score += 0.4;
-    } else if (bmi >= 26 && bmi < 29) {
-      score += 0.9;
-    } else if (bmi >= 29 && bmi < 33) {
-      score += 1.5;
+    // Presets for gender / category fallbacks
+    const fallbackPresets = {
+      men: {
+        XS: { minH: 155, maxH: 165, minW: 50, maxW: 60 },
+        S:  { minH: 163, maxH: 172, minW: 60, maxW: 70 },
+        M:  { minH: 170, maxH: 180, minW: 69, maxW: 79 },
+        L:  { minH: 177, maxH: 187, minW: 78, maxW: 88 },
+        XL: { minH: 183, maxH: 193, minW: 87, maxW: 99 },
+        XXL:{ minH: 188, maxH: 202, minW: 98, maxW: 115 }
+      },
+      women: {
+        XS: { minH: 148, maxH: 158, minW: 40, maxW: 49 },
+        S:  { minH: 155, maxH: 165, minW: 48, maxW: 57 },
+        M:  { minH: 162, maxH: 172, minW: 56, maxW: 66 },
+        L:  { minH: 168, maxH: 178, minW: 65, maxW: 76 },
+        XL: { minH: 173, maxH: 183, minW: 75, maxW: 87 },
+        XXL:{ minH: 178, maxH: 190, minW: 85, maxW: 100 }
+      },
+      pants: {
+        XS: { minH: 150, maxH: 162, minW: 42, maxW: 52 },
+        S:  { minH: 160, maxH: 170, minW: 52, maxW: 64 },
+        M:  { minH: 168, maxH: 178, minW: 63, maxW: 75 },
+        L:  { minH: 175, maxH: 184, minW: 74, maxW: 86 },
+        XL: { minH: 182, maxH: 192, minW: 85, maxW: 98 },
+        XXL:{ minH: 188, maxH: 200, minW: 97, maxW: 112 }
+      }
+    };
+
+    // Determine target size guide
+    let effectiveGuide = null;
+    let guideGender = 'men';
+    const prodCat = ((prod?.category || '') + ' ' + (prod?.name || '')).toLowerCase();
+    if (prodCat.includes('women') || prodCat.includes('نسائي')) {
+      guideGender = 'women';
+    } else if (prodCat.includes('sweatpant') || prodCat.includes('pants') || prodCat.includes('بنطلون')) {
+      guideGender = 'pants';
+    }
+
+    if (prod && prod.sizeGuide && Object.keys(prod.sizeGuide).length > 0) {
+      effectiveGuide = prod.sizeGuide;
     } else {
-      score += 2.1;
+      effectiveGuide = fallbackPresets[guideGender];
     }
 
     // Body Build adjustments
+    let adjW = w;
     const currentBuild = state.saBuild || 'average';
-    if (currentBuild === 'slim') {
-      score -= 0.4;
-    } else if (currentBuild === 'athletic') {
-      score += 0.5; // wider shoulders and chest
-    } else if (currentBuild === 'heavy') {
-      score += 0.8;
-    }
+    if (currentBuild === 'slim') adjW -= 3;
+    else if (currentBuild === 'athletic') adjW += 3;
+    else if (currentBuild === 'heavy') adjW += 6;
 
     // Preferred Fit adjustments
+    let adjH = h;
     const currentFit = state.saFit || 'regular';
-    if (currentFit === 'fitted') {
-      score -= 0.6;
-    } else if (currentFit === 'oversized') {
-      score += 0.7;
-    }
+    if (currentFit === 'fitted') adjW -= 2;
+    else if (currentFit === 'oversized') adjW += 4;
 
-    // Clamp score to sizeScale range
-    let idx = Math.round(score);
-    idx = Math.max(0, Math.min(sizeScale.length - 1, idx));
-    let recommended = sizeScale[idx];
+    const allSizesOrdered = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
+    let bestSize = availableSizes[0] || 'M';
+    let minPenalty = 999999;
 
-    // Check available sizes of current product if open
-    const prod = state.currentProductForModal;
-    const availableSizes = (prod && Array.isArray(prod.sizes) && prod.sizes.length > 0)
-      ? prod.sizes
-      : ['S', 'M', 'L', 'XL', '2XL'];
+    allSizesOrdered.forEach(sz => {
+      const g = effectiveGuide[sz];
+      if (!g) return;
 
-    if (!availableSizes.includes(recommended)) {
-      const availIdxs = availableSizes.map(s => sizeScale.indexOf(s)).filter(i => i !== -1);
+      const minH = (g.minH !== null && g.minH !== undefined && g.minH !== '') ? Number(g.minH) : 150;
+      const maxH = (g.maxH !== null && g.maxH !== undefined && g.maxH !== '') ? Number(g.maxH) : 195;
+      const minW = (g.minW !== null && g.minW !== undefined && g.minW !== '') ? Number(g.minW) : 45;
+      const maxW = (g.maxW !== null && g.maxW !== undefined && g.maxW !== '') ? Number(g.maxW) : 105;
+
+      let diffH = 0;
+      if (adjH < minH) diffH = minH - adjH;
+      else if (adjH > maxH) diffH = adjH - maxH;
+
+      let diffW = 0;
+      if (adjW < minW) diffW = minW - adjW;
+      else if (adjW > maxW) diffW = adjW - maxW;
+
+      let penalty = (diffH * 1.0) + (diffW * 1.4);
+
+      // Prefer available sizes if possible
+      if (!availableSizes.includes(sz)) {
+        penalty += 50;
+      }
+
+      if (penalty < minPenalty) {
+        minPenalty = penalty;
+        bestSize = sz;
+      }
+    });
+
+    // If bestSize is not in availableSizes, find closest available size
+    if (!availableSizes.includes(bestSize)) {
+      const bestIdx = allSizesOrdered.indexOf(bestSize);
+      const availIdxs = availableSizes.map(s => allSizesOrdered.indexOf(s)).filter(i => i !== -1);
       if (availIdxs.length > 0) {
-        availIdxs.sort((a, b) => Math.abs(a - idx) - Math.abs(b - idx));
-        recommended = sizeScale[availIdxs[0]];
+        availIdxs.sort((a, b) => Math.abs(a - bestIdx) - Math.abs(b - bestIdx));
+        bestSize = allSizesOrdered[availIdxs[0]];
       }
     }
 
-    state.saCurrentRecommendation = recommended;
+    state.saCurrentRecommendation = bestSize;
 
-    // Match percentage (high confidence 94-98%)
-    const diff = Math.abs(score - idx);
-    const matchPct = Math.max(93, Math.min(99, Math.round(98 - diff * 8)));
+    // Calculate match percentage
+    const matchPct = Math.max(92, Math.min(99, Math.round(98 - Math.min(25, minPenalty) * 0.8)));
 
     // UI Updates
     const recLetterEl = document.getElementById('recSizeLetter');
-    if (recLetterEl) recLetterEl.textContent = recommended;
+    if (recLetterEl) recLetterEl.textContent = bestSize;
 
     const confirmSizeTextEl = document.getElementById('confirmSizeText');
-    if (confirmSizeTextEl) confirmSizeTextEl.textContent = recommended;
+    if (confirmSizeTextEl) confirmSizeTextEl.textContent = bestSize;
 
     const matchBadgeEl = document.getElementById('recMatchPercent');
     if (matchBadgeEl) {
-      matchBadgeEl.textContent = state.activeLang === 'ar' ? `تطابق بنسبة ${matchPct}%` : `${matchPct}% FIT MATCH`;
+      matchBadgeEl.textContent = state.activeLang === 'ar' ? `تطابق دقيق بنسبة ${matchPct}%` : `${matchPct}% EXACT FIT MATCH`;
     }
 
+    const isAr = state.activeLang === 'ar';
     const noteEl = document.getElementById('recSizeNote');
     if (noteEl) {
-      const isAr = state.activeLang === 'ar';
       let note = '';
       if (currentFit === 'oversized') {
         note = isAr 
-          ? `مقاس ${recommended} يعطيك قصة ستريت وير أوفرسايزد واسعة مع أكتاف ساقطة مميزة وراحة كاملة.`
-          : `Size ${recommended} delivers an authentic dropped-shoulder oversized streetwear silhouette.`;
+          ? `مقاس (${bestSize}) يعطيك لوك أوفرسايزد واسع مع أكتاف ساقطة وراحة استثنائية تناسب طولك ووزنك.`
+          : `Size (${bestSize}) delivers an authentic dropped-shoulder oversized streetwear silhouette.`;
       } else if (currentFit === 'fitted') {
         note = isAr
-          ? `مقاس ${recommended} يمنحك قصة مرتبة ومضبوطة على الجسم بدون أي اتساع زائد في الأكمام.`
-          : `Size ${recommended} provides a clean, tailored contour with minimal excess fabric.`;
+          ? `مقاس (${bestSize}) يمنحك قصة مضبوطة ومرتبة على الجسم بدون اتساع زائد.`
+          : `Size (${bestSize}) provides a clean, tailored contour with minimal excess fabric.`;
       } else {
         note = isAr
-          ? `مقاس ${recommended} هو القصة البوكسي المتوازنة والمثالية لوزنك وطولك بدون تضييق.`
-          : `Size ${recommended} is VELEN's signature relaxed boxy fit — clean drape & drop shoulders.`;
+          ? `مقاس (${bestSize}) هو المقاس المثالي والموصى به لوزنك (${weight} كغ) وطولك (${height} سم) بالقصة البوكسي المريحة.`
+          : `Size (${bestSize}) is the optimal fit for your weight (${weight} kg) & height (${height} cm) in VELEN relaxed boxy cut.`;
       }
       noteEl.textContent = note;
     }
 
-    return recommended;
+    // Render the mini table in the modal
+    renderSizeGuideMiniTable(effectiveGuide, bestSize, isAr, guideGender);
+
+    return bestSize;
   }
 
   function confirmRecommendedSize() {
@@ -3760,16 +3864,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Identify what the customer has in their bag (excluding any current upsell item)
     const cartItems = (state.cart || []).filter(it => !it.isUpsell);
-    const primaryCartItem = cartItems[0] || state.cart[0];
-    const baseProduct = primaryCartItem ? state.products.find(p => p.id === primaryCartItem.id) : null;
+    const cartProductIds = (state.cart || []).map(it => String(it.id).replace('upsell_', ''));
+
+    // Check if any product in cart has a custom upsell configured
+    let baseProduct = null;
+    for (const item of cartItems) {
+      const p = state.products.find(x => String(x.id) === String(item.id));
+      if (p && p.upsellProductId) {
+        baseProduct = p;
+        break;
+      }
+    }
+    if (!baseProduct && cartItems.length > 0) {
+      baseProduct = state.products.find(x => String(x.id) === String(cartItems[0].id));
+    }
 
     let targetProduct = null;
     let customPrice = null;
 
     // 1. Check if the specific product being purchased has a custom upsell recommendation!
     if (baseProduct && baseProduct.upsellProductId) {
-      const candidate = state.products.find(p => p.id === baseProduct.upsellProductId);
-      if (candidate) {
+      const candidate = state.products.find(p => String(p.id) === String(baseProduct.upsellProductId));
+      if (candidate && !cartProductIds.includes(String(candidate.id))) {
         targetProduct = candidate;
         if (baseProduct.upsellPrice !== undefined && baseProduct.upsellPrice !== null && !isNaN(baseProduct.upsellPrice) && Number(baseProduct.upsellPrice) > 0) {
           customPrice = Number(baseProduct.upsellPrice);
@@ -3781,26 +3897,26 @@ document.addEventListener('DOMContentLoaded', () => {
     // Avoid offering the same category (e.g. don't recommend sweatpants if they are already buying sweatpants!)
     if (!targetProduct) {
       const globalProductId = upsellConfig.productId;
-      const globalCandidate = state.products.find(p => p.id === globalProductId);
+      const globalCandidate = state.products.find(p => String(p.id) === String(globalProductId));
 
       const isSameCategory = baseProduct && globalCandidate && (
-        (baseProduct.id === globalCandidate.id) ||
+        (String(baseProduct.id) === String(globalCandidate.id)) ||
         (baseProduct.name && globalCandidate.name &&
          (baseProduct.name.toLowerCase().includes('sweatpant') && globalCandidate.name.toLowerCase().includes('sweatpant') ||
           baseProduct.name.toLowerCase().includes('sweatshirt') && globalCandidate.name.toLowerCase().includes('sweatshirt') ||
           baseProduct.name.toLowerCase().includes('tee') && globalCandidate.name.toLowerCase().includes('tee')))
       );
 
-      if (isSameCategory) {
+      if (isSameCategory || (globalCandidate && cartProductIds.includes(String(globalCandidate.id)))) {
         // Smart complementary pairing:
         // If customer is buying pants -> suggest a sweatshirt, hoodie, or tee
         // If customer is buying top -> suggest sweatpants
-        const isBuyingPants = (baseProduct.name || '').toLowerCase().includes('sweatpant') || (baseProduct.category || '').toLowerCase().includes('sweatpant');
-        const isWomen = (baseProduct.category || '').toLowerCase().includes('women') || (baseProduct.name || '').toLowerCase().includes('women');
+        const isBuyingPants = (baseProduct?.name || '').toLowerCase().includes('sweatpant') || (baseProduct?.category || '').toLowerCase().includes('sweatpant');
+        const isWomen = (baseProduct?.category || '').toLowerCase().includes('women') || (baseProduct?.name || '').toLowerCase().includes('women');
 
         // Look for matching gender piece from complementary category
         targetProduct = state.products.find(p => {
-          if (p.id === baseProduct.id) return false;
+          if (cartProductIds.includes(String(p.id))) return false;
           const pName = (p.name || '').toLowerCase();
           const pCat = (p.category || '').toLowerCase();
           const pIsWomen = pCat.includes('women') || pName.includes('women');
@@ -3814,7 +3930,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Fallback without gender restriction if needed
         if (!targetProduct) {
           targetProduct = state.products.find(p => {
-            if (p.id === baseProduct.id) return false;
+            if (cartProductIds.includes(String(p.id))) return false;
             const pName = (p.name || '').toLowerCase();
             return isBuyingPants ? (pName.includes('sweatshirt') || pName.includes('tee')) : pName.includes('sweatpant');
           });
@@ -3822,7 +3938,11 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       if (!targetProduct) {
-        targetProduct = globalCandidate || state.products[0];
+        if (globalCandidate && !cartProductIds.includes(String(globalCandidate.id))) {
+          targetProduct = globalCandidate;
+        } else {
+          targetProduct = state.products.find(p => !cartProductIds.includes(String(p.id))) || state.products[0];
+        }
       }
     }
 

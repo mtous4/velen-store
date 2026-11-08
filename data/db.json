@@ -920,6 +920,156 @@
         "M": 15
       },
       "linkedProductId": "prod-1793968948036"
+    },
+    {
+      "id": "prod-1793961725455",
+      "name": "VELEN Double-Zip Cropped Sweatshirt",
+      "category": "Men",
+      "price": 30,
+      "costPrice": 20.25,
+      "comparePrice": null,
+      "onSale": false,
+      "featured": true,
+      "image": "/uploads/velen-1794064398327-930174356.jpg",
+      "images": [
+        "/uploads/velen-1794064398327-930174356.jpg",
+        "/uploads/velen-1794064501599-771936537.jpg",
+        "/uploads/velen-1794064495282-642576599.jpg",
+        "/uploads/velen-1793964076875-363546316.jpg",
+        "/uploads/velen-1793964076873-941057990.jpg",
+        "/uploads/velen-1793964076877-254321452.jpg",
+        "/uploads/velen-1793964076881-962661496.jpg",
+        "/uploads/velen-1793964076882-54500308.jpg",
+        "/uploads/velen-1793964114131-775042557.jpg",
+        "/uploads/velen-1793964114133-951468380.jpg",
+        "/uploads/velen-1793964114134-243267067.jpg",
+        "/uploads/velen-1793964114135-775927244.jpg",
+        "/uploads/velen-1793964114137-83459234.jpg",
+        "/uploads/velen-1793964141205-314363456.jpg",
+        "/uploads/velen-1793964141208-977755246.jpg",
+        "/uploads/velen-1793964141208-870483740.jpg",
+        "/uploads/velen-1793964141210-419668022.jpg",
+        "/uploads/velen-1793964141212-799970836.jpg",
+        "/uploads/velen-1794066165802-557621695.jpg",
+        "/uploads/velen-1794066195868-715748450.jpg",
+        "/uploads/velen-1794066195876-709275300.jpg",
+        "/uploads/velen-1794066195877-77418829.jpg",
+        "/uploads/velen-1794066195878-495722590.jpg",
+        "/uploads/velen-1794067000022-731283678.jpg",
+        "/uploads/velen-1794067025052-336233491.jpg",
+        "/uploads/velen-1794067025058-544744543.jpg",
+        "/uploads/velen-1794067025060-687708110.jpg",
+        "/uploads/velen-1794067072294-792940360.jpg",
+        "/uploads/velen-1794067086100-538387164.jpg",
+        "/uploads/velen-1794067101991-167768172.jpg",
+        "/uploads/velen-1794067114122-577869884.jpg",
+        "/uploads/velen-1794067122557-139322429.jpg",
+        "/uploads/velen-1794067130482-862461450.jpg",
+        "/uploads/velen-1794074573264-307887754.webp",
+        "/uploads/velen-1794074670105-902676222.webp",
+        "/uploads/velen-1794074698914-761070318.webp",
+        "/uploads/velen-1794127884146-493956124.webp",
+        "/uploads/velen-1794127901623-860547087.webp",
+        "/uploads/velen-1794127916154-570631385.webp",
+        "/uploads/velen-1794129479216-85878311.jpg",
+        "/uploads/velen-1794129508156-258291755.jpg",
+        "/uploads/velen-1794129533651-195389747.jpg"
+      ],
+      "sizes": [
+        "XS",
+        "S",
+        "M",
+        "L",
+        "XL"
+      ],
+      "colors": [
+        {
+          "name": "Black",
+          "hex": "#000000",
+          "sizes": [
+            "XS",
+            "S",
+            "M",
+            "L"
+          ],
+          "sizeInventory": {
+            "XS": 4,
+            "S": 10,
+            "M": 8,
+            "L": 5
+          },
+          "stock": 27
+        },
+        {
+          "name": "Burgundy",
+          "hex": "#6b1124",
+          "sizes": [
+            "S",
+            "M"
+          ],
+          "sizeInventory": {
+            "S": 6,
+            "M": 7
+          },
+          "stock": 13
+        }
+      ],
+      "stock": 69,
+      "description": "A relaxed-fit, slightly cropped sweatshirt designed for an effortless streetwear look. Featuring a unique two-way zipper that opens from both ends, a clean hood design and front pockets.",
+      "fabric": "70% premium cotton, featuring a heavyweight winter texture",
+      "createdAt": "2026-11-06T10:42:05.455Z",
+      "sizeInventory": {
+        "XS": 7,
+        "S": 18,
+        "M": 15,
+        "L": 22,
+        "XL": 7
+      },
+      "linkedProductId": "prod-1794069306578",
+      "showModelStats": true,
+      "modelHeight": "186 cm",
+      "modelWeight": "77 kg",
+      "modelSize": "L",
+      "upsellProductId": "prod-1793968948036",
+      "upsellPrice": 18,
+      "sizeGuide": {
+        "XS": {
+          "minH": 155,
+          "maxH": 165,
+          "minW": 50,
+          "maxW": 60
+        },
+        "S": {
+          "minH": 163,
+          "maxH": 172,
+          "minW": 60,
+          "maxW": 70
+        },
+        "M": {
+          "minH": 170,
+          "maxH": 180,
+          "minW": 69,
+          "maxW": 79
+        },
+        "L": {
+          "minH": 177,
+          "maxH": 187,
+          "minW": 78,
+          "maxW": 88
+        },
+        "XL": {
+          "minH": 183,
+          "maxH": 193,
+          "minW": 87,
+          "maxW": 99
+        },
+        "XXL": {
+          "minH": 188,
+          "maxH": 202,
+          "minW": 98,
+          "maxW": 115
+        }
+      }
     }
   ],
   "community": [

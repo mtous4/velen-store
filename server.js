@@ -448,6 +448,8 @@ app.post('/api/products', async (req, res) => {
     // Per-Product Checkout Upsell
     upsellProductId: req.body.upsellProductId || null,
     upsellPrice: req.body.upsellPrice !== undefined && req.body.upsellPrice !== null && req.body.upsellPrice !== '' ? parseFloat(req.body.upsellPrice) : null,
+    // Size & Fit Recommendation Guide by Height & Weight
+    sizeGuide: req.body.sizeGuide || null,
     createdAt: new Date().toISOString()
   };
 
@@ -487,7 +489,9 @@ app.put('/api/products/:id', async (req, res) => {
     linkedProductId: req.body.linkedProductId !== undefined ? req.body.linkedProductId : (existing.linkedProductId || null),
     // Per-Product Checkout Upsell
     upsellProductId: req.body.upsellProductId !== undefined ? req.body.upsellProductId : (existing.upsellProductId || null),
-    upsellPrice: req.body.upsellPrice !== undefined ? (req.body.upsellPrice !== null && req.body.upsellPrice !== '' ? parseFloat(req.body.upsellPrice) : null) : (existing.upsellPrice !== undefined ? existing.upsellPrice : null)
+    upsellPrice: req.body.upsellPrice !== undefined ? (req.body.upsellPrice !== null && req.body.upsellPrice !== '' ? parseFloat(req.body.upsellPrice) : null) : (existing.upsellPrice !== undefined ? existing.upsellPrice : null),
+    // Size & Fit Recommendation Guide by Height & Weight
+    sizeGuide: req.body.sizeGuide !== undefined ? req.body.sizeGuide : (existing.sizeGuide || null)
   };
 
   db.products = db.products || [];
