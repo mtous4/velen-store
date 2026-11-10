@@ -45,175 +45,90 @@
   },
   "categories": [
     {
-      "id": "sweatshirts",
-      "nameEn": "Sweatshirts",
-      "nameAr": "سويت شيرت",
-      "slug": "sweatshirts"
+      "id": "men",
+      "nameEn": "Men",
+      "nameAr": "الرجال",
+      "slug": "men"
     },
     {
-      "id": "sweatpants",
-      "nameEn": "Sweatpants",
-      "nameAr": "بناطيل سويت بانتس",
-      "slug": "sweatpants"
-    },
-    {
-      "id": "tees",
-      "nameEn": "Tees",
-      "nameAr": "تيشيرتات",
-      "slug": "tees"
-    },
-    {
-      "id": "ringer",
-      "nameEn": "Ringer Edition",
-      "nameAr": "ياقة ملونة",
-      "slug": "ringer"
-    },
-    {
-      "id": "boxy",
-      "nameEn": "Boxy & Cropped",
-      "nameAr": "قصّة بوكسي",
-      "slug": "boxy"
-    },
-    {
-      "id": "hoodies",
-      "nameEn": "Hoodies & Sweats",
-      "nameAr": "هوديز وسويت شيرت",
-      "slug": "hoodies"
-    },
-    {
-      "id": "pants",
-      "nameEn": "Pants & Bottoms",
-      "nameAr": "بناطيل وسراويل",
-      "slug": "pants"
+      "id": "women",
+      "nameEn": "Women",
+      "nameAr": "النساء",
+      "slug": "women"
     }
   ],
   "products": [
     {
-      "id": "prod-1793964201498",
-      "name": "78",
-      "category": "Men",
-      "price": 20,
-      "costPrice": 5,
-      "comparePrice": 28,
-      "onSale": true,
-      "featured": true,
-      "image": "/uploads/velen-1793964110845-841652343.jpg",
-      "images": [
-        "/uploads/velen-1793964110845-841652343.jpg",
-        "/uploads/velen-1793964129657-376856927.jpg",
-        "/uploads/velen-1793964146454-100233279.jpg",
-        "/uploads/velen-1793964163940-75487782.jpg",
-        "/uploads/velen-1793964184670-713056533.jpg"
-      ],
-      "sizes": [
-        "S",
-        "M",
-        "L",
-        "XL"
-      ],
-      "colors": [
-        {
-          "name": "Default",
-          "hex": "#000000",
-          "images": [
-            "/uploads/velen-1793964110845-841652343.jpg",
-            "/uploads/velen-1793964129657-376856927.jpg",
-            "/uploads/velen-1793964146454-100233279.jpg",
-            "/uploads/velen-1793964163940-75487782.jpg",
-            "/uploads/velen-1793964184670-713056533.jpg"
-          ]
-        }
-      ],
-      "stock": 20,
-      "description": "Premium Everyday Essential designed by Velen.",
-      "fabric": "100% قطن أردني معالج ثقيل 260 GSM",
-      "createdAt": "2026-11-06T11:23:21.498Z"
-    },
-    {
-      "id": "prod-1793963848827",
-      "name": "test",
-      "category": "Men",
-      "price": 55,
-      "costPrice": 5,
-      "comparePrice": 99,
-      "onSale": true,
-      "featured": true,
-      "image": "/uploads/velen-1793963806699-784643100.jpg",
-      "images": [
-        "/uploads/velen-1793963806699-784643100.jpg",
-        "/uploads/velen-1793963835109-292751618.jpg"
-      ],
-      "sizes": [
-        "S",
-        "M",
-        "L",
-        "XL"
-      ],
-      "colors": [
-        {
-          "name": "Default",
-          "hex": "#000000",
-          "images": [
-            "/uploads/velen-1793963806699-784643100.jpg",
-            "/uploads/velen-1793963835109-292751618.jpg"
-          ]
-        }
-      ],
-      "stock": 20,
-      "description": "Premium Everyday Essential designed by Velen.",
-      "fabric": "100% قطن أردني معالج ثقيل 260 GSM",
-      "createdAt": "2026-11-06T11:17:28.827Z"
-    },
-    {
-      "id": "prod-1793962684956",
-      "name": "67",
-      "category": "Men",
-      "price": 20,
-      "costPrice": 5,
-      "comparePrice": 25,
-      "onSale": true,
-      "featured": true,
-      "image": "/uploads/velen-1793962661289-973749511.jpg",
-      "images": [
-        "/uploads/velen-1793962661289-973749511.jpg",
-        "/uploads/velen-1793962669390-51459409.jpg",
-        "/uploads/velen-1793962680766-889965188.jpg"
-      ],
-      "sizes": [
-        "S",
-        "M",
-        "L",
-        "XL"
-      ],
-      "colors": [
-        {
-          "name": "Default",
-          "hex": "#000000",
-          "images": [
-            "/uploads/velen-1793962661289-973749511.jpg",
-            "/uploads/velen-1793962669390-51459409.jpg",
-            "/uploads/velen-1793962680766-889965188.jpg"
-          ]
-        }
-      ],
-      "stock": 20,
-      "description": "Premium Everyday Essential designed by Velen.",
-      "fabric": "100% قطن أردني معالج ثقيل 260 GSM",
-      "createdAt": "2026-11-06T10:58:04.956Z"
-    },
-    {
-      "id": "prod-double-zip",
+      "id": "prod-1793961725455",
       "name": "VELEN Double-Zip Cropped Sweatshirt",
-      "category": "Sweatshirts",
-      "price": 39,
-      "comparePrice": 49,
+      "category": "Men",
+      "price": 30,
+      "costPrice": 20.25,
+      "comparePrice": null,
       "onSale": false,
       "featured": true,
-      "image": "/assets/velen-product-showcase.png",
+      "image": "/uploads/velen-1794064398327-930174356.jpg",
       "images": [
-        "/assets/velen-product-showcase.png",
-        "/assets/velen-hero-winter2026.png",
-        "/assets/velen-boxy-black.jpg"
+        "/uploads/velen-1794064398327-930174356.jpg",
+        "/uploads/velen-1794064501599-771936537.jpg",
+        "/uploads/velen-1794064495282-642576599.jpg",
+        "/uploads/velen-1793964076875-363546316.jpg",
+        "/uploads/velen-1793964076873-941057990.jpg",
+        "/uploads/velen-1793964076877-254321452.jpg",
+        "/uploads/velen-1793964076881-962661496.jpg",
+        "/uploads/velen-1793964076882-54500308.jpg",
+        "/uploads/velen-1793964114131-775042557.jpg",
+        "/uploads/velen-1793964114133-951468380.jpg",
+        "/uploads/velen-1793964114134-243267067.jpg",
+        "/uploads/velen-1793964114135-775927244.jpg",
+        "/uploads/velen-1793964114137-83459234.jpg",
+        "/uploads/velen-1793964141205-314363456.jpg",
+        "/uploads/velen-1793964141208-977755246.jpg",
+        "/uploads/velen-1793964141208-870483740.jpg",
+        "/uploads/velen-1793964141210-419668022.jpg",
+        "/uploads/velen-1793964141212-799970836.jpg",
+        "/uploads/velen-1794066165802-557621695.jpg",
+        "/uploads/velen-1794066195868-715748450.jpg",
+        "/uploads/velen-1794066195876-709275300.jpg",
+        "/uploads/velen-1794066195877-77418829.jpg",
+        "/uploads/velen-1794066195878-495722590.jpg",
+        "/uploads/velen-1794067000022-731283678.jpg",
+        "/uploads/velen-1794067025052-336233491.jpg",
+        "/uploads/velen-1794067025058-544744543.jpg",
+        "/uploads/velen-1794067025060-687708110.jpg",
+        "/uploads/velen-1794067072294-792940360.jpg",
+        "/uploads/velen-1794067086100-538387164.jpg",
+        "/uploads/velen-1794067101991-167768172.jpg",
+        "/uploads/velen-1794067114122-577869884.jpg",
+        "/uploads/velen-1794067122557-139322429.jpg",
+        "/uploads/velen-1794067130482-862461450.jpg",
+        "/uploads/velen-1794074573264-307887754.webp",
+        "/uploads/velen-1794074670105-902676222.webp",
+        "/uploads/velen-1794074698914-761070318.webp",
+        "/uploads/velen-1794127884146-493956124.webp",
+        "/uploads/velen-1794127901623-860547087.webp",
+        "/uploads/velen-1794127916154-570631385.webp",
+        "/uploads/velen-1794129479216-85878311.jpg",
+        "/uploads/velen-1794129508156-258291755.jpg",
+        "/uploads/velen-1794129533651-195389747.jpg",
+        "/uploads/velen-1794264102095-415378937.webp",
+        "/uploads/velen-1794264082554-562795588.jpg",
+        "/uploads/velen-1794264082554-818827607.jpg",
+        "/uploads/velen-1794264082557-317266694.jpg",
+        "/uploads/velen-1794264082555-940889380.jpg",
+        "/uploads/velen-1794264113941-440000135.webp",
+        "/uploads/velen-1794263980898-284259705.webp",
+        "/uploads/velen-1794264035144-601717709.jpg",
+        "/uploads/velen-1794264035145-67802925.jpg",
+        "/uploads/velen-1794264035145-225045235.jpg",
+        "/uploads/velen-1794264035147-292590179.jpg",
+        "/uploads/velen-1794264048661-301382033.webp",
+        "/uploads/velen-1794264216744-116220998.webp",
+        "/uploads/velen-1794264188233-301846319.jpg",
+        "/uploads/velen-1794264188232-391376003.jpg",
+        "/uploads/velen-1794264188233-987942582.jpg",
+        "/uploads/velen-1794264188235-92777204.jpg",
+        "/uploads/velen-1794264170900-847501540.webp"
       ],
       "sizes": [
         "XS",
@@ -224,412 +139,146 @@
       ],
       "colors": [
         {
-          "name": "Crimson Red",
-          "hex": "#8b1e2c",
-          "images": [
-            "/assets/velen-product-showcase.png"
-          ]
-        },
-        {
           "name": "Black",
-          "hex": "#111111",
+          "hex": "#000000",
           "images": [
-            "/assets/velen-hero-winter2026.png",
-            "/assets/velen-boxy-black.jpg"
-          ]
+            "/uploads/velen-1794264102095-415378937.webp",
+            "/uploads/velen-1794264082554-562795588.jpg",
+            "/uploads/velen-1794264082554-818827607.jpg",
+            "/uploads/velen-1794264082557-317266694.jpg",
+            "/uploads/velen-1794264082555-940889380.jpg",
+            "/uploads/velen-1794264113941-440000135.webp"
+          ],
+          "image": "/uploads/velen-1794264102095-415378937.webp",
+          "sizeInventory": {
+            "XS": 3,
+            "S": 4,
+            "M": 5,
+            "L": 8,
+            "XL": 2
+          },
+          "sizes": [
+            "XS",
+            "S",
+            "M",
+            "L",
+            "XL"
+          ],
+          "stock": 22
         },
         {
-          "name": "Heather Grey",
-          "hex": "#a8a8a8",
+          "name": "Burgundy",
+          "hex": "#6b1124",
           "images": [
-            "/assets/velen-hero-winter2026.png"
-          ]
+            "/uploads/velen-1794263980898-284259705.webp",
+            "/uploads/velen-1794264035144-601717709.jpg",
+            "/uploads/velen-1794264035145-67802925.jpg",
+            "/uploads/velen-1794264035145-225045235.jpg",
+            "/uploads/velen-1794264035147-292590179.jpg",
+            "/uploads/velen-1794264048661-301382033.webp"
+          ],
+          "image": "/uploads/velen-1794263980898-284259705.webp",
+          "sizeInventory": {
+            "XS": 1,
+            "S": 6,
+            "M": 5,
+            "L": 7,
+            "XL": 3
+          },
+          "sizes": [
+            "XS",
+            "S",
+            "M",
+            "L",
+            "XL"
+          ],
+          "stock": 22
+        },
+        {
+          "name": "Light Grey",
+          "hex": "#CECCCF",
+          "images": [
+            "/uploads/velen-1794264216744-116220998.webp",
+            "/uploads/velen-1794264188233-301846319.jpg",
+            "/uploads/velen-1794264188232-391376003.jpg",
+            "/uploads/velen-1794264188233-987942582.jpg",
+            "/uploads/velen-1794264188235-92777204.jpg",
+            "/uploads/velen-1794264170900-847501540.webp"
+          ],
+          "image": "/uploads/velen-1794264216744-116220998.webp",
+          "sizeInventory": {
+            "XS": 3,
+            "S": 6,
+            "M": 5,
+            "L": 7,
+            "XL": 2
+          },
+          "sizes": [
+            "XS",
+            "S",
+            "M",
+            "L",
+            "XL"
+          ],
+          "stock": 23
         }
       ],
-      "stock": 60,
+      "stock": 67,
+      "description": "A relaxed-fit, slightly cropped sweatshirt designed for an effortless streetwear look. Featuring a unique two-way zipper that opens from both ends, a clean hood design and front pockets.",
+      "fabric": "70% premium cotton, featuring a heavyweight winter texture",
+      "createdAt": "2026-11-06T10:42:05.455Z",
       "sizeInventory": {
-        "XS": 10,
-        "S": 15,
+        "XS": 7,
+        "S": 16,
         "M": 15,
-        "L": 12,
-        "XL": 8
+        "L": 22,
+        "XL": 7
       },
-      "description": "A relaxed-fit, slightly cropped sweatshirt designed for an effortless streetwear look. Featuring a unique two-way zipper that opens from both ends, a clean hood design and front pockets.\n\nFabric: 70% Premium Cotton",
-      "fabric": "Fabric: 70% Premium Cotton",
-      "createdAt": "2026-11-05T22:47:52.717Z"
-    },
-    {
-      "id": "prod-heavy-sweatpants",
-      "name": "Heavyweight Straight Sweatpants",
-      "category": "Sweatpants",
-      "price": 20,
-      "comparePrice": 28,
-      "onSale": false,
-      "featured": true,
-      "image": "/assets/velen-mobile-product.png",
-      "images": [
-        "/assets/velen-mobile-product.png",
-        "/assets/velen-hero-winter2026.png"
-      ],
-      "sizes": [
-        "XS",
-        "S",
-        "M",
-        "L",
-        "XL"
-      ],
-      "colors": [
-        {
-          "name": "Heather Grey",
-          "hex": "#a8a8a8",
-          "images": [
-            "/assets/velen-mobile-product.png"
-          ]
+      "linkedProductId": "prod-1794069306578",
+      "showModelStats": true,
+      "modelHeight": "186 cm",
+      "modelWeight": "77 kg",
+      "modelSize": "L",
+      "upsellProductId": "prod-1793968948036",
+      "upsellPrice": 18,
+      "sizeGuide": {
+        "XS": {
+          "minH": 155,
+          "maxH": 165,
+          "minW": 50,
+          "maxW": 60
         },
-        {
-          "name": "Black",
-          "hex": "#111111",
-          "images": [
-            "/assets/velen-hero-winter2026.png",
-            "/assets/velen-boxy-black.jpg"
-          ]
+        "S": {
+          "minH": 163,
+          "maxH": 172,
+          "minW": 60,
+          "maxW": 70
         },
-        {
-          "name": "Crimson Red",
-          "hex": "#8b1e2c",
-          "images": [
-            "/assets/velen-product-showcase.png"
-          ]
+        "M": {
+          "minH": 170,
+          "maxH": 180,
+          "minW": 69,
+          "maxW": 79
+        },
+        "L": {
+          "minH": 177,
+          "maxH": 187,
+          "minW": 78,
+          "maxW": 88
+        },
+        "XL": {
+          "minH": 183,
+          "maxH": 193,
+          "minW": 87,
+          "maxW": 99
+        },
+        "XXL": {
+          "minH": 188,
+          "maxH": 202,
+          "minW": 98,
+          "maxW": 115
         }
-      ],
-      "stock": 50,
-      "sizeInventory": {
-        "XS": 8,
-        "S": 12,
-        "M": 14,
-        "L": 10,
-        "XL": 6
-      },
-      "description": "Stay warm and comfortable with our heavyweight cotton sweatpants. Designed with a relaxed streetwear fit, adjustable waistband and practical pockets. Perfect for everyday outfits and effortless styling.\n\nFabric: 70% Premium Cotton",
-      "fabric": "Fabric: 70% Premium Cotton",
-      "createdAt": "2026-11-05T22:47:52.719Z"
-    },
-    {
-      "id": "prod-raw-sweatpants",
-      "name": "Raw-Cut Wide Leg Sweatpants",
-      "category": "Sweatpants",
-      "price": 32,
-      "comparePrice": 40,
-      "onSale": false,
-      "featured": true,
-      "image": "/assets/velen-hero-winter2026.png",
-      "images": [
-        "/assets/velen-hero-winter2026.png",
-        "/assets/velen-mobile-product.png"
-      ],
-      "sizes": [
-        "XS",
-        "S",
-        "M",
-        "L",
-        "XL"
-      ],
-      "colors": [
-        {
-          "name": "Heather Grey",
-          "hex": "#a8a8a8",
-          "images": [
-            "/assets/velen-hero-winter2026.png"
-          ]
-        },
-        {
-          "name": "Black",
-          "hex": "#111111",
-          "images": [
-            "/assets/velen-boxy-black.jpg"
-          ]
-        }
-      ],
-      "stock": 40,
-      "sizeInventory": {
-        "XS": 6,
-        "S": 10,
-        "M": 12,
-        "L": 8,
-        "XL": 4
-      },
-      "description": "Wide-leg cut with clean raw hems. Relaxed streetwear fit with adjustable waistband.\n\nFabric: 70% Premium Cotton",
-      "fabric": "Fabric: 70% Premium Cotton",
-      "createdAt": "2026-11-05T22:47:52.719Z"
-    },
-    {
-      "id": "prod-1793258212025",
-      "name": "VELEN Signature Heavyweight Hoodie - Charcoal",
-      "category": "Hoodies",
-      "price": 24,
-      "comparePrice": 28,
-      "onSale": true,
-      "featured": true,
-      "image": "/assets/velen-hero-clean.jpg",
-      "images": [
-        "/assets/velen-hero-clean.jpg"
-      ],
-      "sizes": [
-        "S",
-        "M",
-        "L",
-        "XL"
-      ],
-      "colors": [
-        {
-          "name": "شاركويل رمادي / Charcoal",
-          "hex": "#34495e",
-          "images": [
-            "/assets/velen-hero-clean.jpg"
-          ]
-        },
-        {
-          "name": "أسود فاحم / Midnight Black",
-          "hex": "#111111",
-          "images": [
-            "/assets/velen-boxy-black.jpg"
-          ]
-        },
-        {
-          "name": "أبيض عاجي / Off White",
-          "hex": "#f5f6fa",
-          "images": [
-            "/assets/velen-boxy-white.jpg"
-          ]
-        }
-      ],
-      "stock": 19,
-      "description": "Oversized luxury drape, double-layered hood without drawstrings, kangaroo pocket, ribbed cuffs. Made in Amman.\n\nFabric: 70% Premium Cotton",
-      "fabric": "Fabric: 70% Premium Cotton",
-      "createdAt": "2026-10-29T07:16:52.025Z",
-      "sizeInventory": {
-        "S": 4,
-        "M": 8,
-        "L": 5,
-        "XL": 2
-      },
-      "costPrice": 9.5
-    },
-    {
-      "id": "prod-1",
-      "name": "VELEN Ringer Tee",
-      "category": "Tees",
-      "price": 13,
-      "comparePrice": 16,
-      "onSale": true,
-      "featured": true,
-      "image": "/assets/velen-ringer-sky-blue.jpg",
-      "images": [
-        "/assets/velen-ringer-sky-blue.jpg",
-        "/assets/velen-hero-banner.jpg"
-      ],
-      "sizes": [
-        "S",
-        "M",
-        "L",
-        "XL"
-      ],
-      "colors": [
-        {
-          "name": "سماوي هادئ / Sky Blue",
-          "hex": "#7bb5d9",
-          "images": [
-            "/assets/velen-ringer-sky-blue.jpg",
-            "/assets/velen-hero-banner.jpg"
-          ]
-        },
-        {
-          "name": "أبيض برباط أسود / Classic White",
-          "hex": "#ffffff",
-          "images": [
-            "/assets/velen-ringer-white.jpg"
-          ]
-        },
-        {
-          "name": "أحمر عنابي / Ruby Red",
-          "hex": "#c0392b",
-          "images": [
-            "/assets/velen-hero-clean.jpg"
-          ]
-        }
-      ],
-      "stock": 23,
-      "description": "Designed for effortless everyday wear. Crafted from 100% premium Jordanian heavyweight cotton with contrast white ribbed collar and cuffs. Tailored streetwear relaxed fit.\n\nFabric: 70% Premium Cotton",
-      "fabric": "Fabric: 70% Premium Cotton",
-      "createdAt": "2026-10-28T10:00:00.000Z",
-      "sizeInventory": {
-        "S": 6,
-        "M": 9,
-        "L": 6,
-        "XL": 2
-      },
-      "costPrice": 4.8
-    },
-    {
-      "id": "prod-2",
-      "name": "VELEN Boxy Cropped Tee",
-      "category": "Tees",
-      "price": 11,
-      "comparePrice": 14,
-      "onSale": true,
-      "featured": true,
-      "image": "/assets/velen-boxy-white.jpg",
-      "images": [
-        "/assets/velen-boxy-white.jpg",
-        "/assets/velen-hero-banner.jpg"
-      ],
-      "sizes": [
-        "S",
-        "M",
-        "L",
-        "XL"
-      ],
-      "colors": [
-        {
-          "name": "أبيض ناصع / Chalk White",
-          "hex": "#ffffff",
-          "images": [
-            "/assets/velen-boxy-white.jpg",
-            "/assets/velen-hero-banner.jpg"
-          ]
-        },
-        {
-          "name": "أسود غامق / Pitch Black",
-          "hex": "#111111",
-          "images": [
-            "/assets/velen-boxy-black.jpg"
-          ]
-        },
-        {
-          "name": "أزرق سماوي / Sky Blue",
-          "hex": "#7bb5d9",
-          "images": [
-            "/assets/velen-ringer-sky-blue.jpg"
-          ]
-        }
-      ],
-      "stock": 19,
-      "description": "Signature boxy cropped silhouette with dropped shoulders. Ultra-soft breathable cotton finish. High-density Velen branding tag at hem.\n\nFabric: 70% Premium Cotton",
-      "fabric": "Fabric: 70% Premium Cotton",
-      "createdAt": "2026-10-28T10:05:00.000Z",
-      "sizeInventory": {
-        "S": 4,
-        "M": 8,
-        "L": 4,
-        "XL": 3
-      },
-      "costPrice": 4
-    },
-    {
-      "id": "prod-3",
-      "name": "VELEN Ringer Tee — White",
-      "category": "Tees",
-      "price": 13,
-      "comparePrice": 16,
-      "onSale": true,
-      "featured": true,
-      "image": "/assets/velen-ringer-white.jpg",
-      "images": [
-        "/assets/velen-ringer-white.jpg"
-      ],
-      "sizes": [
-        "S",
-        "M",
-        "L",
-        "XL"
-      ],
-      "colors": [
-        {
-          "name": "أبيض كلاسيك / Classic White",
-          "hex": "#ffffff",
-          "images": [
-            "/assets/velen-ringer-white.jpg"
-          ]
-        },
-        {
-          "name": "سماوي باستيل / Sky Blue",
-          "hex": "#7bb5d9",
-          "images": [
-            "/assets/velen-ringer-sky-blue.jpg"
-          ]
-        },
-        {
-          "name": "أسود فخم / Pitch Black",
-          "hex": "#111111",
-          "images": [
-            "/assets/velen-boxy-black.jpg"
-          ]
-        }
-      ],
-      "stock": 32,
-      "description": "Clean white base with contrast obsidian black ringer trims. Essential streetwear staple designed and manufactured locally in Amman, Jordan.\n\nFabric: 70% Premium Cotton",
-      "fabric": "Fabric: 70% Premium Cotton",
-      "createdAt": "2026-10-28T10:10:00.000Z",
-      "sizeInventory": {
-        "S": 8,
-        "M": 13,
-        "L": 8,
-        "XL": 3
-      },
-      "costPrice": 4.8
-    },
-    {
-      "id": "prod-4",
-      "name": "VELEN Heavy Boxy Tee",
-      "category": "Tees",
-      "price": 11,
-      "comparePrice": 14,
-      "onSale": true,
-      "featured": true,
-      "image": "/assets/velen-boxy-black.jpg",
-      "images": [
-        "/assets/velen-boxy-black.jpg"
-      ],
-      "sizes": [
-        "S",
-        "M",
-        "L",
-        "XL"
-      ],
-      "colors": [
-        {
-          "name": "أسود داكن / Pitch Black",
-          "hex": "#111111",
-          "images": [
-            "/assets/velen-boxy-black.jpg"
-          ]
-        },
-        {
-          "name": "أبيض ناصع / Chalk White",
-          "hex": "#ffffff",
-          "images": [
-            "/assets/velen-boxy-white.jpg"
-          ]
-        },
-        {
-          "name": "رمادي فحمي / Charcoal Grey",
-          "hex": "#34495e",
-          "images": [
-            "/assets/velen-hero-clean.jpg"
-          ]
-        }
-      ],
-      "stock": 28,
-      "description": "Deep midnight black boxy cut tee. Heavyweight drape, reinforced double stitching, minimal understated luxury aesthetic.\n\nFabric: 70% Premium Cotton",
-      "fabric": "Fabric: 70% Premium Cotton",
-      "createdAt": "2026-10-28T10:15:00.000Z",
-      "sizeInventory": {
-        "S": 7,
-        "M": 12,
-        "L": 7,
-        "XL": 2
-      },
-      "costPrice": 4
+      }
     },
     {
       "id": "prod-1793968948036",
@@ -774,19 +423,366 @@
           "stock": 24
         }
       ],
-      "stock": 50,
+      "stock": 55,
       "description": "Stay warm and comfortable with our heavyweight cotton sweatpants. Designed with a relaxed streetwear fit, adjustable waistband and practical pockets.\n\nPerfect for everyday outfits and effortless styling.",
       "fabric": "70% premium cotton, featuring a heavyweight winter texture",
       "createdAt": "2026-11-06T12:42:28.036Z",
       "sizeInventory": {
-        "XS": 2,
-        "XL": 8,
-        "XXL": 3,
-        "L": 12,
-        "S": 10,
-        "M": 15
+        "S": 15,
+        "M": 15,
+        "L": 15,
+        "XL": 10
       },
       "linkedProductId": "prod-1794069687504"
+    },
+    {
+      "id": "prod-1793974671320",
+      "name": "Ringer Tee",
+      "category": "Men",
+      "price": 13,
+      "costPrice": 10,
+      "comparePrice": 16,
+      "onSale": true,
+      "featured": true,
+      "image": "/uploads/velen-1793974415073-751270047.jpg",
+      "images": [
+        "/uploads/velen-1793974415073-751270047.jpg",
+        "/uploads/velen-1793974415073-640367154.jpg",
+        "/uploads/velen-1793974415071-710040490.jpg",
+        "/uploads/velen-1793974415074-261007053.jpg",
+        "/uploads/velen-1793974631710-178744105.jpg",
+        "/uploads/velen-1793974642294-277375284.jpg",
+        "/uploads/velen-1793974642294-118070185.jpg",
+        "/uploads/velen-1793974866433-991461419.jpg",
+        "/uploads/velen-1793974455647-500950355.jpg",
+        "/uploads/velen-1793974464294-115491996.jpg",
+        "/uploads/velen-1793974464295-24639319.jpg",
+        "/uploads/velen-1793974470493-916992665.jpg",
+        "/uploads/velen-1793974617409-880321134.jpg",
+        "/uploads/velen-1794075128454-692144145.webp",
+        "/uploads/velen-1794075137396-808386898.webp"
+      ],
+      "sizes": [
+        "M",
+        "L"
+      ],
+      "colors": [
+        {
+          "name": "White",
+          "hex": "#FFFFFF",
+          "images": [
+            "/uploads/velen-1793974455647-500950355.jpg",
+            "/uploads/velen-1793974464295-24639319.jpg",
+            "/uploads/velen-1793974464294-115491996.jpg",
+            "/uploads/velen-1793974470493-916992665.jpg",
+            "/uploads/velen-1794075128454-692144145.webp"
+          ],
+          "image": "/uploads/velen-1793974455647-500950355.jpg",
+          "sizeInventory": {
+            "S": 0,
+            "M": 2,
+            "L": 2,
+            "XL": 0
+          },
+          "sizes": [
+            "S",
+            "M",
+            "L",
+            "XL"
+          ],
+          "stock": 4
+        },
+        {
+          "name": "Sky blue",
+          "hex": "#B7DAFA",
+          "images": [
+            "/uploads/velen-1793974617409-880321134.jpg",
+            "/uploads/velen-1793974642294-277375284.jpg",
+            "/uploads/velen-1793974642294-118070185.jpg",
+            "/uploads/velen-1793974631710-178744105.jpg",
+            "/uploads/velen-1794075137396-808386898.webp"
+          ],
+          "image": "/uploads/velen-1793974617409-880321134.jpg",
+          "sizeInventory": {
+            "S": 0,
+            "M": 2,
+            "L": 2,
+            "XL": 0
+          },
+          "sizes": [
+            "S",
+            "M",
+            "L",
+            "XL"
+          ],
+          "stock": 4
+        }
+      ],
+      "stock": 8,
+      "description": "A classic combination with a modern feel. Featuring contrasting navy ribbed collar and sleeve trims against a clean white body. An easy essential for everyday outfits.",
+      "fabric": "75% Cotton",
+      "createdAt": "2026-11-06T14:17:51.320Z",
+      "sizeInventory": {
+        "S": 0,
+        "M": 4,
+        "L": 4,
+        "XL": 0
+      },
+      "linkedProductId": "prod-1794072189323",
+      "showModelStats": true,
+      "modelHeight": "186 cm",
+      "modelWeight": "77 kg",
+      "modelSize": "XL",
+      "upsellProductId": "prod-1793976276079",
+      "upsellPrice": 10
+    },
+    {
+      "id": "prod-1793976276079",
+      "name": "Cropped Tee",
+      "category": "Men",
+      "price": 11,
+      "costPrice": 9,
+      "comparePrice": 13,
+      "onSale": true,
+      "featured": false,
+      "image": "/uploads/velen-1793976141249-215946209.jpg",
+      "images": [
+        "/uploads/velen-1793976141249-215946209.jpg",
+        "/uploads/velen-1793976163501-260400771.jpg",
+        "/uploads/velen-1793976163502-914369836.jpg",
+        "/uploads/velen-1793976163502-482336806.jpg",
+        "/uploads/velen-1793976224725-570231829.jpg",
+        "/uploads/velen-1793976230329-5324487.jpg",
+        "/uploads/velen-1793976230330-574428780.jpg",
+        "/uploads/velen-1793976239347-528840082.jpg",
+        "/uploads/velen-1793976188785-850259743.jpg",
+        "/uploads/velen-1793976188786-275584688.jpg",
+        "/uploads/velen-1793976188788-735546060.jpg",
+        "/uploads/velen-1793976188788-404792675.jpg",
+        "/uploads/velen-1794075162701-856517935.webp",
+        "/uploads/velen-1794075184005-332885882.webp"
+      ],
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL"
+      ],
+      "colors": [
+        {
+          "name": "White",
+          "hex": "#FFFFFF",
+          "images": [
+            "/uploads/velen-1793976188788-404792675.jpg",
+            "/uploads/velen-1793976188788-735546060.jpg",
+            "/uploads/velen-1793976188785-850259743.jpg",
+            "/uploads/velen-1793976188786-275584688.jpg",
+            "/uploads/velen-1794075162701-856517935.webp"
+          ],
+          "image": "/uploads/velen-1793976188788-404792675.jpg",
+          "sizeInventory": {
+            "S": 2,
+            "M": 2,
+            "L": 2,
+            "XL": 0
+          },
+          "sizes": [
+            "S",
+            "M",
+            "L",
+            "XL"
+          ],
+          "stock": 6
+        },
+        {
+          "name": "black",
+          "hex": "#000000",
+          "images": [
+            "/uploads/velen-1793976224725-570231829.jpg",
+            "/uploads/velen-1793976239347-528840082.jpg",
+            "/uploads/velen-1793976230329-5324487.jpg",
+            "/uploads/velen-1793976230330-574428780.jpg",
+            "/uploads/velen-1794075184005-332885882.webp"
+          ],
+          "image": "/uploads/velen-1793976224725-570231829.jpg",
+          "sizeInventory": {
+            "S": 2,
+            "M": 2,
+            "L": 2,
+            "XL": 2
+          },
+          "sizes": [
+            "S",
+            "M",
+            "L",
+            "XL"
+          ],
+          "stock": 8
+        }
+      ],
+      "stock": 14,
+      "description": "A modern cropped silhouette designed for an effortless everyday look. Featuring a clean finish, relaxed fit, and a shorter length for a contemporary style.",
+      "fabric": "Premium Cotton",
+      "createdAt": "2026-11-06T14:44:36.079Z",
+      "sizeInventory": {
+        "S": 4,
+        "M": 4,
+        "L": 4,
+        "XL": 2
+      },
+      "linkedProductId": "prod-1794072658488",
+      "showModelStats": true,
+      "modelHeight": "186 cm",
+      "modelWeight": "77 kg",
+      "modelSize": "XL",
+      "upsellProductId": "prod-1793974671320",
+      "upsellPrice": 10
+    },
+    {
+      "id": "prod-1794069306578",
+      "name": "VELEN Double-Zip Cropped Sweatshirt",
+      "category": "Women",
+      "price": 30,
+      "costPrice": 20.25,
+      "comparePrice": null,
+      "onSale": false,
+      "featured": true,
+      "image": "/uploads/velen-1794068976614-482659838.jpg",
+      "images": [
+        "/uploads/velen-1794068976614-482659838.jpg",
+        "/uploads/velen-1794068976616-761163109.jpg",
+        "/uploads/velen-1794068976613-791502711.jpg",
+        "/uploads/velen-1794068933001-341276813.jpg",
+        "/uploads/velen-1794068933003-623361329.jpg",
+        "/uploads/velen-1794068933000-699440742.jpg",
+        "/uploads/velen-1794069017423-946160041.jpg",
+        "/uploads/velen-1794069051863-29801244.jpg",
+        "/uploads/velen-1794069051865-166387788.jpg",
+        "/uploads/velen-1794069051867-559621861.jpg",
+        "/uploads/velen-1794069051869-774939936.jpg",
+        "/uploads/velen-1794069139450-45875850.jpg",
+        "/uploads/velen-1794069159413-567313739.jpg",
+        "/uploads/velen-1794069159414-875263187.jpg",
+        "/uploads/velen-1794069159415-423810856.jpg",
+        "/uploads/velen-1794069159418-143586327.jpg",
+        "/uploads/velen-1794069197690-381391872.jpg",
+        "/uploads/velen-1794069217088-432708955.jpg",
+        "/uploads/velen-1794069217088-908311237.jpg",
+        "/uploads/velen-1794069217088-413513415.jpg",
+        "/uploads/velen-1794069217089-247380166.jpg",
+        "/uploads/velen-1794128144811-519854410.webp",
+        "/uploads/velen-1794128162360-102894238.webp",
+        "/uploads/velen-1794128180561-538163880.webp",
+        "/uploads/velen-1794129048390-375227679.webp",
+        "/uploads/velen-1794129865160-18919605.webp",
+        "/uploads/velen-1794129894096-444145019.webp",
+        "/uploads/velen-1794129926822-750594864.webp"
+      ],
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL"
+      ],
+      "colors": [
+        {
+          "name": "Deep Burgundy",
+          "hex": "#4C0D18",
+          "images": [
+            "/uploads/velen-1794129865160-18919605.webp",
+            "/uploads/velen-1794069051869-774939936.jpg",
+            "/uploads/velen-1794069051863-29801244.jpg",
+            "/uploads/velen-1794069051865-166387788.jpg",
+            "/uploads/velen-1794069051867-559621861.jpg",
+            "/uploads/velen-1794128144811-519854410.webp"
+          ],
+          "image": "/uploads/velen-1794129865160-18919605.webp",
+          "sizeInventory": {
+            "S": 5,
+            "M": 5,
+            "L": 5,
+            "XL": 5
+          },
+          "sizes": [
+            "S",
+            "M",
+            "L",
+            "XL"
+          ],
+          "stock": 20
+        },
+        {
+          "name": "Light Grey",
+          "hex": "#C9C7CA",
+          "images": [
+            "/uploads/velen-1794129894096-444145019.webp",
+            "/uploads/velen-1794069159414-875263187.jpg",
+            "/uploads/velen-1794069159413-567313739.jpg",
+            "/uploads/velen-1794069159415-423810856.jpg",
+            "/uploads/velen-1794069159418-143586327.jpg",
+            "/uploads/velen-1794128162360-102894238.webp"
+          ],
+          "image": "/uploads/velen-1794129894096-444145019.webp",
+          "sizeInventory": {
+            "S": 5,
+            "M": 5,
+            "L": 5,
+            "XL": 5
+          },
+          "sizes": [
+            "S",
+            "M",
+            "L",
+            "XL"
+          ],
+          "stock": 20
+        },
+        {
+          "name": "black",
+          "hex": "#000000",
+          "images": [
+            "/uploads/velen-1794129926822-750594864.webp",
+            "/uploads/velen-1794069217089-247380166.jpg",
+            "/uploads/velen-1794069217088-413513415.jpg",
+            "/uploads/velen-1794069217088-908311237.jpg",
+            "/uploads/velen-1794069217088-432708955.jpg",
+            "/uploads/velen-1794128180561-538163880.webp"
+          ],
+          "image": "/uploads/velen-1794129926822-750594864.webp",
+          "sizeInventory": {
+            "S": 5,
+            "M": 5,
+            "L": 5,
+            "XL": 5
+          },
+          "sizes": [
+            "S",
+            "M",
+            "L",
+            "XL"
+          ],
+          "stock": 20
+        }
+      ],
+      "stock": 67,
+      "description": "A relaxed-fit, slightly cropped sweatshirt designed for an effortless streetwear look. Featuring a unique two-way zipper that opens from both ends, a clean hood design and front pockets.\n\nblack",
+      "fabric": "70% premium cotton, featuring a heavyweight winter texture",
+      "createdAt": "2026-11-07T16:35:06.578Z",
+      "sizeInventory": {
+        "XS": 7,
+        "S": 16,
+        "M": 15,
+        "L": 22,
+        "XL": 7
+      },
+      "linkedProductId": "prod-1793961725455",
+      "showModelStats": true,
+      "modelHeight": "168 cm",
+      "modelWeight": "53kg",
+      "modelSize": "XS",
+      "upsellProductId": "prod-1794069687504",
+      "upsellPrice": 18,
+      "sizeGuide": null
     },
     {
       "id": "prod-1794069687504",
@@ -844,7 +840,7 @@
             "S": 5,
             "M": 5,
             "L": 5,
-            "XL": 5
+            "XL": 0
           },
           "sizes": [
             "S",
@@ -852,7 +848,7 @@
             "L",
             "XL"
           ],
-          "stock": 20
+          "stock": 15
         },
         {
           "name": "Deep Burgundy",
@@ -907,76 +903,147 @@
           "stock": 20
         }
       ],
-      "stock": 50,
+      "stock": 55,
       "description": "Stay warm and comfortable with our heavyweight cotton sweatpants. Designed with a relaxed streetwear fit, adjustable waistband and practical pockets.\n\nPerfect for everyday outfits and effortless styling.",
       "fabric": "70% premium cotton, featuring a heavyweight winter texture",
       "createdAt": "2026-11-07T16:41:27.504Z",
       "sizeInventory": {
-        "XS": 2,
-        "XL": 8,
-        "XXL": 3,
-        "L": 12,
-        "S": 10,
-        "M": 15
+        "S": 15,
+        "M": 15,
+        "L": 15,
+        "XL": 10
       },
-      "linkedProductId": "prod-1793968948036"
+      "linkedProductId": "prod-1793968948036",
+      "showModelStats": true,
+      "modelHeight": "186 cm",
+      "modelWeight": "77 kg",
+      "modelSize": "L",
+      "upsellProductId": null,
+      "upsellPrice": null,
+      "sizeGuide": null
     },
     {
-      "id": "prod-1793961725455",
-      "name": "VELEN Double-Zip Cropped Sweatshirt",
-      "category": "Men",
-      "price": 30,
-      "costPrice": 20.25,
-      "comparePrice": null,
-      "onSale": false,
+      "id": "prod-1794072189323",
+      "name": "Ringer Tee",
+      "category": "Women",
+      "price": 13,
+      "costPrice": 9,
+      "comparePrice": 16,
+      "onSale": true,
       "featured": true,
-      "image": "/uploads/velen-1794064398327-930174356.jpg",
+      "image": "/uploads/velen-1794071943338-694350906.webp",
       "images": [
-        "/uploads/velen-1794064398327-930174356.jpg",
-        "/uploads/velen-1794064501599-771936537.jpg",
-        "/uploads/velen-1794064495282-642576599.jpg",
-        "/uploads/velen-1793964076875-363546316.jpg",
-        "/uploads/velen-1793964076873-941057990.jpg",
-        "/uploads/velen-1793964076877-254321452.jpg",
-        "/uploads/velen-1793964076881-962661496.jpg",
-        "/uploads/velen-1793964076882-54500308.jpg",
-        "/uploads/velen-1793964114131-775042557.jpg",
-        "/uploads/velen-1793964114133-951468380.jpg",
-        "/uploads/velen-1793964114134-243267067.jpg",
-        "/uploads/velen-1793964114135-775927244.jpg",
-        "/uploads/velen-1793964114137-83459234.jpg",
-        "/uploads/velen-1793964141205-314363456.jpg",
-        "/uploads/velen-1793964141208-977755246.jpg",
-        "/uploads/velen-1793964141208-870483740.jpg",
-        "/uploads/velen-1793964141210-419668022.jpg",
-        "/uploads/velen-1793964141212-799970836.jpg",
-        "/uploads/velen-1794066165802-557621695.jpg",
-        "/uploads/velen-1794066195868-715748450.jpg",
-        "/uploads/velen-1794066195876-709275300.jpg",
-        "/uploads/velen-1794066195877-77418829.jpg",
-        "/uploads/velen-1794066195878-495722590.jpg",
-        "/uploads/velen-1794067000022-731283678.jpg",
-        "/uploads/velen-1794067025052-336233491.jpg",
-        "/uploads/velen-1794067025058-544744543.jpg",
-        "/uploads/velen-1794067025060-687708110.jpg",
-        "/uploads/velen-1794067072294-792940360.jpg",
-        "/uploads/velen-1794067086100-538387164.jpg",
-        "/uploads/velen-1794067101991-167768172.jpg",
-        "/uploads/velen-1794067114122-577869884.jpg",
-        "/uploads/velen-1794067122557-139322429.jpg",
-        "/uploads/velen-1794067130482-862461450.jpg",
-        "/uploads/velen-1794074573264-307887754.webp",
-        "/uploads/velen-1794074670105-902676222.webp",
-        "/uploads/velen-1794074698914-761070318.webp",
-        "/uploads/velen-1794127884146-493956124.webp",
-        "/uploads/velen-1794127901623-860547087.webp",
-        "/uploads/velen-1794127916154-570631385.webp",
-        "/uploads/velen-1794129479216-85878311.jpg",
-        "/uploads/velen-1794129508156-258291755.jpg",
-        "/uploads/velen-1794129533651-195389747.jpg"
+        "/uploads/velen-1794071943338-694350906.webp",
+        "/uploads/velen-1794071672198-297086149.webp",
+        "/uploads/velen-1794071672200-924018045.webp",
+        "/uploads/velen-1794071672200-223315921.webp",
+        "/uploads/velen-1794071672201-648181958.webp",
+        "/uploads/velen-1794071943337-479725487.webp",
+        "/uploads/velen-1794071943338-196791339.webp",
+        "/uploads/velen-1794071943338-451815041.webp",
+        "/uploads/velen-1794072073907-962620487.webp",
+        "/uploads/velen-1794072073907-311175504.webp",
+        "/uploads/velen-1794072073907-111248701.webp",
+        "/uploads/velen-1794072135214-154053145.webp",
+        "/uploads/velen-1794072135214-607492322.webp",
+        "/uploads/velen-1794075102788-66512642.webp",
+        "/uploads/velen-1794075115139-660099559.webp"
       ],
       "sizes": [
-        "XS",
+        "M",
+        "L"
+      ],
+      "colors": [
+        {
+          "name": "Sky blue",
+          "hex": "#BACEEE",
+          "images": [
+            "/uploads/velen-1794072073907-111248701.webp",
+            "/uploads/velen-1794072073907-962620487.webp",
+            "/uploads/velen-1794072073907-311175504.webp",
+            "/uploads/velen-1794075102788-66512642.webp"
+          ],
+          "image": "/uploads/velen-1794072073907-111248701.webp",
+          "sizeInventory": {
+            "S": 0,
+            "M": 2,
+            "L": 2,
+            "XL": 0
+          },
+          "sizes": [
+            "S",
+            "M",
+            "L",
+            "XL"
+          ],
+          "stock": 4
+        },
+        {
+          "name": "White",
+          "hex": "#D4D2DD",
+          "images": [
+            "/uploads/velen-1794072135214-154053145.webp",
+            "/uploads/velen-1794072135214-607492322.webp",
+            "/uploads/velen-1794075115139-660099559.webp"
+          ],
+          "image": "/uploads/velen-1794072135214-154053145.webp",
+          "sizeInventory": {
+            "S": 0,
+            "M": 2,
+            "L": 2,
+            "XL": 0
+          },
+          "sizes": [
+            "S",
+            "M",
+            "L",
+            "XL"
+          ],
+          "stock": 4
+        }
+      ],
+      "stock": 8,
+      "description": "A classic combination with a modern feel. Featuring contrasting navy ribbed collar and sleeve trims against a clean white body. An easy essential for everyday outfits.",
+      "fabric": "Fabric: 70% Premium Cotton",
+      "createdAt": "2026-11-07T17:23:09.323Z",
+      "sizeInventory": {
+        "S": 0,
+        "M": 4,
+        "L": 4,
+        "XL": 0
+      },
+      "linkedProductId": "prod-1793974671320",
+      "showModelStats": true,
+      "modelHeight": "160 cm",
+      "modelWeight": "50 kg",
+      "modelSize": "XS",
+      "upsellProductId": "prod-1793976276079",
+      "upsellPrice": 10
+    },
+    {
+      "id": "prod-1794072658488",
+      "name": "Cropped Tee",
+      "category": "Women",
+      "price": 11,
+      "costPrice": 9,
+      "comparePrice": 13,
+      "onSale": true,
+      "featured": true,
+      "image": "/uploads/velen-1794073264654-14662125.webp",
+      "images": [
+        "/uploads/velen-1794073264654-14662125.webp",
+        "/uploads/velen-1794072487050-927462284.webp",
+        "/uploads/velen-1794072487050-654287840.webp",
+        "/uploads/velen-1794072582769-546372064.webp",
+        "/uploads/velen-1794072582769-555076796.webp",
+        "/uploads/velen-1794072434489-588529171.webp",
+        "/uploads/velen-1794073316868-275746043.webp",
+        "/uploads/velen-1794073344343-807058801.webp",
+        "/uploads/velen-1794073357513-766128313.webp",
+        "/uploads/velen-1794075203768-919413389.webp",
+        "/uploads/velen-1794075212788-166555879.webp"
+      ],
+      "sizes": [
         "S",
         "M",
         "L",
@@ -984,191 +1051,226 @@
       ],
       "colors": [
         {
-          "name": "Black",
+          "name": "black",
           "hex": "#000000",
+          "images": [
+            "/uploads/velen-1794072434489-588529171.webp",
+            "/uploads/velen-1794072487050-927462284.webp",
+            "/uploads/velen-1794072487050-654287840.webp",
+            "/uploads/velen-1794075203768-919413389.webp"
+          ],
+          "image": "/uploads/velen-1794072434489-588529171.webp",
+          "sizeInventory": {
+            "S": 2,
+            "M": 2,
+            "L": 2,
+            "XL": 2
+          },
           "sizes": [
-            "XS",
             "S",
             "M",
-            "L"
+            "L",
+            "XL"
           ],
-          "sizeInventory": {
-            "XS": 4,
-            "S": 10,
-            "M": 8,
-            "L": 5
-          },
-          "stock": 27
+          "stock": 8
         },
         {
-          "name": "Burgundy",
-          "hex": "#6b1124",
+          "name": "White",
+          "hex": "#FFFFFF",
+          "images": [
+            "/uploads/velen-1794073316868-275746043.webp",
+            "/uploads/velen-1794073344343-807058801.webp",
+            "/uploads/velen-1794073357513-766128313.webp",
+            "/uploads/velen-1794075212788-166555879.webp"
+          ],
+          "image": "/uploads/velen-1794073316868-275746043.webp",
+          "sizeInventory": {
+            "S": 2,
+            "M": 2,
+            "L": 2,
+            "XL": 0
+          },
           "sizes": [
             "S",
-            "M"
+            "M",
+            "L",
+            "XL"
           ],
-          "sizeInventory": {
-            "S": 6,
-            "M": 7
-          },
-          "stock": 13
+          "stock": 6
         }
       ],
-      "stock": 69,
-      "description": "A relaxed-fit, slightly cropped sweatshirt designed for an effortless streetwear look. Featuring a unique two-way zipper that opens from both ends, a clean hood design and front pockets.",
-      "fabric": "70% premium cotton, featuring a heavyweight winter texture",
-      "createdAt": "2026-11-06T10:42:05.455Z",
+      "stock": 14,
+      "description": "A modern cropped silhouette designed for an effortless everyday look. Featuring a clean finish, relaxed fit, and a shorter length for a contemporary style.",
+      "fabric": "Fabric: 70% Premium Cotton",
+      "createdAt": "2026-11-07T17:30:58.488Z",
       "sizeInventory": {
-        "XS": 7,
-        "S": 18,
-        "M": 15,
-        "L": 22,
-        "XL": 7
+        "S": 4,
+        "M": 4,
+        "L": 4,
+        "XL": 2
       },
-      "linkedProductId": "prod-1794069306578",
+      "linkedProductId": "prod-1793976276079",
       "showModelStats": true,
-      "modelHeight": "186 cm",
-      "modelWeight": "77 kg",
-      "modelSize": "L",
-      "upsellProductId": "prod-1793968948036",
-      "upsellPrice": 18,
-      "sizeGuide": {
-        "XS": {
-          "minH": 155,
-          "maxH": 165,
-          "minW": 50,
-          "maxW": 60
-        },
-        "S": {
-          "minH": 163,
-          "maxH": 172,
-          "minW": 60,
-          "maxW": 70
-        },
-        "M": {
-          "minH": 170,
-          "maxH": 180,
-          "minW": 69,
-          "maxW": 79
-        },
-        "L": {
-          "minH": 177,
-          "maxH": 187,
-          "minW": 78,
-          "maxW": 88
-        },
-        "XL": {
-          "minH": 183,
-          "maxH": 193,
-          "minW": 87,
-          "maxW": 99
-        },
-        "XXL": {
-          "minH": 188,
-          "maxH": 202,
-          "minW": 98,
-          "maxW": 115
-        }
-      }
+      "modelHeight": "160 cm",
+      "modelWeight": "50 kg",
+      "modelSize": "XS",
+      "upsellProductId": "prod-1794072189323",
+      "upsellPrice": 10
     }
   ],
   "community": [
     {
-      "id": "comm-1793964851049",
-      "author": "حمودي الوحش",
-      "authorTag": "@velen.official",
+      "id": "comm-1794062824377",
+      "author": "tamaras_cornerr",
+      "authorTag": "tamaras_cornerr",
       "avatar": "/assets/velen-logo.jpg",
-      "mediaType": "video",
-      "mediaUrl": "/uploads/velen-1793964820854-337162292.mp4",
-      "videoUrl": "/uploads/velen-1793964820854-337162292.mp4",
-      "subtitle": "VELEN Ringer Tee - VELEN Official",
+      "mediaType": "photo",
+      "mediaUrl": "/uploads/velen-1794062035883-705874201.jpg",
+      "videoUrl": null,
+      "subtitle": "Ringer Tee - VELEN Official",
       "rating": 5,
-      "comment": "الكوتش الموديل الحلو",
-      "itemWorn": "VELEN Ringer Tee",
-      "likes": 0,
+      "comment": ".",
+      "itemWorn": "Ringer Tee",
       "approved": true,
-      "createdAt": "2026-11-06T11:34:11.049Z"
+      "createdAt": "2026-11-07T14:47:04.377Z",
+      "likes": 3
     },
     {
-      "id": "comm-1793964685285",
+      "id": "comm-1794061738028",
+      "author": "hamzehshaheenn",
+      "authorTag": "hamzehshaheenn",
+      "avatar": "/assets/velen-logo.jpg",
+      "mediaType": "video",
+      "mediaUrl": "/uploads/velen-1794061656960-265655873.mp4",
+      "videoUrl": "/uploads/velen-1794061656960-265655873.mp4",
+      "subtitle": "Cropped Tee - VELEN Official",
+      "rating": 5,
+      "comment": ".",
+      "itemWorn": "Cropped Tee",
+      "approved": true,
+      "createdAt": "2026-11-07T14:28:58.028Z",
+      "likes": 2
+    },
+    {
+      "id": "comm-1794061147443",
+      "author": "sedrabelall",
+      "authorTag": "sedrabelall",
+      "avatar": "/assets/velen-logo.jpg",
+      "mediaType": "video",
+      "mediaUrl": "/uploads/velen-1794061125953-594529651.mp4",
+      "videoUrl": "/uploads/velen-1794061125953-594529651.mp4",
+      "subtitle": "Cropped Tee - VELEN Official",
+      "rating": 5,
+      "comment": ".",
+      "itemWorn": "Cropped Tee",
+      "approved": true,
+      "createdAt": "2026-11-07T14:19:07.443Z",
+      "likes": 2
+    },
+    {
+      "id": "comm-1794061060509",
+      "author": "aboodabuabdu",
+      "authorTag": "aboodabuabdu",
+      "avatar": "/assets/velen-logo.jpg",
+      "mediaType": "video",
+      "mediaUrl": "/uploads/velen-1794061048527-261974131.mp4",
+      "videoUrl": "/uploads/velen-1794061048527-261974131.mp4",
+      "subtitle": "Ringer Tee - VELEN Official",
+      "rating": 5,
+      "comment": ".",
+      "itemWorn": "Ringer Tee",
+      "approved": true,
+      "createdAt": "2026-11-07T14:17:40.509Z",
+      "likes": 2
+    },
+    {
+      "id": "comm-1794060419808",
       "author": "VELEN Official",
-      "authorTag": "@velen.official",
+      "authorTag": "ammarrbasheer",
       "avatar": "/assets/velen-logo.jpg",
-      "mediaType": "photo",
-      "mediaUrl": "/uploads/velen-1793964675301-491717273.jpg",
-      "videoUrl": null,
-      "subtitle": "VELEN Ringer Tee - VELEN Official",
-      "rating": 5,
-      "comment": "ثصبثصبثب",
-      "itemWorn": "VELEN Ringer Tee",
-      "likes": 0,
-      "approved": true,
-      "createdAt": "2026-11-06T11:31:25.285Z"
-    },
-    {
-      "id": "comm-1793548900530",
-      "author": "حمزة العبادي",
-      "authorTag": "@hamza_abbadi",
-      "avatar": "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&q=80",
-      "mediaType": "text",
-      "mediaUrl": null,
-      "videoUrl": null,
-      "subtitle": "Velen Style",
-      "rating": 5,
-      "comment": "الخامة خرافية والقصة البوكسي على اللبس ممتازة جداً، فخورين بمنتج أردني بهالمستوى!",
-      "itemWorn": "VELEN Ringer Tee — Sky Blue",
-      "likes": 0,
-      "approved": true,
-      "createdAt": "2026-11-01T16:01:40.530Z"
-    },
-    {
-      "id": "comm-1",
-      "author": "Omar_AlKhatib",
-      "authorTag": "@omar.style_jo",
-      "avatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80",
       "mediaType": "video",
-      "mediaUrl": "/assets/velen-community-1.jpg",
-      "videoUrl": "https://assets.mixkit.co/videos/preview/mixkit-young-man-styling-a-casual-look-41555-large.mp4",
-      "subtitle": "بنطلون مع Ringer Sky Blue",
+      "mediaUrl": "/uploads/velen-1794060399702-370842687.mp4",
+      "videoUrl": "/uploads/velen-1794060399702-370842687.mp4",
+      "subtitle": "Ringer Tee - VELEN Official",
       "rating": 5,
-      "comment": "خامة التيشيرت فوق الخيال! الفت بيرفكت والتوصيل بعمان وصلني بنفس اليوم 🔥",
-      "itemWorn": "VELEN Ringer Tee — Sky Blue",
-      "likes": 49,
+      "comment": ".",
+      "itemWorn": "Ringer Tee",
       "approved": true,
-      "createdAt": "2026-10-28T19:30:00.000Z"
+      "createdAt": "2026-11-07T14:06:59.808Z",
+      "likes": 2
     },
     {
-      "id": "comm-2",
-      "author": "Leen.Amman",
-      "authorTag": "@leen_fits",
-      "avatar": "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=150&q=80",
-      "mediaType": "photo",
-      "mediaUrl": "/assets/velen-community-2.jpg",
-      "subtitle": "Jabal Amman Cafe Fit",
+      "id": "comm-1794060099248",
+      "author": "VELEN Official",
+      "authorTag": "ayhamabusalhiya",
+      "avatar": "/assets/velen-logo.jpg",
+      "mediaType": "video",
+      "mediaUrl": "/uploads/velen-1794060071511-876857895.mov",
+      "videoUrl": "/uploads/velen-1794060071511-876857895.mov",
+      "subtitle": "Cropped Tee - VELEN Official",
       "rating": 5,
-      "comment": "احلى بوكسي تيشيرت جربته بالأردن.. القطن تقيل وما بتغير مع الغسيل أبداً والتطريز راقي!",
-      "itemWorn": "VELEN Boxy Cropped Tee — Black",
-      "likes": 38,
+      "comment": ".",
+      "itemWorn": "Cropped Tee",
       "approved": true,
-      "createdAt": "2026-10-27T16:20:00.000Z"
-    },
-    {
-      "id": "comm-3",
-      "author": "Tariq_Z",
-      "authorTag": "@tariq.jo",
-      "avatar": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80",
-      "mediaType": "photo",
-      "mediaUrl": "/assets/velen-boxy-black.jpg",
-      "subtitle": "All Black Essentials",
-      "rating": 5,
-      "comment": "البراند الأقوى حالياً بدون مبالغة، السعر مقابل الجودة أسطوري والتفاصيل رهيبة.",
-      "itemWorn": "VELEN Boxy Cropped Tee — Black",
-      "likes": 31,
-      "approved": true,
-      "createdAt": "2026-10-26T12:00:00.000Z"
+      "createdAt": "2026-11-07T14:01:39.248Z",
+      "likes": 2
     }
   ],
   "orders": [
+    {
+      "id": "ORD-1004",
+      "customerName": "Sarah Issa",
+      "phone": "0798076964",
+      "city": "Amman (الأردن)",
+      "address": "Deir ghbar",
+      "notes": "",
+      "source": "Storefront (المتجر الإلكتروني)",
+      "items": [
+        {
+          "id": "prod-1794069687504",
+          "name": "Heavyweight Straight Sweatpants",
+          "price": 22,
+          "image": "/uploads/velen-1794069510403-945710849.jpg",
+          "size": "XL",
+          "color": "black",
+          "colorHex": "#000000",
+          "quantity": 1
+        }
+      ],
+      "subtotal": 22,
+      "shipping": 0,
+      "total": 22,
+      "paymentMethod": "Cash on Delivery (دفع عند الاستلام)",
+      "createdAt": "2026-11-08T17:57:04.016Z",
+      "status": "Delivered"
+    },
+    {
+      "id": "ORD-1005",
+      "customerName": "khaled waleed",
+      "phone": "0797447909",
+      "city": "Amman (الأردن)",
+      "address": "shafabdran",
+      "notes": "",
+      "source": "Storefront (المتجر الإلكتروني)",
+      "items": [
+        {
+          "id": "prod-1793968948036",
+          "name": "Heavyweight Straight Sweatpants",
+          "price": 22,
+          "image": "/uploads/velen-1793968701897-380553725.jpg",
+          "size": "L",
+          "color": "Deep Burgundy",
+          "colorHex": "#4F0B16",
+          "quantity": 1
+        }
+      ],
+      "subtotal": 22,
+      "shipping": 0,
+      "total": 22,
+      "paymentMethod": "Cash on Delivery (دفع عند الاستلام)",
+      "createdAt": "2026-11-07T13:45:20.312Z",
+      "status": "Cancelled"
+    },
     {
       "id": "ORD-1003",
       "customerName": "Test Valid Order",
@@ -1190,8 +1292,32 @@
       "shipping": 0,
       "total": 0,
       "paymentMethod": "Cash on Delivery",
-      "status": "Pending",
-      "createdAt": "2026-11-05T00:49:44.949Z"
+      "createdAt": "2026-11-05T00:49:44.949Z",
+      "status": "Cancelled"
+    },
+    {
+      "id": "ORD-1002",
+      "customerName": "Test Buyer",
+      "phone": "0799999999",
+      "city": "Amman",
+      "address": "Abdoun",
+      "notes": "",
+      "source": "Storefront (المتجر الإلكتروني)",
+      "items": [
+        {
+          "id": "prod_1",
+          "name": "Raw Edge Oversized Tee",
+          "price": 18,
+          "quantity": 1,
+          "size": "M"
+        }
+      ],
+      "subtotal": 0,
+      "shipping": 0,
+      "total": 16,
+      "paymentMethod": "Cash on Delivery (دفع عند الاستلام)",
+      "createdAt": "2026-11-04T23:05:24.523Z",
+      "status": "Cancelled"
     },
     {
       "id": "ORD-1001",
@@ -1214,8 +1340,8 @@
       "shipping": 3,
       "total": 38,
       "paymentMethod": "cod",
-      "status": "Pending",
-      "createdAt": "2026-11-03T21:55:37.428Z"
+      "createdAt": "2026-11-03T21:55:37.428Z",
+      "status": "Cancelled"
     },
     {
       "id": "ORD-1000",
@@ -1238,8 +1364,134 @@
       "shipping": 3,
       "total": 38,
       "paymentMethod": "cod",
-      "status": "Pending",
-      "createdAt": "2026-11-03T21:55:36.540Z"
+      "createdAt": "2026-11-03T21:55:36.540Z",
+      "status": "Cancelled"
+    },
+    {
+      "id": "ORD-1866",
+      "customerName": "drgdr",
+      "phone": "+962797447909",
+      "city": "Amman (الأردن)",
+      "address": "hy",
+      "notes": "ghyf",
+      "items": [
+        {
+          "id": "prod-1",
+          "name": "VELEN Ringer Tee — Sky Blue",
+          "price": 13,
+          "image": "/assets/velen-ringer-sky-blue.jpg",
+          "size": "S",
+          "quantity": 1
+        },
+        {
+          "id": "upsell_ringer_tee",
+          "name": "VELEN Ringer Tee — Special Addon",
+          "price": 9.5,
+          "image": "/assets/velen-logo.jpg",
+          "size": "M",
+          "quantity": 1
+        }
+      ],
+      "subtotal": 22.5,
+      "shipping": 0,
+      "total": 22.5,
+      "paymentMethod": "Cash on Delivery (دفع عند الاستلام)",
+      "createdAt": "2026-11-03T08:40:31.895Z",
+      "status": "Cancelled"
+    },
+    {
+      "id": "ORD-6916",
+      "customerName": "Test Customer",
+      "phone": "+962770188144",
+      "city": "Amman",
+      "address": "Testing address",
+      "notes": "",
+      "items": [
+        {
+          "id": "prod-1",
+          "name": "VELEN Ringer Tee",
+          "price": 13,
+          "quantity": 1,
+          "size": "M"
+        }
+      ],
+      "subtotal": 13,
+      "shipping": 0,
+      "total": 13,
+      "paymentMethod": "Cash on Delivery",
+      "createdAt": "2026-11-02T22:05:57.677Z",
+      "status": "Cancelled"
+    },
+    {
+      "id": "ORD-7888",
+      "customerName": "fg",
+      "phone": "0797447909",
+      "city": "Amman (الأردن)",
+      "address": "fvfv",
+      "notes": "",
+      "items": [
+        {
+          "id": "prod-2",
+          "name": "VELEN Boxy Cropped Tee — White",
+          "price": 11,
+          "image": "/assets/velen-boxy-white.jpg",
+          "size": "S",
+          "quantity": 1
+        }
+      ],
+      "subtotal": 11,
+      "shipping": 0,
+      "total": 11,
+      "paymentMethod": "CliQ (كليك)",
+      "createdAt": "2026-11-02T16:25:52.880Z",
+      "status": "Cancelled"
+    },
+    {
+      "id": "ORD-8560",
+      "customerName": "يرسيبر",
+      "phone": "0776514515",
+      "city": "Amman (الأردن)",
+      "address": "بي يب",
+      "notes": "يب يبربير",
+      "items": [
+        {
+          "id": "prod-1793566099469",
+          "name": "رث",
+          "price": 20,
+          "image": "/assets/velen-logo.jpg",
+          "size": "M",
+          "quantity": 1
+        }
+      ],
+      "subtotal": 20,
+      "shipping": 0,
+      "total": 20,
+      "paymentMethod": "Cash on Delivery (دفع عند الاستلام)",
+      "createdAt": "2026-11-01T20:52:49.513Z",
+      "status": "Cancelled"
+    },
+    {
+      "id": "ORD-9821",
+      "customerName": "أحمد العبداللات",
+      "phone": "0791234567",
+      "city": "Amman (عمان - دابوق)",
+      "address": "شارع دابوق الرئيسي، بناية 14، طابق 2",
+      "items": [
+        {
+          "id": "prod-1",
+          "name": "VELEN Ringer Tee — Sky Blue",
+          "size": "L",
+          "price": 13,
+          "quantity": 1,
+          "image": "/assets/velen-ringer-sky-blue.jpg"
+        }
+      ],
+      "subtotal": 13,
+      "shipping": 0,
+      "total": 13,
+      "paymentMethod": "Cash on Delivery (دفع عند الاستلام)",
+      "createdAt": "2026-10-29T08:15:00.000Z",
+      "status": "Cancelled"
     },
     {
       "id": "ORD-1137",
@@ -1262,31 +1514,8 @@
       "shipping": 0,
       "total": 13,
       "paymentMethod": "Cash on Delivery (دفع عند الاستلام)",
-      "status": "Pending",
-      "createdAt": "2026-10-29T07:16:37.520Z"
-    },
-    {
-      "id": "ORD-9821",
-      "customerName": "أحمد العبداللات",
-      "phone": "0791234567",
-      "city": "Amman (عمان - دابوق)",
-      "address": "شارع دابوق الرئيسي، بناية 14، طابق 2",
-      "items": [
-        {
-          "id": "prod-1",
-          "name": "VELEN Ringer Tee — Sky Blue",
-          "size": "L",
-          "price": 13,
-          "quantity": 1,
-          "image": "/assets/velen-ringer-sky-blue.jpg"
-        }
-      ],
-      "subtotal": 13,
-      "shipping": 0,
-      "total": 13,
-      "paymentMethod": "Cash on Delivery (دفع عند الاستلام)",
-      "status": "Out for Delivery",
-      "createdAt": "2026-10-29T08:15:00.000Z"
+      "createdAt": "2026-10-29T07:16:37.520Z",
+      "status": "Cancelled"
     }
   ],
   "design": {
@@ -1314,9 +1543,9 @@
     },
     "valueProps": {
       "enabled": true,
-      "prop1": "توصيل مجاني في عمّان وبدينار لكافة المحافظات",
-      "prop2": "قطن أردني فاخر 260 GSM معالج ومثبت",
-      "prop3": "تبديل فوري للمقاس عند باب البيت",
+      "prop1": "Free delivery in Amman & 1 JOD across Jordan",
+      "prop2": "Premium cotton fabrics, made for lasting comfort",
+      "prop3": "Easy and convenient size exchanges from your doorstep",
       "prop4": "Secure Payment"
     },
     "sectionsOrder": [
@@ -1340,19 +1569,19 @@
     "communitySection": {
       "title": "COMMUNITY WEARS VELEN",
       "subtitle": "Real people. Real style.",
-      "desc": "شاركنا لوكك اليومي وفيديوهاتك مع قطع Velen، وقيم تجربتك من 5 نجوم لتدخل السحب الأسبوعي على بوكس إسنشيلز كامل!"
+      "desc": "Share your everyday looks and videos featuring VELEN with us on social media. Your content could be featured on our official pages!"
     },
     "aboutSection": {
       "enabled": true,
       "sub": "THE STORY",
       "title": "WHY VELEN?",
-      "p1": "انطلقت Velen من عمّان لإعادة تعريف الملابس اليومية في الأردن. نركز على القصّات البوكسي المريحة (Boxy & Cropped Fit) والأقمشة القطنية الثقيلة 100% التي تحافظ على شكلها ونعومتها مع الاستخدام المتكرر.",
-      "feature1Title": "قطن محلي نخب أول",
-      "feature1Desc": "نسيج قطني محبوك بوزن 260 GSM معالجة ضد الانكماش والوبر.",
-      "feature2Title": "قصّة بوكسي معاصرة",
-      "feature2Desc": "تصميم أكتاف منسدلة وطول متناسق يعطي إطلالة ستريت وير نظيفة وفخمة.",
-      "feature3Title": "فخر الصناعة الأردنية",
-      "feature3Desc": "مُصمم ومُنتج بأيادٍ أردنية مبدعة لدعم الإنتاج المحلي بأعلى معايير العالمية.",
+      "p1": "Born in Amman, VELEN was created to bring a fresh perspective to everyday streetwear in Jordan. We believe everyday clothing should combine distinctive design, comfort, and lasting quality. That's why we carefully select our fabrics and create pieces designed to fit your lifestyle while maintaining their shape and softness, wear after wear.",
+      "feature1Title": "Premium Cotton Quality",
+      "feature1Desc": "Carefully selected premium cotton fabrics that deliver lasting comfort, softness, and durability.",
+      "feature2Title": "Modern Streetwear Design",
+      "feature2Desc": "Thoughtfully crafted fits and clean details that create an effortless look, easy to style every day.",
+      "feature3Title": "Proudly Made in Jordan",
+      "feature3Desc": "A Jordanian brand with local design and production, inspired by global streetwear culture.",
       "image": "/assets/velen-logo.jpg",
       "quote": "Clean fits. Premium feel. Built for everyday wear."
     },
@@ -1368,39 +1597,54 @@
       "enabled": true,
       "title": "An Exclusive Offer Just for You",
       "subtitle": "Add this piece to your order at a special price.",
-      "productId": "prod-1794069687504",
-      "specialPrice": 18,
-      "discountPrice": 18
+      "productId": "prod-1793974671320",
+      "specialPrice": 10,
+      "discountPrice": 10
     },
     "socialLinks": {
       "instagram": "https://www.instagram.com/velen.offical?dlrf=c3I5MGh6eTZneGYy"
     },
     "portalCards": {
-      "shopImage": "/uploads/velen-1793879708439-712682715.png",
-      "storyImage": "/assets/velen-boxy-white.jpg",
-      "communityImage": "/assets/velen-community-1.jpg"
+      "shopImage": "/uploads/velen-1794087006341-127277359.jpg",
+      "storyImage": "/uploads/velen-1794087070598-316209950.jpg",
+      "communityImage": "/uploads/velen-1794087095632-320546527.jpg"
     }
   },
   "promoCodes": [
     {
-      "code": "VELEN10",
+      "code": "ABD115",
       "type": "percentage",
+      "discountType": "percentage",
       "value": 10,
-      "active": true,
-      "uses": 0,
+      "discountValue": 10,
       "minOrder": 0,
-      "usageLimit": 50,
-      "timesUsed": 0
+      "active": true,
+      "timesUsed": 0,
+      "createdAt": "2026-11-03T08:46:38.590Z"
     },
     {
-      "code": "FREESHIP",
-      "type": "fixed",
-      "value": 1,
+      "code": "AMMAN",
+      "type": "percentage",
+      "discountType": "percentage",
+      "value": 10,
+      "discountValue": 10,
+      "minOrder": 0,
       "active": true,
+      "timesUsed": 0,
+      "createdAt": "2026-11-03T08:46:58.261Z"
+    },
+    {
+      "code": "KHALED",
+      "type": "fixed",
+      "discountType": "fixed",
+      "value": 1,
+      "discountValue": 1,
+      "minOrder": 3,
+      "active": true,
+      "usageLimit": 2,
+      "timesUsed": 0,
       "uses": 0,
-      "minOrder": 15,
-      "usageLimit": 50,
-      "timesUsed": 0
+      "createdAt": "2026-11-05T00:20:02.041Z"
     }
   ],
   "expenses": [
