@@ -19,3 +19,6 @@ serviceAccountKey.json
 # Uploads
 public/uploads/*
 !public/uploads/.gitkeep
+
+# Backups
+backup_pre_redesign/
