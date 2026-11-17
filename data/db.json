@@ -141,6 +141,21 @@
         {
           "name": "Black",
           "hex": "#000000",
+          "sizes": [
+            "XS",
+            "S",
+            "M",
+            "L",
+            "XL"
+          ],
+          "sizeInventory": {
+            "XS": 4,
+            "S": 8,
+            "M": 10,
+            "L": 10,
+            "XL": 5
+          },
+          "stock": 37,
           "images": [
             "/uploads/velen-1794264102095-415378937.webp",
             "/uploads/velen-1794264082554-562795588.jpg",
@@ -148,15 +163,11 @@
             "/uploads/velen-1794264082557-317266694.jpg",
             "/uploads/velen-1794264082555-940889380.jpg",
             "/uploads/velen-1794264113941-440000135.webp"
-          ],
-          "image": "/uploads/velen-1794264102095-415378937.webp",
-          "sizeInventory": {
-            "XS": 3,
-            "S": 4,
-            "M": 5,
-            "L": 8,
-            "XL": 2
-          },
+          ]
+        },
+        {
+          "name": "Burgundy",
+          "hex": "#6b1124",
           "sizes": [
             "XS",
             "S",
@@ -164,11 +175,14 @@
             "L",
             "XL"
           ],
-          "stock": 22
-        },
-        {
-          "name": "Burgundy",
-          "hex": "#6b1124",
+          "sizeInventory": {
+            "XS": 3,
+            "S": 8,
+            "M": 8,
+            "L": 8,
+            "XL": 4
+          },
+          "stock": 31,
           "images": [
             "/uploads/velen-1794263980898-284259705.webp",
             "/uploads/velen-1794264035144-601717709.jpg",
@@ -176,15 +190,11 @@
             "/uploads/velen-1794264035145-225045235.jpg",
             "/uploads/velen-1794264035147-292590179.jpg",
             "/uploads/velen-1794264048661-301382033.webp"
-          ],
-          "image": "/uploads/velen-1794263980898-284259705.webp",
-          "sizeInventory": {
-            "XS": 1,
-            "S": 6,
-            "M": 5,
-            "L": 7,
-            "XL": 3
-          },
+          ]
+        },
+        {
+          "name": "Light Grey",
+          "hex": "#b5b5b5",
           "sizes": [
             "XS",
             "S",
@@ -192,11 +202,14 @@
             "L",
             "XL"
           ],
-          "stock": 22
-        },
-        {
-          "name": "Light Grey",
-          "hex": "#CECCCF",
+          "sizeInventory": {
+            "XS": 3,
+            "S": 8,
+            "M": 8,
+            "L": 8,
+            "XL": 4
+          },
+          "stock": 31,
           "images": [
             "/uploads/velen-1794264216744-116220998.webp",
             "/uploads/velen-1794264188233-301846319.jpg",
@@ -204,35 +217,19 @@
             "/uploads/velen-1794264188233-987942582.jpg",
             "/uploads/velen-1794264188235-92777204.jpg",
             "/uploads/velen-1794264170900-847501540.webp"
-          ],
-          "image": "/uploads/velen-1794264216744-116220998.webp",
-          "sizeInventory": {
-            "XS": 3,
-            "S": 6,
-            "M": 5,
-            "L": 7,
-            "XL": 2
-          },
-          "sizes": [
-            "XS",
-            "S",
-            "M",
-            "L",
-            "XL"
-          ],
-          "stock": 23
+          ]
         }
       ],
-      "stock": 67,
+      "stock": 99,
       "description": "A relaxed-fit, slightly cropped sweatshirt designed for an effortless streetwear look. Featuring a unique two-way zipper that opens from both ends, a clean hood design and front pockets.",
       "fabric": "70% premium cotton, featuring a heavyweight winter texture",
       "createdAt": "2026-11-06T10:42:05.455Z",
       "sizeInventory": {
-        "XS": 7,
-        "S": 16,
-        "M": 15,
-        "L": 22,
-        "XL": 7
+        "XS": 10,
+        "S": 24,
+        "M": 26,
+        "L": 26,
+        "XL": 13
       },
       "linkedProductId": "prod-1794069306578",
       "showModelStats": true,
@@ -339,64 +336,23 @@
       ],
       "colors": [
         {
-          "name": "Light Grey",
-          "hex": "#BCBBC0",
-          "images": [
-            "/uploads/velen-1794068237275-701997918.jpg",
-            "/uploads/velen-1794068324882-21659705.jpg",
-            "/uploads/velen-1794068324883-917335435.jpg",
-            "/uploads/velen-1794068339143-695591125.jpg",
-            "/uploads/velen-1794068339145-978806516.jpg",
-            "/uploads/velen-1794074765024-630457959.webp"
-          ],
-          "image": "/uploads/velen-1794068237275-701997918.jpg",
-          "sizeInventory": {
-            "XS": 3,
-            "S": 6,
-            "M": 5,
-            "L": 8,
-            "XL": 2
-          },
-          "sizes": [
-            "XS",
-            "S",
-            "M",
-            "L",
-            "XL"
-          ],
-          "stock": 24
-        },
-        {
-          "name": "Deep Burgundy",
-          "hex": "#4F0B16",
-          "images": [
-            "/uploads/velen-1794068151661-72193471.jpg",
-            "/uploads/velen-1794068182565-427336284.jpg",
-            "/uploads/velen-1794068182565-766080786.jpg",
-            "/uploads/velen-1794068194720-112772891.jpg",
-            "/uploads/velen-1794068194723-989937481.jpg",
-            "/uploads/velen-1794074748194-256440590.webp"
-          ],
-          "image": "/uploads/velen-1794068151661-72193471.jpg",
-          "sizeInventory": {
-            "XS": 3,
-            "S": 7,
-            "M": 7,
-            "L": 6,
-            "XL": 2
-          },
-          "sizes": [
-            "XS",
-            "S",
-            "M",
-            "L",
-            "XL"
-          ],
-          "stock": 25
-        },
-        {
-          "name": "black",
+          "name": "Black",
           "hex": "#000000",
+          "sizes": [
+            "XS",
+            "S",
+            "M",
+            "L",
+            "XL"
+          ],
+          "sizeInventory": {
+            "XS": 4,
+            "S": 8,
+            "M": 10,
+            "L": 10,
+            "XL": 6
+          },
+          "stock": 38,
           "images": [
             "/uploads/velen-1794067907992-292549168.jpg",
             "/uploads/velen-1794068071552-133172107.jpg",
@@ -404,15 +360,11 @@
             "/uploads/velen-1794068083763-958413162.jpg",
             "/uploads/velen-1794068095582-125880995.jpg",
             "/uploads/velen-1794074787084-407117322.webp"
-          ],
-          "image": "/uploads/velen-1794067907992-292549168.jpg",
-          "sizeInventory": {
-            "XS": 2,
-            "S": 7,
-            "M": 5,
-            "L": 8,
-            "XL": 2
-          },
+          ]
+        },
+        {
+          "name": "Deep Burgundy",
+          "hex": "#6b1124",
           "sizes": [
             "XS",
             "S",
@@ -420,18 +372,61 @@
             "L",
             "XL"
           ],
-          "stock": 24
+          "sizeInventory": {
+            "XS": 3,
+            "S": 8,
+            "M": 8,
+            "L": 8,
+            "XL": 5
+          },
+          "stock": 32,
+          "images": [
+            "/uploads/velen-1794068151661-72193471.jpg",
+            "/uploads/velen-1794068182565-427336284.jpg",
+            "/uploads/velen-1794068182565-766080786.jpg",
+            "/uploads/velen-1794068194720-112772891.jpg",
+            "/uploads/velen-1794068194723-989937481.jpg",
+            "/uploads/velen-1794074748194-256440590.webp"
+          ]
+        },
+        {
+          "name": "Light Grey",
+          "hex": "#b5b5b5",
+          "sizes": [
+            "XS",
+            "S",
+            "M",
+            "L",
+            "XL"
+          ],
+          "sizeInventory": {
+            "XS": 4,
+            "S": 8,
+            "M": 8,
+            "L": 8,
+            "XL": 5
+          },
+          "stock": 33,
+          "images": [
+            "/uploads/velen-1794068237275-701997918.jpg",
+            "/uploads/velen-1794068324882-21659705.jpg",
+            "/uploads/velen-1794068324883-917335435.jpg",
+            "/uploads/velen-1794068339143-695591125.jpg",
+            "/uploads/velen-1794068339145-978806516.jpg",
+            "/uploads/velen-1794074765024-630457959.webp"
+          ]
         }
       ],
-      "stock": 55,
+      "stock": 103,
       "description": "Stay warm and comfortable with our heavyweight cotton sweatpants. Designed with a relaxed streetwear fit, adjustable waistband and practical pockets.\n\nPerfect for everyday outfits and effortless styling.",
       "fabric": "70% premium cotton, featuring a heavyweight winter texture",
       "createdAt": "2026-11-06T12:42:28.036Z",
       "sizeInventory": {
-        "S": 15,
-        "M": 15,
-        "L": 15,
-        "XL": 10
+        "XS": 11,
+        "S": 24,
+        "M": 26,
+        "L": 26,
+        "XL": 16
       },
       "linkedProductId": "prod-1794069687504"
     },
@@ -469,64 +464,62 @@
       "colors": [
         {
           "name": "White",
-          "hex": "#FFFFFF",
+          "hex": "#ffffff",
+          "sizes": [
+            "S",
+            "M",
+            "L",
+            "XL"
+          ],
+          "sizeInventory": {
+            "S": 5,
+            "M": 6,
+            "L": 6,
+            "XL": 4
+          },
+          "stock": 21,
           "images": [
             "/uploads/velen-1793974455647-500950355.jpg",
             "/uploads/velen-1793974464295-24639319.jpg",
             "/uploads/velen-1793974464294-115491996.jpg",
             "/uploads/velen-1793974470493-916992665.jpg",
             "/uploads/velen-1794075128454-692144145.webp"
-          ],
-          "image": "/uploads/velen-1793974455647-500950355.jpg",
-          "sizeInventory": {
-            "S": 0,
-            "M": 2,
-            "L": 2,
-            "XL": 0
-          },
+          ]
+        },
+        {
+          "name": "Sky blue",
+          "hex": "#87ceeb",
           "sizes": [
             "S",
             "M",
             "L",
             "XL"
           ],
-          "stock": 4
-        },
-        {
-          "name": "Sky blue",
-          "hex": "#B7DAFA",
+          "sizeInventory": {
+            "S": 5,
+            "M": 6,
+            "L": 6,
+            "XL": 4
+          },
+          "stock": 21,
           "images": [
             "/uploads/velen-1793974617409-880321134.jpg",
             "/uploads/velen-1793974642294-277375284.jpg",
             "/uploads/velen-1793974642294-118070185.jpg",
             "/uploads/velen-1793974631710-178744105.jpg",
             "/uploads/velen-1794075137396-808386898.webp"
-          ],
-          "image": "/uploads/velen-1793974617409-880321134.jpg",
-          "sizeInventory": {
-            "S": 0,
-            "M": 2,
-            "L": 2,
-            "XL": 0
-          },
-          "sizes": [
-            "S",
-            "M",
-            "L",
-            "XL"
-          ],
-          "stock": 4
+          ]
         }
       ],
-      "stock": 8,
+      "stock": 42,
       "description": "A classic combination with a modern feel. Featuring contrasting navy ribbed collar and sleeve trims against a clean white body. An easy essential for everyday outfits.",
       "fabric": "75% Cotton",
       "createdAt": "2026-11-06T14:17:51.320Z",
       "sizeInventory": {
-        "S": 0,
-        "M": 4,
-        "L": 4,
-        "XL": 0
+        "S": 10,
+        "M": 12,
+        "L": 12,
+        "XL": 8
       },
       "linkedProductId": "prod-1794072189323",
       "showModelStats": true,
@@ -571,64 +564,62 @@
       "colors": [
         {
           "name": "White",
-          "hex": "#FFFFFF",
+          "hex": "#ffffff",
+          "sizes": [
+            "S",
+            "M",
+            "L",
+            "XL"
+          ],
+          "sizeInventory": {
+            "S": 5,
+            "M": 6,
+            "L": 6,
+            "XL": 4
+          },
+          "stock": 21,
           "images": [
             "/uploads/velen-1793976188788-404792675.jpg",
             "/uploads/velen-1793976188788-735546060.jpg",
             "/uploads/velen-1793976188785-850259743.jpg",
             "/uploads/velen-1793976188786-275584688.jpg",
             "/uploads/velen-1794075162701-856517935.webp"
-          ],
-          "image": "/uploads/velen-1793976188788-404792675.jpg",
-          "sizeInventory": {
-            "S": 2,
-            "M": 2,
-            "L": 2,
-            "XL": 0
-          },
+          ]
+        },
+        {
+          "name": "Black",
+          "hex": "#000000",
           "sizes": [
             "S",
             "M",
             "L",
             "XL"
           ],
-          "stock": 6
-        },
-        {
-          "name": "black",
-          "hex": "#000000",
+          "sizeInventory": {
+            "S": 6,
+            "M": 8,
+            "L": 8,
+            "XL": 5
+          },
+          "stock": 27,
           "images": [
             "/uploads/velen-1793976224725-570231829.jpg",
             "/uploads/velen-1793976239347-528840082.jpg",
             "/uploads/velen-1793976230329-5324487.jpg",
             "/uploads/velen-1793976230330-574428780.jpg",
             "/uploads/velen-1794075184005-332885882.webp"
-          ],
-          "image": "/uploads/velen-1793976224725-570231829.jpg",
-          "sizeInventory": {
-            "S": 2,
-            "M": 2,
-            "L": 2,
-            "XL": 2
-          },
-          "sizes": [
-            "S",
-            "M",
-            "L",
-            "XL"
-          ],
-          "stock": 8
+          ]
         }
       ],
-      "stock": 14,
+      "stock": 48,
       "description": "A modern cropped silhouette designed for an effortless everyday look. Featuring a clean finish, relaxed fit, and a shorter length for a contemporary style.",
       "fabric": "Premium Cotton",
       "createdAt": "2026-11-06T14:44:36.079Z",
       "sizeInventory": {
-        "S": 4,
-        "M": 4,
-        "L": 4,
-        "XL": 2
+        "S": 11,
+        "M": 14,
+        "L": 14,
+        "XL": 9
       },
       "linkedProductId": "prod-1794072658488",
       "showModelStats": true,
@@ -686,94 +677,97 @@
       ],
       "colors": [
         {
-          "name": "Deep Burgundy",
-          "hex": "#4C0D18",
-          "images": [
-            "/uploads/velen-1794129865160-18919605.webp",
-            "/uploads/velen-1794069051869-774939936.jpg",
-            "/uploads/velen-1794069051863-29801244.jpg",
-            "/uploads/velen-1794069051865-166387788.jpg",
-            "/uploads/velen-1794069051867-559621861.jpg",
-            "/uploads/velen-1794128144811-519854410.webp"
-          ],
-          "image": "/uploads/velen-1794129865160-18919605.webp",
-          "sizeInventory": {
-            "S": 5,
-            "M": 5,
-            "L": 5,
-            "XL": 5
-          },
+          "name": "Black",
+          "hex": "#000000",
           "sizes": [
+            "XS",
             "S",
             "M",
             "L",
             "XL"
           ],
-          "stock": 20
+          "sizeInventory": {
+            "XS": 4,
+            "S": 8,
+            "M": 10,
+            "L": 10,
+            "XL": 5
+          },
+          "stock": 37,
+          "images": [
+            "/uploads/velen-1794264102095-415378937.webp",
+            "/uploads/velen-1794264082554-562795588.jpg",
+            "/uploads/velen-1794264082554-818827607.jpg",
+            "/uploads/velen-1794264082557-317266694.jpg",
+            "/uploads/velen-1794264082555-940889380.jpg",
+            "/uploads/velen-1794264113941-440000135.webp"
+          ]
+        },
+        {
+          "name": "Deep Burgundy",
+          "hex": "#6b1124",
+          "sizes": [
+            "XS",
+            "S",
+            "M",
+            "L",
+            "XL"
+          ],
+          "sizeInventory": {
+            "XS": 3,
+            "S": 8,
+            "M": 8,
+            "L": 8,
+            "XL": 4
+          },
+          "stock": 31,
+          "images": [
+            "/uploads/velen-1794263980898-284259705.webp",
+            "/uploads/velen-1794264035144-601717709.jpg",
+            "/uploads/velen-1794264035145-67802925.jpg",
+            "/uploads/velen-1794264035145-225045235.jpg",
+            "/uploads/velen-1794264035147-292590179.jpg",
+            "/uploads/velen-1794264048661-301382033.webp"
+          ]
         },
         {
           "name": "Light Grey",
-          "hex": "#C9C7CA",
-          "images": [
-            "/uploads/velen-1794129894096-444145019.webp",
-            "/uploads/velen-1794069159414-875263187.jpg",
-            "/uploads/velen-1794069159413-567313739.jpg",
-            "/uploads/velen-1794069159415-423810856.jpg",
-            "/uploads/velen-1794069159418-143586327.jpg",
-            "/uploads/velen-1794128162360-102894238.webp"
-          ],
-          "image": "/uploads/velen-1794129894096-444145019.webp",
-          "sizeInventory": {
-            "S": 5,
-            "M": 5,
-            "L": 5,
-            "XL": 5
-          },
+          "hex": "#b5b5b5",
           "sizes": [
+            "XS",
             "S",
             "M",
             "L",
             "XL"
           ],
-          "stock": 20
-        },
-        {
-          "name": "black",
-          "hex": "#000000",
-          "images": [
-            "/uploads/velen-1794129926822-750594864.webp",
-            "/uploads/velen-1794069217089-247380166.jpg",
-            "/uploads/velen-1794069217088-413513415.jpg",
-            "/uploads/velen-1794069217088-908311237.jpg",
-            "/uploads/velen-1794069217088-432708955.jpg",
-            "/uploads/velen-1794128180561-538163880.webp"
-          ],
-          "image": "/uploads/velen-1794129926822-750594864.webp",
           "sizeInventory": {
-            "S": 5,
-            "M": 5,
-            "L": 5,
-            "XL": 5
+            "XS": 3,
+            "S": 8,
+            "M": 8,
+            "L": 8,
+            "XL": 4
           },
-          "sizes": [
-            "S",
-            "M",
-            "L",
-            "XL"
-          ],
-          "stock": 20
+          "stock": 31,
+          "images": [
+            "/uploads/velen-1794264216744-116220998.webp",
+            "/uploads/velen-1794264188233-301846319.jpg",
+            "/uploads/velen-1794264188232-391376003.jpg",
+            "/uploads/velen-1794264188233-987942582.jpg",
+            "/uploads/velen-1794264188235-92777204.jpg",
+            "/uploads/velen-1794264170900-847501540.webp"
+          ]
         }
       ],
-      "stock": 67,
+      "stock": 99,
       "description": "A relaxed-fit, slightly cropped sweatshirt designed for an effortless streetwear look. Featuring a unique two-way zipper that opens from both ends, a clean hood design and front pockets.\n\nblack",
       "fabric": "70% premium cotton, featuring a heavyweight winter texture",
       "createdAt": "2026-11-07T16:35:06.578Z",
       "sizeInventory": {
-        "XS": 7,
-        "S": 16,
-        "M": 15,
-        "L": 22,
-        "XL": 7
+        "XS": 10,
+        "S": 24,
+        "M": 26,
+        "L": 26,
+        "XL": 13
       },
       "linkedProductId": "prod-1793961725455",
       "showModelStats": true,
@@ -825,93 +819,97 @@
       ],
       "colors": [
         {
-          "name": "black",
+          "name": "Black",
           "hex": "#000000",
-          "images": [
-            "/uploads/velen-1794069510403-945710849.jpg",
-            "/uploads/velen-1794069534453-329710625.jpg",
-            "/uploads/velen-1794069534454-813027662.jpg",
-            "/uploads/velen-1794069534455-500435827.jpg",
-            "/uploads/velen-1794069534456-357953826.jpg",
-            "/uploads/velen-1794074952381-425009823.webp"
-          ],
-          "image": "/uploads/velen-1794069510403-945710849.jpg",
-          "sizeInventory": {
-            "S": 5,
-            "M": 5,
-            "L": 5,
-            "XL": 0
-          },
           "sizes": [
+            "XS",
             "S",
             "M",
             "L",
             "XL"
           ],
-          "stock": 15
+          "sizeInventory": {
+            "XS": 4,
+            "S": 8,
+            "M": 10,
+            "L": 10,
+            "XL": 6
+          },
+          "stock": 38,
+          "images": [
+            "/uploads/velen-1794067907992-292549168.jpg",
+            "/uploads/velen-1794068071552-133172107.jpg",
+            "/uploads/velen-1794068077036-157434301.jpg",
+            "/uploads/velen-1794068083763-958413162.jpg",
+            "/uploads/velen-1794068095582-125880995.jpg",
+            "/uploads/velen-1794074787084-407117322.webp"
+          ]
         },
         {
           "name": "Deep Burgundy",
-          "hex": "#580E1B",
-          "images": [
-            "/uploads/velen-1794069565539-903877669.jpg",
-            "/uploads/velen-1794069608188-79910869.jpg",
-            "/uploads/velen-1794069608190-130763971.jpg",
-            "/uploads/velen-1794069608194-357457006.jpg",
-            "/uploads/velen-1794069608194-781705416.jpg",
-            "/uploads/velen-1794074967296-217757856.webp"
-          ],
-          "image": "/uploads/velen-1794069565539-903877669.jpg",
-          "sizeInventory": {
-            "S": 5,
-            "M": 5,
-            "L": 5,
-            "XL": 5
-          },
+          "hex": "#6b1124",
           "sizes": [
+            "XS",
             "S",
             "M",
             "L",
             "XL"
           ],
-          "stock": 20
+          "sizeInventory": {
+            "XS": 3,
+            "S": 8,
+            "M": 8,
+            "L": 8,
+            "XL": 5
+          },
+          "stock": 32,
+          "images": [
+            "/uploads/velen-1794068151661-72193471.jpg",
+            "/uploads/velen-1794068182565-427336284.jpg",
+            "/uploads/velen-1794068182565-766080786.jpg",
+            "/uploads/velen-1794068194720-112772891.jpg",
+            "/uploads/velen-1794068194723-989937481.jpg",
+            "/uploads/velen-1794074748194-256440590.webp"
+          ]
         },
         {
           "name": "Light Grey",
-          "hex": "#D3D0D7",
-          "images": [
-            "/uploads/velen-1794069635081-297969745.jpg",
-            "/uploads/velen-1794069664816-277499430.jpg",
-            "/uploads/velen-1794069664819-89016695.jpg",
-            "/uploads/velen-1794069664821-430101440.jpg",
-            "/uploads/velen-1794069664821-615729957.jpg",
-            "/uploads/velen-1794074982600-873737690.webp"
-          ],
-          "image": "/uploads/velen-1794069635081-297969745.jpg",
-          "sizeInventory": {
-            "S": 5,
-            "M": 5,
-            "L": 5,
-            "XL": 5
-          },
+          "hex": "#b5b5b5",
           "sizes": [
+            "XS",
             "S",
             "M",
             "L",
             "XL"
           ],
-          "stock": 20
+          "sizeInventory": {
+            "XS": 4,
+            "S": 8,
+            "M": 8,
+            "L": 8,
+            "XL": 5
+          },
+          "stock": 33,
+          "images": [
+            "/uploads/velen-1794068237275-701997918.jpg",
+            "/uploads/velen-1794068324882-21659705.jpg",
+            "/uploads/velen-1794068324883-917335435.jpg",
+            "/uploads/velen-1794068339143-695591125.jpg",
+            "/uploads/velen-1794068339145-978806516.jpg",
+            "/uploads/velen-1794074765024-630457959.webp"
+          ]
         }
       ],
-      "stock": 55,
+      "stock": 103,
       "description": "Stay warm and comfortable with our heavyweight cotton sweatpants. Designed with a relaxed streetwear fit, adjustable waistband and practical pockets.\n\nPerfect for everyday outfits and effortless styling.",
       "fabric": "70% premium cotton, featuring a heavyweight winter texture",
       "createdAt": "2026-11-07T16:41:27.504Z",
       "sizeInventory": {
-        "S": 15,
-        "M": 15,
-        "L": 15,
-        "XL": 10
+        "XS": 11,
+        "S": 24,
+        "M": 26,
+        "L": 26,
+        "XL": 16
       },
       "linkedProductId": "prod-1793968948036",
       "showModelStats": true,
@@ -955,62 +953,63 @@
       ],
       "colors": [
         {
-          "name": "Sky blue",
-          "hex": "#BACEEE",
-          "images": [
-            "/uploads/velen-1794072073907-111248701.webp",
-            "/uploads/velen-1794072073907-962620487.webp",
-            "/uploads/velen-1794072073907-311175504.webp",
-            "/uploads/velen-1794075102788-66512642.webp"
-          ],
-          "image": "/uploads/velen-1794072073907-111248701.webp",
-          "sizeInventory": {
-            "S": 0,
-            "M": 2,
-            "L": 2,
-            "XL": 0
-          },
+          "name": "White",
+          "hex": "#ffffff",
           "sizes": [
             "S",
             "M",
             "L",
             "XL"
           ],
-          "stock": 4
+          "sizeInventory": {
+            "S": 5,
+            "M": 6,
+            "L": 6,
+            "XL": 4
+          },
+          "stock": 21,
+          "images": [
+            "/uploads/velen-1793974455647-500950355.jpg",
+            "/uploads/velen-1793974464295-24639319.jpg",
+            "/uploads/velen-1793974464294-115491996.jpg",
+            "/uploads/velen-1793974470493-916992665.jpg",
+            "/uploads/velen-1794075128454-692144145.webp"
+          ]
         },
         {
-          "name": "White",
-          "hex": "#D4D2DD",
-          "images": [
-            "/uploads/velen-1794072135214-154053145.webp",
-            "/uploads/velen-1794072135214-607492322.webp",
-            "/uploads/velen-1794075115139-660099559.webp"
-          ],
-          "image": "/uploads/velen-1794072135214-154053145.webp",
-          "sizeInventory": {
-            "S": 0,
-            "M": 2,
-            "L": 2,
-            "XL": 0
-          },
+          "name": "Sky blue",
+          "hex": "#87ceeb",
           "sizes": [
             "S",
             "M",
             "L",
             "XL"
           ],
-          "stock": 4
+          "sizeInventory": {
+            "S": 5,
+            "M": 6,
+            "L": 6,
+            "XL": 4
+          },
+          "stock": 21,
+          "images": [
+            "/uploads/velen-1793974617409-880321134.jpg",
+            "/uploads/velen-1793974642294-277375284.jpg",
+            "/uploads/velen-1793974642294-118070185.jpg",
+            "/uploads/velen-1793974631710-178744105.jpg",
+            "/uploads/velen-1794075137396-808386898.webp"
+          ]
         }
       ],
-      "stock": 8,
+      "stock": 42,
       "description": "A classic combination with a modern feel. Featuring contrasting navy ribbed collar and sleeve trims against a clean white body. An easy essential for everyday outfits.",
       "fabric": "Fabric: 70% Premium Cotton",
       "createdAt": "2026-11-07T17:23:09.323Z",
       "sizeInventory": {
-        "S": 0,
-        "M": 4,
-        "L": 4,
-        "XL": 0
+        "S": 10,
+        "M": 12,
+        "L": 12,
+        "XL": 8
       },
       "linkedProductId": "prod-1793974671320",
       "showModelStats": true,
@@ -1051,63 +1050,63 @@
       ],
       "colors": [
         {
-          "name": "black",
-          "hex": "#000000",
-          "images": [
-            "/uploads/velen-1794072434489-588529171.webp",
-            "/uploads/velen-1794072487050-927462284.webp",
-            "/uploads/velen-1794072487050-654287840.webp",
-            "/uploads/velen-1794075203768-919413389.webp"
-          ],
-          "image": "/uploads/velen-1794072434489-588529171.webp",
-          "sizeInventory": {
-            "S": 2,
-            "M": 2,
-            "L": 2,
-            "XL": 2
-          },
+          "name": "White",
+          "hex": "#ffffff",
           "sizes": [
             "S",
             "M",
             "L",
             "XL"
           ],
-          "stock": 8
+          "sizeInventory": {
+            "S": 5,
+            "M": 6,
+            "L": 6,
+            "XL": 4
+          },
+          "stock": 21,
+          "images": [
+            "/uploads/velen-1793976188788-404792675.jpg",
+            "/uploads/velen-1793976188788-735546060.jpg",
+            "/uploads/velen-1793976188785-850259743.jpg",
+            "/uploads/velen-1793976188786-275584688.jpg",
+            "/uploads/velen-1794075162701-856517935.webp"
+          ]
         },
         {
-          "name": "White",
-          "hex": "#FFFFFF",
-          "images": [
-            "/uploads/velen-1794073316868-275746043.webp",
-            "/uploads/velen-1794073344343-807058801.webp",
-            "/uploads/velen-1794073357513-766128313.webp",
-            "/uploads/velen-1794075212788-166555879.webp"
-          ],
-          "image": "/uploads/velen-1794073316868-275746043.webp",
-          "sizeInventory": {
-            "S": 2,
-            "M": 2,
-            "L": 2,
-            "XL": 0
-          },
+          "name": "Black",
+          "hex": "#000000",
           "sizes": [
             "S",
             "M",
             "L",
             "XL"
           ],
-          "stock": 6
+          "sizeInventory": {
+            "S": 6,
+            "M": 8,
+            "L": 8,
+            "XL": 5
+          },
+          "stock": 27,
+          "images": [
+            "/uploads/velen-1793976224725-570231829.jpg",
+            "/uploads/velen-1793976239347-528840082.jpg",
+            "/uploads/velen-1793976230329-5324487.jpg",
+            "/uploads/velen-1793976230330-574428780.jpg",
+            "/uploads/velen-1794075184005-332885882.webp"
+          ]
         }
       ],
-      "stock": 14,
+      "stock": 48,
       "description": "A modern cropped silhouette designed for an effortless everyday look. Featuring a clean finish, relaxed fit, and a shorter length for a contemporary style.",
       "fabric": "Fabric: 70% Premium Cotton",
       "createdAt": "2026-11-07T17:30:58.488Z",
       "sizeInventory": {
-        "S": 4,
-        "M": 4,
-        "L": 4,
-        "XL": 2
+        "S": 11,
+        "M": 14,
+        "L": 14,
+        "XL": 9
       },
       "linkedProductId": "prod-1793976276079",
       "showModelStats": true,

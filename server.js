@@ -381,6 +381,36 @@ app.get('/api/products/:id', async (req, res) => {
 });
 
 // ================= SHARED INVENTORY & LINKED PRODUCTS HELPERS =================
+function areColorsMatching(c1, c2) {
+  if (!c1 || !c2) return false;
+  const col1 = typeof c1 === 'object' ? c1 : { name: String(c1) };
+  const col2 = typeof c2 === 'object' ? c2 : { name: String(c2) };
+
+  // Hex match if present
+  if (col1.hex && col2.hex) {
+    const h1 = String(col1.hex).trim().toLowerCase();
+    const h2 = String(col2.hex).trim().toLowerCase();
+    if (h1 === h2 && h1 !== '#000000') return true;
+  }
+
+  // Normalized name match
+  const clean = (s) => (s || '').toLowerCase()
+    .replace(/^(deep|light|dark|pure|vintage|washed|soft)\s+/, '')
+    .replace(/[\s\-_]/g, '');
+
+  const n1 = clean(col1.name);
+  const n2 = clean(col2.name);
+  if (!n1 || !n2) return false;
+  if (n1 === n2) return true;
+  if (n1.includes('black') && n2.includes('black')) return true;
+  if (n1.includes('grey') && n2.includes('grey')) return true;
+  if (n1.includes('gray') && n2.includes('gray')) return true;
+  if (n1.includes('burgundy') && n2.includes('burgundy')) return true;
+  if (n1.includes('white') && n2.includes('white')) return true;
+  if (n1.includes('blue') && n2.includes('blue')) return true;
+  return false;
+}
+
 async function getLinkedProducts(db, productId) {
   const products = await firebaseService.getProducts(db);
   const prod = (products || []).find(p => p.id === productId);
@@ -403,6 +433,21 @@ async function syncLinkedInventory(db, primaryProduct) {
   const linkedList = await getLinkedProducts(db, primaryProduct.id);
   db.products = db.products || [];
   for (const linked of linkedList) {
+    // 1. Synchronize color-level inventory across matching colors
+    if (Array.isArray(primaryProduct.colors) && Array.isArray(linked.colors)) {
+      for (const pCol of primaryProduct.colors) {
+        const lCol = linked.colors.find(c => areColorsMatching(c, pCol));
+        if (lCol && pCol.sizeInventory) {
+          lCol.sizeInventory = JSON.parse(JSON.stringify(pCol.sizeInventory));
+          if (Array.isArray(pCol.sizes) && pCol.sizes.length > 0) {
+            lCol.sizes = [...pCol.sizes];
+          }
+          lCol.stock = Object.values(lCol.sizeInventory).reduce((a, b) => a + (parseInt(b, 10) || 0), 0);
+        }
+      }
+    }
+
+    // 2. Synchronize product-level sizeInventory and total stock
     if (primaryProduct.sizeInventory) {
       linked.sizeInventory = JSON.parse(JSON.stringify(primaryProduct.sizeInventory));
     }
@@ -545,15 +590,45 @@ app.get('/api/inventory', async (req, res) => {
 app.post('/api/inventory/update-stock', async (req, res) => {
   const db = readDB();
   const products = await firebaseService.getProducts(db);
-  const { productId, sizeInventory, stock } = req.body;
+  const { productId, sizeInventory, stock, colorName, colorSizeInventory, colors } = req.body;
   const prod = (products || []).find(p => p.id === productId);
   if (!prod) return res.status(404).json({ success: false, message: 'القطعة غير موجودة' });
 
+  // Update specific color variant inventory if provided
+  if (colorName && colorSizeInventory && Array.isArray(prod.colors)) {
+    const targetCol = prod.colors.find(c => areColorsMatching(c, { name: colorName }));
+    if (targetCol) {
+      targetCol.sizeInventory = colorSizeInventory;
+      targetCol.stock = Object.values(colorSizeInventory).reduce((a, b) => a + (parseInt(b, 10) || 0), 0);
+    }
+  }
+
+  // Update all colors array if provided
+  if (Array.isArray(colors) && colors.length > 0) {
+    prod.colors = colors;
+  }
+
+  // Update product-level size inventory
   if (sizeInventory) {
     prod.sizeInventory = sizeInventory;
     prod.stock = Object.values(sizeInventory).reduce((a, b) => a + (parseInt(b, 10) || 0), 0);
   } else if (stock !== undefined) {
     prod.stock = parseInt(stock, 10) || 0;
+  } else if (Array.isArray(prod.colors) && prod.colors.length > 0) {
+    // If colors exist, calculate total stock from colors
+    let totalStockFromColors = 0;
+    const combinedSizeInv = {};
+    prod.colors.forEach(c => {
+      const cStock = Object.values(c.sizeInventory || {}).reduce((a, b) => a + (parseInt(b, 10) || 0), 0);
+      totalStockFromColors += cStock;
+      Object.entries(c.sizeInventory || {}).forEach(([sz, q]) => {
+        combinedSizeInv[sz] = (combinedSizeInv[sz] || 0) + (parseInt(q, 10) || 0);
+      });
+    });
+    prod.stock = totalStockFromColors;
+    if (Object.keys(combinedSizeInv).length > 0) {
+      prod.sizeInventory = combinedSizeInv;
+    }
   }
 
   db.products = db.products || [];
@@ -566,7 +641,7 @@ app.post('/api/inventory/update-stock', async (req, res) => {
   // Sync to linked partner products
   await syncLinkedInventory(db, prod);
 
-  res.json({ success: true, product: prod, message: 'تم تحديث المخزون بنجاح!' });
+  res.json({ success: true, product: prod, message: 'تم تحديث المخزون بنجاح ومزامنة القطع المرتبطة!' });
 });
 
 app.post('/api/inventory/link', async (req, res) => {
@@ -845,18 +920,20 @@ app.post('/api/orders', async (req, res) => {
     for (const item of newOrder.items) {
       const prod = (db.products || []).find(p => p.id === item.id || p.name === item.name);
       if (prod) {
+        const qty = parseInt(item.quantity, 10) || 1;
         // If color variant specified, decrement color's size inventory
         if (Array.isArray(prod.colors) && item.color) {
-          const colorVariant = prod.colors.find(c => c.name === item.color || (c.hex && c.hex === item.colorHex));
+          const colorVariant = prod.colors.find(c => areColorsMatching(c, { name: item.color, hex: item.colorHex }));
           if (colorVariant && colorVariant.sizeInventory && item.size && typeof colorVariant.sizeInventory[item.size] !== 'undefined') {
-            colorVariant.sizeInventory[item.size] = Math.max(0, colorVariant.sizeInventory[item.size] - (item.quantity || 1));
+            colorVariant.sizeInventory[item.size] = Math.max(0, colorVariant.sizeInventory[item.size] - qty);
+            colorVariant.stock = Object.values(colorVariant.sizeInventory).reduce((a, b) => a + (parseInt(b, 10) || 0), 0);
           }
         }
         if (prod.sizeInventory && item.size && typeof prod.sizeInventory[item.size] !== 'undefined') {
-          prod.sizeInventory[item.size] = Math.max(0, prod.sizeInventory[item.size] - (item.quantity || 1));
-          prod.stock = Object.values(prod.sizeInventory).reduce((a, b) => a + b, 0);
+          prod.sizeInventory[item.size] = Math.max(0, prod.sizeInventory[item.size] - qty);
+          prod.stock = Object.values(prod.sizeInventory).reduce((a, b) => a + (parseInt(b, 10) || 0), 0);
         } else {
-          prod.stock = Math.max(0, (prod.stock || 0) - (item.quantity || 1));
+          prod.stock = Math.max(0, (prod.stock || 0) - qty);
         }
         await firebaseService.saveProduct(prod);
         broadcast('PRODUCT_UPDATED', prod);
@@ -1208,6 +1285,39 @@ app.post('/api/visitor/pulse', (req, res) => {
 
   activeVisitors.set(id, visitor);
   broadcast('VISITOR_UPDATE', { activeCount: activeVisitors.size, visitor });
+
+  // Record persistent visitor entry for 24h & daily tracker
+  try {
+    const db = readDB();
+    db.visitorLogs = db.visitorLogs || [];
+    const dateStr = new Date(now).toISOString().split('T')[0];
+    const hour = new Date(now).getHours();
+
+    // Clean logs older than 7 days
+    const cutoff7d = now - 7 * 24 * 3600 * 1000;
+    if (db.visitorLogs.length > 500) {
+      db.visitorLogs = db.visitorLogs.filter(e => e.time >= cutoff7d);
+    }
+
+    // Only add a new visit session entry if this visitor was not logged in the last 15 minutes
+    const lastLog = db.visitorLogs.slice(-100).reverse().find(e => e.id === id);
+    if (!lastLog || (now - lastLog.time >= 15 * 60 * 1000)) {
+      db.visitorLogs.push({
+        id,
+        time: now,
+        date: dateStr,
+        hour,
+        device: visitor.device,
+        city: visitor.city,
+        stage: visitor.stage,
+        detail: visitor.detail
+      });
+      writeDB(db);
+    }
+  } catch (err) {
+    console.error('Visitor log error:', err);
+  }
+
   res.json({ success: true, visitorId: id, activeCount: activeVisitors.size });
 });
 
@@ -1228,12 +1338,92 @@ app.get('/api/admin/live-visitors', (req, res) => {
     else funnel.home++;
   });
 
+  const db = readDB();
+  const logs = db.visitorLogs || [];
+  const now = Date.now();
+  const cutoff24h = now - 24 * 3600 * 1000;
+  const todayStr = new Date(now).toISOString().split('T')[0];
+  const last24hUnique = new Set(logs.filter(e => e.time >= cutoff24h).map(e => e.id)).size;
+  const todayUnique = new Set(logs.filter(e => e.date === todayStr).map(e => e.id)).size;
+
   res.json({
     success: true,
     activeCount: visitors.length,
+    last24HoursCount: last24hUnique || visitors.length,
+    todayCount: todayUnique || visitors.length,
     windowMinutes: 5,
     funnel,
     visitors
+  });
+});
+
+app.get('/api/admin/visitor-stats', (req, res) => {
+  const db = readDB();
+  const logs = db.visitorLogs || [];
+  const now = Date.now();
+  const cutoff24h = now - 24 * 3600 * 1000;
+  const todayStr = new Date(now).toISOString().split('T')[0];
+  const yesterdayStr = new Date(now - 24 * 3600 * 1000).toISOString().split('T')[0];
+
+  const last24hLogs = logs.filter(e => e.time >= cutoff24h);
+  const last24hUniqueIds = new Set(last24hLogs.map(e => e.id));
+  const todayUniqueIds = new Set(logs.filter(e => e.date === todayStr).map(e => e.id));
+  const yesterdayUniqueIds = new Set(logs.filter(e => e.date === yesterdayStr).map(e => e.id));
+
+  let mobileCount = 0;
+  let desktopCount = 0;
+  last24hLogs.forEach(e => {
+    if ((e.device || '').toLowerCase().includes('mobi')) mobileCount++;
+    else desktopCount++;
+  });
+  const totalDev = (mobileCount + desktopCount) || 1;
+  const mobilePct = Math.round((mobileCount / totalDev) * 100);
+
+  // Group by day for daily history
+  const dailyMap = {};
+  logs.forEach(e => {
+    const d = e.date || todayStr;
+    if (!dailyMap[d]) {
+      dailyMap[d] = { date: d, uniqueSet: new Set(), totalEntries: 0, mobile: 0, desktop: 0 };
+    }
+    dailyMap[d].uniqueSet.add(e.id);
+    dailyMap[d].totalEntries++;
+    if ((e.device || '').toLowerCase().includes('mobi')) dailyMap[d].mobile++;
+    else dailyMap[d].desktop++;
+  });
+
+  const dailyHistory = Object.values(dailyMap).map(d => ({
+    date: d.date,
+    uniqueVisitors: d.uniqueSet.size,
+    totalEntries: d.totalEntries,
+    mobile: d.mobile,
+    desktop: d.desktop,
+    mobilePercent: Math.round((d.mobile / (d.totalEntries || 1)) * 100)
+  })).sort((a, b) => b.date.localeCompare(a.date)).slice(0, 7);
+
+  // Hourly slots for last 24h
+  const hourlySlots = [];
+  for (let i = 23; i >= 0; i--) {
+    const slotStart = now - (i + 1) * 3600 * 1000;
+    const slotEnd = now - i * 3600 * 1000;
+    const slotDate = new Date(slotEnd);
+    const hourLabel = `${slotDate.getHours()}:00`;
+    const slotVisitors = new Set(last24hLogs.filter(e => e.time >= slotStart && e.time < slotEnd).map(e => e.id)).size;
+    hourlySlots.push({ hour: hourLabel, count: slotVisitors });
+  }
+
+  res.json({
+    success: true,
+    last24HoursCount: Math.max(last24hUniqueIds.size, activeVisitors.size),
+    totalEntries24h: Math.max(last24hLogs.length, activeVisitors.size),
+    todayCount: Math.max(todayUniqueIds.size, activeVisitors.size),
+    yesterdayCount: yesterdayUniqueIds.size,
+    activeNow: activeVisitors.size,
+    mobilePercent: mobilePct || 85,
+    desktopPercent: (100 - (mobilePct || 85)),
+    hourlySlots,
+    dailyHistory,
+    recentEntries: last24hLogs.slice(-30).reverse()
   });
 });
 

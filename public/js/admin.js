@@ -535,6 +535,22 @@ document.addEventListener('DOMContentLoaded', () => {
       if (totalStock === 0) stockBadgeColor = '#e74c3c';
       else if (totalStock <= 3) stockBadgeColor = '#f39c12';
 
+      // Colors breakdown badges
+      let colorsBadgesHtml = '';
+      if (Array.isArray(p.colors) && p.colors.length > 0) {
+        colorsBadgesHtml = `
+          <div style="display:flex; flex-wrap:wrap; gap:4px; margin-top:6px;">
+            ${p.colors.map(c => `
+              <span style="display:inline-flex; align-items:center; gap:5px; background:#111; border:1px solid #333; padding:2px 7px; border-radius:4px; font-size:10px; color:#ddd;">
+                <span style="width:8px; height:8px; border-radius:50%; background:${c.hex || '#fff'}; border:1px solid rgba(255,255,255,0.4);"></span>
+                <span>${c.name}:</span>
+                <strong style="color:${(c.stock || 0) > 0 ? 'var(--gold-accent, #e5b95f)' : '#e74c3c'}">${c.stock || 0}</strong>
+              </span>
+            `).join('')}
+          </div>
+        `;
+      }
+
       return `
         <tr>
           <td>
@@ -543,6 +559,7 @@ document.addEventListener('DOMContentLoaded', () => {
               <div>
                 <strong style="color:#fff; font-size:13px; display:block;">${p.name}</strong>
                 <span style="color:#888; font-size:11px;">${Number(p.price).toFixed(3)} JOD</span>
+                ${colorsBadgesHtml}
               </div>
             </div>
           </td>
@@ -568,9 +585,16 @@ document.addEventListener('DOMContentLoaded', () => {
     }).join('');
   }
 
+  let quickStockCurrentProduct = null;
+  let quickStockActiveColorName = null;
+  let quickStockColorsCache = {};
+
   function openQuickStockModal(id) {
     const p = state.products.find(x => x.id === id);
     if (!p) return;
+
+    quickStockCurrentProduct = JSON.parse(JSON.stringify(p));
+    quickStockColorsCache = {};
 
     const modal = document.getElementById('quickStockModal');
     if (!modal) return;
@@ -583,15 +607,95 @@ document.addEventListener('DOMContentLoaded', () => {
     if (linkedNotice) {
       if (partner) {
         linkedNotice.style.display = 'block';
-        linkedNotice.innerHTML = `<i class="fa-solid fa-link"></i> <strong>مخزون موحد:</strong> هذه القطعة مرتبطة مع (${partner.name}) — أي تعديل على الكميات هنا سيحدث القطعتين معاً فوراً في المستودع والمتجر!`;
+        linkedNotice.innerHTML = `<i class="fa-solid fa-link"></i> <strong>مخزون موحد ومباشر:</strong> هذه القطعة مرتبطة مع (${partner.name}) — أي تعديل على الكميات هنا سيحدث القطعتين معاً فوراً في المستودع والمتجر!`;
       } else {
         linkedNotice.style.display = 'none';
       }
     }
 
+    const colorContainer = document.getElementById('quickStockColorContainer');
+    if (Array.isArray(p.colors) && p.colors.length > 0) {
+      if (colorContainer) colorContainer.style.display = 'block';
+      p.colors.forEach(c => {
+        quickStockColorsCache[c.name] = Object.assign({}, c.sizeInventory || {});
+      });
+      quickStockActiveColorName = p.colors[0].name;
+      renderQuickStockColorTabs();
+      renderQuickStockSizesForColor(quickStockActiveColorName);
+    } else {
+      if (colorContainer) colorContainer.style.display = 'none';
+      quickStockActiveColorName = null;
+      renderQuickStockSizesFlat(p.sizeInventory || {}, p.sizes || []);
+    }
+
+    modal.classList.add('active');
+  }
+
+  function saveCurrentQuickStockInputsToCache() {
+    const inputs = document.querySelectorAll('.quick-size-input');
+    const currentInv = {};
+    inputs.forEach(inp => {
+      const sz = inp.getAttribute('data-size');
+      currentInv[sz] = Math.max(0, parseInt(inp.value, 10) || 0);
+    });
+
+    if (quickStockActiveColorName) {
+      quickStockColorsCache[quickStockActiveColorName] = currentInv;
+      if (quickStockCurrentProduct && Array.isArray(quickStockCurrentProduct.colors)) {
+        const col = quickStockCurrentProduct.colors.find(c => c.name === quickStockActiveColorName);
+        if (col) {
+          col.sizeInventory = currentInv;
+          col.stock = Object.values(currentInv).reduce((a, b) => a + (parseInt(b, 10) || 0), 0);
+        }
+      }
+    } else if (quickStockCurrentProduct) {
+      quickStockCurrentProduct.sizeInventory = currentInv;
+      quickStockCurrentProduct.stock = Object.values(currentInv).reduce((a, b) => a + (parseInt(b, 10) || 0), 0);
+    }
+  }
+
+  function renderQuickStockColorTabs() {
+    const p = quickStockCurrentProduct;
+    if (!p || !Array.isArray(p.colors)) return;
+    const colorTabs = document.getElementById('quickStockColorTabs');
+    const badge = document.getElementById('quickStockColorCountBadge');
+    if (badge) badge.textContent = `${p.colors.length} ألوان متوفرة`;
+    if (!colorTabs) return;
+
+    colorTabs.innerHTML = p.colors.map(c => {
+      const isActive = c.name === quickStockActiveColorName;
+      const inv = quickStockColorsCache[c.name] || c.sizeInventory || {};
+      const colStock = Object.values(inv).reduce((a, b) => a + (parseInt(b, 10) || 0), 0);
+      const activeBorder = isActive ? '2px solid var(--gold-accent, #e5b95f)' : '1px solid #333';
+      const activeBg = isActive ? 'rgba(229,185,95,0.18)' : '#1a1a1a';
+      const activeColor = isActive ? '#fff' : '#aaa';
+
+      return `
+        <button type="button" onclick="window.velenAdmin.switchQuickStockColor('${c.name.replace(/'/g, "\\'")}')"
+          style="display:inline-flex; align-items:center; gap:8px; padding:6px 12px; border-radius:6px; background:${activeBg}; border:${activeBorder}; color:${activeColor}; font-weight:700; font-size:12px; cursor:pointer; transition:all 0.2s;">
+          <span style="display:inline-block; width:12px; height:12px; border-radius:50%; background:${c.hex || '#fff'}; border:1px solid rgba(255,255,255,0.4);"></span>
+          <span>${c.name}</span>
+          <span style="background:#0a0a0a; border:1px solid #444; border-radius:4px; padding:1px 6px; font-size:11px; color:var(--gold-accent, #e5b95f); font-weight:800;">${colStock}</span>
+        </button>
+      `;
+    }).join('');
+  }
+
+  function switchQuickStockColor(newColorName) {
+    saveCurrentQuickStockInputsToCache();
+    quickStockActiveColorName = newColorName;
+    renderQuickStockColorTabs();
+    renderQuickStockSizesForColor(newColorName);
+  }
+
+  function renderQuickStockSizesForColor(colorName) {
+    const p = quickStockCurrentProduct;
+    if (!p) return;
+    const col = (p.colors || []).find(c => c.name === colorName);
+    const inv = quickStockColorsCache[colorName] || (col ? col.sizeInventory : {}) || {};
     const sizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
     const grid = document.getElementById('quickStockSizeGrid');
-    const inv = p.sizeInventory || {};
+    if (!grid) return;
 
     grid.innerHTML = sizes.map(sz => {
       const qty = inv[sz] !== undefined ? Number(inv[sz]) : (p.sizes && p.sizes.includes(sz) ? 5 : 0);
@@ -607,8 +711,33 @@ document.addEventListener('DOMContentLoaded', () => {
       `;
     }).join('');
 
+    const label = document.getElementById('quickStockTotalLabel');
+    if (label) label.textContent = `إجمالي كمية لون (${colorName}):`;
     recalculateQuickStock();
-    modal.classList.add('active');
+  }
+
+  function renderQuickStockSizesFlat(inv, prodSizes) {
+    const sizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
+    const grid = document.getElementById('quickStockSizeGrid');
+    if (!grid) return;
+
+    grid.innerHTML = sizes.map(sz => {
+      const qty = inv[sz] !== undefined ? Number(inv[sz]) : (prodSizes && prodSizes.includes(sz) ? 5 : 0);
+      return `
+        <div style="background:#161616; border:1px solid #333; border-radius:6px; padding:10px; text-align:center;">
+          <div style="font-weight:700; color:#fff; font-size:13px; margin-bottom:6px;">مقاس ${sz}</div>
+          <div style="display:flex; align-items:center; justify-content:center; gap:6px;">
+            <button type="button" onclick="window.velenAdmin.changeQuickQty('${sz}', -1)" style="width:28px; height:28px; background:#222; border:1px solid #444; color:#fff; border-radius:4px; font-weight:700; cursor:pointer;">-</button>
+            <input type="number" min="0" class="quick-size-input" data-size="${sz}" value="${qty}" oninput="window.velenAdmin.recalculateQuickStock()" style="width:55px; text-align:center; background:#0a0a0a; border:1px solid #555; color:#fff; border-radius:4px; padding:4px; font-weight:700;">
+            <button type="button" onclick="window.velenAdmin.changeQuickQty('${sz}', 1)" style="width:28px; height:28px; background:#222; border:1px solid #444; color:#fff; border-radius:4px; font-weight:700; cursor:pointer;">+</button>
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    const label = document.getElementById('quickStockTotalLabel');
+    if (label) label.textContent = `إجمالي الكمية:`;
+    recalculateQuickStock();
   }
 
   function recalculateQuickStock() {
@@ -740,6 +869,9 @@ document.addEventListener('DOMContentLoaded', () => {
             </button>
             <button class="link-btn" onclick="window.velenAdmin.openWaybill('${o.id}')" style="background:#fff; color:#000; padding:6px 10px; border-radius:4px; font-size:11px; font-weight:700; margin-right:4px;">
               <i class="fa-solid fa-print"></i> بوليصة
+            </button>
+            <button class="link-btn" onclick="window.velenAdmin.sendWaybillWhatsApp('${o.id}')" title="إرسال بيانات البوليصة للمندوب عبر واتساب" style="background:#128c7e; color:#fff; padding:6px 9px; border-radius:4px; font-size:11px; font-weight:700; margin-right:4px;">
+              <i class="fa-solid fa-truck-fast"></i> للمندوب
             </button>
           </td>
         </tr>
@@ -1915,22 +2047,46 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.getElementById('quickStockForm')?.addEventListener('submit', async (e) => {
       e.preventDefault();
-      const productId = document.getElementById('quickStockProductId').value;
-      const inputs = document.querySelectorAll('.quick-size-input');
-      const sizeInventory = {};
-      let totalStock = 0;
-      inputs.forEach(inp => {
-        const size = inp.getAttribute('data-size');
-        const qty = Math.max(0, parseInt(inp.value, 10) || 0);
-        sizeInventory[size] = qty;
-        totalStock += qty;
-      });
+      saveCurrentQuickStockInputsToCache();
+
+      const p = quickStockCurrentProduct;
+      const productId = document.getElementById('quickStockProductId').value || (p ? p.id : null);
+      if (!productId) return;
+
+      const payload = { productId };
+
+      if (p && Array.isArray(p.colors) && p.colors.length > 0) {
+        // Apply cached size inventories to all colors
+        p.colors.forEach(c => {
+          if (quickStockColorsCache[c.name]) {
+            c.sizeInventory = quickStockColorsCache[c.name];
+            c.stock = Object.values(c.sizeInventory).reduce((a, b) => a + (parseInt(b, 10) || 0), 0);
+          }
+        });
+        payload.colors = p.colors;
+        if (quickStockActiveColorName) {
+          payload.colorName = quickStockActiveColorName;
+          payload.colorSizeInventory = quickStockColorsCache[quickStockActiveColorName];
+        }
+      } else {
+        const inputs = document.querySelectorAll('.quick-size-input');
+        const sizeInventory = {};
+        let totalStock = 0;
+        inputs.forEach(inp => {
+          const size = inp.getAttribute('data-size');
+          const qty = Math.max(0, parseInt(inp.value, 10) || 0);
+          sizeInventory[size] = qty;
+          totalStock += qty;
+        });
+        payload.sizeInventory = sizeInventory;
+        payload.stock = totalStock;
+      }
 
       try {
         const res = await fetch('/api/inventory/update-stock', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ productId, sizeInventory, stock: totalStock })
+          body: JSON.stringify(payload)
         });
         const data = await res.json();
         if (data.success) {
@@ -3199,6 +3355,70 @@ document.addEventListener('DOMContentLoaded', () => {
     `;
   }
 
+  function printWaybillHtml(htmlContent) {
+    let iframe = document.getElementById('velenPrintIframe');
+    if (!iframe) {
+      iframe = document.createElement('iframe');
+      iframe.id = 'velenPrintIframe';
+      iframe.style.position = 'fixed';
+      iframe.style.right = '0';
+      iframe.style.bottom = '0';
+      iframe.style.width = '0';
+      iframe.style.height = '0';
+      iframe.style.border = 'none';
+      document.body.appendChild(iframe);
+    }
+
+    const doc = iframe.contentWindow.document;
+    doc.open();
+    doc.write(`
+      <!DOCTYPE html>
+      <html dir="rtl" lang="ar">
+      <head>
+        <meta charset="UTF-8">
+        <title>بوليصة شحن Velen Official</title>
+        <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        <style>
+          @page { size: auto; margin: 8mm; }
+          * { box-sizing: border-box; }
+          body {
+            margin: 0;
+            padding: 12px;
+            background: #ffffff !important;
+            color: #000000 !important;
+            font-family: 'Tajawal', 'Segoe UI', Tahoma, Arial, sans-serif;
+            direction: rtl;
+          }
+          @media print {
+            body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .waybill-sheet-item { page-break-after: always; break-after: page; }
+          }
+        </style>
+      </head>
+      <body>
+        ${htmlContent}
+      </body>
+      </html>
+    `);
+    doc.close();
+
+    setTimeout(() => {
+      try {
+        iframe.contentWindow.focus();
+        iframe.contentWindow.print();
+      } catch (err) {
+        const printWin = window.open('', '_blank');
+        if (printWin) {
+          printWin.document.write(doc.documentElement.outerHTML);
+          printWin.document.close();
+          printWin.focus();
+          printWin.print();
+        }
+      }
+    }, 350);
+  }
+
   // Global methods for window
   window.velenAdmin = {
     switchTab,
@@ -3399,6 +3619,7 @@ document.addEventListener('DOMContentLoaded', () => {
       window.open(`https://wa.me/${cleanPhone}?text=${msg}`, '_blank');
     },
     openWaybill: (orderId) => {
+      state.currentWaybillOrderId = orderId;
       const o = state.orders.find(ord => ord.id === orderId);
       if (!o) return;
       const area = document.getElementById('waybillPrintArea');
@@ -3406,6 +3627,46 @@ document.addEventListener('DOMContentLoaded', () => {
 
       area.innerHTML = generateSingleWaybillHtml(o);
       document.getElementById('waybillModal').classList.add('active');
+    },
+    sendWaybillWhatsApp: (targetOrderId) => {
+      const orderId = targetOrderId || state.currentWaybillOrderId;
+      const o = state.orders.find(ord => ord.id === orderId);
+      if (!o) {
+        showAdminToast('يرجى تحديد طلب لإرسال بوليصته للمندوب', 'error');
+        return;
+      }
+
+      const itemsText = (o.items || []).map(i => `  • ${i.name} (مقاس: ${i.size || 'M'}${i.color ? ` | لون: ${i.color}` : ''}) × ${i.quantity || 1}`).join('\n');
+
+      const text = `📦 *بوليصة شحن وتوصيل - VELEN OFFICIAL*
+━━━━━━━━━━━━━━━━━━
+🔢 *رقم الطلب:* ${o.id}
+👤 *اسم العميل:* ${o.customerName}
+📞 *رقم العميل:* ${o.phone}
+📍 *المدينة:* ${o.city}
+🏠 *العنوان:* ${o.address}
+${o.notes ? `📝 *ملاحظات التوصيل:* ${o.notes}\n` : ''}━━━━━━━━━━━━━━━━━━
+🛍️ *القطع المطلوبة:*
+${itemsText}
+━━━━━━━━━━━━━━━━━━
+💵 *المبلغ المطلوب تحصيله (COD):* *${Number(o.total).toFixed(3)} JOD*
+(شامل التوصيل - استلام نقدي)
+━━━━━━━━━━━━━━━━━━
+🚚 *حالة الطلب:* جاهز للتسليم
+✨ شكراً - فريق إدارة Velen Official`;
+
+      const lastDriver = localStorage.getItem('velen_driver_phone') || '';
+      const driverPhone = prompt('أدخل رقم واتساب مندوب التوصيل (أو اتركه فارغاً لاختيار المندوب من محادثات واتساب مباشرة):', lastDriver);
+      
+      let url = `https://wa.me/?text=${encodeURIComponent(text)}`;
+      if (driverPhone && driverPhone.trim()) {
+        let clean = driverPhone.trim().replace(/[^0-9]/g, '');
+        if (clean.startsWith('07')) clean = '962' + clean.substring(1);
+        localStorage.setItem('velen_driver_phone', driverPhone.trim());
+        url = `https://wa.me/${clean}?text=${encodeURIComponent(text)}`;
+      }
+      window.open(url, '_blank');
+      showAdminToast('تم فتح واتساب لإرسال بيانات البوليصة للمندوب 📲', 'success');
     },
     toggleSelectAllOrders: (checked) => {
       document.querySelectorAll('.order-select-check').forEach(cb => {
@@ -3463,10 +3724,8 @@ document.addEventListener('DOMContentLoaded', () => {
       `;
 
       document.getElementById('waybillModal').classList.add('active');
-      setTimeout(() => {
-        window.print();
-      }, 400);
-      showAdminToast(`تم تجهيز ${selected.length} بوليصة شحن للطباعة 🖨️`, 'success');
+      printWaybillHtml(waybillsHtml);
+      showAdminToast(`تم تجهيز وإرسال ${selected.length} بوليصة شحن للطباعة 🖨️`, 'success');
     },
     printWaybill: () => {
       const area = document.getElementById('waybillPrintArea');
@@ -3474,7 +3733,7 @@ document.addEventListener('DOMContentLoaded', () => {
         showAdminToast('يرجى فتح بوليصة طلب أولاً للطباعة', 'error');
         return;
       }
-      window.print();
+      printWaybillHtml(area.innerHTML);
     },
     downloadWaybill: async () => {
       const area = document.getElementById('waybillPrintArea');
@@ -3738,6 +3997,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     },
     openQuickStockModal,
+    switchQuickStockColor,
     recalculateQuickStock,
     changeQuickQty,
     openLinkModalFor: (id) => openLinkInventoryModal(id),
@@ -3950,7 +4210,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const container = document.getElementById('liveVisitorsContainer');
     const refreshBtn = document.getElementById('btnRefreshLiveView');
 
-    if (refreshBtn) refreshBtn.addEventListener('click', fetchLiveVisitors);
+    if (refreshBtn) refreshBtn.addEventListener('click', () => {
+      fetchLiveVisitors();
+      fetchVisitorStats();
+    });
 
     async function fetchLiveVisitors() {
       try {
@@ -4032,7 +4295,96 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
 
+    async function fetchVisitorStats() {
+      try {
+        const res = await fetch('/api/admin/visitor-stats');
+        const data = await res.json();
+        if (!data.success) return;
+
+        // KPI cards in Live View tab
+        const s24h = document.getElementById('stats24hUnique');
+        if (s24h) s24h.textContent = data.last24HoursCount || 0;
+
+        const s24hEntries = document.getElementById('stats24hEntries');
+        if (s24hEntries) s24hEntries.textContent = data.totalEntries24h || data.last24HoursCount || 0;
+
+        const sToday = document.getElementById('statsTodayUnique');
+        if (sToday) sToday.textContent = data.todayCount || 0;
+
+        const sYest = document.getElementById('statsYesterdayUnique');
+        if (sYest) sYest.textContent = data.yesterdayCount || 0;
+
+        const sMob = document.getElementById('statsMobilePct');
+        if (sMob) sMob.textContent = `${data.mobilePercent || 0}%`;
+
+        const sDesk = document.getElementById('statsDesktopPct');
+        if (sDesk) sDesk.textContent = `${data.desktopPercent || 0}%`;
+
+        // Dashboard KPI card
+        const kpi24h = document.getElementById('kpi24hVisitors');
+        if (kpi24h) kpi24h.textContent = `${data.last24HoursCount || 0} زائر`;
+
+        const kpi24hSub = document.getElementById('kpi24hVisitorsSub');
+        if (kpi24hSub) kpi24hSub.textContent = `اليوم: ${data.todayCount || 0} | نشط الآن: ${data.activeNow || 0}`;
+
+        // Hourly bars
+        const hourlyWrap = document.getElementById('hourlySlotsContainer');
+        if (hourlyWrap && Array.isArray(data.hourlySlots)) {
+          const maxVal = Math.max(...data.hourlySlots.map(s => s.count), 1);
+          hourlyWrap.innerHTML = data.hourlySlots.map(s => {
+            const heightPct = Math.max(12, Math.round((s.count / maxVal) * 80));
+            const hasActivity = s.count > 0;
+            const barBg = hasActivity ? 'linear-gradient(to top, #e5b95f, #f39c12)' : '#222';
+            return `
+              <div style="flex:1; min-width:26px; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; height:100%;" title="${s.hour}: ${s.count} زائر">
+                <span style="font-size:10px; color:${hasActivity ? '#fff' : '#555'}; font-weight:700; margin-bottom:3px;">${s.count > 0 ? s.count : ''}</span>
+                <div style="width:100%; height:${heightPct}%; background:${barBg}; border-radius:3px 3px 0 0;"></div>
+                <span style="font-size:9px; color:#777; margin-top:4px; white-space:nowrap;">${s.hour}</span>
+              </div>
+            `;
+          }).join('');
+        }
+
+        // Daily history table
+        const tbody = document.getElementById('dailyVisitorsTableBody');
+        if (tbody && Array.isArray(data.dailyHistory)) {
+          if (data.dailyHistory.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:15px; color:#666;">لا توجد سجلات سابقة بعد</td></tr>`;
+          } else {
+            tbody.innerHTML = data.dailyHistory.map(row => `
+              <tr style="border-bottom:1px solid #222;">
+                <td style="padding:10px; font-weight:700; color:#fff;">
+                  <i class="fa-solid fa-calendar-day" style="color:var(--gold-accent); margin-left:6px;"></i> ${row.date}
+                </td>
+                <td style="padding:10px; text-align:center;">
+                  <span style="font-weight:800; color:#2ecc71; background:rgba(46,204,113,0.1); border:1px solid rgba(46,204,113,0.25); padding:3px 8px; border-radius:4px;">
+                    ${row.uniqueVisitors}
+                  </span>
+                </td>
+                <td style="padding:10px; text-align:center; font-weight:700; color:#eee;">${row.totalEntries}</td>
+                <td style="padding:10px; text-align:center; color:#3498db;">${row.mobile}</td>
+                <td style="padding:10px; text-align:center; color:#aaa;">${row.desktop}</td>
+                <td style="padding:10px; text-align:center;">
+                  <span style="font-weight:700; color:#9b59b6;">${row.mobilePercent}%</span>
+                </td>
+              </tr>
+            `).join('');
+          }
+        }
+      } catch (err) {
+        console.error('Error fetching visitor stats:', err);
+      }
+    }
+
+    fetchLiveVisitors();
+    fetchVisitorStats();
+    setInterval(() => {
+      fetchLiveVisitors();
+      fetchVisitorStats();
+    }, 25000);
+
     window.fetchLiveVisitors = fetchLiveVisitors;
+    window.fetchVisitorStats = fetchVisitorStats;
   }
 
   // ================= SETUP WAYBILL MODAL =================
